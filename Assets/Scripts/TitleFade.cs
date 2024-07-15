@@ -1,46 +1,44 @@
 using System.Collections;
+
 using TMPro;
+
 using UnityEngine;
 
-public class TitleFade : MonoBehaviour
-{
-    TextMeshProUGUI  text;
+public class TitleFade : MonoBehaviour {
+	TextMeshProUGUI text;
 
-    private void Awake()
-    {
-        text = GetComponent<TextMeshProUGUI>();
-        StartCoroutine(FadeTextToFullAlpha());
-    }
+	private void Awake() {
+		text = GetComponent<TextMeshProUGUI>();
+		StartCoroutine(FadeTextToFullAlpha());
+	}
 
-    private void Start()
-    {
-    }
+	private void Start() {
+	}
 
-    private void Update()
-    {
-    }
+	private void Update() {
+	}
 
-    public IEnumerator FadeTextToFullAlpha()
-    {
-        text.color = new Color(text.color.r, text.color.g, text.color.b, 0);
-        while (text.color.a < 1.0f)
-        {
-            text.color = new Color(text.color.r, text.color.g, text.color.b, text.color.a + Time.deltaTime / 2.0f);
-            yield return null;
-        }
+	public IEnumerator FadeTextToFullAlpha() {
+		text.color = new Color(text.color.r, text.color.g, text.color.b, 0);
 
-        StartCoroutine(FadeTextToZeroAlpha());
-    }
+		while (text.color.a < 1.0f) {
+			text.color = new Color(text.color.r, text.color.g, text.color.b, text.color.a + Time.deltaTime / 2.0f);
 
-    public IEnumerator FadeTextToZeroAlpha()
-    {
-        text.color = new Color(text.color.r, text.color.g, text.color.b, 1);
-        while (text.color.a > 0.0f)
-        {
-            text.color = new Color(text.color.r, text.color.g, text.color.b, text.color.a - Time.deltaTime / 2.0f);
-            yield return null;
-        }
+			yield return null;
+		}
 
-        StartCoroutine(FadeTextToFullAlpha());
-    }
+		StartCoroutine(FadeTextToZeroAlpha());
+	}
+
+	public IEnumerator FadeTextToZeroAlpha() {
+		text.color = new Color(text.color.r, text.color.g, text.color.b, 1);
+
+		while (text.color.a > 0.0f) {
+			text.color = new Color(text.color.r, text.color.g, text.color.b, text.color.a - Time.deltaTime / 2.0f);
+
+			yield return null;
+		}
+
+		StartCoroutine(FadeTextToFullAlpha());
+	}
 }
