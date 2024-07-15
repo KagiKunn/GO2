@@ -118,7 +118,7 @@ public class CameraControl : MonoBehaviour
 
             // 최대 줌 인 범위를 벗어날 때 값에 맞추려고 한번 줌 아웃 되는 현상을 방지
         }
-
+        
         // scroll > 0 : scroll up하면 줌아웃
         else if (_camera.orthographicSize >= 7.03f && scroll < 0)
         {
