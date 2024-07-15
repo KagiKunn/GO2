@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class CameraControl : MonoBehaviour
 {
@@ -15,10 +16,26 @@ public class CameraControl : MonoBehaviour
     [SerializeField] private Camera _camera;
     private float temp_value;
     [SerializeField] private float speed = 10.0f;
+    [SerializeField] private Tilemap tilemap; // 타일맵
+
+    // 타일맵 경계 변수
+    private Vector3 minBounds;
+    private Vector3 maxBounds;
+    private float halfHeight;
+    private float halfWidth;
 
     private void Start()
     {
         _camera = GetComponent<Camera>();
+
+        // 카메라의 반높이와 반너비를 계산
+        halfHeight = _camera.orthographicSize;
+        halfWidth = halfHeight * _camera.aspect;
+
+        // 타일맵의 경계를 가져옴
+        Bounds tilemapBounds = tilemap.localBounds;
+        minBounds = tilemapBounds.min;
+        maxBounds = tilemapBounds.max;
     }
 
     private void Update()
@@ -31,6 +48,9 @@ public class CameraControl : MonoBehaviour
 
         // 카메라 위치 업데이트
         UpdateCameraPosition();
+        
+        // 카메라 줌
+        CameraZoom();
     }
 
     private void ControlCameraPosition()
@@ -101,7 +121,12 @@ public class CameraControl : MonoBehaviour
 
         var currentPosition = transform.position;
         var targetPosition = currentPosition + _directionForce;
-        transform.position = Vector3.Lerp(currentPosition, targetPosition, 0.5f);
+
+        // 타일맵 경계 내로 위치 제한
+        float clampedX = Mathf.Clamp(targetPosition.x, minBounds.x + halfWidth, maxBounds.x - halfWidth);
+        float clampedY = Mathf.Clamp(targetPosition.y, minBounds.y + halfHeight, maxBounds.y - halfHeight);
+
+        transform.position = new Vector3(clampedX, clampedY, targetPosition.z);
     }
 
     private void CameraZoom()
@@ -118,14 +143,18 @@ public class CameraControl : MonoBehaviour
 
             // 최대 줌 인 범위를 벗어날 때 값에 맞추려고 한번 줌 아웃 되는 현상을 방지
         }
-        
+
         // scroll > 0 : scroll up하면 줌아웃
-        else if (_camera.orthographicSize >= 7.03f && scroll < 0)
+        else if (_camera.orthographicSize >= 5.03f && scroll < 0)
         {
             temp_value = _camera.orthographicSize;
             _camera.orthographicSize = temp_value; // maximize zoom out
         }
         else
             _camera.orthographicSize -= scroll * 0.5f;
+
+        // 줌이 변경되었을 때 반높이와 반너비를 재계산
+        halfHeight = _camera.orthographicSize;
+        halfWidth = halfHeight * _camera.aspect;
     }
 }
