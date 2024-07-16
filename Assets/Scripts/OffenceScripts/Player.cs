@@ -1,6 +1,7 @@
 using System;
 
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour {
 	[SerializeField]
@@ -9,15 +10,18 @@ public class Player : MonoBehaviour {
 	[SerializeField]
 	private float speed;
 
-	private Rigidbody2D rigid;
+	private Rigidbody2D rigidbody2D;
+	private SpriteRenderer spriteRenderer;
+	private Animator animator;
 
 	private void Awake() {
-		rigid = GetComponent<Rigidbody2D>();
+		rigidbody2D = GetComponent<Rigidbody2D>();
+		spriteRenderer = GetComponent<SpriteRenderer>();
+		animator = GetComponent<Animator>();
 	}
 
-	private void Update() {
-		inputVec.x = Input.GetAxisRaw("Horizontal");
-		inputVec.y = Input.GetAxisRaw("Vertical");
+	private void OnMove(InputValue value) {
+		inputVec = value.Get<Vector2>();
 	}
 
 	private void FixedUpdate() {
@@ -28,8 +32,16 @@ public class Player : MonoBehaviour {
 		// rigid.velocity = inputVec;
 
 		// 3. 위치 제어
-		Vector2 nextVec = inputVec.normalized * speed * Time.fixedDeltaTime;
+		Vector2 nextVec = inputVec * speed * Time.fixedDeltaTime;
 
-		rigid.MovePosition(rigid.position + nextVec);
+		rigidbody2D.MovePosition(rigidbody2D.position + nextVec);
+	}
+
+	private void LateUpdate() {
+		animator.SetFloat("Speed", inputVec.magnitude);
+
+		if (inputVec.x != 0) {
+			spriteRenderer.flipX = inputVec.x < 0;
+		}
 	}
 }
