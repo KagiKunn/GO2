@@ -2,6 +2,7 @@ using System;
 
 using UnityEngine;
 using UnityEngine.InputSystem;
+#pragma warning disable CS0108, CS0114
 
 public class Player : MonoBehaviour {
 	[SerializeField]
@@ -43,5 +44,9 @@ public class Player : MonoBehaviour {
 		if (inputVec.x != 0) {
 			spriteRenderer.flipX = inputVec.x < 0;
 		}
+	}
+	
+	public Vector2 InputVec {
+		get { return inputVec; }
 	}
 }

@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour {
 			if (!instance) {
 				instance = FindObjectOfType(typeof(GameManager)) as GameManager;
 
-				if (instance == null) Debug.Log("No Singleton obj");
+				if (instance == null) Debug.Log("No Singleton obj 123123124124124123123123");
 			}
 
 			return instance;
@@ -27,13 +27,15 @@ public class GameManager : MonoBehaviour {
 
 			return null;
 		}
-
-		set { player = value; }
 	}
 
 	private void Awake() {
-		if (instance == null) instance = this;
-		else if (instance != this) Destroy(gameObject);
+		if (instance == null){ instance = this;
+			Debug.Log("인스턴스 생성");}
+		else if (instance != this){ Destroy(gameObject);
+			Debug.Log("Destroied");}
+
+		player = GetComponent<Player>();
 
 		DontDestroyOnLoad(gameObject);
 	}
