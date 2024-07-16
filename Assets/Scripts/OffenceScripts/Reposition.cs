@@ -8,7 +8,11 @@ public class Reposition : MonoBehaviour {
 
 		Player playerInstance = GameManager.Instance.Player;
 
-		if (playerInstance == null) return;
+		if (playerInstance == null) {
+			CustomLogger.LogError("Player instance is null");
+
+			return;
+		}
 
 		Vector3 playerPosition = playerInstance.transform.position;
 		Vector3 myPosition = transform.position;
@@ -20,7 +24,7 @@ public class Reposition : MonoBehaviour {
 
 		float directionX = playerDirection.x < 0 ? -1 : 1;
 		float directionY = playerDirection.y < 0 ? -1 : 1;
-
+		
 		switch (transform.tag) {
 			case "Ground":
 				if (diffX > diffY) transform.Translate(Vector3.right * directionX * 40);
