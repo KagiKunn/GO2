@@ -5,6 +5,7 @@ using UnityEngine.Audio;
 using UnityEngine.UI;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Threading.Tasks;
 
 public class SoundControl : MonoBehaviour
 {
@@ -58,7 +59,7 @@ public class SoundControl : MonoBehaviour
         SaveSetting();
     }
 
-    private void LoadSetting()
+    private async void LoadSetting()
     {
         try
         {
@@ -71,9 +72,15 @@ public class SoundControl : MonoBehaviour
                 bgmVolSlider.value = ss.bgm;
                 sfxVolSlider.value = ss.sfx;
 
+                await Task.Delay(10);
+
                 SetLevel("Master", masterVolSlider.value, masterVal, false);
                 SetLevel("BGM", bgmVolSlider.value, bgmVal, false);
                 SetLevel("SFX", sfxVolSlider.value, sfxVal, false);
+                
+                Debug.LogWarning("Master:"+ss.master);
+                Debug.LogWarning("BGM:"+ss.bgm);
+                Debug.LogWarning("SFX:"+ss.sfx);
             }
         }
         catch (Exception ex)
