@@ -1,6 +1,7 @@
 using System;
 
 using UnityEngine;
+using UnityEngine.Animations;
 
 public class GameManager : MonoBehaviour {
 	#pragma warning disable CS0618
