@@ -10,33 +10,54 @@ public class GameManager : MonoBehaviour {
 	[SerializeField]
 	private Player player;
 
+	[SerializeField]
+	private PoolManager poolManager;
+
 	public static GameManager Instance {
 		get {
 			if (instance == null) {
-				instance = FindObjectOfType(typeof(GameManager)) as GameManager;
+				instance = FindObjectOfType<GameManager>();
 
-				if (instance == null) CustomLogger.LogError("No Singleton Object");
+				if (instance == null) {
+					CustomLogger.LogError("No Singleton Object");
+				} else {
+					instance.Initialize();
+				}
 			}
 
 			return instance;
 		}
 	}
 
-	public Player Player {
-		get { return player != null ? player : null; }
-	}
+	public Player Player => player;
+	public PoolManager PoolManager => poolManager;
 
 	private void Awake() {
 		if (instance == null) instance = this;
 		else if (instance != this) Destroy(gameObject);
 
 		DontDestroyOnLoad(gameObject);
+	}
 
+	private void Initialize() {
 		if (player == null) {
 			player = FindObjectOfType<Player>();
 
-			if (player == null) CustomLogger.LogError("Player instance not found");
-			else CustomLogger.Log("Player instance found and assigned");
+			if (player == null) {
+				CustomLogger.LogError("Player instance not found");
+			} else {
+				CustomLogger.Log("Player instance found and assigned");
+			}
+		}
+
+		if (poolManager == null) {
+			poolManager = FindObjectOfType<PoolManager>();
+
+			if (poolManager == null) {
+				CustomLogger.LogError("PoolManager instance not found");
+			} else {
+				CustomLogger.Log("PoolManager instance found and assigned");
+			}
 		}
 	}
 }

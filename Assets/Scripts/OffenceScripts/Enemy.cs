@@ -15,10 +15,13 @@ public class Enemy : MonoBehaviour {
 
 	private Rigidbody2D rigidbody2D;
 	private SpriteRenderer spriteRenderer;
+	private Player player;
 
 	private void Awake() {
 		rigidbody2D = GetComponent<Rigidbody2D>();
 		spriteRenderer = GetComponent<SpriteRenderer>();
+		
+		player = GameManager.Instance.Player;
 	}
 
 	private void FixedUpdate() {
@@ -35,5 +38,9 @@ public class Enemy : MonoBehaviour {
 		if (!isLive) return;
 
 		spriteRenderer.flipX = target.position.x < rigidbody2D.position.x;
+	}
+
+	private void OnEnable() {
+		target = player.GetComponent<Rigidbody2D>();
 	}
 }
