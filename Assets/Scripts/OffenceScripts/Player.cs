@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour {
 	[SerializeField]
-	private Vector2 inputVec;
+	private Vector2 inputVector2;
 
 	[SerializeField]
 	private float speed;
@@ -22,7 +22,7 @@ public class Player : MonoBehaviour {
 	}
 
 	private void OnMove(InputValue value) {
-		inputVec = value.Get<Vector2>();
+		inputVector2 = value.Get<Vector2>();
 	}
 
 	private void FixedUpdate() {
@@ -33,20 +33,20 @@ public class Player : MonoBehaviour {
 		// rigid.velocity = inputVec;
 
 		// 3. 위치 제어
-		Vector2 nextVec = inputVec * speed * Time.fixedDeltaTime;
+		Vector2 nextVector2 = inputVector2 * speed * Time.fixedDeltaTime;
 
-		rigidbody2D.MovePosition(rigidbody2D.position + nextVec);
+		rigidbody2D.MovePosition(rigidbody2D.position + nextVector2);
 	}
 
 	private void LateUpdate() {
-		animator.SetFloat("Speed", inputVec.magnitude);
+		animator.SetFloat("Speed", inputVector2.magnitude);
 
-		if (inputVec.x != 0) {
-			spriteRenderer.flipX = inputVec.x < 0;
+		if (inputVector2.x != 0) {
+			spriteRenderer.flipX = inputVector2.x < 0;
 		}
 	}
 	
-	public Vector2 InputVec {
-		get { return inputVec; }
+	public Vector2 InputVector2 {
+		get { return inputVector2; }
 	}
 }
