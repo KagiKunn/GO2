@@ -11,10 +11,10 @@ public class GameManager : MonoBehaviour {
 
 	public static GameManager Instance {
 		get {
-			if (!instance) {
+			if (instance == null) {
 				instance = FindObjectOfType(typeof(GameManager)) as GameManager;
 
-				if (instance == null) Debug.Log("No Singleton obj");
+				if (instance == null) CustomLogger.LogError("No Singleton Object");
 			}
 
 			return instance;
@@ -22,13 +22,7 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public Player Player {
-		get {
-			if (player != null) return player;
-
-			return null;
-		}
-
-		set { player = value; }
+		get { return player != null ? player : null; }
 	}
 
 	private void Awake() {
@@ -36,5 +30,12 @@ public class GameManager : MonoBehaviour {
 		else if (instance != this) Destroy(gameObject);
 
 		DontDestroyOnLoad(gameObject);
+
+		if (player == null) {
+			player = FindObjectOfType<Player>();
+
+			if (player == null) CustomLogger.LogError("Player instance not found");
+			else CustomLogger.Log("Player instance found and assigned");
+		}
 	}
 }
