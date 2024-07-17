@@ -5,7 +5,7 @@ using Random = UnityEngine.Random;
 public class EnemyMovement : MonoBehaviour
 {
     [SerializeField]
-    private float speed = 2.0f;
+    private float speed = 1.0f;
     private Rigidbody2D _rigid2d;
     private Animator _animator;
     private void Awake()
