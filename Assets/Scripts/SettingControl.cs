@@ -20,6 +20,7 @@ public class SettingControl : MonoBehaviour
     [SerializeField] private AudioMixer audioMixer;
     [SerializeField] private Toggle vibrationToggle;
     [SerializeField] private TextMeshProUGUI UUID;
+    [SerializeField] private TextMeshProUGUI Username;
     private string filepath;
 
     public static SettingControl Instance { get; private set; }
@@ -57,6 +58,11 @@ public class SettingControl : MonoBehaviour
         {
             UUID.text = "UUID : " + PlayerDataControl.Instance.UUID;
             GUIUtility.systemCopyBuffer = PlayerDataControl.Instance.UUID;
+        }
+
+        if (PlayerDataControl.Instance.Username != null)
+        {
+            Username.text = PlayerDataControl.Instance.Username;
         }
     }
 
