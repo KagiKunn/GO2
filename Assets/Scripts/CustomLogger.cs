@@ -7,15 +7,41 @@ public static class CustomLogger {
 		return System.IO.Path.GetFileNameWithoutExtension(filePath);
 	}
 
-	public static void Log(string message, string color = "green", [CallerFilePath] string filePath = "") {
-		Debug.Log($"<color={color}>[{GetFileName(filePath)}] {message}</color>");
+	private static string ColorToHex(object color) {
+		if (color is Color col) {
+			return "#" + ColorUtility.ToHtmlStringRGBA(col);
+		} else if (color is string str) {
+			if (ColorUtility.TryParseHtmlString(str, out Color namedColor)) {
+				return "#" + ColorUtility.ToHtmlStringRGBA(namedColor);
+			}
+
+			string[] rgbParts = str.Split(',');
+
+			if (rgbParts.Length == 3) {
+				bool isValidR = byte.TryParse(rgbParts[0], out byte r);
+				bool isValidG = byte.TryParse(rgbParts[1], out byte g);
+				bool isValidB = byte.TryParse(rgbParts[2], out byte b);
+
+				if (isValidR && isValidG && isValidB) {
+					return "#" + ColorUtility.ToHtmlStringRGBA(new Color32(r, g, b, 255));
+				}
+			}
+
+			return str.StartsWith("#") ? str : "#" + str;
+		} else {
+			return "#ffffff";
+		}
 	}
 
-	public static void LogWarning(string message, string color = "yellow", [CallerFilePath] string filePath = "") {
-		Debug.LogWarning($"<color={color}>[{GetFileName(filePath)}] {message}</color>");
+	public static void Log(object message, object color = null, [CallerFilePath] string filePath = "") {
+		Debug.Log($"<color={ColorToHex(color != null ? color : "green")}>[{GetFileName(filePath)}] {message}</color>");
 	}
 
-	public static void LogError(string message, string color = "red", [CallerFilePath] string filePath = "") {
-		Debug.LogError($"<color={color}>[{GetFileName(filePath)}] {message}</color>");
+	public static void LogWarning(object message, object color = null, [CallerFilePath] string filePath = "") {
+		Debug.LogWarning($"<color={ColorToHex(color != null ? color : "yellow")}>[{GetFileName(filePath)}] {message}</color>");
+	}
+
+	public static void LogError(object message, object color = null, [CallerFilePath] string filePath = "") {
+		Debug.LogError($"<color={ColorToHex(color != null ? color : "red")}>[{GetFileName(filePath)}] {message}</color>");
 	}
 }
