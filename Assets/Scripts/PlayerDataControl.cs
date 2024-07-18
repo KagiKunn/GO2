@@ -14,6 +14,37 @@ public class PlayerDataControl : MonoBehaviour
     private int lv;
     private int repeat;
 
+    public SceneControl SC
+    {
+        get => sc;
+        set => sc = value;
+    }
+
+    public string UUID
+    {
+        get => uuid;
+        set => uuid = value;
+    }
+
+    public int Level
+    {
+        get => lv;
+        set => lv = value;
+    }
+
+    public int Repeat
+    {
+        get => repeat;
+        set => repeat = value;
+    }
+
+
+    
+    public static PlayerDataControl Instance
+    {
+        get;
+        private set;
+    }
     private async void Awake()
     {
         sc = gameObject.AddComponent<SceneControl>();
@@ -25,7 +56,15 @@ public class PlayerDataControl : MonoBehaviour
             await LoadPlayer();
         }
 
-        DontDestroyOnLoad(this);
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(this);
+        }
+        else
+        {
+            Destroy(this);
+        }
     }
 
     void Start()
@@ -44,7 +83,7 @@ public class PlayerDataControl : MonoBehaviour
             Login();
         }
 
-        sc.LoadScene("Main");
+        sc.LoadScene("Defense");
     }
 
     private async Task LoadPlayer()
