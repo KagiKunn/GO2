@@ -7,60 +7,97 @@ using UnityEngine;
 
 public class PlayerDataControl : MonoBehaviour
 {
-    private SceneControl sc;
+    private SceneControl sceneControl;
     private static string persistentDataPath;
-    private string filepath;
+    private string filePath;
     private string uuid;
-    private int lv;
+    private string username;
+    private int level;
     private int repeat;
+
+    public SceneControl SceneControl
+    {
+        get => sceneControl;
+        set => sceneControl = value;
+    }
+
+    public string UUID
+    {
+        get => uuid;
+        set => uuid = value;
+    }
+
+    public int Level
+    {
+        get => level;
+        set => level = value;
+    }
+
+    public int Repeat
+    {
+        get => repeat;
+        set => repeat = value;
+    }
+
+    public string Username
+    {
+        get => username;
+        set => username = value;
+    }
+
+    public static PlayerDataControl Instance { get; private set; }
 
     private async void Awake()
     {
-        sc = gameObject.AddComponent<SceneControl>();
+        sceneControl = gameObject.AddComponent<SceneControl>();
         persistentDataPath = Application.persistentDataPath;
-        filepath = Path.Combine(persistentDataPath, "Player.dat");
+        filePath = Path.Combine(persistentDataPath, "Player.dat");
 
-        if (File.Exists(filepath))
+        if (File.Exists(filePath))
         {
-            await LoadPlayer();
+            await LoadPlayerAsync();
         }
 
-        DontDestroyOnLoad(this);
-    }
-
-    void Start()
-    {
-        // 필요시 초기화 작업 추가
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(this);
+        }
+        else
+        {
+            Destroy(this);
+        }
+        GameStart();
     }
 
     public void GameStart()
     {
-        if (string.IsNullOrEmpty(uuid))
+        if (string.IsNullOrEmpty(UUID))
         {
-            MakePlayer();
+            CreateNewPlayer();
         }
         else
         {
             Login();
         }
 
-        sc.LoadScene("Main");
     }
 
-    private async Task LoadPlayer()
+    private async Task LoadPlayerAsync()
     {
         try
         {
-            using (FileStream file = File.Open(filepath, FileMode.Open, FileAccess.Read, FileShare.None))
+            using (FileStream file = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.None))
             {
                 BinaryFormatter formatter = new BinaryFormatter();
-                PlayerLocalData pld = (PlayerLocalData)formatter.Deserialize(file);
+                PlayerLocalData playerData = (PlayerLocalData)formatter.Deserialize(file);
 
-                uuid = pld.uuid;
-                lv = pld.lv;
-                repeat = pld.repeat;
+                uuid = playerData.uuid;
+                level = playerData.lv;
+                repeat = playerData.repeat;
+                username = playerData.username ?? "プレイヤー";
 
-                await Task.Delay(10); // 비동기 작업 시 모의 딜레이
+                await Task.CompletedTask; // 비동기 작업 유지
             }
         }
         catch (Exception ex)
@@ -69,56 +106,60 @@ public class PlayerDataControl : MonoBehaviour
         }
     }
 
-    private void MakePlayer()
+    private void CreateNewPlayer()
     {
-        uuid = Guid.NewGuid().ToString();
+        UUID = Guid.NewGuid().ToString();
 
-        PlayerLocalData pld = new PlayerLocalData
+        PlayerLocalData playerData = new PlayerLocalData
         {
-            uuid = uuid,
+            uuid = UUID,
             lv = 1,
-            repeat = 0
+            repeat = 0,
+            username = "プレイヤー"
         };
 
-        SaveLocalData(pld);
+        SaveLocalData(playerData);
 
-        DBControl.OnCUD($"Insert into account values (null, '{uuid}', {pld.lv}, {pld.repeat})");
+        DBControl.OnCUD($"Insert into account values (null, '{UUID}', {playerData.lv}, {playerData.repeat})");
     }
 
     private void Login()
     {
-        DataSet ds = DBControl.OnRead($"Select * from account where uuid = '{uuid}'", "account");
+        DataSet ds = DBControl.OnRead($"Select * from account where uuid = '{UUID}'", "account");
 
         if (ds != null && ds.Tables.Contains("account"))
         {
             DataTable dt = ds.Tables["account"];
             DataRow row = dt.Rows[0];
 
-            uuid = row["uuid"].ToString();
-            lv = Convert.ToInt32(row["lv"]);
-            repeat = Convert.ToInt32(row["repeat"]);
+            UUID = row["uuid"].ToString();
+            Level = Convert.ToInt32(row["lv"]);
+            Repeat = Convert.ToInt32(row["repeat"]);
+            Username = row["username"].ToString();
         }
-
+        Debug.LogWarning("Logged In");
         Save();
     }
 
     private void Save()
     {
-        PlayerLocalData pld = new PlayerLocalData
+        PlayerLocalData playerData = new PlayerLocalData
         {
-            uuid = uuid,
-            lv = lv,
-            repeat = repeat
+            uuid = UUID,
+            lv = Level,
+            repeat = Repeat,
+            username = Username
         };
 
-        SaveLocalData(pld);
+        SaveLocalData(playerData);
+        DBControl.OnCUD($"Update account set lv = {playerData.lv}, username = '{playerData.username}', `repeat` = {playerData.repeat} where uuid = '{playerData.uuid}'");
     }
 
     private void SaveLocalData(PlayerLocalData data)
     {
         try
         {
-            using (FileStream file = File.Create(filepath))
+            using (FileStream file = File.Create(filePath))
             {
                 BinaryFormatter formatter = new BinaryFormatter();
                 formatter.Serialize(file, data);
