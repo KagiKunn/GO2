@@ -7,11 +7,12 @@ public class GameManager : MonoBehaviour {
 	#pragma warning disable CS0618
 	private static GameManager instance;
 
-	[SerializeField]
-	private Player player;
+	[SerializeField] private Player player;
 
-	[SerializeField]
-	private PoolManager poolManager;
+	[SerializeField] private PoolManager poolManager;
+
+	[SerializeField] private float gameTime;
+	[SerializeField] private float maxGameTime = 2 * 10f;
 
 	public static GameManager Instance {
 		get {
@@ -31,12 +32,21 @@ public class GameManager : MonoBehaviour {
 
 	public Player Player => player;
 	public PoolManager PoolManager => poolManager;
+	public float GameTime => gameTime;
 
 	private void Awake() {
 		if (instance == null) instance = this;
 		else if (instance != this) Destroy(gameObject);
 
 		DontDestroyOnLoad(gameObject);
+	}
+
+	private void Update() {
+		gameTime += Time.deltaTime;
+
+		if (gameTime > maxGameTime) {
+			gameTime = maxGameTime;
+		}
 	}
 
 	private void Initialize() {
