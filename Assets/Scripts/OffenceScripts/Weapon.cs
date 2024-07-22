@@ -11,6 +11,14 @@ public class Weapon : MonoBehaviour {
 	[SerializeField] private int count;
 	[SerializeField] private float speed;
 
+	private float timer;
+
+	private Player player;
+
+	private void Awake() {
+		player = GetComponentInParent<Player>();
+	}
+
 	private void Start() {
 		Initialized();
 	}
@@ -18,16 +26,24 @@ public class Weapon : MonoBehaviour {
 	private void Update() {
 		switch (id) {
 			case 0:
-				transform.Rotate(Vector3.forward * speed * Time.deltaTime);
+				transform.Rotate(Vector3.back * speed * Time.deltaTime);
 
 				break;
 
 			default:
+				timer += Time.deltaTime;
+
+				if (timer > speed) {
+					timer = 0f;
+
+					Fire();
+				}
+
 				break;
 		}
 
 		// Test Code
-		if (Input.GetButtonDown("Jump")) LevelUp(20, 5);
+		if (Input.GetButtonDown("Jump")) LevelUp(10, 1);
 	}
 
 	public void LevelUp(float damage, int count) {
@@ -42,13 +58,15 @@ public class Weapon : MonoBehaviour {
 	public void Initialized() {
 		switch (id) {
 			case 0:
-				speed = -150;
+				speed = 150;
 
 				Batch();
 
 				break;
 
 			default:
+				speed = 0.3f;
+
 				break;
 		}
 	}
@@ -71,7 +89,24 @@ public class Weapon : MonoBehaviour {
 
 			bullet.Rotate(rotateVector3);
 			bullet.Translate(bullet.up * 1.5f, Space.World);
-			bullet.GetComponent<Bullet>().Initialized(damage, -1); // -1 is Infinity penetration.
+
+			bullet.GetComponent<Bullet>().Initialized(damage, -1, Vector3.zero); // -1 is Infinity penetration.
 		}
+	}
+
+	private void Fire() {
+		if (!player.Scanner.NearestTarget) return;
+
+		Vector3 targetPosition = player.Scanner.NearestTarget.position;
+		Vector3 direction = targetPosition - transform.position;
+
+		direction = direction.normalized;
+
+		Transform bullet = GameManager.Instance.PoolManager.Get(prefabId).transform;
+
+		bullet.position = transform.position;
+		bullet.rotation = Quaternion.FromToRotation(Vector3.up, direction);
+
+		bullet.GetComponent<Bullet>().Initialized(damage, count, direction); // -1 is Infinity penetration.
 	}
 }
