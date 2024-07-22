@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class EnemyMovement : MonoBehaviour
+public class EnemyMovementSkel : MonoBehaviour
 {
     [SerializeField]
     private float speed = 1.0f;
@@ -14,8 +14,11 @@ public class EnemyMovement : MonoBehaviour
     private Rigidbody2D _rigid2d;
     private Animator _animator;
     private static readonly int RunAnimationHash = Animator.StringToHash("1_Run");
-    private static readonly int AttackAnimationHash = Animator.StringToHash("2_Attack_Bow");
+    private static readonly int AttackAnimationHash = Animator.StringToHash("2_Attack_Normal");
     private Vector3 movementdirection;
+    private CastleWall castleWall;
+    private bool isAttacking = false;
+    
     private void Awake()
     {
         // pos.position = new Vector2(0, 0);
@@ -30,15 +33,34 @@ public class EnemyMovement : MonoBehaviour
         Collider2D hit = Physics2D.OverlapBox(boxCenter, boxSize, 0,detectionLayerMask);
         if (hit != null && hit.name == "CastleWall")
         {
-            _animator.Play(AttackAnimationHash);
+            if (!isAttacking)
+            {
+                isAttacking = true;
+                _animator.Play(AttackAnimationHash);
+                castleWall = hit.GetComponent<CastleWall>();
+                if (castleWall != null)
+                {
+                    castleWall.TakeDamage(1);
+                }
+                Invoke("ResetAttack", 1.0f);
+            }
             movementdirection = Vector3.zero;
         }
         else
         {
             _animator.Play(RunAnimationHash);
+            movementdirection = Vector3.down;
+            isAttacking = false;
         }
         _rigid2d.velocity = movementdirection * (speed * Time.timeScale);
     }
+
+    private void ResetAttack()
+    {
+        isAttacking = false;
+    }
+    
+
     private void OnDrawGizmos()
     {
         Vector2 boxCenter = (Vector2)transform.position + new Vector2(0, -boxSize.y / 2);
