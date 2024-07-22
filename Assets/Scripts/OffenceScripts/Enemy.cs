@@ -8,7 +8,7 @@ public class Enemy : MonoBehaviour {
 	[SerializeField] private float speed;
 	[SerializeField] private float health;
 	[SerializeField] private float maxHealth;
-	
+
 	[SerializeField] private RuntimeAnimatorController[] runtimeAnimatorController;
 
 	[SerializeField] private Rigidbody2D target;
@@ -56,5 +56,20 @@ public class Enemy : MonoBehaviour {
 		speed = spawnData.Speed;
 		maxHealth = spawnData.Health;
 		health = spawnData.Health;
+	}
+
+	private void OnTriggerEnter2D(Collider2D other) {
+		if (!other.CompareTag("Bullet")) return;
+
+		health -= other.GetComponent<Bullet>().Damage();
+
+		if (health > 0) {
+		} else {
+			Dead();
+		}
+	}
+
+	private void Dead() {
+		gameObject.SetActive(false);
 	}
 }
