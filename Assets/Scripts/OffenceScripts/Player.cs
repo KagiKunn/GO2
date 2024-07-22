@@ -2,23 +2,24 @@ using System;
 
 using UnityEngine;
 using UnityEngine.InputSystem;
+
 #pragma warning disable CS0108, CS0114
 
 public class Player : MonoBehaviour {
-	[SerializeField]
-	private Vector2 inputVector2;
+	[SerializeField] private Vector2 inputVector2;
 
-	[SerializeField]
-	private float speed;
+	[SerializeField] private float speed;
 
 	private Rigidbody2D rigidbody2D;
 	private SpriteRenderer spriteRenderer;
 	private Animator animator;
+	private Scanner scanner;
 
 	private void Awake() {
 		rigidbody2D = GetComponent<Rigidbody2D>();
 		spriteRenderer = GetComponent<SpriteRenderer>();
 		animator = GetComponent<Animator>();
+		scanner = GetComponent<Scanner>();
 	}
 
 	private void OnMove(InputValue value) {
@@ -45,8 +46,8 @@ public class Player : MonoBehaviour {
 			spriteRenderer.flipX = inputVector2.x < 0;
 		}
 	}
-	
-	public Vector2 InputVector2 {
-		get { return inputVector2; }
-	}
+
+	public Vector2 InputVector2 => inputVector2;
+
+	public Scanner Scanner => scanner;
 }

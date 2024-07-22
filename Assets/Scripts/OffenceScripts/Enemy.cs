@@ -5,22 +5,26 @@ using UnityEngine;
 #pragma warning disable CS0108, CS0114
 
 public class Enemy : MonoBehaviour {
-	[SerializeField]
-	private float speed;
+	[SerializeField] private float speed;
+	[SerializeField] private float health;
+	[SerializeField] private float maxHealth;
 
-	[SerializeField]
-	private Rigidbody2D target;
+	[SerializeField] private RuntimeAnimatorController[] runtimeAnimatorController;
 
-	private bool isLive = true;
+	[SerializeField] private Rigidbody2D target;
+
+	private bool isLive;
 
 	private Rigidbody2D rigidbody2D;
+	private Animator animator;
 	private SpriteRenderer spriteRenderer;
 	private Player player;
 
 	private void Awake() {
 		rigidbody2D = GetComponent<Rigidbody2D>();
+		animator = GetComponent<Animator>();
 		spriteRenderer = GetComponent<SpriteRenderer>();
-		
+
 		player = GameManager.Instance.Player;
 	}
 
@@ -42,5 +46,30 @@ public class Enemy : MonoBehaviour {
 
 	private void OnEnable() {
 		target = player.GetComponent<Rigidbody2D>();
+		isLive = true;
+		health = maxHealth;
+	}
+
+	public void Initialized(SpawnData spawnData) {
+		animator.runtimeAnimatorController = runtimeAnimatorController[spawnData.SpriteType];
+
+		speed = spawnData.Speed;
+		maxHealth = spawnData.Health;
+		health = spawnData.Health;
+	}
+
+	private void OnTriggerEnter2D(Collider2D other) {
+		if (!other.CompareTag("Bullet")) return;
+
+		health -= other.GetComponent<Bullet>().Damage();
+
+		if (health > 0) {
+		} else {
+			Dead();
+		}
+	}
+
+	private void Dead() {
+		gameObject.SetActive(false);
 	}
 }
