@@ -18,8 +18,6 @@ public class PoolManager : MonoBehaviour {
 		for (int i = 0; i < pools.Length; i++) {
 			pools[i] = new List<GameObject>();
 		}
-
-		CustomLogger.Log(pools.Length);
 	}
 
 	public GameObject Get(int index) {
