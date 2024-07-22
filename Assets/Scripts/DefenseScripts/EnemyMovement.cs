@@ -1,6 +1,4 @@
-using System;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 public class EnemyMovement : MonoBehaviour
 {
@@ -10,7 +8,7 @@ public class EnemyMovement : MonoBehaviour
     private LayerMask detectionLayerMask;
     
     [SerializeField]
-    private Vector2 boxSize = new Vector2(2, 1);
+    private Vector2 boxSize = new Vector2(2, 0.1f);
     private Rigidbody2D _rigid2d;
     private Animator _animator;
     private static readonly int RunAnimationHash = Animator.StringToHash("1_Run");
