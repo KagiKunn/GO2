@@ -14,7 +14,7 @@ public class EnemySpawner : MonoBehaviour
     public float maxY = 10f;
 
     // 고정된 Y축 좌표
-    private const float fixedX = 9.5f;
+    private const float fixedX = 20f;
 
     // 생성할 오브젝트의 개수
     [SerializeField]

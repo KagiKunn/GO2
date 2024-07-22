@@ -18,10 +18,13 @@ public class Menu : MonoBehaviour
     {
         // 버튼 클릭 시 실행할 코드를 여기에 작성합니다.
         CustomLogger.Log("MenuButton clicked!","yellow");
-        float time = Time.timeScale;
-        if (time <= 0)
+        if (Time.timeScale <= 0)
         {
-            
+            Time.timeScale = 1;
+        }
+        else
+        {
+            Time.timeScale = 0;
         }
     }
 }
