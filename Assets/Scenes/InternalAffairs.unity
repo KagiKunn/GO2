@@ -6733,6 +6733,7 @@ GameObject:
   - component: {fileID: 939893333}
   - component: {fileID: 939893332}
   - component: {fileID: 939893335}
+  - component: {fileID: 939893336}
   m_Layer: 5
   m_Name: HeroBtn
   m_TagString: Untagged
@@ -6816,6 +6817,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 939893336}
+        m_TargetAssemblyTypeName: HeroBtnScene, Assembly-CSharp
+        m_MethodName: SceneChange
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &939893333
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6871,6 +6884,18 @@ MonoBehaviour:
     type: 3}
   btn_txt: {fileID: 553361677}
   originalTxtColor: {r: 0, g: 0, b: 0, a: 0}
+--- !u!114 &939893336
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 939893330}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73b8fadef84bb463c86a450c888490cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &948289549
 GameObject:
   m_ObjectHideFlags: 0
@@ -7887,7 +7912,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_UiScaleMode: 1
-  m_ReferencePixelsPerUnit: 32
+  m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 640, y: 360}
   m_ScreenMatchMode: 0
