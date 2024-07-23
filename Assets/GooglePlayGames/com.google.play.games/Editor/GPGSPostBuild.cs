@@ -15,6 +15,7 @@
 // </copyright>
 
 #if UNITY_ANDROID
+
 namespace GooglePlayGames.Editor
 {
     using System.Collections.Generic;
