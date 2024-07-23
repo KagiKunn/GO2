@@ -107,6 +107,7 @@ public class CameraSwitcher : MonoBehaviour
             cameraControls[currentCameraIndex].InitializeCamera();
         }
         CustomLogger.Log(currentCameraIndex + " Camera is Enabled","yellow");
+        CustomLogger.Log(cameras[currentCameraIndex].transform.position + ": Camera position","yellow");
         //Debug.LogWarning(currentCameraIndex + " Camera is Enabled");
     }
 }
