@@ -76,7 +76,8 @@ public class CameraSwitcher : MonoBehaviour
     {
         if (cameraIndex < 0 || cameraIndex >= cameras.Length)
         {
-            Debug.LogError("Invalid camera index: " + cameraIndex);
+            CustomLogger.LogError("Invalid camera index: " + cameraIndex);
+            // Debug.LogError("Invalid camera index: " + cameraIndex);
             return;
         }
 
@@ -105,7 +106,8 @@ public class CameraSwitcher : MonoBehaviour
             cameraControls[currentCameraIndex].enabled = true;
             cameraControls[currentCameraIndex].InitializeCamera();
         }
-
-        Debug.LogWarning(currentCameraIndex + " Camera is Enabled");
+        CustomLogger.Log(currentCameraIndex + " Camera is Enabled","yellow");
+        CustomLogger.Log(cameras[currentCameraIndex].transform.position + ": Camera position","yellow");
+        //Debug.LogWarning(currentCameraIndex + " Camera is Enabled");
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 
 using UnityEngine;
 
@@ -16,20 +17,27 @@ public class Enemy : MonoBehaviour {
 	private bool isLive;
 
 	private Rigidbody2D rigidbody2D;
+	private Collider2D collider2D;
 	private Animator animator;
 	private SpriteRenderer spriteRenderer;
+	private WaitForFixedUpdate waitForFixedUpdate;
+
+	private GameManager gameManager;
 	private Player player;
 
 	private void Awake() {
 		rigidbody2D = GetComponent<Rigidbody2D>();
+		collider2D = GetComponent<Collider2D>();
 		animator = GetComponent<Animator>();
 		spriteRenderer = GetComponent<SpriteRenderer>();
+		waitForFixedUpdate = new WaitForFixedUpdate();
 
+		gameManager = GameManager.Instance;
 		player = GameManager.Instance.Player;
 	}
 
 	private void FixedUpdate() {
-		if (!isLive) return;
+		if (!isLive || animator.GetCurrentAnimatorStateInfo(0).IsName("Hit")) return;
 
 		Vector2 directionVector2 = target.position - rigidbody2D.position;
 		Vector2 nextVector2 = directionVector2.normalized * speed * Time.fixedDeltaTime;
@@ -46,7 +54,13 @@ public class Enemy : MonoBehaviour {
 
 	private void OnEnable() {
 		target = player.GetComponent<Rigidbody2D>();
+
 		isLive = true;
+		collider2D.enabled = true;
+		rigidbody2D.simulated = true;
+		spriteRenderer.sortingOrder = 2;
+		animator.SetBool("Dead", false);
+
 		health = maxHealth;
 	}
 
@@ -59,14 +73,38 @@ public class Enemy : MonoBehaviour {
 	}
 
 	private void OnTriggerEnter2D(Collider2D other) {
-		if (!other.CompareTag("Bullet")) return;
+		if (!other.CompareTag("Bullet") || !isLive) return;
 
 		health -= other.GetComponent<Bullet>().Damage();
 
+		StartCoroutine(KnockBack());
+		// StartCoroutine("KnockBack");
+
 		if (health > 0) {
+			animator.SetTrigger("Hit");
 		} else {
-			Dead();
+			isLive = false;
+			collider2D.enabled = false;
+			rigidbody2D.simulated = false;
+			spriteRenderer.sortingOrder = 1;
+			animator.SetBool("Dead", true);
+
+			gameManager.Kill++;
+			gameManager.GetExp();
 		}
+	}
+
+	IEnumerator KnockBack() {
+		// yield return null; // 1프레임 쉬기
+
+		// yield return new WaitForSeconds(2f); // 2초 쉬기
+
+		yield return waitForFixedUpdate; // 다음 하나의 무리 프레임 딜레이
+
+		Vector3 playerPosition = player.transform.position;
+		Vector3 directionVector3 = transform.position - playerPosition;
+
+		rigidbody2D.AddForce(directionVector3.normalized * 3, ForceMode2D.Impulse);
 	}
 
 	private void Dead() {
