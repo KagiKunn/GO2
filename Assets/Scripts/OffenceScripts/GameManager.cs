@@ -95,6 +95,8 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void GetExp() {
+		if (level == nextExp.Length) return;
+
 		exp++;
 
 		if (exp == nextExp[level]) {
