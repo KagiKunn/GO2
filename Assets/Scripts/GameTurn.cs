@@ -18,7 +18,7 @@ public class GameTurn : MonoBehaviour
     {
         if (gameTurn == maxTurn)
         {
-            
+            CustomLogger.Log("GameOver","green");
         }
         gameTurn++;
     }
