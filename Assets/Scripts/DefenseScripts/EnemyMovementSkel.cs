@@ -24,12 +24,12 @@ public class EnemyMovementSkel : MonoBehaviour
         // pos.position = new Vector2(0, 0);
         _rigid2d = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
-        movementdirection = Vector3.down;
+        movementdirection = Vector3.left;
     }
 
     private void Update()
     {
-        Vector2 boxCenter = (Vector2)transform.position + new Vector2(0, -boxSize.y / 2);
+        Vector2 boxCenter = (Vector2)transform.position + new Vector2(-boxSize.x/2, 0);
         Collider2D hit = Physics2D.OverlapBox(boxCenter, boxSize, 0,detectionLayerMask);
         if (hit != null && hit.name == "CastleWall")
         {
@@ -49,7 +49,7 @@ public class EnemyMovementSkel : MonoBehaviour
         else
         {
             _animator.Play(RunAnimationHash);
-            movementdirection = Vector3.down;
+            movementdirection = Vector3.left;
             isAttacking = false;
         }
         _rigid2d.velocity = movementdirection * (speed * Time.timeScale);
@@ -63,7 +63,7 @@ public class EnemyMovementSkel : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Vector2 boxCenter = (Vector2)transform.position + new Vector2(0, -boxSize.y / 2);
+        Vector2 boxCenter = (Vector2)transform.position + new Vector2(-boxSize.x/2, 0);
         Gizmos.color = Color.red;
         Gizmos.DrawWireCube(boxCenter, boxSize);
     }
