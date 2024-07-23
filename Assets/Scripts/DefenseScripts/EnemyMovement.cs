@@ -6,7 +6,7 @@ public class EnemyMovement : MonoBehaviour
     private float speed = 1.0f;
     [SerializeField]
     private LayerMask detectionLayerMask;
-    
+
     [SerializeField]
     private Vector2 boxSize = new Vector2(2, 0.1f);
     private Rigidbody2D _rigid2d;
@@ -27,15 +27,15 @@ public class EnemyMovement : MonoBehaviour
         Vector2 boxCenter = (Vector2)transform.position + new Vector2(-boxSize.x/2, 0);
         Collider2D hit = Physics2D.OverlapBox(boxCenter, boxSize, 0,detectionLayerMask);
         if (hit != null && hit.name == "CastleWall")
-            {
-                _animator.Play(AttackAnimationHash);
-                movementdirection = Vector3.zero;
-            }
+        {
+            _animator.Play(AttackAnimationHash);
+            movementdirection = Vector3.zero;
+        }
         else
         {
             _animator.Play(RunAnimationHash);
         }
-            _rigid2d.velocity = movementdirection * (speed * Time.timeScale);
+        _rigid2d.velocity = movementdirection * (speed * Time.timeScale);
     }
     private void OnDrawGizmos()
     {
