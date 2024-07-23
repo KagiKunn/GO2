@@ -7,12 +7,22 @@ public class GameManager : MonoBehaviour {
 	#pragma warning disable CS0618
 	private static GameManager instance;
 
+	[Header("# Game Control")]
+	[SerializeField] private float gameTime;
+
+	[SerializeField] private float maxGameTime = 2 * 10f;
+
+	[Header("# Player Info")]
+	[SerializeField] private int level;
+
+	[SerializeField] private int kill;
+	[SerializeField] private int exp;
+	[SerializeField] private int[] nextExp = { 3, 5, 10, 100, 150, 210, 280, 360, 450, 600 };
+
+	[Header("# Game Object")]
 	[SerializeField] private Player player;
 
 	[SerializeField] private PoolManager poolManager;
-
-	[SerializeField] private float gameTime;
-	[SerializeField] private float maxGameTime = 2 * 10f;
 
 	public static GameManager Instance {
 		get {
@@ -32,7 +42,20 @@ public class GameManager : MonoBehaviour {
 
 	public Player Player => player;
 	public PoolManager PoolManager => poolManager;
+
 	public float GameTime => gameTime;
+
+	public int Kill {
+		get => kill;
+
+		set => kill = value;
+	}
+
+	public int Exp {
+		get => exp;
+
+		set => exp = value;
+	}
 
 	private void Awake() {
 		if (instance == null) instance = this;
@@ -68,6 +91,15 @@ public class GameManager : MonoBehaviour {
 			} else {
 				CustomLogger.Log("PoolManager instance found and assigned");
 			}
+		}
+	}
+
+	public void GetExp() {
+		exp++;
+
+		if (exp == nextExp[level]) {
+			level++;
+			exp = 0;
 		}
 	}
 }
