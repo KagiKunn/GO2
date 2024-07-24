@@ -34,14 +34,14 @@ public static class CustomLogger {
 	}
 
 	public static void Log(object message, object color = null, [CallerFilePath] string filePath = "", [CallerMemberName] string memberName = "") {
-		Debug.Log($"<i><b><color={ColorToHex(color != null ? color : "green")}>[{GetFileName(filePath)}::{memberName}] {message}</color></b></i>");
+		Debug.Log($"<i><b><color={ColorToHex(color != null ? color : "green")}>[{GetFileName(filePath)}::{memberName}()] {message}</color></b></i>");
 	}
 
 	public static void LogWarning(object message, object color = null, [CallerFilePath] string filePath = "", [CallerMemberName] string memberName = "") {
-		Debug.LogWarning($"<i><b><color={ColorToHex(color != null ? color : "yellow")}>[{GetFileName(filePath)}::{memberName}] {message}</color></b></i>");
+		Debug.LogWarning($"<i><b><color={ColorToHex(color != null ? color : "yellow")}>[{GetFileName(filePath)}::{memberName}()] {message}</color></b></i>");
 	}
 
 	public static void LogError(object message, object color = null, [CallerFilePath] string filePath = "", [CallerMemberName] string memberName = "") {
-		Debug.LogError($"<i><b><color={ColorToHex(color != null ? color : "red")}>[{GetFileName(filePath)}::{memberName}] {message}</color></b></i>");
+		Debug.LogError($"<i><b><color={ColorToHex(color != null ? color : "red")}>[{GetFileName(filePath)}::{memberName}()] {message}</color></b></i>");
 	}
 }

@@ -3,6 +3,8 @@ using System;
 using UnityEngine;
 using UnityEngine.Animations;
 
+#pragma warning disable CS0414 // 필드가 대입되었으나 값이 사용되지 않습니다
+
 public class GameManager : MonoBehaviour {
 	#pragma warning disable CS0618
 	private static GameManager instance;
@@ -13,8 +15,10 @@ public class GameManager : MonoBehaviour {
 	[SerializeField] private float maxGameTime = 2 * 10f;
 
 	[Header("# Player Info")]
-	[SerializeField] private int level;
+	[SerializeField] private int health;
 
+	[SerializeField] private int maxHealth = 100;
+	[SerializeField] private int level;
 	[SerializeField] private int kill;
 	[SerializeField] private int exp;
 	[SerializeField] private int[] nextExp = { 3, 5, 10, 100, 150, 210, 280, 360, 450, 600 };
@@ -24,44 +28,15 @@ public class GameManager : MonoBehaviour {
 
 	[SerializeField] private PoolManager poolManager;
 
-	public static GameManager Instance {
-		get {
-			if (instance == null) {
-				instance = FindObjectOfType<GameManager>();
-
-				if (instance == null) {
-					CustomLogger.LogError("No Singleton Object");
-				} else {
-					instance.Initialize();
-				}
-			}
-
-			return instance;
-		}
-	}
-
-	public Player Player => player;
-	public PoolManager PoolManager => poolManager;
-
-	public float GameTime => gameTime;
-
-	public int Kill {
-		get => kill;
-
-		set => kill = value;
-	}
-
-	public int Exp {
-		get => exp;
-
-		set => exp = value;
-	}
-
 	private void Awake() {
 		if (instance == null) instance = this;
 		else if (instance != this) Destroy(gameObject);
 
 		DontDestroyOnLoad(gameObject);
+	}
+
+	private void Start() {
+		health = maxHealth;
 	}
 
 	private void Update() {
@@ -103,5 +78,57 @@ public class GameManager : MonoBehaviour {
 			level++;
 			exp = 0;
 		}
+	}
+
+	public static GameManager Instance {
+		get {
+			if (instance == null) {
+				instance = FindObjectOfType<GameManager>();
+
+				if (instance == null) {
+					CustomLogger.LogError("No Singleton Object");
+				} else {
+					instance.Initialize();
+				}
+			}
+
+			return instance;
+		}
+	}
+
+	public Player Player => player;
+	public PoolManager PoolManager => poolManager;
+
+	public float GameTime => gameTime;
+	public float MaxGameTime => maxGameTime;
+
+	public int Health {
+		get => health;
+
+		set => health = value;
+	}
+
+	public int MaxHealth {
+		get => maxHealth;
+
+		set => maxHealth = value;
+	}
+
+	public int Level => level;
+
+	public int Kill {
+		get => kill;
+
+		set => kill = value;
+	}
+
+	public int Exp {
+		get => exp;
+
+		set => exp = value;
+	}
+
+	public int[] NextExp {
+		get => nextExp;
 	}
 }
