@@ -37,8 +37,6 @@ public class CameraControl : MonoBehaviour
         // 타일맵의 경계를 가져옴
         Transform gridTransform = tilemap.layoutGrid.transform;
         Bounds tilemapBounds = tilemap.localBounds;
-        Debug.LogWarning(_camera.name + ":minBounds:" + minBounds);
-        Debug.LogWarning(_camera.name + ":maxBounds:" + maxBounds);
 
         minBounds = gridTransform.TransformPoint(tilemapBounds.min);
         maxBounds = gridTransform.TransformPoint(tilemapBounds.max);
@@ -158,5 +156,16 @@ public class CameraControl : MonoBehaviour
 
         halfHeight = _camera.orthographicSize;
         halfWidth = halfHeight * _camera.aspect;
+
+        // 카메라의 위치를 경계 내로 조정
+        var currentPosition = transform.position;
+        float clampedX = Mathf.Clamp(currentPosition.x, minBounds.x + halfWidth, maxBounds.x - halfWidth);
+        if (minBounds.x > maxBounds.x)
+        {
+            clampedX = Mathf.Clamp(currentPosition.x, maxBounds.x + halfWidth, minBounds.x - halfWidth);
+        }
+        float clampedY = Mathf.Clamp(currentPosition.y, minBounds.y + halfHeight, maxBounds.y - halfHeight);
+        transform.position = new Vector3(clampedX, clampedY, currentPosition.z);
     }
+
 }
