@@ -1,6 +1,4 @@
-using System;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 public class EnemyMovementSkel : MonoBehaviour
 {
@@ -9,10 +7,13 @@ public class EnemyMovementSkel : MonoBehaviour
     [SerializeField]
     private LayerMask detectionLayerMask;
 
+    [SerializeField] private int attackDamage = 1;
+    [SerializeField] private float attackSpeed = 1f;
+    
     [SerializeField]
-    private Vector2 boxSize = new Vector2(1, 2);
-    private Rigidbody2D _rigid2d;
-    private Animator _animator;
+    private Vector2 boxSize = new Vector2(2, 0.1f);
+    private Rigidbody2D rigid2d;
+    private Animator animator;
     private static readonly int RunAnimationHash = Animator.StringToHash("1_Run");
     private static readonly int AttackAnimationHash = Animator.StringToHash("2_Attack_Normal");
     private Vector3 movementdirection;
@@ -22,8 +23,8 @@ public class EnemyMovementSkel : MonoBehaviour
     private void Awake()
     {
         // pos.position = new Vector2(0, 0);
-        _rigid2d = GetComponent<Rigidbody2D>();
-        _animator = GetComponent<Animator>();
+        rigid2d = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
         movementdirection = Vector3.left;
     }
 
@@ -36,11 +37,11 @@ public class EnemyMovementSkel : MonoBehaviour
             if (!isAttacking)
             {
                 isAttacking = true;
-                _animator.Play(AttackAnimationHash);
+                animator.Play(AttackAnimationHash);
                 castleWall = hit.GetComponent<CastleWall>();
                 if (castleWall != null)
                 {
-                    castleWall.TakeDamage(1);
+                    castleWall.TakeDamage(attackDamage);
                 }
                 Invoke("ResetAttack", 1.0f);
             }
@@ -48,18 +49,17 @@ public class EnemyMovementSkel : MonoBehaviour
         }
         else
         {
-            _animator.Play(RunAnimationHash);
+            animator.Play(RunAnimationHash);
             movementdirection = Vector3.left;
             isAttacking = false;
         }
-        _rigid2d.velocity = movementdirection * (speed * Time.timeScale);
+        rigid2d.velocity = movementdirection * (speed * Time.timeScale);
     }
 
     private void ResetAttack()
     {
         isAttacking = false;
     }
-    
 
     private void OnDrawGizmos()
     {
