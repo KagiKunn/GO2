@@ -8,12 +8,18 @@ public class AllyScan : MonoBehaviour {
     [SerializeField] private float scanRange; // 반지름
     [SerializeField] private LayerMask targetLayer;
 
+    private Animator animator;
     private Transform nearestTarget;
     private RaycastHit2D[] targets;
+    private static readonly int AttackAnimationHash = Animator.StringToHash("2_Attack_Bow");
+    private void Awake()
+    {
+        animator = GetComponent<Animator>();
+    }
 
     private void FixedUpdate() {
         targets = Physics2D.CircleCastAll(transform.position, scanRange, Vector2.zero, 0, targetLayer);
-
+        
         nearestTarget = GetNearest();
     }
 
@@ -24,6 +30,7 @@ public class AllyScan : MonoBehaviour {
 
         foreach (RaycastHit2D target in targets) {
             CustomLogger.Log("Detected");
+            animator.Play(AttackAnimationHash);
             Vector3 myPosition = transform.position;
             Vector3 targetPosition = target.transform.position;
 
