@@ -2906,9 +2906,9 @@ GameObject:
   - component: {fileID: 2062433686723056253}
   - component: {fileID: 381436236269200417}
   - component: {fileID: 204913122375773179}
-  - component: {fileID: 3111155003497958046}
   - component: {fileID: 2496212685620526786}
   - component: {fileID: 8550477096472532520}
+  - component: {fileID: 2937377346813310335}
   m_Layer: 0
   m_Name: UnitRoot
   m_TagString: Untagged
@@ -2967,23 +2967,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &3111155003497958046
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5517365784781944402}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 54d0a0b7d166adc4bb9a66b9da0efe97, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 1
-  detectionLayerMask:
-    serializedVersion: 2
-    m_Bits: 64
-  boxSize: {x: 1, y: 2}
 --- !u!50 &2496212685620526786
 Rigidbody2D:
   serializedVersion: 4
@@ -3048,6 +3031,29 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0.36}
   m_Size: {x: 0.5, y: 0.8}
   m_Direction: 0
+--- !u!114 &2937377346813310335
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5517365784781944402}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f417b36df4681e48a4521d737d5c364, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 1
+  detectionLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
+  attackDamage: 1
+  attackSpeed: 0.5
+  runState: 1
+  attackState: 1
+  normalState: 0
+  skillState: 0
+  boxSize: {x: 2, y: 0.1}
 --- !u!1 &5686199508719357711
 GameObject:
   m_ObjectHideFlags: 0
