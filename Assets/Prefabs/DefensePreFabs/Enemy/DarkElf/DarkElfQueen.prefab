@@ -2048,7 +2048,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -2072,17 +2072,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f417b36df4681e48a4521d737d5c364, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 1.5
+  moveSpeed: 1.5
   detectionLayerMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   attackDamage: 2
   attackSpeed: 1
   runState: 1
   attackState: 1
   normalState: 0.5
   skillState: 0
-  boxSize: {x: 5, y: 0.1}
+  boxSize: {x: 7, y: 0.1}
 --- !u!58 &1633647741894230480
 CircleCollider2D:
   m_ObjectHideFlags: 0
