@@ -29,7 +29,7 @@ public class AllyScan : MonoBehaviour {
         float diff = 100;
 
         foreach (RaycastHit2D target in targets) {
-            CustomLogger.Log("Detected");
+            //CustomLogger.Log("Detected");
             animator.Play(AttackAnimationHash);
             Vector3 myPosition = transform.position;
             Vector3 targetPosition = target.transform.position;
