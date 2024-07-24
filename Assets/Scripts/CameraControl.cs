@@ -37,8 +37,6 @@ public class CameraControl : MonoBehaviour
         // 타일맵의 경계를 가져옴
         Transform gridTransform = tilemap.layoutGrid.transform;
         Bounds tilemapBounds = tilemap.localBounds;
-        Debug.LogWarning(_camera.name + ":minBounds:" + minBounds);
-        Debug.LogWarning(_camera.name + ":maxBounds:" + maxBounds);
 
         minBounds = gridTransform.TransformPoint(tilemapBounds.min);
         maxBounds = gridTransform.TransformPoint(tilemapBounds.max);
