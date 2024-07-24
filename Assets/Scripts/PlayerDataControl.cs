@@ -70,7 +70,7 @@ public class PlayerDataControl : MonoBehaviour
         GameStart();
     }
 
-    public void GameStart()
+    public async void GameStart()
     {
         if (string.IsNullOrEmpty(UUID))
         {
@@ -78,9 +78,8 @@ public class PlayerDataControl : MonoBehaviour
         }
         else
         {
-            Login();
+            await SyncWithServer();
         }
-
     }
 
     private async Task LoadPlayerAsync()
@@ -123,7 +122,7 @@ public class PlayerDataControl : MonoBehaviour
         DBControl.OnCUD($"Insert into account values (null, '{UUID}', {playerData.lv}, {playerData.repeat})");
     }
 
-    private void Login()
+    private async Task SyncWithServer()
     {
         DataSet ds = DBControl.OnRead($"Select * from account where uuid = '{UUID}'", "account");
 
@@ -132,16 +131,36 @@ public class PlayerDataControl : MonoBehaviour
             DataTable dt = ds.Tables["account"];
             DataRow row = dt.Rows[0];
 
-            UUID = row["uuid"].ToString();
-            Level = Convert.ToInt32(row["lv"]);
-            Repeat = Convert.ToInt32(row["repeat"]);
-            Username = row["username"].ToString();
+            string serverUUID = row["uuid"].ToString();
+            int serverLevel = Convert.ToInt32(row["lv"]);
+            int serverRepeat = Convert.ToInt32(row["repeat"]);
+            string serverUsername = row["username"].ToString();
+
+            if (UUID != serverUUID || Level != serverLevel || Repeat != serverRepeat || Username != serverUsername)
+            {
+                UUID = serverUUID;
+                Level = serverLevel;
+                Repeat = serverRepeat;
+                Username = serverUsername;
+
+                SaveLocalData(new PlayerLocalData
+                {
+                    uuid = UUID,
+                    lv = Level,
+                    repeat = Repeat,
+                    username = Username
+                });
+            }
         }
-        Debug.LogWarning("Logged In");
-        Save();
+        else
+        {
+            Debug.LogWarning("No matching server data found.");
+        }
+
+        await Task.CompletedTask;
     }
 
-    private void Save()
+    public void Save()
     {
         PlayerLocalData playerData = new PlayerLocalData
         {

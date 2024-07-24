@@ -40,6 +40,7 @@ public class CameraControl : MonoBehaviour
 
         minBounds = gridTransform.TransformPoint(tilemapBounds.min);
         maxBounds = gridTransform.TransformPoint(tilemapBounds.max);
+        
     }
 
     private void Update()
@@ -119,8 +120,11 @@ public class CameraControl : MonoBehaviour
 
         var currentPosition = transform.position;
         var targetPosition = currentPosition + _directionForce;
-
         float clampedX = Mathf.Clamp(targetPosition.x, minBounds.x + halfWidth, maxBounds.x - halfWidth);
+        if (minBounds.x > maxBounds.x)
+        {
+            clampedX = Mathf.Clamp(targetPosition.x, maxBounds.x + halfWidth, minBounds.x - halfWidth);
+        }
         float clampedY = Mathf.Clamp(targetPosition.y, minBounds.y + halfHeight, maxBounds.y - halfHeight);
 
         if (!allway)
@@ -152,5 +156,16 @@ public class CameraControl : MonoBehaviour
 
         halfHeight = _camera.orthographicSize;
         halfWidth = halfHeight * _camera.aspect;
+
+        // 카메라의 위치를 경계 내로 조정
+        var currentPosition = transform.position;
+        float clampedX = Mathf.Clamp(currentPosition.x, minBounds.x + halfWidth, maxBounds.x - halfWidth);
+        if (minBounds.x > maxBounds.x)
+        {
+            clampedX = Mathf.Clamp(currentPosition.x, maxBounds.x + halfWidth, minBounds.x - halfWidth);
+        }
+        float clampedY = Mathf.Clamp(currentPosition.y, minBounds.y + halfHeight, maxBounds.y - halfHeight);
+        transform.position = new Vector3(clampedX, clampedY, currentPosition.z);
     }
+
 }

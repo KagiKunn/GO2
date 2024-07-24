@@ -125,7 +125,7 @@ namespace GooglePlayGames.Editor {
 		}
 
 		/// <summary>
-		/// Provide static access to setup for facilitating automated builds.
+		/// Provide static access to set up for facilitating automated builds.
 		/// </summary>
 		/// <param name="webClientId">The oauth2 client id for the game.  This is only
 		/// needed if the ID Token or access token are needed.</param>
