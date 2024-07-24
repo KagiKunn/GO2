@@ -9,7 +9,7 @@ public class EnemyMovementSkel : MonoBehaviour
 
     [SerializeField] private int attackDamage = 1;
     [SerializeField] private float attackSpeed = 1f;
-    
+
     [SerializeField]
     private Vector2 boxSize = new Vector2(2, 0.1f);
     private Rigidbody2D rigid2d;
@@ -49,6 +49,7 @@ public class EnemyMovementSkel : MonoBehaviour
         }
         else
         {
+            
             animator.Play(RunAnimationHash);
             movementdirection = Vector3.left;
             isAttacking = false;

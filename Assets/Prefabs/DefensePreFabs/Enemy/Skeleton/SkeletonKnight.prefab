@@ -1564,7 +1564,7 @@ GameObject:
   - component: {fileID: 900195793151100152}
   - component: {fileID: 3745978659109239786}
   - component: {fileID: 182812178885286203}
-  - component: {fileID: 5660839241950881796}
+  - component: {fileID: 730446133670312697}
   m_Layer: 7
   m_Name: HorseRoot
   m_TagString: Untagged
@@ -1582,7 +1582,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.0000012172386, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0.000016897413}
-  m_LocalScale: {x: 2, y: 2, z: 1}
+  m_LocalScale: {x: 1.2, y: 1.2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3560764293217785811}
@@ -1638,7 +1638,7 @@ Animator:
   m_GameObject: {fileID: 2160878103218979641}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 6afdac86022b42e44b0cca967407cd11, type: 2}
+  m_Controller: {fileID: 9100000, guid: 1d582fc429fc13a4cbaad817432708c7, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -1662,10 +1662,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f417b36df4681e48a4521d737d5c364, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 1
+  moveSpeed: 1.2
   detectionLayerMask:
     serializedVersion: 2
     m_Bits: 64
+  attackDamage: 2
+  attackSpeed: 1
+  runState: 1
+  attackState: 0
+  normalState: 0
+  skillState: 0
   boxSize: {x: 3, y: 0.1}
 --- !u!50 &182812178885286203
 Rigidbody2D:
@@ -1694,8 +1700,8 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!61 &5660839241950881796
-BoxCollider2D:
+--- !u!58 &730446133670312697
+CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1728,18 +1734,8 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.04, y: 0.5}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 1.25, y: 1}
-  m_EdgeRadius: 0
+  m_Offset: {x: 0, y: 0.35}
+  m_Radius: 0.4
 --- !u!1 &2245934811763394067
 GameObject:
   m_ObjectHideFlags: 0
