@@ -3371,7 +3371,7 @@ GameObject:
   - component: {fileID: 2219955711617258321}
   - component: {fileID: 4930032827558777601}
   - component: {fileID: 5933452589616873904}
-  - component: {fileID: 7518302125255457394}
+  - component: {fileID: 3417030226561502979}
   m_Layer: 0
   m_Name: UnitRoot
   m_TagString: Untagged
@@ -3418,7 +3418,7 @@ Animator:
   m_GameObject: {fileID: 7876398243370056514}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: ab937231d0600440fb0d8757568d78d7, type: 2}
+  m_Controller: {fileID: 9100000, guid: c2fc0aafc4ba14749a6cc196ffeb52b8, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -3442,17 +3442,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f417b36df4681e48a4521d737d5c364, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 1
+  moveSpeed: 1
   detectionLayerMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   attackDamage: 1
   attackSpeed: 1
   runState: 1
   attackState: 1
   normalState: 0.25
   skillState: 0
-  boxSize: {x: 4, y: 0.1}
+  boxSize: {x: 5, y: 0.1}
 --- !u!50 &5933452589616873904
 Rigidbody2D:
   serializedVersion: 4
@@ -3480,8 +3480,8 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!70 &7518302125255457394
-CapsuleCollider2D:
+--- !u!58 &3417030226561502979
+CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -3514,9 +3514,8 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0.36}
-  m_Size: {x: 0.5, y: 0.9}
-  m_Direction: 0
+  m_Offset: {x: 0, y: 0.2}
+  m_Radius: 0.2
 --- !u!1 &7905788050517805099
 GameObject:
   m_ObjectHideFlags: 0

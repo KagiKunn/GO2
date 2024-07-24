@@ -727,7 +727,7 @@ Animator:
   m_GameObject: {fileID: 1431050427258077071}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: ab937231d0600440fb0d8757568d78d7, type: 2}
+  m_Controller: {fileID: 9100000, guid: c2fc0aafc4ba14749a6cc196ffeb52b8, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -754,7 +754,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -814,17 +814,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f417b36df4681e48a4521d737d5c364, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 1
+  moveSpeed: 1
   detectionLayerMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   attackDamage: 1
   attackSpeed: 0.5
   runState: 1
   attackState: 1
   normalState: 0.25
   skillState: 0
-  boxSize: {x: 4, y: 0.1}
+  boxSize: {x: 5, y: 0.1}
 --- !u!1 &1491858262209264445
 GameObject:
   m_ObjectHideFlags: 0

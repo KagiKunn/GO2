@@ -3,15 +3,18 @@ using UnityEngine.UIElements;
 
 public class Menu : MonoBehaviour
 {
-    private Button _menuButton;
     [SerializeField]
     private UIDocument uiDocument;
+    private Button menuButton;
+    private Button speedButton;
     private void Awake()
     {
-        _menuButton = uiDocument.rootVisualElement.Q<Button>("MenuButton");
-        if (_menuButton != null)
+        menuButton = uiDocument.rootVisualElement.Q<Button>("MenuButton");
+        speedButton = uiDocument.rootVisualElement.Q<Button>("SpeedButton");
+        if (menuButton != null && speedButton != null)
         {
-            _menuButton.clicked += OnMenuButtonClicked;
+            menuButton.clicked += OnMenuButtonClicked;
+            speedButton.clicked += OnSpeedButtonClicked;
         }
     }
     private void OnMenuButtonClicked()
@@ -25,6 +28,19 @@ public class Menu : MonoBehaviour
         else
         {
             Time.timeScale = 0;
+        }
+    }
+
+    private void OnSpeedButtonClicked()
+    {
+        CustomLogger.Log("SpeedButton clicked!","yellow");
+        if (Time.timeScale < 2)
+        {
+            Time.timeScale = 2;
+        }
+        else
+        {
+            Time.timeScale = 1;
         }
     }
 }
