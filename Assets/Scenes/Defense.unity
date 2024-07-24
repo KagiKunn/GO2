@@ -7182,13 +7182,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 432860099}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1222656459655a1479c2ccb099f713fd, type: 3}
+  m_Script: {fileID: 11500000, guid: bb0ff1a607b6b464dbf533d521336d19, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   detectionLayerMask:
     serializedVersion: 2
     m_Bits: 0
   boxSize: {x: 0, y: 12}
+  health: 100
+  gameOverImage: {fileID: 491734050}
 --- !u!1 &491734048
 GameObject:
   m_ObjectHideFlags: 0
@@ -31272,7 +31274,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2043143692}
   - component: {fileID: 2043143691}
-  - component: {fileID: 2043143690}
+  - component: {fileID: 2043143693}
   m_Layer: 0
   m_Name: Spawner
   m_TagString: Untagged
@@ -31280,28 +31282,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &2043143690
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2043143689}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d51fa1767398a7e47b8352f46a57d499, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  objectPrefabs:
-  - {fileID: 8765090358203190414, guid: f2fe3c1332333c048b6eb78b67c943c6, type: 3}
-  - {fileID: 1822805178930394091, guid: 4eb489848a1668442bfb722a7e14522a, type: 3}
-  - {fileID: 1822805178930394091, guid: 4eb489848a1668442bfb722a7e14522a, type: 3}
-  - {fileID: 1822805178930394091, guid: 4eb489848a1668442bfb722a7e14522a, type: 3}
-  - {fileID: 1822805178930394091, guid: 4eb489848a1668442bfb722a7e14522a, type: 3}
-  minY: -1
-  maxY: 10
-  numberOfObjects: 100
-  maxSpawnInterval: 2
 --- !u!212 &2043143691
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -31373,6 +31353,28 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2043143693
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2043143689}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4a3ee66271ed974ba41ede6014c5fa6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objectPrefabs:
+  - {fileID: 7056000162727164853, guid: 78fc94d50a126914cbf73c6833f89d40, type: 3}
+  - {fileID: 4671762458729282005, guid: 71c87d8203d14ba47a4d4e396a8363c8, type: 3}
+  - {fileID: 257554848983660160, guid: 67babb23f73659c4b8e1aff693bb85a1, type: 3}
+  - {fileID: 7798541044053392926, guid: e9a89a42116beae408d144f0408039af, type: 3}
+  - {fileID: 1839222284020890419, guid: ecbf48371fd6b7a43a609b4f84b7f769, type: 3}
+  minY: -0
+  maxY: 10
+  numberOfObjects: 10
+  maxSpawnInterval: 2
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
