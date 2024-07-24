@@ -1945,9 +1945,9 @@ GameObject:
   - component: {fileID: 2325141432993647926}
   - component: {fileID: 1384872417708493086}
   - component: {fileID: 6989147199394318797}
-  - component: {fileID: 7982464054999654907}
   - component: {fileID: 5671123332169692181}
-  - component: {fileID: 454194783352111475}
+  - component: {fileID: 8801076648507892207}
+  - component: {fileID: 1633647741894230480}
   m_Layer: 0
   m_Name: HorseRoot
   m_TagString: Untagged
@@ -2021,7 +2021,7 @@ Animator:
   m_GameObject: {fileID: 2559675139453203779}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 6afdac86022b42e44b0cca967407cd11, type: 2}
+  m_Controller: {fileID: 9100000, guid: 7d202f578bec24e928d3baa75058aae5, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -2033,23 +2033,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &7982464054999654907
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2559675139453203779}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 54d0a0b7d166adc4bb9a66b9da0efe97, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 1
-  detectionLayerMask:
-    serializedVersion: 2
-    m_Bits: 64
-  boxSize: {x: 3, y: 0.1}
 --- !u!50 &5671123332169692181
 Rigidbody2D:
   serializedVersion: 4
@@ -2065,7 +2048,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -2077,8 +2060,31 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!61 &454194783352111475
-BoxCollider2D:
+--- !u!114 &8801076648507892207
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2559675139453203779}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f417b36df4681e48a4521d737d5c364, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 1.5
+  detectionLayerMask:
+    serializedVersion: 2
+    m_Bits: 64
+  attackDamage: 2
+  attackSpeed: 1
+  runState: 1
+  attackState: 1
+  normalState: 0.5
+  skillState: 0
+  boxSize: {x: 7, y: 0.1}
+--- !u!58 &1633647741894230480
+CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -2111,18 +2117,8 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.1, y: 0.55}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 1.4, y: 1.2}
-  m_EdgeRadius: 0
+  m_Offset: {x: 0, y: 0.35}
+  m_Radius: 0.4
 --- !u!1 &2749697002802305104
 GameObject:
   m_ObjectHideFlags: 0
