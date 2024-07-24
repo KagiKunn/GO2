@@ -23,7 +23,7 @@ public class CastleWall : MonoBehaviour
    public void TakeDamage(int damage)
    {
       health -= damage;
-      Debug.Log("성벽의 체력: " + health);
+      // Debug.Log("성벽의 체력: " + health);
       if (health <= 0)
       {
          Destroy(gameObject);
