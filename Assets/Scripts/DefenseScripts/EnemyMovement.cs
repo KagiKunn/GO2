@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class EnemyMovement : MonoBehaviour
 {
+
+    [SerializeField] private int HP = 10;
     [SerializeField]
     private float moveSpeed = 1.0f;
     [SerializeField]
@@ -22,8 +24,6 @@ public class EnemyMovement : MonoBehaviour
     private Vector2 boxSize = new Vector2(2, 0.1f);
     private Rigidbody2D rigid2d;
     private Animator animator;
-    private static readonly int RunAnimationHash = Animator.StringToHash("1_Run");
-    private static readonly int AttackAnimationHash = Animator.StringToHash("2_Attack_Normal");
     private Vector3 movementdirection;
     private CastleWall castleWall;
     private Collider2D hit;
