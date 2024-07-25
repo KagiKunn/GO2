@@ -3853,7 +3853,8 @@ GameObject:
   - component: {fileID: 5198239624377129251}
   - component: {fileID: 8582452153963524488}
   - component: {fileID: 8712745788350586769}
-  - component: {fileID: 4141886908947842134}
+  - component: {fileID: 1636245028345566169}
+  - component: {fileID: 2115664772749803828}
   m_Layer: 7
   m_Name: UnitRoot
   m_TagString: Untagged
@@ -3924,10 +3925,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f417b36df4681e48a4521d737d5c364, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 1
+  health: 10
+  moveSpeed: 1
   detectionLayerMask:
     serializedVersion: 2
     m_Bits: 64
+  attackDamage: 1
+  attackSpeed: 1
+  runState: 1
+  attackState: 1
+  normalState: 0
+  skillState: 0
   boxSize: {x: 1, y: 0.1}
 --- !u!50 &8712745788350586769
 Rigidbody2D:
@@ -3956,8 +3964,20 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!70 &4141886908947842134
-CapsuleCollider2D:
+--- !u!114 &1636245028345566169
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8641698667335076956}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76c7a70ed6791a04797d89bb0504bacb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!58 &2115664772749803828
+CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -3990,9 +4010,8 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0.35}
-  m_Size: {x: 0.5, y: 0.9}
-  m_Direction: 0
+  m_Offset: {x: 0, y: 0.2}
+  m_Radius: 0.2
 --- !u!1 &8879148401483439288
 GameObject:
   m_ObjectHideFlags: 0

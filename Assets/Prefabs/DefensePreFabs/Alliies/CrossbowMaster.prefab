@@ -611,7 +611,7 @@ GameObject:
   - component: {fileID: 7085753901918377942}
   - component: {fileID: 5508744230828847624}
   - component: {fileID: 3575845549369424435}
-  - component: {fileID: 8647136183165818620}
+  - component: {fileID: 3783509261800389141}
   m_Layer: 8
   m_Name: UnitRoot
   m_TagString: Untagged
@@ -682,7 +682,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22d2f6f63e7a499eb8f868c773c2ff64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scanRange: 10
+  detectionRadius: 10
   enemyLayer:
     serializedVersion: 2
     m_Bits: 128
@@ -690,9 +690,10 @@ MonoBehaviour:
   attackSpeed: 1
   runState: 1
   attackState: 1
-  normalState: 0
-  skillState: 0
-  detectionRadius: 5
+  normalState: 1
+  skillState: 1
+  projectilePrefab: {fileID: 8172912759357463194, guid: 36a426832f5148a4d994235d6893d79c,
+    type: 3}
 --- !u!114 &3575845549369424435
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -705,18 +706,43 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76c7a70ed6791a04797d89bb0504bacb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &8647136183165818620
-MonoBehaviour:
+--- !u!70 &3783509261800389141
+CapsuleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1095612902964379762}
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76c7a70ed6791a04797d89bb0504bacb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0.36}
+  m_Size: {x: 0.5, y: 0.8}
+  m_Direction: 0
 --- !u!1 &1428125916110134240
 GameObject:
   m_ObjectHideFlags: 0

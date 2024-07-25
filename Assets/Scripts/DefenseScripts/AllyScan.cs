@@ -6,7 +6,7 @@ using UnityEngine;
 #pragma warning disable CS0414
 
 public class AllyScan : MonoBehaviour {
-    [SerializeField] private float scanRange = 10f; // 반지름
+    public float detectionRadius = 5.0f;
     [SerializeField] private LayerMask enemyLayer;
     [SerializeField] private int attackDamage = 1;
     [SerializeField] private float attackSpeed = 1f;
@@ -19,7 +19,8 @@ public class AllyScan : MonoBehaviour {
     //normal 0, bow 0.5, magic 1
     [SerializeField] private float skillState = 0f;
     
-    public float detectionRadius = 5.0f;
+    public GameObject projectilePrefab;
+    
     private Animator animator;
     private GameObject closestObject;
     private void Awake()
@@ -64,11 +65,11 @@ public class AllyScan : MonoBehaviour {
         if (closestCollider != null)
         {
             closestObject = closestCollider.gameObject;
-            CustomLogger.Log("Closest object found: " + closestObject.name);
+            // CustomLogger.Log("Closest object found: " + closestObject.name);
         }
         else
         {
-            CustomLogger.Log("No object found in range.","yellow");
+            // CustomLogger.Log("No object found in range.","yellow");
         }
     }
     private void AllyAttack()
@@ -87,18 +88,47 @@ public class AllyScan : MonoBehaviour {
     {
         if (closestObject != null)
         {
-            // 적이 데미지를 입고 죽었는지 확인하는 로직 추가
-            EnemyMovement enemy = closestObject.GetComponent<EnemyMovement>();
-            if (enemy != null)
+            if (normalState == 1f || skillState == 1f || normalState == 0.25f || skillState == 0.25f)
             {
-                enemy.TakeDamage(attackDamage);
-                if (enemy.IsDead())
-                {
-                    CustomLogger.Log("적이 죽었습니다.");
-                    closestObject = null;
-                }
+                CollisionAttack();
+            }
+            else
+            {
+                HitScanAttack();
             }
             AllyIdle();
+        }
+    }
+
+    public void HitScanAttack()
+    {
+        EnemyMovement enemy = closestObject.GetComponent<EnemyMovement>();
+        if (enemy != null)
+        {
+            enemy.TakeDamage(attackDamage);
+            if (enemy.IsDead())
+            {
+                CustomLogger.Log("적이 죽었습니다.");
+                closestObject = null;
+            }
+        }
+    }
+    public void CollisionAttack()
+    {
+        if (closestObject != null)
+        {
+            GameObject projectileInstance = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
+            AllyProjectile projectile = projectileInstance.GetComponent<AllyProjectile>();
+            if (projectile != null)
+            {
+                projectile.Initialize(closestObject.transform, attackDamage);
+            }
+            else
+            {
+                HitScanAttack();
+            }
+
+            closestObject = null;
         }
     }
 
