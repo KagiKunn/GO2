@@ -105,11 +105,16 @@ public class EnemySpawner : MonoBehaviour
             }
         }
 
+        /*確率の区間を０～１までの範囲で分けるイメージ。
+        randomValueが任意の数を,0f～1fまでの間で引く
+        例えばfloat[] { 0.35f, 0.35f, 0.15f, 0.15f };の場合
+        この確率テーブルの配列を巡回しながらその数がどの区間に位置するかを判定する。*/
+        
         GameObject GetRandomPrefab()
         {
             float randomValue = Random.Range(0f, 1f);
             float[] percentages = GetPercentages();
-
+  
             for (int i = 0; i < percentages.Length; i++)
             {
                 if (randomValue < percentages[i])
