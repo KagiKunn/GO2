@@ -30,6 +30,7 @@ public class EnemyMovement : MonoBehaviour {
 	[SerializeField]
 	private Vector2 boxSize = new Vector2(2, 0.1f);
 
+	public GameObject projectilePrefab;
 	private Rigidbody2D rigid2d;
 	private Animator animator;
 	private Vector3 movementdirection;
@@ -83,10 +84,33 @@ public class EnemyMovement : MonoBehaviour {
 
 	public void isAttack() {
 		if (castleWall != null) {
-			castleWall.TakeDamage(attackDamage);
+			if (normalState == 1f || skillState == 1f || normalState == 0.25f || skillState == 0.25f)
+			{
+				CollisionAttack();
+			}
+			else
+			{
+				castleWall.TakeDamage(attackDamage);
+			}
 		}
 	}
 
+	public void CollisionAttack()
+	{
+		if (castleWall != null)
+		{
+			GameObject projectileInstance = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
+			EnemyProjectile projectile = projectileInstance.GetComponent<EnemyProjectile>();
+			if (projectile != null)
+			{
+				projectile.Initialize(castleWall.transform, attackDamage);
+			}
+			else
+			{
+				castleWall.TakeDamage(attackDamage);
+			}
+		}
+	}
 	public void TakeDamage(int damage) {
 		health -= damage;
 		Debug.Log(gameObject + "유닛의 체력: " + health);
