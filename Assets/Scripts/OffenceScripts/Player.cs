@@ -50,4 +50,10 @@ public class Player : MonoBehaviour {
 	public Vector2 InputVector2 => inputVector2;
 
 	public Scanner Scanner => scanner;
+
+	public float Speed {
+		get => speed;
+
+		set => speed = value;
+	}
 }
