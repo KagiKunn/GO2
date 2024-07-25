@@ -45,4 +45,8 @@ public class PoolManager : MonoBehaviour {
 
 		return select;
 	}
+
+	public GameObject[] Prefabs => prefabs;
+
+	public List<GameObject>[] Pools => pools;
 }

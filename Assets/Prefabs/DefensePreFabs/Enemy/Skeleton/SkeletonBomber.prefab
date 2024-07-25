@@ -972,7 +972,8 @@ GameObject:
   - component: {fileID: 8584830291560308018}
   - component: {fileID: 8199395775680507782}
   - component: {fileID: 7608727461238216322}
-  - component: {fileID: 7997012487211442227}
+  - component: {fileID: 7910395572670557456}
+  - component: {fileID: 3384175824230727642}
   m_Layer: 7
   m_Name: UnitRoot
   m_TagString: Untagged
@@ -1019,7 +1020,7 @@ Animator:
   m_GameObject: {fileID: 2592570029827866267}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: ab937231d0600440fb0d8757568d78d7, type: 2}
+  m_Controller: {fileID: 9100000, guid: c2fc0aafc4ba14749a6cc196ffeb52b8, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -1043,11 +1044,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f417b36df4681e48a4521d737d5c364, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 1
+  health: 10
+  moveSpeed: 1
   detectionLayerMask:
     serializedVersion: 2
     m_Bits: 0
-  boxSize: {x: 0.5, y: 0.1}
+  attackDamage: 1
+  attackSpeed: 1
+  runState: 1
+  attackState: 0
+  normalState: 0
+  skillState: 1
+  boxSize: {x: 1, y: 0.1}
 --- !u!50 &7608727461238216322
 Rigidbody2D:
   serializedVersion: 4
@@ -1075,8 +1083,8 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!70 &7997012487211442227
-CapsuleCollider2D:
+--- !u!58 &7910395572670557456
+CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1109,9 +1117,20 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0.34}
-  m_Size: {x: 0.5, y: 0.8}
-  m_Direction: 0
+  m_Offset: {x: 0, y: 0.2}
+  m_Radius: 0.2
+--- !u!114 &3384175824230727642
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2592570029827866267}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76c7a70ed6791a04797d89bb0504bacb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2630955402140288465
 GameObject:
   m_ObjectHideFlags: 0
