@@ -37,6 +37,8 @@ public class Enemy : MonoBehaviour {
 	}
 
 	private void FixedUpdate() {
+		if (!gameManager.IsLive) return;
+
 		if (!isLive || animator.GetCurrentAnimatorStateInfo(0).IsName("Hit")) return;
 
 		Vector2 directionVector2 = target.position - rigidbody2D.position;
@@ -47,6 +49,8 @@ public class Enemy : MonoBehaviour {
 	}
 
 	private void LateUpdate() {
+		if (!gameManager.IsLive) return;
+
 		if (!isLive) return;
 
 		spriteRenderer.flipX = target.position.x < rigidbody2D.position.x;
