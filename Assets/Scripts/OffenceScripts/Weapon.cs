@@ -51,7 +51,7 @@ public class Weapon : MonoBehaviour {
 		if (id == 0) {
 			Batch();
 		}
-		
+
 		player.BroadcastMessage("ApplyGear", SendMessageOptions.DontRequireReceiver);
 	}
 
@@ -88,7 +88,18 @@ public class Weapon : MonoBehaviour {
 
 				break;
 		}
+
+		// Hand Set
+		Hand hand = player.Hands[(int)itemData.ItemType];
 		
+		if (hand.SpriteRenderer == null) {
+			CustomLogger.LogError("SpriteRenderer is not assigned in Hand script!");
+			return;
+		}
+
+		hand.SpriteRenderer.sprite = itemData.Hand;
+		hand.gameObject.SetActive(true);
+
 		player.BroadcastMessage("ApplyGear", SendMessageOptions.DontRequireReceiver);
 	}
 
