@@ -1489,6 +1489,7 @@ GameObject:
   - component: {fileID: 6252990113303190693}
   - component: {fileID: 1307137548483057584}
   - component: {fileID: 2804672603654040769}
+  - component: {fileID: 6393176177648455338}
   m_Layer: 7
   m_Name: UnitRoot
   m_TagString: Untagged
@@ -1559,7 +1560,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f417b36df4681e48a4521d737d5c364, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 1
+  health: 10
+  moveSpeed: 1
   detectionLayerMask:
     serializedVersion: 2
     m_Bits: 64
@@ -1633,6 +1635,18 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0.2}
   m_Radius: 0.2
+--- !u!114 &6393176177648455338
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3331597670410432400}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76c7a70ed6791a04797d89bb0504bacb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3477534327125601685
 GameObject:
   m_ObjectHideFlags: 0
