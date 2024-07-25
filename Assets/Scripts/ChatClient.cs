@@ -1,16 +1,19 @@
 using System;
+using System.Collections;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Button = UnityEngine.UI.Button;
 
 public class ChatClient : MonoBehaviour
 {
     [SerializeField] private TMP_InputField input;
     [SerializeField] private TextMeshProUGUI chatBox;
     [SerializeField] private Button chatButton;
+    [SerializeField] private ScrollRect chatScroll;
     private string username;
     private TcpClient client;
     private NetworkStream stream;
@@ -29,6 +32,7 @@ public class ChatClient : MonoBehaviour
         }
 
         InitializeConnect();
+        input.onSubmit.AddListener(delegate { enterSend();});
     }
 
     void Update()
@@ -37,7 +41,15 @@ public class ChatClient : MonoBehaviour
         {
             chatBox.text += r_message;
             r_message = string.Empty;
+            StartCoroutine(chatMove());
         }
+
+    }
+    
+    IEnumerator chatMove()
+    {
+        yield return new WaitForSeconds(0.01f);
+        chatScroll.verticalNormalizedPosition = 0.0f;
     }
 
     void InitializeConnect()
@@ -55,7 +67,24 @@ public class ChatClient : MonoBehaviour
         }
     }
 
-    public void OnSendButton()
+    void enterSend()
+    {
+        StartCoroutine(coEnter());
+    }
+
+    IEnumerator coEnter()
+    {
+        if (!string.IsNullOrEmpty(Input.compositionString))
+        {
+            input.text += Input.compositionString;
+        }
+        yield return new WaitForEndOfFrame();
+        input.text = input.text.Trim();
+        sendMessage();
+        input.ActivateInputField();
+    }
+    
+    public void sendMessage()
     {
         if (client == null)
         {
@@ -64,18 +93,11 @@ public class ChatClient : MonoBehaviour
 
         if (!string.IsNullOrEmpty(input.text))
         {
-            try
-            {
                 string message = username + ": " + input.text + "\n"; // 개행 문자 추가
                 byte[] data = Encoding.UTF8.GetBytes(message);
                 stream.Write(data, 0, data.Length);
                 stream.Flush(); // 스트림 플러시
                 input.text = string.Empty;
-            }
-            catch (Exception e)
-            {
-                Debug.LogError("Error sending message: " + e.Message);
-            }
         }
     }
 
