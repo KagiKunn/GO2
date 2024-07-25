@@ -6,6 +6,7 @@ using Random = UnityEngine.Random;
 
 public class Gacha : MonoBehaviour
 {
+    public static Gacha Instance { get; private set; }
     public List<ItemSO> items;
     public int normalProbability = 70;
     public int rareProbability = 25;
@@ -17,6 +18,19 @@ public class Gacha : MonoBehaviour
 
     private Dictionary<ItemRarity, int> probabilityMap;
 
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
     private void Start()
     {
         probabilityMap = new Dictionary<ItemRarity, int>
@@ -27,7 +41,17 @@ public class Gacha : MonoBehaviour
         };
 
         ItemSO GachaItem = GachaRandomItem();
-        Debug.Log($"Gacha Item: {GachaItem.itemName}, Rarity: {GachaItem.rarity}");
+        CustomLogger.Log($"Gacha Item: {GachaItem.itemName}, Rarity: {GachaItem.rarity}");
+
+        if (resultImage != null)
+        {
+            resultImage.enabled = false;
+        }
+        if (resultText != null)
+        {
+            resultText.enabled = false;
+        }
+        
         
     }
 
@@ -46,13 +70,16 @@ public class Gacha : MonoBehaviour
             { ItemRarity.Unique, 0 }
         };
 
+        List<ItemSO> gachaItems = new List<ItemSO>();
+
         for (int i = 0; i < GachaCount; i++)
         {
             ItemSO gachaItem = GachaRandomItem();
+            gachaItems.Add(gachaItem);
             gachaResults[gachaItem.rarity]++;
         }
 
-        DisplayMultiGachaResult(gachaResults, GachaCount);
+        DisplayMultiGachaResult(gachaResults, GachaCount, gachaItems);
     }
 
     public ItemSO GachaRandomItem()
@@ -85,15 +112,17 @@ public class Gacha : MonoBehaviour
         if (resultImage != null)
         {
             resultImage.sprite = item.icon;
+            resultImage.enabled = true;
         }
 
         if (resultText != null)
         {
             resultText.text = $"Item: {item.itemName}\nRarity: {item.rarity}";
+            resultText.enabled = true;
         }
     }
 
-    void DisplayMultiGachaResult(Dictionary<ItemRarity, int> gachaResults, int gachaCount)
+    void DisplayMultiGachaResult(Dictionary<ItemRarity, int> gachaResults, int gachaCount, List<ItemSO> gachaItems)
     {
         if (multiGachaResultText != null)
         {
@@ -101,14 +130,32 @@ public class Gacha : MonoBehaviour
             float rarePercent = (float)gachaResults[ItemRarity.Rare] / gachaCount * 100;
             float uniquePercent = (float)gachaResults[ItemRarity.Unique] / gachaCount * 100;
             
-            multiGachaResultText.text = $"Result of {gachaCount} Gachas:\n" +
-                                        $"Normal: {gachaResults[ItemRarity.Normal]} ({normalPercent:F2}%)\n" +
-                                        $"Rare: {gachaResults[ItemRarity.Rare]} ({rarePercent:F2}%)\n" +
-                                        $"Unique: {gachaResults[ItemRarity.Unique]} ({uniquePercent:F2}%)";
-            Debug.Log($"Result of {gachaCount} Gachas:\n" +
-                      $"Normal: {gachaResults[ItemRarity.Normal]} ({normalPercent:F2}%)\n" +
-                      $"Rare: {gachaResults[ItemRarity.Rare]} ({rarePercent:F2}%)\n" +
-                      $"Unique: {gachaResults[ItemRarity.Unique]} ({uniquePercent:F2}%)");
+            String resultText = $"Result of {gachaCount} Gachas:\n" +
+                                $"Normal: {gachaResults[ItemRarity.Normal]} ({normalPercent:F2}%)\n" +
+                                $"Rare: {gachaResults[ItemRarity.Rare]} ({rarePercent:F2}%)\n" +
+                                $"Unique: {gachaResults[ItemRarity.Unique]} ({uniquePercent:F2}%)\n\n" +
+                                "Items:\n";
+
+            foreach (var item in gachaItems)
+            {
+                resultText += $"Item: {item.itemName}, Rarity: {item.rarity}\n";
+            }
+
+            multiGachaResultText.text = resultText;
+            CustomLogger.Log(this.resultText);
+
+
+
+
+
+            // multiGachaResultText.text = $"Result of {gachaCount} Gachas:\n" +
+            //                             $"Normal: {gachaResults[ItemRarity.Normal]} ({normalPercent:F2}%)\n" +
+            //                             $"Rare: {gachaResults[ItemRarity.Rare]} ({rarePercent:F2}%)\n" +
+            //                             $"Unique: {gachaResults[ItemRarity.Unique]} ({uniquePercent:F2}%)";
+            // Debug.Log($"Result of {gachaCount} Gachas:\n" +
+            //           $"Normal: {gachaResults[ItemRarity.Normal]} ({normalPercent:F2}%)\n" +
+            //           $"Rare: {gachaResults[ItemRarity.Rare]} ({rarePercent:F2}%)\n" +
+            //           $"Unique: {gachaResults[ItemRarity.Unique]} ({uniquePercent:F2}%)");
         }
     }
 }
