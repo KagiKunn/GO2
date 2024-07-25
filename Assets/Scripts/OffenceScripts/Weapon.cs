@@ -22,6 +22,8 @@ public class Weapon : MonoBehaviour {
 	}
 
 	private void Update() {
+		if (!GameManager.Instance.IsLive) return;
+
 		switch (id) {
 			case 0:
 				transform.Rotate(Vector3.back * speed * Time.deltaTime);
@@ -91,9 +93,10 @@ public class Weapon : MonoBehaviour {
 
 		// Hand Set
 		Hand hand = player.Hands[(int)itemData.ItemType];
-		
+
 		if (hand.SpriteRenderer == null) {
 			CustomLogger.LogError("SpriteRenderer is not assigned in Hand script!");
+
 			return;
 		}
 

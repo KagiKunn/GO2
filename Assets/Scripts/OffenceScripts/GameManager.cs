@@ -7,11 +7,12 @@ using UnityEngine.Animations;
 
 public class GameManager : MonoBehaviour {
 	#pragma warning disable CS0618
-	private static GameManager instance;
+	private static GameManager instance = null;
 
 	[Header("# Game Control")]
-	[SerializeField] private float gameTime;
+	[SerializeField] private bool isLive;
 
+	[SerializeField] private float gameTime;
 	[SerializeField] private float maxGameTime = 2 * 10f;
 
 	[Header("# Player Info")]
@@ -27,19 +28,28 @@ public class GameManager : MonoBehaviour {
 	[SerializeField] private Player player;
 
 	[SerializeField] private PoolManager poolManager;
+	[SerializeField] private LevelUp uiLevelUp;
 
 	private void Awake() {
-		if (instance == null) instance = this;
-		else if (instance != this) Destroy(gameObject);
+		if (instance == null) {
+			instance = this;
 
-		DontDestroyOnLoad(gameObject);
+			DontDestroyOnLoad(this.gameObject);
+		} else if (instance != this) {
+			Destroy(this.gameObject);
+		}
 	}
 
 	private void Start() {
 		health = maxHealth;
+
+		// 임시 스크립트(첫번째 캐릭터 선택)
+		uiLevelUp.Select(0);
 	}
 
 	private void Update() {
+		if (!isLive) return;
+
 		gameTime += Time.deltaTime;
 
 		if (gameTime > maxGameTime) {
@@ -70,13 +80,13 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void GetExp() {
-		if (level == nextExp.Length) return;
-
 		exp++;
 
-		if (exp == nextExp[level]) {
+		if (exp == nextExp[Mathf.Min(level, nextExp.Length - 1)]) {
 			level++;
 			exp = 0;
+
+			uiLevelUp.Show();
 		}
 	}
 
@@ -87,6 +97,8 @@ public class GameManager : MonoBehaviour {
 
 				if (instance == null) {
 					CustomLogger.LogError("No Singleton Object");
+
+					return null;
 				} else {
 					instance.Initialize();
 				}
@@ -96,11 +108,25 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
+	public void Stop() {
+		isLive = false;
+
+		Time.timeScale = 0;
+	}
+
+	public void Resume() {
+		isLive = true;
+
+		Time.timeScale = 1;
+	}
+
 	public Player Player => player;
 	public PoolManager PoolManager => poolManager;
 
 	public float GameTime => gameTime;
 	public float MaxGameTime => maxGameTime;
+
+	public bool IsLive => isLive;
 
 	public int Health {
 		get => health;
