@@ -33,15 +33,15 @@ public static class CustomLogger {
 		}
 	}
 
-	public static void Log(object message, object color = null, [CallerFilePath] string filePath = "", [CallerMemberName] string memberName = "") {
-		Debug.Log($"<i><b><color={ColorToHex(color != null ? color : "green")}>[{GetFileName(filePath)}::{memberName}] {message}</color></b></i>");
+	public static void Log(object message, object color = null, [CallerFilePath] string filePath = "", [CallerMemberName] string memberName = "", [CallerLineNumber] int lineNumber = 0) {
+		Debug.Log($"<i><b><color={ColorToHex(color != null ? color : "green")}>[{GetFileName(filePath)}::{memberName}() Line:{lineNumber:000}] {message}</color></b></i>");
 	}
 
-	public static void LogWarning(object message, object color = null, [CallerFilePath] string filePath = "", [CallerMemberName] string memberName = "") {
-		Debug.LogWarning($"<i><b><color={ColorToHex(color != null ? color : "yellow")}>[{GetFileName(filePath)}::{memberName}] {message}</color></b></i>");
+	public static void LogWarning(object message, object color = null, [CallerFilePath] string filePath = "", [CallerMemberName] string memberName = "", [CallerLineNumber] int lineNumber = 0) {
+		Debug.LogWarning($"<i><b><color={ColorToHex(color != null ? color : "yellow")}>[{GetFileName(filePath)}::{memberName}() Line:{lineNumber:000}] {message}</color></b></i>");
 	}
 
-	public static void LogError(object message, object color = null, [CallerFilePath] string filePath = "", [CallerMemberName] string memberName = "") {
-		Debug.LogError($"<i><b><color={ColorToHex(color != null ? color : "red")}>[{GetFileName(filePath)}::{memberName}] {message}</color></b></i>");
+	public static void LogError(object message, object color = null, [CallerFilePath] string filePath = "", [CallerMemberName] string memberName = "", [CallerLineNumber] int lineNumber = 0) {
+		Debug.LogError($"<i><b><color={ColorToHex(color != null ? color : "red")}>[{GetFileName(filePath)}::{memberName}() Line:{lineNumber:000}] {message}</color></b></i>");
 	}
 }

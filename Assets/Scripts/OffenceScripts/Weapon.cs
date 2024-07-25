@@ -14,16 +14,16 @@ public class Weapon : MonoBehaviour {
 	private float timer;
 
 	private Player player;
+	private PoolManager poolManager;
 
 	private void Awake() {
-		player = GetComponentInParent<Player>();
-	}
-
-	private void Start() {
-		Initialized();
+		player = GameManager.Instance.Player;
+		poolManager = GameManager.Instance.PoolManager;
 	}
 
 	private void Update() {
+		if (!GameManager.Instance.IsLive) return;
+
 		switch (id) {
 			case 0:
 				transform.Rotate(Vector3.back * speed * Time.deltaTime);
@@ -53,9 +53,30 @@ public class Weapon : MonoBehaviour {
 		if (id == 0) {
 			Batch();
 		}
+
+		player.BroadcastMessage("ApplyGear", SendMessageOptions.DontRequireReceiver);
 	}
 
-	public void Initialized() {
+	public void Initialized(ItemData itemData) {
+		// Basic Set
+		name = "Weapon" + itemData.ItemId;
+
+		transform.parent = player.transform;
+		transform.localPosition = Vector3.zero;
+
+		// Property Set
+		id = itemData.ItemId;
+		damage = itemData.BaseDamge;
+		count = itemData.BaseCount;
+
+		for (int i = 0; i < poolManager.Prefabs.Length; i++) {
+			if (itemData.Projectile == poolManager.Prefabs[i]) {
+				prefabId = i;
+
+				break;
+			}
+		}
+
 		switch (id) {
 			case 0:
 				speed = 150;
@@ -65,10 +86,24 @@ public class Weapon : MonoBehaviour {
 				break;
 
 			default:
-				speed = 0.3f;
+				speed = 0.4f;
 
 				break;
 		}
+
+		// Hand Set
+		Hand hand = player.Hands[(int)itemData.ItemType];
+
+		if (hand.SpriteRenderer == null) {
+			CustomLogger.LogError("SpriteRenderer is not assigned in Hand script!");
+
+			return;
+		}
+
+		hand.SpriteRenderer.sprite = itemData.Hand;
+		hand.gameObject.SetActive(true);
+
+		player.BroadcastMessage("ApplyGear", SendMessageOptions.DontRequireReceiver);
 	}
 
 	private void Batch() {
@@ -78,7 +113,7 @@ public class Weapon : MonoBehaviour {
 			if (i < transform.childCount) {
 				bullet = transform.GetChild(i);
 			} else {
-				bullet = GameManager.Instance.PoolManager.Get(prefabId).transform;
+				bullet = poolManager.Get(prefabId).transform;
 				bullet.parent = transform;
 			}
 
@@ -102,11 +137,25 @@ public class Weapon : MonoBehaviour {
 
 		direction = direction.normalized;
 
-		Transform bullet = GameManager.Instance.PoolManager.Get(prefabId).transform;
+		Transform bullet = poolManager.Get(prefabId).transform;
 
 		bullet.position = transform.position;
 		bullet.rotation = Quaternion.FromToRotation(Vector3.up, direction);
 
 		bullet.GetComponent<Bullet>().Initialized(damage, count, direction); // -1 is Infinity penetration.
+	}
+
+	public int ID => id;
+
+	public int PrefabId => prefabId;
+
+	public float Damage => damage;
+
+	public int Count => count;
+
+	public float Speed {
+		get => speed;
+
+		set => speed = value;
 	}
 }

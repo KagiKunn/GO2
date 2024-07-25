@@ -6,7 +6,7 @@ public class AllySpawner : MonoBehaviour
 {
     [SerializeField] private GameObject[] allies;
     [SerializeField] private Tilemap tilemap;
-    [SerializeField] private bool facingRight;
+    [SerializeField] private bool facingRight = false;
     [SerializeField] private float xSpacing = 0.5f;
     [SerializeField] private float ySpacing = 0.5f;
     private Vector3[] alliesPosition;
