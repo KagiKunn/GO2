@@ -2,7 +2,7 @@ using UnityEngine;
 
 [CreateAssetMenu(fileName = "Item", menuName = "Scriptble Object/ItemData")]
 public class ItemData : ScriptableObject {
-	public enum ItemTypeEnum  { Melee, Range, Glove, Shoe, Heal }
+	public enum ItemTypeEnum { Melee, Range, Glove, Shoe, Heal }
 
 	[Header("# Main Info")]
 	[SerializeField] private ItemTypeEnum itemType;
@@ -21,6 +21,8 @@ public class ItemData : ScriptableObject {
 
 	[Header("# Weapon")]
 	[SerializeField] private GameObject projectile;
+
+	[SerializeField] private Sprite hand;
 
 	public ItemTypeEnum ItemType => itemType;
 
@@ -41,4 +43,10 @@ public class ItemData : ScriptableObject {
 	public int[] Counts => counts;
 
 	public GameObject Projectile => projectile;
+
+	public Sprite Hand {
+		get => hand;
+
+		set => hand = value;
+	}
 }
