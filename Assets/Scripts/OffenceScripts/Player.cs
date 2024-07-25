@@ -29,6 +29,8 @@ public class Player : MonoBehaviour {
 	}
 
 	private void FixedUpdate() {
+		if (!GameManager.Instance.IsLive) return;
+
 		// 1. 힘을 준다
 		// rigid.AddForce(inputVec);
 
@@ -42,6 +44,8 @@ public class Player : MonoBehaviour {
 	}
 
 	private void LateUpdate() {
+		if (!GameManager.Instance.IsLive) return;
+
 		animator.SetFloat("Speed", inputVector2.magnitude);
 
 		if (inputVector2.x != 0) {
