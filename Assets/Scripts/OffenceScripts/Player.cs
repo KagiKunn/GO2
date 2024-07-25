@@ -14,12 +14,14 @@ public class Player : MonoBehaviour {
 	private SpriteRenderer spriteRenderer;
 	private Animator animator;
 	private Scanner scanner;
+	[SerializeField] private Hand[] hands;
 
 	private void Awake() {
 		rigidbody2D = GetComponent<Rigidbody2D>();
 		spriteRenderer = GetComponent<SpriteRenderer>();
 		animator = GetComponent<Animator>();
 		scanner = GetComponent<Scanner>();
+		hands = GetComponentsInChildren<Hand>(true);
 	}
 
 	private void OnMove(InputValue value) {
@@ -27,6 +29,8 @@ public class Player : MonoBehaviour {
 	}
 
 	private void FixedUpdate() {
+		if (!GameManager.Instance.IsLive) return;
+
 		// 1. 힘을 준다
 		// rigid.AddForce(inputVec);
 
@@ -40,6 +44,8 @@ public class Player : MonoBehaviour {
 	}
 
 	private void LateUpdate() {
+		if (!GameManager.Instance.IsLive) return;
+
 		animator.SetFloat("Speed", inputVector2.magnitude);
 
 		if (inputVector2.x != 0) {
@@ -55,5 +61,11 @@ public class Player : MonoBehaviour {
 		get => speed;
 
 		set => speed = value;
+	}
+
+	public Hand[] Hands {
+		get => hands;
+
+		set => hands = value;
 	}
 }

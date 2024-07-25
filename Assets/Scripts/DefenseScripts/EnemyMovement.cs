@@ -3,7 +3,7 @@ using UnityEngine;
 public class EnemyMovement : MonoBehaviour
 {
 
-    [SerializeField] private int HP = 10;
+    [SerializeField] private int health = 10;
     [SerializeField]
     private float moveSpeed = 1.0f;
     [SerializeField]
@@ -67,6 +67,7 @@ public class EnemyMovement : MonoBehaviour
     {
         movementdirection = Vector3.left;
         animator.SetFloat("RunState",0.5f);
+        animator.ResetTrigger("Attack");
     }
 
     private void EnemyAttack()
@@ -83,7 +84,27 @@ public class EnemyMovement : MonoBehaviour
             castleWall.TakeDamage(attackDamage);
         }
     }
+    public void TakeDamage(int damage)
+    {
+        health -= damage;
+        Debug.Log(gameObject+"유닛의 체력: " + health);
+        if (health <= 0)
+        {
+            Die();
+        }
+    }
+    public bool IsDead()
+    {
+        return health <= 0;
+    }
 
+    private void Die()
+    {
+        // 적이 죽었을 때의 동작 (예: 오브젝트 비활성화)
+        gameObject.SetActive(false);
+        CustomLogger.Log(gameObject+"유닛이 파괴되었습니다!","blue");
+
+    }
     private void OnDrawGizmos()
     {
         Vector2 boxCenter = (Vector2)transform.position + new Vector2(-boxSize.x/2, 0);

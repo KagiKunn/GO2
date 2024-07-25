@@ -1195,6 +1195,7 @@ GameObject:
   - component: {fileID: 496585734549198347}
   - component: {fileID: 459011108828332311}
   - component: {fileID: 7807129213302239710}
+  - component: {fileID: 4147225526930602872}
   m_Layer: 7
   m_Name: UnitRoot
   m_TagString: Untagged
@@ -1292,12 +1293,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f417b36df4681e48a4521d737d5c364, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 1
+  health: 10
+  moveSpeed: 1
   detectionLayerMask:
     serializedVersion: 2
     m_Bits: 64
   attackDamage: 1
   attackSpeed: 0.5
+  runState: 1
+  attackState: 1
+  normalState: 0
+  skillState: 0
   boxSize: {x: 1, y: 0.1}
 --- !u!58 &7807129213302239710
 CircleCollider2D:
@@ -1335,6 +1341,18 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0.2}
   m_Radius: 0.2
+--- !u!114 &4147225526930602872
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3230014446831001847}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76c7a70ed6791a04797d89bb0504bacb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3261212458942091917
 GameObject:
   m_ObjectHideFlags: 0
