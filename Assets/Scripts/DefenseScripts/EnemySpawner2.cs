@@ -5,105 +5,66 @@ using DefenseScripts;
 
 public class EnemySpawner2 : MonoBehaviour
 {
-    // 스테이지별 적 프리팹 목록을 저장하는 리스트
     [SerializeField] private List<EnemyStage> stageEnemyPrefabs;
-
-    // 현재 스테이지 번호
     [SerializeField] public int currentStage = 1;
-
-    // 웨이브에서 사용할 적 프리팹 목록
-    private List<GameObject> _enemyPrefabs;
-
-    // 오브젝트를 생성할 Y축의 최소 및 최대 좌표
+    private List<GameObject> enemyPrefabs;
     public float minY = -0f;
     public float maxY = 10f;
-
-    // 고정된 X축 좌표
     private const float fixedX = 20f;
-
-    // 생성할 오브젝트의 개수
     [SerializeField] public int numberOfObjects = 10;
-
-    // 스포너가 생성한 적 오브젝트 개수
     private int spawnedEnemy = 0;
-
-    // 최대 생성 간격
     public float maxSpawnInterval = 2f;
-
-    // 총 웨이브 수
     [SerializeField] private int totalWave = 3;
-    
-    // 현재 웨이브
     private int currentWave = 0;
+
+    //ステージと種族マッチング
+    private List<int> usedStages = new List<int>();
+    private List<string> usedRaces = new List<string>();
 
     void Start()
     {
-        CustomLogger.Log("Current Stage: "+currentStage, "yellow");
-        StartCoroutine(SpawnWaves());
+        StartCoroutine(ManageStages());
+    }
+
+    //ステージ決定
+    IEnumerator ManageStages()
+    {
+        while (currentStage <= 5)
+        {
+            CustomLogger.Log("Current Stage: " + currentStage, "yellow");
+            
+            //SpawnWaves()でWave生成が終わるまで保留、
+            //３Waveまで進行した後に実行を再開
+            yield return StartCoroutine(SpawnWaves());
+            CustomLogger.Log("스테이지 종료", "red");
+            yield return new WaitForSeconds(5f);
+
+            currentStage++;
+            currentWave = 0;
+        }
+
+        CustomLogger.Log("모든 스테이지가 완료되었습니다.", "red");
     }
 
     IEnumerator SpawnWaves()
     {
-        // 스테이지별 적 prefab가 저장된 배열 stageEnemyPrefabs[]에서
-        // 그 인덱스번호에 해당하는 종족을 가져옴
-        EnemyStage stage = stageEnemyPrefabs[currentStage - 1];
-        
-        //이번 스테이지에서 사용할 적 Prefab 배열을 초기화
-        _enemyPrefabs = new List<GameObject>();
-
-        // 현재 스테이지 번호에 따라 적 프리팹 배열을 설정
-        switch (currentStage)
+        // 각 스테이지마다 등장할 종족을 랜덤하게 선택
+        if (!usedStages.Contains(currentStage))
         {
-            case 1:
-                _enemyPrefabs.AddRange(stage.darkElf);
-                break;
-            case 2:
-                _enemyPrefabs.AddRange(stage.human);
-                break;
-            case 3:
-                _enemyPrefabs.AddRange(stage.orc);
-                break;
-            case 4:
-                _enemyPrefabs.AddRange(stage.skeleton);
-                break;
-            case 5:
-                _enemyPrefabs.AddRange(stage.witch);
-                break;
+            enemyPrefabs = SelectRandomEnemyPrefabs();
+            usedStages.Add(currentStage);
         }
 
-        //Waveによる敵兵組み合わせ調整
         while (currentWave < totalWave)
         {
             currentWave++;
             
-            //결정된 스테이지 프리팹을 사용해서 Wave프리팹을 초기화
-            List<GameObject> wavePrefabs = new List<GameObject>(_enemyPrefabs);
-
-            //
-            switch (currentWave)
-            {
-                //1웨이브일경우: 프리팹이 2개 이상일 경우(예외처리) 0 1 2 3 4  
-                case 1:
-                    if (wavePrefabs.Count > 2)
-                    {
-                        wavePrefabs.RemoveRange(2, wavePrefabs.Count - 2); // 앞의 2개만 사용
-                    }
-                    break;
-                case 2:
-                    if (wavePrefabs.Count > 4)
-                    {
-                        wavePrefabs.RemoveRange(4, wavePrefabs.Count - 4); // 앞의 4개만 사용
-                    }
-                    break;
-                case 3:
-                    // 모든 프리팹을 사용
-                    break;
-            }
+            List<GameObject> wavePrefabs = new List<GameObject>(enemyPrefabs);
 
             CustomLogger.Log(currentWave + "웨이브 시작");
             yield return StartCoroutine(SpawnObjects(wavePrefabs));
 
-            spawnedEnemy = 0; // 웨이브 종료 시 초기화
+            spawnedEnemy = 0;
 
             if (currentWave < totalWave)
             {
@@ -111,21 +72,62 @@ public class EnemySpawner2 : MonoBehaviour
                 yield return new WaitForSeconds(5f);
             }
         }
+    }
 
-        CustomLogger.Log("모든 웨이브가 완료되었습니다.", "red");
+    //ステージごとランダムで種族を選び、その種族のPrefabをreturn
+    List<GameObject> SelectRandomEnemyPrefabs()
+    {
+        //最終的にreturnされる敵兵PrefabのList宣言
+        List<GameObject> selectedEnemies = new List<GameObject>();
+        
+        //使用可能な種族のListを作成+usedRacesに含まれてる種族を削除
+        //今回のステージで使用可能な種族だけがList内に残る。
+        List<string> availableRaces = new List<string> { "darkElf", "human", "orc", "skeleton", "witch" };
+        availableRaces.RemoveAll(race => usedRaces.Contains(race));
+
+        //使用可能な種族が残っていない場合の例外処理
+        if (availableRaces.Count == 0)
+        {
+            CustomLogger.Log("모든 종족이 이미 사용되었습니다.", "red");
+            return selectedEnemies;
+        }
+
+        //availableRaves[]の中からランダムで選んで、usedRacesに追加する。
+        string selectedRace = availableRaces[Random.Range(0, availableRaces.Count)];
+        usedRaces.Add(selectedRace);
+        CustomLogger.Log("선택된 종족 : "+selectedRace,"yellow");
+
+        //選ばれた種族のPrefabのListを持ち込んで、selectedEnemiesに入れてreturn
+        EnemyStage stage = stageEnemyPrefabs[currentStage - 1];
+
+        switch (selectedRace)
+        {
+            case "darkElf":
+                selectedEnemies.AddRange(stage.darkElf);
+                break;
+            case "human":
+                selectedEnemies.AddRange(stage.human);
+                break;
+            case "orc":
+                selectedEnemies.AddRange(stage.orc);
+                break;
+            case "skeleton":
+                selectedEnemies.AddRange(stage.skeleton);
+                break;
+            case "witch":
+                selectedEnemies.AddRange(stage.witch);
+                break;
+        }
+
+        return selectedEnemies;
     }
 
     IEnumerator SpawnObjects(List<GameObject> wavePrefabs)
     {
-        
         for (int i = 0; i < numberOfObjects; i++)
         {
-            
             float randomY = Random.Range(minY, maxY);
-
-            // Random Prefab 選択
             GameObject randomPrefab = GetRandomPrefab(wavePrefabs);
-
             Vector3 spawnPosition = new Vector3(fixedX, randomY, 0);
             Instantiate(randomPrefab, spawnPosition, Quaternion.identity, transform);
 
@@ -135,7 +137,6 @@ public class EnemySpawner2 : MonoBehaviour
             spawnedEnemy++;
             CustomLogger.Log("생성한 적의 수 " + spawnedEnemy);
 
-            // 最大数に達するとWave終了。
             if (spawnedEnemy >= numberOfObjects)
             {
                 break;
@@ -143,10 +144,6 @@ public class EnemySpawner2 : MonoBehaviour
         }
     }
 
-    /*確率の区間を０～１までの範囲で分けるイメージ。
-       randomValueが任意の数を,0f～1fまでの間で引く
-       例えばfloat[] { 0.35f, 0.35f, 0.15f, 0.15f };の場合
-       この確率テーブルの配列を巡回しながらその数がどの区間に位置するかを判定する。*/
     GameObject GetRandomPrefab(List<GameObject> wavePrefabs)
     {
         float randomValue = Random.Range(0f, 1f);
@@ -167,17 +164,16 @@ public class EnemySpawner2 : MonoBehaviour
 
     float[] GetPercentages(int prefabCount)
     {
-        //現在のWaveによって出現率を調整する。
         switch (currentWave)
         {
-            case 1: //1Wave
-                return new float[] { 0.5f, 0.5f }; // 各50%
+            case 1:
+                return new float[] { 0.5f, 0.5f };
             case 2:
-                return new float[] { 0.35f, 0.35f, 0.15f, 0.15f }; // 35%, 35%, 15%, 15%
+                return new float[] { 0.35f, 0.35f, 0.15f, 0.15f };
             case 3:
-                return new float[] { 0.25f, 0.25f, 0.2f, 0.2f, 0.1f }; // 25%, 25%, 20%, 20%, 10%
+                return new float[] { 0.25f, 0.25f, 0.2f, 0.2f, 0.1f };
             default:
-                return new float[] { 1f }; // 100%
+                return new float[] { 1f };
         }
     }
 }
