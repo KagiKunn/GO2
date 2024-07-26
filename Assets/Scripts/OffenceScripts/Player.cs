@@ -16,12 +16,16 @@ public class Player : MonoBehaviour {
 	private Scanner scanner;
 	[SerializeField] private Hand[] hands;
 
+	private GameManager gameManager;
+
 	private void Awake() {
 		rigidbody2D = GetComponent<Rigidbody2D>();
 		spriteRenderer = GetComponent<SpriteRenderer>();
 		animator = GetComponent<Animator>();
 		scanner = GetComponent<Scanner>();
 		hands = GetComponentsInChildren<Hand>(true);
+
+		gameManager = GameManager.Instance;
 	}
 
 	private void OnMove(InputValue value) {
@@ -29,6 +33,8 @@ public class Player : MonoBehaviour {
 	}
 
 	private void FixedUpdate() {
+		if (!gameManager.IsLive) return;
+
 		// 1. 힘을 준다
 		// rigid.AddForce(inputVec);
 
@@ -42,10 +48,28 @@ public class Player : MonoBehaviour {
 	}
 
 	private void LateUpdate() {
+		if (!gameManager.IsLive) return;
+
 		animator.SetFloat("Speed", inputVector2.magnitude);
 
 		if (inputVector2.x != 0) {
 			spriteRenderer.flipX = inputVector2.x < 0;
+		}
+	}
+
+	private void OnCollisionStay2D(Collision2D other) {
+		if (!gameManager.IsLive) return;
+
+		gameManager.Health -= Time.deltaTime * 10;
+
+		if (gameManager.Health < 0) {
+			for (int i = 2; i < transform.childCount; i++) {
+				transform.GetChild(i).gameObject.SetActive(false);
+			}
+
+			animator.SetTrigger("Dead");
+
+			gameManager.GameOver();
 		}
 	}
 

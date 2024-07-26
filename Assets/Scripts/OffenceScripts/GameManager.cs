@@ -1,23 +1,25 @@
 using System;
+using System.Collections;
 
 using UnityEngine;
 using UnityEngine.Animations;
+using UnityEngine.SceneManagement;
 
-#pragma warning disable CS0414 // 필드가 대입되었으나 값이 사용되지 않습니다
+#pragma warning disable CS0414, CS0618 // 필드가 대입되었으나 값이 사용되지 않습니다
 
 public class GameManager : MonoBehaviour {
-	#pragma warning disable CS0618
-	private static GameManager instance;
+	private static GameManager instance = null;
 
 	[Header("# Game Control")]
-	[SerializeField] private float gameTime;
+	[SerializeField] private bool isLive;
 
+	[SerializeField] private float gameTime;
 	[SerializeField] private float maxGameTime = 2 * 10f;
 
 	[Header("# Player Info")]
-	[SerializeField] private int health;
+	[SerializeField] private float health;
 
-	[SerializeField] private int maxHealth = 100;
+	[SerializeField] private float maxHealth = 100;
 	[SerializeField] private int level;
 	[SerializeField] private int kill;
 	[SerializeField] private int exp;
@@ -27,23 +29,75 @@ public class GameManager : MonoBehaviour {
 	[SerializeField] private Player player;
 
 	[SerializeField] private PoolManager poolManager;
+	[SerializeField] private LevelUp uiLevelUp;
+	[SerializeField] private Result uiResult;
+	[SerializeField] private GameObject enemyCleaner;
 
 	private void Awake() {
-		if (instance == null) instance = this;
-		else if (instance != this) Destroy(gameObject);
+		if (instance == null) {
+			instance = this;
 
-		DontDestroyOnLoad(gameObject);
+			DontDestroyOnLoad(this.gameObject);
+		} else if (instance != this) {
+			Destroy(this.gameObject);
+		}
 	}
 
-	private void Start() {
+	public void GameStart() {
 		health = maxHealth;
+
+		// 임시 스크립트(첫번째 캐릭터 선택)
+		uiLevelUp.Select(0);
+
+		Resume();
+	}
+
+	public void GameOver() {
+		StartCoroutine(GameOverRoutine());
+	}
+
+	IEnumerator GameOverRoutine() {
+		isLive = false;
+
+		yield return new WaitForSeconds(0.5f);
+
+		uiResult.gameObject.SetActive(true);
+
+		uiResult.Lose();
+
+		Stop();
+	}
+
+	public void GameVictory() {
+		StartCoroutine(GameVictoryRoutine());
+	}
+
+	IEnumerator GameVictoryRoutine() {
+		isLive = false;
+		enemyCleaner.SetActive(true);
+
+		yield return new WaitForSeconds(0.5f);
+
+		uiResult.gameObject.SetActive(true);
+
+		uiResult.Win();
+
+		Stop();
+	}
+
+	public void GameRetry() {
+		SceneManager.LoadScene("Offence");
 	}
 
 	private void Update() {
+		if (!isLive) return;
+
 		gameTime += Time.deltaTime;
 
 		if (gameTime > maxGameTime) {
 			gameTime = maxGameTime;
+
+			GameVictory();
 		}
 	}
 
@@ -70,13 +124,15 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void GetExp() {
-		if (level == nextExp.Length) return;
+		if (!isLive) return;
 
 		exp++;
 
-		if (exp == nextExp[level]) {
+		if (exp == nextExp[Mathf.Min(level, nextExp.Length - 1)]) {
 			level++;
 			exp = 0;
+
+			uiLevelUp.Show();
 		}
 	}
 
@@ -87,6 +143,8 @@ public class GameManager : MonoBehaviour {
 
 				if (instance == null) {
 					CustomLogger.LogError("No Singleton Object");
+
+					return null;
 				} else {
 					instance.Initialize();
 				}
@@ -96,19 +154,33 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
+	public void Stop() {
+		isLive = false;
+
+		Time.timeScale = 0;
+	}
+
+	public void Resume() {
+		isLive = true;
+
+		Time.timeScale = 1;
+	}
+
 	public Player Player => player;
 	public PoolManager PoolManager => poolManager;
 
 	public float GameTime => gameTime;
 	public float MaxGameTime => maxGameTime;
 
-	public int Health {
+	public bool IsLive => isLive;
+
+	public float Health {
 		get => health;
 
 		set => health = value;
 	}
 
-	public int MaxHealth {
+	public float MaxHealth {
 		get => maxHealth;
 
 		set => maxHealth = value;

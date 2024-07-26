@@ -936,6 +936,7 @@ GameObject:
   - component: {fileID: 4227654838679825055}
   - component: {fileID: 7336299622201659516}
   - component: {fileID: 6310121920033799509}
+  - component: {fileID: 6803249898332363293}
   m_Layer: 8
   m_Name: UnitRoot
   m_TagString: Untagged
@@ -1006,7 +1007,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22d2f6f63e7a499eb8f868c773c2ff64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scanRange: 10
+  detectionRadius: 10
   enemyLayer:
     serializedVersion: 2
     m_Bits: 128
@@ -1016,7 +1017,18 @@ MonoBehaviour:
   attackState: 1
   normalState: 0
   skillState: 0
-  detectionRadius: 5
+--- !u!114 &6803249898332363293
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2951327534349704554}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76c7a70ed6791a04797d89bb0504bacb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3095376027585421805
 GameObject:
   m_ObjectHideFlags: 0

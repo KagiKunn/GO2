@@ -9,7 +9,10 @@ public class ItemData : ScriptableObject {
 
 	[SerializeField] private int itemId;
 	[SerializeField] private string itemName;
+
+	[TextArea]
 	[SerializeField] private string itemDesc;
+
 	[SerializeField] private Sprite itemIcon;
 
 	[Header("# Level Data")]
