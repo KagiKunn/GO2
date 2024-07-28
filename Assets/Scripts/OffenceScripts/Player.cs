@@ -15,6 +15,7 @@ public class Player : MonoBehaviour {
 	private Animator animator;
 	private Scanner scanner;
 	[SerializeField] private Hand[] hands;
+	[SerializeField] private RuntimeAnimatorController[] animatorControllers;
 
 	private GameManager gameManager;
 
@@ -26,6 +27,12 @@ public class Player : MonoBehaviour {
 		hands = GetComponentsInChildren<Hand>(true);
 
 		gameManager = GameManager.Instance;
+	}
+
+	private void OnEnable() {
+		speed *= Character.Speed;
+
+		animator.runtimeAnimatorController = animatorControllers[gameManager.PlayerId];
 	}
 
 	private void OnMove(InputValue value) {

@@ -47,7 +47,7 @@ public class Weapon : MonoBehaviour {
 	}
 
 	public void LevelUp(float damage, int count) {
-		this.damage = damage;
+		this.damage = damage * Character.Damage;
 		this.count += count;
 
 		if (id == 0) {
@@ -66,8 +66,8 @@ public class Weapon : MonoBehaviour {
 
 		// Property Set
 		id = itemData.ItemId;
-		damage = itemData.BaseDamge;
-		count = itemData.BaseCount;
+		damage = itemData.BaseDamge * Character.Damage;
+		count = itemData.BaseCount + Character.Count;
 
 		for (int i = 0; i < poolManager.Prefabs.Length; i++) {
 			if (itemData.Projectile == poolManager.Prefabs[i]) {
@@ -79,14 +79,14 @@ public class Weapon : MonoBehaviour {
 
 		switch (id) {
 			case 0:
-				speed = 150;
+				speed = 150 * Character.WeaponSpeed;
 
 				Batch();
 
 				break;
 
 			default:
-				speed = 0.4f;
+				speed = 0.5f * Character.WeaponRate;
 
 				break;
 		}
