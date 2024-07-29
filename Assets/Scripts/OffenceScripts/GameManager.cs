@@ -90,6 +90,8 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void GameRetry() {
+		Destroy(this.gameObject);
+
 		SceneManager.LoadScene("Offence");
 	}
 
@@ -110,7 +112,7 @@ public class GameManager : MonoBehaviour {
 			player = FindObjectOfType<Player>();
 
 			if (player == null) {
-				CustomLogger.LogError("Player instance not found");
+				CustomLogger.Log("Player instance not found", "red");
 			} else {
 				CustomLogger.Log("Player instance found and assigned");
 			}
@@ -120,7 +122,7 @@ public class GameManager : MonoBehaviour {
 			poolManager = FindObjectOfType<PoolManager>();
 
 			if (poolManager == null) {
-				CustomLogger.LogError("PoolManager instance not found");
+				CustomLogger.Log("PoolManager instance not found", "red");
 			} else {
 				CustomLogger.Log("PoolManager instance found and assigned");
 			}
@@ -146,7 +148,7 @@ public class GameManager : MonoBehaviour {
 				instance = FindObjectOfType<GameManager>();
 
 				if (instance == null) {
-					CustomLogger.LogError("No Singleton Object");
+					CustomLogger.Log("No Singleton Object", "red");
 
 					return null;
 				} else {
