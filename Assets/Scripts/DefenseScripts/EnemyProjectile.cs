@@ -1,48 +1,30 @@
 using UnityEngine;
 
-public class EnemyProjectile : MonoBehaviour
-{
+public class EnemyProjectile : MonoBehaviour {
     public float speed = 10f;
     private int damage;
-    private Transform target;
+    private Vector3 direction;
+    [SerializeField] private LayerMask targetLayerMask;
 
-    public void Initialize(Transform target, int damage)
-    {
-        this.target = target;
+    public void Initialize(Vector3 direction, int damage) {
+        this.direction = direction;
         this.damage = damage;
     }
 
-    private void Update()
-    {
-        if (target == null)
-        {
-            Destroy(gameObject);
-            return;
-        }
-
-        Vector2 direction = (Vector2)target.position - (Vector2)transform.position;
-        float distanceThisFrame = speed * Time.deltaTime;
-
-        if (direction.magnitude <= distanceThisFrame)
-        {
-            HitTarget();
-            return;
-        }
-
-        transform.Translate(direction.normalized * distanceThisFrame, Space.World);
+    private void Update() {
+        // 지정된 방향으로 발사체 이동
+        transform.position += direction * speed * Time.deltaTime;
     }
 
-    void HitTarget()
-    {
-        CastleWall castleWall = target.GetComponent<CastleWall>();
-        if (castleWall != null)
-        {
-            castleWall.TakeDamage(damage);
-            // if (castleWall.IsDead())
-            // {
-            //     CustomLogger.Log("적이 죽었습니다.");
-            // }
+    private void OnTriggerEnter2D(Collider2D collision) {
+        Debug.Log("Projectile hit: " + collision.name); // 충돌 로그 추가
+        // 지정된 레이어에 닿으면 데미지 주기
+        if (((1 << collision.gameObject.layer) & targetLayerMask) != 0) {
+            CastleWall targetCastleWall = collision.GetComponent<CastleWall>();
+            if (targetCastleWall != null) {
+                targetCastleWall.TakeDamage(damage);
+            }
+            Destroy(gameObject); // 투사체 파괴
         }
-        Destroy(gameObject);
     }
 }

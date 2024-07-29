@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 #pragma warning disable CS0414
 
@@ -30,6 +31,7 @@ public class EnemyMovement : MonoBehaviour {
 	[SerializeField]
 	private Vector2 boxSize = new Vector2(2, 0.1f);
 
+	
 	public GameObject projectilePrefab;
 	private Rigidbody2D rigid2d;
 	private Animator animator;
@@ -99,11 +101,12 @@ public class EnemyMovement : MonoBehaviour {
 	{
 		if (castleWall != null)
 		{
-			GameObject projectileInstance = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
+			Vector3 spawnPosition = transform.position + new Vector3(0, GetComponent<Collider2D>().bounds.size.y, 0);
+			GameObject projectileInstance = Instantiate(projectilePrefab, spawnPosition, Quaternion.Euler(0,180,0));
 			EnemyProjectile projectile = projectileInstance.GetComponent<EnemyProjectile>();
 			if (projectile != null)
 			{
-				projectile.Initialize(castleWall.transform, attackDamage);
+				projectile.Initialize(Vector3.left, attackDamage);
 			}
 			else
 			{

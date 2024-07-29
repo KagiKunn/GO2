@@ -1048,14 +1048,15 @@ MonoBehaviour:
   moveSpeed: 1
   detectionLayerMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   attackDamage: 1
   attackSpeed: 1
   runState: 1
-  attackState: 0
+  attackState: 1
   normalState: 0
-  skillState: 1
+  skillState: 0
   boxSize: {x: 1, y: 0.1}
+  projectilePrefab: {fileID: 0}
 --- !u!50 &7608727461238216322
 Rigidbody2D:
   serializedVersion: 4
