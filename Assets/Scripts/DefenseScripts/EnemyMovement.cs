@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 #pragma warning disable CS0414
 
@@ -30,6 +31,8 @@ public class EnemyMovement : MonoBehaviour {
 	[SerializeField]
 	private Vector2 boxSize = new Vector2(2, 0.1f);
 
+	
+	public GameObject projectilePrefab;
 	private Rigidbody2D rigid2d;
 	private Animator animator;
 	private Vector3 movementdirection;
@@ -83,10 +86,34 @@ public class EnemyMovement : MonoBehaviour {
 
 	public void isAttack() {
 		if (castleWall != null) {
-			castleWall.TakeDamage(attackDamage);
+			if (normalState == 1f || skillState == 1f || normalState == 0.25f || skillState == 0.25f)
+			{
+				CollisionAttack();
+			}
+			else
+			{
+				castleWall.TakeDamage(attackDamage);
+			}
 		}
 	}
 
+	public void CollisionAttack()
+	{
+		if (castleWall != null)
+		{
+			Vector3 spawnPosition = transform.position + new Vector3(0, GetComponent<Collider2D>().bounds.size.y, 0);
+			GameObject projectileInstance = Instantiate(projectilePrefab, spawnPosition, Quaternion.Euler(0,180,0));
+			EnemyProjectile projectile = projectileInstance.GetComponent<EnemyProjectile>();
+			if (projectile != null)
+			{
+				projectile.Initialize(Vector3.left, attackDamage);
+			}
+			else
+			{
+				castleWall.TakeDamage(attackDamage);
+			}
+		}
+	}
 	public void TakeDamage(int damage) {
 		health -= damage;
 		Debug.Log(gameObject + "유닛의 체력: " + health);
