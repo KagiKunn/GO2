@@ -53,9 +53,11 @@ public class HeroSelect : MonoBehaviour
         // 영웅 편성하기
         for (int i = 0; i < selectedHeroes.Length; i++)
         {
-            if (selectedHeroes[i].GetComponent<Image>().sprite == null)
+            Image selectedHero = selectedHeroes[i].GetComponent<Image>(); // 선택된 영웅 이미지
+            if (selectedHero.sprite == null)
             {
-                selectedHeroes[i].GetComponent<Image>().sprite = heroes[index].GetComponent<Image>().sprite;
+                selectedHero.sprite = heroes[index].GetComponent<Image>().sprite;
+                selectedHero.enabled = true; 
                 SetMainCharacterImage(index); // 선택된 후 바로 CharacterImage 설정
                 break;
             }
@@ -67,7 +69,9 @@ public class HeroSelect : MonoBehaviour
     {
         CustomLogger.Log("Selected Heroes Button Clicked");
         // 하단 이미지 슬롯을 클릭했을 때 해당 슬롯의 이미지를 제거
-        selectedHeroes[index].GetComponent<Image>().sprite = null;
+        Image selectedHero = selectedHeroes[index].GetComponent<Image>();
+        selectedHero.sprite = null;
+        selectedHero.enabled = false;
     }
 
     public void SetMainCharacterImage(int heroIndex = -1)
@@ -114,7 +118,9 @@ public class HeroSelect : MonoBehaviour
     {
         for (int i = 0; i < selectedHeroes.Length; i++)
         {
-            selectedHeroes[i].GetComponent<Image>().sprite = null;
+            Image selectedHero = selectedHeroes[i].GetComponent<Image>();
+            selectedHero.sprite = null;
+            selectedHero.enabled = false;
         }
         SetMainCharacterImage();
     }
