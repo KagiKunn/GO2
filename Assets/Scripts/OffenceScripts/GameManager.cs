@@ -17,8 +17,9 @@ public class GameManager : MonoBehaviour {
 	[SerializeField] private float maxGameTime = 2 * 10f;
 
 	[Header("# Player Info")]
-	[SerializeField] private float health;
+	[SerializeField] private int playerId;
 
+	[SerializeField] private float health;
 	[SerializeField] private float maxHealth = 100;
 	[SerializeField] private int level;
 	[SerializeField] private int kill;
@@ -43,11 +44,14 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
-	public void GameStart() {
+	public void GameStart(int id) {
+		playerId = id;
+
 		health = maxHealth;
 
-		// 임시 스크립트(첫번째 캐릭터 선택)
-		uiLevelUp.Select(0);
+		player.gameObject.SetActive(true);
+
+		uiLevelUp.Select(playerId % 2);
 
 		Resume();
 	}
@@ -86,6 +90,8 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void GameRetry() {
+		Destroy(this.gameObject);
+
 		SceneManager.LoadScene("Offence");
 	}
 
@@ -106,7 +112,7 @@ public class GameManager : MonoBehaviour {
 			player = FindObjectOfType<Player>();
 
 			if (player == null) {
-				CustomLogger.LogError("Player instance not found");
+				CustomLogger.Log("Player instance not found", "red");
 			} else {
 				CustomLogger.Log("Player instance found and assigned");
 			}
@@ -116,7 +122,7 @@ public class GameManager : MonoBehaviour {
 			poolManager = FindObjectOfType<PoolManager>();
 
 			if (poolManager == null) {
-				CustomLogger.LogError("PoolManager instance not found");
+				CustomLogger.Log("PoolManager instance not found", "red");
 			} else {
 				CustomLogger.Log("PoolManager instance found and assigned");
 			}
@@ -142,7 +148,7 @@ public class GameManager : MonoBehaviour {
 				instance = FindObjectOfType<GameManager>();
 
 				if (instance == null) {
-					CustomLogger.LogError("No Singleton Object");
+					CustomLogger.Log("No Singleton Object", "red");
 
 					return null;
 				} else {
@@ -203,4 +209,6 @@ public class GameManager : MonoBehaviour {
 	public int[] NextExp {
 		get => nextExp;
 	}
+
+	public int PlayerId => playerId;
 }
