@@ -1,14 +1,13 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using UnityEngine.UIElements;
 
 public class AllySpawner : MonoBehaviour
 {
     [SerializeField] private GameObject[] allies;
     [SerializeField] private Tilemap tilemap;
     [SerializeField] private bool facingRight = false;
-    [SerializeField] private float xSpacing = 0.5f;
-    [SerializeField] private float ySpacing = 0.5f;
+    [SerializeField] private float xSpacing = 1.0f;  // 타일 크기에 맞게 조정
+    [SerializeField] private float ySpacing = 1.0f;  // 타일 크기에 맞게 조정
     private Vector3[] alliesPosition;
 
     private int row = 8;
@@ -16,32 +15,39 @@ public class AllySpawner : MonoBehaviour
 
     void Awake()
     {
-        int maxUnitCount = allies.Length-1;
+        int maxUnitCount = allies.Length;
         int currentNumber = 0;
         BoundsInt bounds = tilemap.cellBounds;
-        Vector3Int gridCenter = new Vector3Int(bounds.xMin + bounds.size.x / 3, bounds.yMin + bounds.size.y / 2, 0);
+        Vector3Int gridStart = new Vector3Int(bounds.xMin, bounds.yMin, 0);  // 왼쪽 아래를 기준점으로 설정
+
         for (int x = 0; x < column; x++)
         {
             for (int y = 0; y < row; y++)
             {
-                if (currentNumber > maxUnitCount)
+                if (currentNumber >= maxUnitCount)
                 {
                     break;
                 }
-                Vector3Int gridPosition = new Vector3Int(gridCenter.x + x+1, y, 0);
-                Vector3 worldPosition = tilemap.CellToWorld(gridPosition);
-                worldPosition += new Vector3(x * xSpacing, y * ySpacing, 0);
-                if (facingRight) {
-                    Instantiate(allies[currentNumber], worldPosition, Quaternion.Euler(0,180,0),transform);
 
-                }else {
-                    Instantiate(allies[currentNumber], worldPosition, Quaternion.identity,transform);
+                // 타일맵의 셀 위치에 따라 그리드 위치 계산
+                Vector3Int gridPosition = new Vector3Int(gridStart.x + x, gridStart.y + y, 0);
+                Vector3 worldPosition = tilemap.CellToWorld(gridPosition);
+
+                // 스페이싱 값에 따라 월드 위치 조정
+                worldPosition += new Vector3(x * xSpacing, y * ySpacing, 0);
+
+                // 계산된 월드 위치에 유닛 생성
+                if (facingRight)
+                {
+                    Instantiate(allies[currentNumber], worldPosition, Quaternion.Euler(0, 180, 0), transform);
                 }
+                else
+                {
+                    Instantiate(allies[currentNumber], worldPosition, Quaternion.identity, transform);
+                }
+
                 currentNumber++;
             }
-            
-            
-            
         }
     }
 }
