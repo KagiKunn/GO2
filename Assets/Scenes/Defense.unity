@@ -7701,6 +7701,7 @@ GameObject:
   - component: {fileID: 294567138}
   - component: {fileID: 294567137}
   - component: {fileID: 294567139}
+  - component: {fileID: 294567140}
   m_Layer: 0
   m_Name: CastleFloor
   m_TagString: Untagged
@@ -8551,8 +8552,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   allies:
   - {fileID: 7888996360327651887, guid: f251d4c264061504cb5e63cf7c50f8b5, type: 3}
-  - {fileID: 3534444474618446514, guid: ba343ca9333df6047a1c120aa1018b6d, type: 3}
   - {fileID: 6098444360452790214, guid: 313cc5626bdb40c4caba5cde9da777f3, type: 3}
+  - {fileID: 3534444474618446514, guid: ba343ca9333df6047a1c120aa1018b6d, type: 3}
   - {fileID: 6179158954207379504, guid: 15accb8dcd196fc4086a8f8903abddd9, type: 3}
   - {fileID: 6781188755031549437, guid: 14d80addf33070f4ead56f9d39ceb9b1, type: 3}
   - {fileID: 8617405725351149479, guid: 8db7b256470b988418cfaff97d130bcf, type: 3}
@@ -8561,13 +8562,28 @@ MonoBehaviour:
   - {fileID: 3133274129896086462, guid: 25b9622195d1df44ab4aaf85495f6a06, type: 3}
   - {fileID: 299709998097345282, guid: ccf832e4061b599449b1f3ef3956242b, type: 3}
   - {fileID: 1591793750267026000, guid: 1530cb08789302e4c9bbb07a8df0b7a4, type: 3}
-  - {fileID: 5078748258946161633, guid: 2422acea0e1021648b6552d117bfe5f7, type: 3}
   - {fileID: 2144735349077494666, guid: 9f9cc971460371147a42f8ea4777cd66, type: 3}
-  - {fileID: 6179158954207379504, guid: 15accb8dcd196fc4086a8f8903abddd9, type: 3}
+  - {fileID: 773221152859356726, guid: 8a2ca8890f65c2e4086affdfe699f1b3, type: 3}
+  - {fileID: 5078748258946161633, guid: 2422acea0e1021648b6552d117bfe5f7, type: 3}
   tilemap: {fileID: 294567138}
   facingRight: 1
   xSpacing: 1
   ySpacing: 1
+--- !u!114 &294567140
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 294567135}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a7701e3ce7ab44429ef986718f5f1f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clickableLayer:
+    serializedVersion: 2
+    m_Bits: 256
 --- !u!1 &432860099
 GameObject:
   m_ObjectHideFlags: 0
@@ -9789,7 +9805,7 @@ Camera:
   field of view: 60
   orthographic: 1
   orthographic size: 5
-  m_Depth: -1
+  m_Depth: 1
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -15319,23 +15335,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41142c86f0099df47b48ddb7f9714531, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  allies:
-  - {fileID: 7888996360327651887, guid: f251d4c264061504cb5e63cf7c50f8b5, type: 3}
-  - {fileID: 3534444474618446514, guid: ba343ca9333df6047a1c120aa1018b6d, type: 3}
-  - {fileID: 6098444360452790214, guid: 313cc5626bdb40c4caba5cde9da777f3, type: 3}
-  - {fileID: 6179158954207379504, guid: 15accb8dcd196fc4086a8f8903abddd9, type: 3}
-  - {fileID: 6179158954207379504, guid: 15accb8dcd196fc4086a8f8903abddd9, type: 3}
-  - {fileID: 6781188755031549437, guid: 14d80addf33070f4ead56f9d39ceb9b1, type: 3}
-  - {fileID: 8617405725351149479, guid: 8db7b256470b988418cfaff97d130bcf, type: 3}
-  - {fileID: 8617405725351149479, guid: 8db7b256470b988418cfaff97d130bcf, type: 3}
-  - {fileID: 8617405725351149479, guid: 8db7b256470b988418cfaff97d130bcf, type: 3}
-  - {fileID: 8617405725351149479, guid: 8db7b256470b988418cfaff97d130bcf, type: 3}
-  - {fileID: 8617405725351149479, guid: 8db7b256470b988418cfaff97d130bcf, type: 3}
-  - {fileID: 8617405725351149479, guid: 8db7b256470b988418cfaff97d130bcf, type: 3}
-  - {fileID: 8617405725351149479, guid: 8db7b256470b988418cfaff97d130bcf, type: 3}
-  - {fileID: 8617405725351149479, guid: 8db7b256470b988418cfaff97d130bcf, type: 3}
-  - {fileID: 8617405725351149479, guid: 8db7b256470b988418cfaff97d130bcf, type: 3}
-  - {fileID: 8617405725351149479, guid: 8db7b256470b988418cfaff97d130bcf, type: 3}
+  allies: []
   tilemap: {fileID: 1482762146}
   facingRight: 1
   xSpacing: 0.5
@@ -24090,7 +24090,7 @@ Camera:
   field of view: 60
   orthographic: 1
   orthographic size: 5
-  m_Depth: -1
+  m_Depth: 1
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 4294967295

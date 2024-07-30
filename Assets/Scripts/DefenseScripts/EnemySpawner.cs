@@ -96,7 +96,6 @@ public class EnemySpawner : MonoBehaviour {
 				yield return new WaitForSeconds(waitTime);
 
 				spawnedEnemy++;
-				CustomLogger.Log("생성한 적의 수 " + spawnedEnemy);
 
 				//최대 생성수에 도달하면 웨이브를 종료
 				if (spawnedEnemy == numberOfObjects) {
