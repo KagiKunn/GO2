@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2235198780597478281}
   - component: {fileID: 4690262029861152322}
+  - component: {fileID: 5905069743289092819}
   m_Layer: 7
   m_Name: OrcBerserker
   m_TagString: Untagged
@@ -59,6 +60,18 @@ MonoBehaviour:
   UnitTypeChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &5905069743289092819
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 22752085748122022}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76c7a70ed6791a04797d89bb0504bacb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &48333501337345115
 GameObject:
   m_ObjectHideFlags: 0
@@ -3472,7 +3485,8 @@ GameObject:
   - component: {fileID: 914769603093376202}
   - component: {fileID: 8440661661770551452}
   - component: {fileID: 6045841316602810412}
-  - component: {fileID: 488569638275168145}
+  - component: {fileID: 2975988857883154915}
+  - component: {fileID: 511581219577090124}
   m_Layer: 7
   m_Name: UnitRoot
   m_TagString: Untagged
@@ -3519,7 +3533,7 @@ Animator:
   m_GameObject: {fileID: 7384170049884736164}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: ab937231d0600440fb0d8757568d78d7, type: 2}
+  m_Controller: {fileID: 9100000, guid: c2fc0aafc4ba14749a6cc196ffeb52b8, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -3543,11 +3557,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f417b36df4681e48a4521d737d5c364, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 1
+  health: 10
+  moveSpeed: 1
   detectionLayerMask:
     serializedVersion: 2
     m_Bits: 64
+  attackDamage: 1
+  attackSpeed: 1
+  runState: 1
+  attackState: 1
+  normalState: 0
+  skillState: 0
   boxSize: {x: 3, y: 0.1}
+  projectilePrefab: {fileID: 0}
 --- !u!50 &6045841316602810412
 Rigidbody2D:
   serializedVersion: 4
@@ -3575,8 +3597,20 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!70 &488569638275168145
-CapsuleCollider2D:
+--- !u!114 &2975988857883154915
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7384170049884736164}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76c7a70ed6791a04797d89bb0504bacb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!58 &511581219577090124
+CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -3609,9 +3643,8 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0.36}
-  m_Size: {x: 0.5, y: 0.9}
-  m_Direction: 0
+  m_Offset: {x: 0, y: 0.2}
+  m_Radius: 0.2
 --- !u!1 &7593402091460629835
 GameObject:
   m_ObjectHideFlags: 0

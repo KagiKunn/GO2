@@ -3622,7 +3622,8 @@ GameObject:
   - component: {fileID: 2984043107868469722}
   - component: {fileID: 9185465238836809683}
   - component: {fileID: 1170939455269804218}
-  - component: {fileID: 5831351371286236538}
+  - component: {fileID: 1121002133300385167}
+  - component: {fileID: 419383251144105382}
   m_Layer: 7
   m_Name: UnitRoot
   m_TagString: Untagged
@@ -3669,7 +3670,7 @@ Animator:
   m_GameObject: {fileID: 8240507657805926041}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: ab937231d0600440fb0d8757568d78d7, type: 2}
+  m_Controller: {fileID: 9100000, guid: c2fc0aafc4ba14749a6cc196ffeb52b8, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -3693,7 +3694,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f417b36df4681e48a4521d737d5c364, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HP: 10
+  health: 10
   moveSpeed: 1
   detectionLayerMask:
     serializedVersion: 2
@@ -3702,9 +3703,10 @@ MonoBehaviour:
   attackSpeed: 1
   runState: 1
   attackState: 1
-  normalState: 0
+  normalState: 0.5
   skillState: 0
   boxSize: {x: 5, y: 0.1}
+  projectilePrefab: {fileID: 0}
 --- !u!50 &1170939455269804218
 Rigidbody2D:
   serializedVersion: 4
@@ -3732,8 +3734,20 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!70 &5831351371286236538
-CapsuleCollider2D:
+--- !u!114 &1121002133300385167
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8240507657805926041}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76c7a70ed6791a04797d89bb0504bacb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!58 &419383251144105382
+CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -3766,9 +3780,8 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0.36}
-  m_Size: {x: 0.5, y: 0.8}
-  m_Direction: 0
+  m_Offset: {x: 0, y: 0.2}
+  m_Radius: 0.2
 --- !u!1 &8534155571423379264
 GameObject:
   m_ObjectHideFlags: 0

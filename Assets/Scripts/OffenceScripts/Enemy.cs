@@ -93,8 +93,10 @@ public class Enemy : MonoBehaviour {
 			spriteRenderer.sortingOrder = 1;
 			animator.SetBool("Dead", true);
 
-			gameManager.Kill++;
-			gameManager.GetExp();
+			if (gameManager.IsLive) {
+				gameManager.Kill++;
+				gameManager.GetExp();
+			}
 		}
 	}
 

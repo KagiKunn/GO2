@@ -8,6 +8,7 @@ using Random = UnityEngine.Random;
 
 public class Reposition : MonoBehaviour {
 	private Collider2D collider2D;
+	private Player playerInstance;
 
 	private void Awake() {
 		collider2D = GetComponent<Collider2D>();
@@ -16,10 +17,12 @@ public class Reposition : MonoBehaviour {
 	private void OnTriggerExit2D(Collider2D other) {
 		if (!other.CompareTag("Area")) return;
 
-		Player playerInstance = GameManager.Instance.Player;
+		if (GameManager.Instance != null) {
+			playerInstance = GameManager.Instance.Player;
+		}
 
 		if (playerInstance == null) {
-			CustomLogger.LogError("Player instance is null");
+			CustomLogger.Log("Player instance is null", "red");
 
 			return;
 		}
