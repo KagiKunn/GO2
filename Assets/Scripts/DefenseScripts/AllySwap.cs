@@ -57,7 +57,7 @@ public class ClickObjectDetector2D : MonoBehaviour
             }
             else
             {
-                CustomLogger.LogError("No object clicked");
+                CustomLogger.LogWarning("No object clicked");
             }
         }
 
