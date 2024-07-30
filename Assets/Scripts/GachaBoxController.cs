@@ -41,15 +41,21 @@ public class GachaBoxController : MonoBehaviour
 
         if (isMultiGacha)
         {
-            if (Gacha.Instance.multiGachaResultText != null)
-            {
-                Gacha.Instance.multiGachaResultText.enabled = true;
-            }
+            // if (Gacha.Instance.multiGachaResultText != null)
+            // {
+            //     Gacha.Instance.multiGachaResultText.enabled = true;
+            // }
 
             if (Gacha.Instance.resultText != null)
             {
                 Gacha.Instance.resultText.enabled = false;
             }
+
+            if (Gacha.Instance.resultImage != null)
+            {
+                Gacha.Instance.resultImage.enabled = false;
+            }
+
         }
         else
         {
