@@ -240,7 +240,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 10000000
-  penetration: -1
+  penetration: -100
 --- !u!61 &28386035
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2407,7 +2407,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 20, y: 20}
+  m_Size: {x: 25, y: 25}
   m_EdgeRadius: 0
 --- !u!1 &478507716
 GameObject:
@@ -10824,7 +10824,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isLive: 0
   gameTime: 0
-  maxGameTime: 20
+  maxGameTime: 300
   playerId: 0
   health: 0
   maxHealth: 100
@@ -20608,6 +20608,7 @@ MonoBehaviour:
     health: 15
     speed: 2.4
   spawnPointTransforms: []
+  levelTime: 0
 --- !u!1 &1679781308
 GameObject:
   m_ObjectHideFlags: 0
