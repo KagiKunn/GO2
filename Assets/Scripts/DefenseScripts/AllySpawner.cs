@@ -10,7 +10,7 @@ public class AllySpawner : MonoBehaviour
     [SerializeField] private float ySpacing = 1.0f;  // 타일 크기에 맞게 조정
     private Vector3[] alliesPosition;
 
-    private int row = 8;
+    private int row = 7;
     private int column = 2;
 
     void Awake()
@@ -18,7 +18,7 @@ public class AllySpawner : MonoBehaviour
         int maxUnitCount = allies.Length;
         int currentNumber = 0;
         BoundsInt bounds = tilemap.cellBounds;
-        Vector3Int gridStart = new Vector3Int(bounds.xMin, bounds.yMin, 0);  // 왼쪽 아래를 기준점으로 설정
+        Vector3Int gridStart = new Vector3Int(bounds.xMax - column - 1, bounds.yMin + 1, 0);  // 오른쪽에서 한 칸 띄운 위치를 기준점으로 설정
 
         for (int x = 0; x < column; x++)
         {
