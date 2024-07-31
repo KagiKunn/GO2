@@ -17,12 +17,19 @@ public class ScrollbarSizeSetter : MonoBehaviour
     {
         scrollbar.size = 0f;
     }
-
+    void Update()
+    {
+        scrollbar.size = 0f;
+    }
     void LateUpdate()
     {
-        if (scrollbar.size != 0f)
-        {
-            scrollbar.size = 0f;
-        }
+        scrollbar.size = 0f;
+    }   
+    
+    void OnDisable()
+    {
+        // Scrollbar의 사이즈를 0으로 계속 고정
+        scrollbar.size = 0f;
     }
+    
 }
