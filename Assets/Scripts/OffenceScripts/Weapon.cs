@@ -125,7 +125,7 @@ public class Weapon : MonoBehaviour {
 			bullet.Rotate(rotateVector3);
 			bullet.Translate(bullet.up * 1.5f, Space.World);
 
-			bullet.GetComponent<Bullet>().Initialized(damage, -1, Vector3.zero); // -1 is Infinity penetration.
+			bullet.GetComponent<Bullet>().Initialized(damage, -100, Vector3.zero); // -1 is Infinity penetration.
 
 			AudioManager.Instance.PlaySfx(AudioManager.Sfx.Melee);
 		}
