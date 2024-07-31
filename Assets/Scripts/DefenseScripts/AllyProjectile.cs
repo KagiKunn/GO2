@@ -40,7 +40,7 @@ public class AllyProjectile : MonoBehaviour
             enemy.TakeDamage(damage);
             if (enemy.IsDead())
             {
-                CustomLogger.Log("적이 죽었습니다.");
+                Destroy(gameObject);
             }
         }
         Destroy(gameObject);
