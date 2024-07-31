@@ -2174,7 +2174,6 @@ GameObject:
   - component: {fileID: 702878841}
   - component: {fileID: 702878840}
   - component: {fileID: 702878839}
-  - component: {fileID: 702878842}
   m_Layer: 5
   m_Name: Scrollbar Vertical
   m_TagString: Untagged
@@ -2246,7 +2245,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1939723928}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0
+  m_Size: 0.97646093
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -2271,8 +2270,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 6187939654538201919, guid: d5d34e3d224b64f8eadb7ef7e2c6dbb9,
-    type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2290,19 +2288,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 702878837}
   m_CullTransparentMesh: 1
---- !u!114 &702878842
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 702878837}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1c0cd7cc4c95944c797f80c3b76e8fb4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  scrollbar: {fileID: 702878839}
 --- !u!1 &778688755
 GameObject:
   m_ObjectHideFlags: 0
@@ -5650,7 +5635,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 897710771807637462, guid: c106d7c3ffa0a4e91933c46a6aefe248, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
