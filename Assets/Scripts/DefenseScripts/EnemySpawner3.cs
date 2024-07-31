@@ -72,6 +72,7 @@ public class EnemySpawner3 : MonoBehaviour
     // 웨이브 관리
     IEnumerator SpawnWaves()
     {
+        CustomLogger.Log("SpawnWaves 진입", "blue");
         // 적 프리팹이 선택되지 않았음을 검증
         if (stageController.EnemyPrefabs == null || stageController.EnemyPrefabs.Count == 0)
         {
@@ -82,25 +83,39 @@ public class EnemySpawner3 : MonoBehaviour
         // 전체 웨이브보다 현재 웨이브 카운트가 적을 경우에만 반복 스폰
         while (stageController.CurrentWave < stageController.TotalWave)
         {
+            CustomLogger.Log("여기는 진입함?", "blue");
             stageController.IncrementWave();
 
             List<GameObject> wavePrefabs = new List<GameObject>(stageController.EnemyPrefabs);
             CustomLogger.Log(stageController.CurrentWave + "웨이브 시작");
-            yield return StartCoroutine(SpawnObjects(wavePrefabs));
+
+            if (wavePrefabs.Count > 0)
+            {
+                yield return StartCoroutine(SpawnObjects(wavePrefabs));
+            }
+            else
+            {
+                CustomLogger.Log("wavePrefabs가 비어있음", "white");
+            }
 
             spawnedEnemy = 0;
 
             if (stageController.CurrentWave < stageController.TotalWave)
             {
-                CustomLogger.Log("웨이브 " + stageController.CurrentWave + " 종료. 다음 웨이브까지 " + spawnInterval + "초 대기", "yellow");
+                CustomLogger.Log("웨이브 " + stageController.CurrentWave + " 종료. 다음 웨이브까지 " + spawnInterval + "초 대기",
+                    "yellow");
                 yield return new WaitForSeconds(spawnInterval);
             }
         }
     }
 
+
     // 적 스폰 담당
     IEnumerator SpawnObjects(List<GameObject> wavePrefabs)
     {
+        CustomLogger.Log("SpawnObjects 진입", "blue");
+        CustomLogger.Log(wavePrefabs);
+
         for (int i = 0; i < numberOfObjects; i++)
         {
             float randomY = Random.Range(minY, maxY);
@@ -163,7 +178,7 @@ public class EnemySpawner3 : MonoBehaviour
     }
 
     // 버튼 클릭 시 호출
-    void OnNextTurnButtonClicked()
+    public void OnNextTurnButtonClicked()
     {
         if (stageEndPopup != null)
         {

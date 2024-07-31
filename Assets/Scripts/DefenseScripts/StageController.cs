@@ -17,7 +17,7 @@ public class StageController : MonoBehaviour
     // 각 스테이지의 적 프리팹 리스트
     [SerializeField] private List<StageEnemies> stageEnemies;
     [SerializeField] private int currentStage = 1;
-    [SerializeField] private int totalWave = 3;
+    [SerializeField] private int totalWave = 3; // 기본값으로 3 웨이브 설정
 
     private int currentWave = 0;
     private List<int> usedStages = new List<int>();
@@ -61,7 +61,7 @@ public class StageController : MonoBehaviour
         currentWave = 0;
     }
 
-    public List<GameObject> SelectRandomEnemyPrefabs()
+    public void SelectRandomEnemyPrefabs()
     {
         List<GameObject> selectedEnemies = new List<GameObject>();
         List<string> availableRaces = new List<string> { "darkElf", "human", "orc", "skeleton", "witch" };
@@ -70,7 +70,8 @@ public class StageController : MonoBehaviour
         if (availableRaces.Count == 0)
         {
             CustomLogger.Log("모든 종족이 이미 사용되었습니다.", "red");
-            return selectedEnemies;
+            enemyPrefabs = selectedEnemies;
+            return;
         }
 
         string selectedRace = availableRaces[Random.Range(0, availableRaces.Count)];
@@ -98,6 +99,7 @@ public class StageController : MonoBehaviour
                 break;
         }
 
-        return selectedEnemies;
+        enemyPrefabs = selectedEnemies;
+        CustomLogger.Log("선택된 적 프리팹 수: " + enemyPrefabs.Count, "blue"); // 선택된 적 프리팹 수를 로그에 출력
     }
 }
