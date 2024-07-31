@@ -17,12 +17,22 @@ public class EnemySpawner2 : MonoBehaviour
     [SerializeField] private int totalWave = 3;
     private int currentWave = 0;
 
+    //ProgressBar 스크립트 참조
+    public ProgressBar progressBar; 
+    
     //ステージと種族マッチング
     private List<int> usedStages = new List<int>();
     private List<string> usedRaces = new List<string>();
 
     void Start()
     {
+        // ProgressBar 초기화
+        if (progressBar != null)
+        {
+            progressBar.SetMaxValue(numberOfObjects * totalWave);
+            progressBar.SetValue(0);
+        }
+
         StartCoroutine(ManageStages());
     }
 
@@ -136,6 +146,13 @@ public class EnemySpawner2 : MonoBehaviour
 
             spawnedEnemy++;
             CustomLogger.Log("생성한 적의 수 " + spawnedEnemy);
+
+            // ProgressBar 업데이트
+            if (progressBar != null)
+            {
+                progressBar.SetValue(spawnedEnemy + (currentWave - 1) * numberOfObjects);
+            }
+
 
             if (spawnedEnemy >= numberOfObjects)
             {
