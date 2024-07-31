@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -90,7 +91,8 @@ public class HeroSelect : MonoBehaviour
             int firstHeroIndex = GetHeroIndex(selectedHeroes[0].GetComponent<Image>().sprite);
             CharacterImage.sprite = GetHeroMainImage(firstHeroIndex);
             MainHero.SetActive(true);
-        }else
+        }
+        else
         {
             CharacterImage.sprite = null;
             MainHero.SetActive(false);
