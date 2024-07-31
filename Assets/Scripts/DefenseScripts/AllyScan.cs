@@ -109,7 +109,6 @@ public class AllyScan : MonoBehaviour {
             enemy.TakeDamage(attackDamage);
             if (enemy.IsDead())
             {
-                CustomLogger.Log("적이 죽었습니다.");
                 closestObject = null;
             }
         }
