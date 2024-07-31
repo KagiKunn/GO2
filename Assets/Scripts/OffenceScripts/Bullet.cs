@@ -15,22 +15,28 @@ public class Bullet : MonoBehaviour {
 	}
 
 	private void OnTriggerEnter2D(Collider2D other) {
-		if (!other.CompareTag("Enemy") || penetration == -1) return;
+		if (!other.CompareTag("Enemy") || penetration == -100) return;
 
 		penetration--;
 
-		if (penetration == -1) {
+		if (penetration < 0) {
 			rigidbody2D.velocity = Vector2.zero;
 
 			gameObject.SetActive(false);
 		}
 	}
 
+	private void OnTriggerExit2D(Collider2D other) {
+		if (!other.CompareTag("Area") || penetration == -100) return;
+
+		gameObject.SetActive(false);
+	}
+
 	public void Initialized(float damage, int penetration, Vector3 direction) {
 		this.damage = damage;
 		this.penetration = penetration;
 
-		if (penetration > -1) {
+		if (penetration >= 0) {
 			rigidbody2D.velocity = direction * 15f;
 		}
 	}
