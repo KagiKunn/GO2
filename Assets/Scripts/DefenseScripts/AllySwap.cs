@@ -14,10 +14,13 @@ public class ClickObjectDetector2D : MonoBehaviour
     private Vector3 targetPosition1;
     private Vector3 targetPosition2;
 
+    private float originTime;
+
     void Update()
     {
         if (Input.GetMouseButtonDown(0) && !isMoving) // 마우스 왼쪽 버튼 클릭 확인 및 이동 중인지 확인
         {
+            
             Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector2 mousePosition2D = new Vector2(mousePosition.x, mousePosition.y);
 
@@ -30,12 +33,19 @@ public class ClickObjectDetector2D : MonoBehaviour
 
                 if (unit1 == null)
                 {
+                    originTime = Time.timeScale;
                     unit1 = clickedObject;
+                    if (unit1 != null)
+                    {
+                        Time.timeScale = 0.5f;
+                    }
                     CustomLogger.Log("Selected unit1: " + unit1.name);
                 }
                 else
                 {
                     unit2 = clickedObject;
+                    if (unit2 != null)
+                        Time.timeScale = originTime;
                     CustomLogger.Log("Selected unit2: " + unit2.name);
 
                     targetPosition1 = unit2.transform.position;

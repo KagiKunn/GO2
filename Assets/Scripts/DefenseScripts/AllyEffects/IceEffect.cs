@@ -3,7 +3,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "DamageEffects/IceEffect")]
 public class IceEffect : DamageEffect
 {
-    public override void ApplyEffect(EnemyMovement enemy,Transform projectile, int damage)
+    public override void ApplyEffect(EnemyMovement enemy, Transform projectile, int damage, float aoe)
     {
         enemy.TakeDamage(damage);
         CustomLogger.Log("Ice Damage","blue");

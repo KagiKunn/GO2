@@ -2937,9 +2937,9 @@ GameObject:
   - component: {fileID: 8126122395282480047}
   - component: {fileID: 2769701709727564104}
   - component: {fileID: 1210278737179755084}
-  - component: {fileID: 3255972215725086385}
-  - component: {fileID: 3999792195767297986}
-  - component: {fileID: 5959745860262026290}
+  - component: {fileID: 7100779699809130240}
+  - component: {fileID: 51398463423449732}
+  - component: {fileID: 6657228824950814745}
   m_Layer: 8
   m_Name: UnitRoot
   m_TagString: Untagged
@@ -2998,7 +2998,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &3255972215725086385
+--- !u!114 &7100779699809130240
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3020,10 +3020,11 @@ MonoBehaviour:
   attackState: 1
   normalState: 0.25
   skillState: 0
+  aoe: 2
   damageEffect: {fileID: 11400000, guid: e75aeb6c76b413f43a14de623eb79a79, type: 2}
   projectilePrefab: {fileID: 8172912759357463194, guid: 36a426832f5148a4d994235d6893d79c,
     type: 3}
---- !u!114 &3999792195767297986
+--- !u!114 &51398463423449732
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3035,7 +3036,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76c7a70ed6791a04797d89bb0504bacb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!70 &5959745860262026290
+--- !u!70 &6657228824950814745
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
