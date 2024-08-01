@@ -1,5 +1,6 @@
 using UnityEngine;
-using UnityEngine.Tilemaps;
+using System.Collections;
+using System.Collections.Generic;
 
 #pragma warning disable CS0414
 
@@ -7,7 +8,7 @@ public class EnemyMovement : MonoBehaviour {
 	[SerializeField] private int health = 10;
 
 	[SerializeField]
-	private float moveSpeed = 1.0f;
+	public float moveSpeed = 1.0f;
 
 	[SerializeField]
 	private LayerMask detectionLayerMask;
@@ -38,6 +39,7 @@ public class EnemyMovement : MonoBehaviour {
 	private Vector3 movementdirection;
 	private CastleWall castleWall;
 	private Collider2D hit;
+	private bool isChangingBrightness = false;
 
 	private void Awake() {
 		// pos.position = new Vector2(0, 0);
@@ -115,13 +117,96 @@ public class EnemyMovement : MonoBehaviour {
 		}
 	}
 	public void TakeDamage(int damage) {
-		health -= damage;
+        health -= damage;
 
-		if (health <= 0) {
-			Die();
-		}
+        // 코루틴이 실행 중이지 않을 때만 호출
+        if (!isChangingBrightness)
+        {
+            StartCoroutine(ChangeBrightnessTemporarily(0.1f, 0.6f)); // 예: 명도를 50%로 줄임
+        }
+
+        if (health <= 0) {
+            Die();
+        }
+    }
+
+	public void SetMoveSpeed(float decrease)
+	{
+		moveSpeed = moveSpeed - decrease;
 	}
 
+    private IEnumerator ChangeBrightnessTemporarily(float duration, float brightnessMultiplier)
+    {
+        isChangingBrightness = true;  // 코루틴이 실행 중임을 표시
+
+        Transform parent = transform;
+        Dictionary<Transform, Color> originalColors = new Dictionary<Transform, Color>();
+
+        // 부모 오브젝트와 자식 오브젝트의 원래 색상을 저장하고 명도를 변경
+        yield return StoreAndChangeBrightnessRecursively(parent, brightnessMultiplier, originalColors);
+
+        // 지정된 시간 동안 대기
+        yield return new WaitForSeconds(duration);
+
+        // 원래 색상으로 복원
+        yield return RestoreOriginalColors(originalColors);
+
+        isChangingBrightness = false;  // 코루틴 실행 종료 표시
+    }
+
+    private IEnumerator StoreAndChangeBrightnessRecursively(Transform parent, float brightnessMultiplier, Dictionary<Transform, Color> originalColors)
+    {
+        Queue<Transform> queue = new Queue<Transform>();
+        queue.Enqueue(parent);
+
+        while (queue.Count > 0)
+        {
+            Transform current = queue.Dequeue();
+            SpriteRenderer spriteRenderer = current.GetComponent<SpriteRenderer>();
+            if (spriteRenderer != null)
+            {
+                originalColors[current] = spriteRenderer.color;
+                spriteRenderer.color = ChangeBrightness(spriteRenderer.color, brightnessMultiplier);
+            }
+
+            foreach (Transform child in current)
+            {
+                queue.Enqueue(child);
+            }
+
+            // 작업을 한 프레임에 모두 처리하지 않도록 대기
+            if (queue.Count % 15 == 0)
+            {
+                yield return null;
+            }
+        }
+    }
+
+    private Color ChangeBrightness(Color color, float multiplier)
+    {
+        float h, s, v;
+        Color.RGBToHSV(color, out h, out s, out v);
+        v *= multiplier;
+        return Color.HSVToRGB(h, s, v);
+    }
+
+    private IEnumerator RestoreOriginalColors(Dictionary<Transform, Color> originalColors)
+    {
+        foreach (KeyValuePair<Transform, Color> entry in originalColors)
+        {
+            SpriteRenderer spriteRenderer = entry.Key.GetComponent<SpriteRenderer>();
+            if (spriteRenderer != null)
+            {
+                spriteRenderer.color = entry.Value;
+            }
+
+            // 작업을 한 프레임에 모두 처리하지 않도록 대기
+            if (entry.Key.GetSiblingIndex() % 15 == 0)
+            {
+                yield return null;
+            }
+        }
+    }
 	public bool IsDead() {
 		return health <= 0;
 	}

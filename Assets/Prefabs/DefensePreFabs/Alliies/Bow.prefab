@@ -2348,10 +2348,9 @@ GameObject:
   - component: {fileID: 427913731191410833}
   - component: {fileID: 1972248218335517870}
   - component: {fileID: 1816230872333139572}
-  - component: {fileID: 1184978958384532013}
-  - component: {fileID: 4104089190932660011}
-  - component: {fileID: 174581518274872567}
-  - component: {fileID: 5600664208056769113}
+  - component: {fileID: 239452637812919822}
+  - component: {fileID: 6551062218395266589}
+  - component: {fileID: 692094755426073849}
   m_Layer: 8
   m_Name: UnitRoot
   m_TagString: Untagged
@@ -2410,7 +2409,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &1184978958384532013
+--- !u!114 &239452637812919822
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2432,9 +2431,11 @@ MonoBehaviour:
   attackState: 1
   normalState: 0.25
   skillState: 0
+  aoe: 2
+  damageEffect: {fileID: 11400000, guid: e75aeb6c76b413f43a14de623eb79a79, type: 2}
   projectilePrefab: {fileID: 8172912759357463194, guid: 36a426832f5148a4d994235d6893d79c,
     type: 3}
---- !u!114 &4104089190932660011
+--- !u!114 &6551062218395266589
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2446,7 +2447,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76c7a70ed6791a04797d89bb0504bacb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!70 &174581518274872567
+--- !u!70 &692094755426073849
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2483,57 +2484,6 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0.36}
   m_Size: {x: 0.5, y: 0.8}
   m_Direction: 0
---- !u!20 &5600664208056769113
-Camera:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5545106858585411651}
-  m_Enabled: 1
-  serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
-  m_projectionMatrixMode: 1
-  m_GateFitMode: 2
-  m_FOVAxisMode: 0
-  m_Iso: 200
-  m_ShutterSpeed: 0.005
-  m_Aperture: 16
-  m_FocusDistance: 10
-  m_FocalLength: 50
-  m_BladeCount: 5
-  m_Curvature: {x: 2, y: 11}
-  m_BarrelClipping: 0.25
-  m_Anamorphism: 0
-  m_SensorSize: {x: 36, y: 24}
-  m_LensShift: {x: 0, y: 0}
-  m_NormalizedViewPortRect:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 1
-    height: 1
-  near clip plane: 0.3
-  far clip plane: 1000
-  field of view: 60
-  orthographic: 0
-  orthographic size: 5
-  m_Depth: 0
-  m_CullingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_RenderingPath: -1
-  m_TargetTexture: {fileID: 0}
-  m_TargetDisplay: 0
-  m_TargetEye: 3
-  m_HDR: 1
-  m_AllowMSAA: 1
-  m_AllowDynamicResolution: 0
-  m_ForceIntoRT: 0
-  m_OcclusionCulling: 1
-  m_StereoConvergence: 10
-  m_StereoSeparation: 0.022
 --- !u!1 &5577558027338023143
 GameObject:
   m_ObjectHideFlags: 0
@@ -3497,7 +3447,7 @@ GameObject:
   - component: {fileID: 8475333608525416197}
   m_Layer: 8
   m_Name: Bow
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3511,7 +3461,7 @@ RectTransform:
   m_GameObject: {fileID: 7888996360327651887}
   m_LocalRotation: {x: -0, y: 0.008726557, z: -0, w: 0.9999619}
   m_LocalPosition: {x: 0, y: 0, z: 0.00015256465}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.2, y: 1.2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 427913731191410833}

@@ -8808,13 +8808,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   allies:
-  - {fileID: 7888996360327651887, guid: f251d4c264061504cb5e63cf7c50f8b5, type: 3}
-  - {fileID: 6098444360452790214, guid: 313cc5626bdb40c4caba5cde9da777f3, type: 3}
+  - {fileID: 0}
+  - {fileID: 0}
   - {fileID: 3534444474618446514, guid: ba343ca9333df6047a1c120aa1018b6d, type: 3}
-  - {fileID: 6179158954207379504, guid: 15accb8dcd196fc4086a8f8903abddd9, type: 3}
-  - {fileID: 6781188755031549437, guid: 14d80addf33070f4ead56f9d39ceb9b1, type: 3}
+  - {fileID: 0}
+  - {fileID: 0}
   - {fileID: 8617405725351149479, guid: 8db7b256470b988418cfaff97d130bcf, type: 3}
-  - {fileID: 50039320965488619, guid: 87decbef580085b42b7fdc58b15ca962, type: 3}
+  - {fileID: 0}
   - {fileID: 822987607556925277, guid: 03d9eaad2e9bb544a97df8ae4837e79f, type: 3}
   - {fileID: 3133274129896086462, guid: 25b9622195d1df44ab4aaf85495f6a06, type: 3}
   - {fileID: 299709998097345282, guid: ccf832e4061b599449b1f3ef3956242b, type: 3}
@@ -8822,6 +8822,8 @@ MonoBehaviour:
   - {fileID: 2144735349077494666, guid: 9f9cc971460371147a42f8ea4777cd66, type: 3}
   - {fileID: 773221152859356726, guid: 8a2ca8890f65c2e4086affdfe699f1b3, type: 3}
   - {fileID: 5078748258946161633, guid: 2422acea0e1021648b6552d117bfe5f7, type: 3}
+  defaultObject: {fileID: 2207002965724295314, guid: f4b0d938ca6a2fd40b2ac2646439926c,
+    type: 3}
   tilemap: {fileID: 294567138}
   facingRight: 1
   xSpacing: 1
@@ -8841,6 +8843,11 @@ MonoBehaviour:
   clickableLayer:
     serializedVersion: 2
     m_Bits: 256
+  playerObjCircle: {fileID: 803794498}
+  playerObjCircle1: {fileID: 2579837272745347421, guid: e3f3eb61d64936d41a8775cb9f69e009,
+    type: 3}
+  playerObjCircle2: {fileID: 2579837272745347421, guid: e3f3eb61d64936d41a8775cb9f69e009,
+    type: 3}
 --- !u!1 &432860099
 GameObject:
   m_ObjectHideFlags: 0
@@ -10270,6 +10277,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c51aaa46189252447b799a2fc161072b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &803794498 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2579837272745347421, guid: e3f3eb61d64936d41a8775cb9f69e009,
+    type: 3}
+  m_PrefabInstance: {fileID: 814692678}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &803794499 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1154552522731625606, guid: e3f3eb61d64936d41a8775cb9f69e009,
+    type: 3}
+  m_PrefabInstance: {fileID: 814692678}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &805951404
 GameObject:
   m_ObjectHideFlags: 0
@@ -13125,6 +13144,8 @@ MonoBehaviour:
   attackState: 1
   normalState: 0
   skillState: 0
+  aoe: 2
+  damageEffect: {fileID: 0}
   projectilePrefab: {fileID: 0}
 --- !u!1 &1353238826
 GameObject:
@@ -15237,6 +15258,7 @@ Transform:
   m_Children:
   - {fileID: 432860100}
   - {fileID: 294567136}
+  - {fileID: 803794499}
   m_Father: {fileID: 660744211}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1449427014
@@ -16069,12 +16091,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1482762142}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 41142c86f0099df47b48ddb7f9714531, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   allies: []
+  defaultObject: {fileID: 2207002965724295314, guid: f4b0d938ca6a2fd40b2ac2646439926c,
+    type: 3}
   tilemap: {fileID: 1482762146}
   facingRight: 1
   xSpacing: 0.5
@@ -26059,6 +26083,8 @@ SceneRoots:
   - {fileID: 1109086710}
   - {fileID: 65661334}
   - {fileID: 971673595}
-  - {fileID: 216539788}
+  - {fileID: 8181495743769998827}
+  - {fileID: 3507044375423185155}
+  - {fileID: 2130960960728557894}
   - {fileID: 176507274}
   - {fileID: 2037801925}
