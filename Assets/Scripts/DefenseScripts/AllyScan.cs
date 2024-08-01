@@ -7,9 +7,9 @@ public class AllyScan : MonoBehaviour
     [SerializeField] private int attackDamage = 1;
     [SerializeField] private float attackSpeed = 1f;
     [SerializeField] private float runState = 0f;
-    [SerializeField] private float attackState = 1f;
-    [SerializeField] private float normalState = 0f;
-    [SerializeField] private float skillState = 0f;
+    [SerializeField] private float attackState;
+    [SerializeField] private float normalState;
+    [SerializeField] private float skillState;
     [SerializeField] private float aoe = 2f;
 
     [SerializeField] private DamageEffect damageEffect; // damageEffect를 SerializeField로 추가
@@ -21,8 +21,6 @@ public class AllyScan : MonoBehaviour
     private void Awake()
     {
         animator = GetComponent<Animator>();
-        animator.speed = attackSpeed;
-        animator.speed = attackSpeed;
         animator.SetFloat("RunState", runState);
         animator.SetFloat("SkillState", skillState);
         animator.SetFloat("NormalState", normalState);
@@ -39,8 +37,21 @@ public class AllyScan : MonoBehaviour
         {
             AllyAttack();
         }
+        SetAnimationSpeed("AttackState",attackSpeed);
     }
-
+    public void SetAnimationSpeed(string name, float speed)
+    {
+        // AnimatorStateInfo를 사용하여 현재 상태가 공격 상태인지 확인하고, 속도를 변경합니다.
+        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+        if (stateInfo.IsName(name))
+        {
+            animator.speed = speed;
+        }
+        else
+        {
+            animator.speed = 1f;
+        }
+    }
     void FindClosestObject()
     {
         Vector2 point = transform.position;
