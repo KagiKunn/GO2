@@ -1,0 +1,76 @@
+﻿%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1847050325385241245
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1725356937903507994}
+  - component: {fileID: 7748053672710165924}
+  m_Layer: 0
+  m_Name: DefenseStage
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1725356937903507994
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1847050325385241245}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 5.4513373, y: 5.3039985, z: 0.1448052}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7748053672710165924
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1847050325385241245}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 162c8a4dd0dc4678bed21edcd375d526, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  darkElf:
+  - {fileID: 7056000162727164853, guid: 78fc94d50a126914cbf73c6833f89d40, type: 3}
+  - {fileID: 4671762458729282005, guid: 71c87d8203d14ba47a4d4e396a8363c8, type: 3}
+  - {fileID: 257554848983660160, guid: 67babb23f73659c4b8e1aff693bb85a1, type: 3}
+  - {fileID: 7798541044053392926, guid: e9a89a42116beae408d144f0408039af, type: 3}
+  - {fileID: 1839222284020890419, guid: ecbf48371fd6b7a43a609b4f84b7f769, type: 3}
+  human:
+  - {fileID: 6634290375242253128, guid: f67fa9e1419edc2458a373131f64c1b2, type: 3}
+  - {fileID: 4531840113203881442, guid: a5b97426e2c2c1d40b435f12e59c223d, type: 3}
+  - {fileID: 141717027028280160, guid: 95ea6df50e6f24247b0fdae95467e010, type: 3}
+  - {fileID: 1521261300023797124, guid: 4a35b89c2a5388449b6c29e3955b5ec0, type: 3}
+  - {fileID: 1712848231207533490, guid: 3dbb5e50bcfde0b4bb94f29fe11b7fae, type: 3}
+  orc:
+  - {fileID: 7829867968762000690, guid: fdc5b4d02bfd7074282e501465a4391a, type: 3}
+  - {fileID: 4200133173619688769, guid: 264ea89df369aa74e92dc08b2388f3bb, type: 3}
+  - {fileID: 22752085748122022, guid: 463a4b97e195f774cb6d458dc74dd015, type: 3}
+  - {fileID: 7259552809771645439, guid: ea2804e7b2b7c7d4991d97a0e655589b, type: 3}
+  - {fileID: 2841263313334068932, guid: 3dafbbd16b8210242b4db8fc01007d90, type: 3}
+  skeleton:
+  - {fileID: 8765090358203190414, guid: f2fe3c1332333c048b6eb78b67c943c6, type: 3}
+  - {fileID: 7996934490576644032, guid: 2c25fe2a3f95bbe42a553e83d5f4b020, type: 3}
+  - {fileID: 1822805178930394091, guid: 4eb489848a1668442bfb722a7e14522a, type: 3}
+  - {fileID: 4888487255515548889, guid: ec04a436597427d45aebebe20700b752, type: 3}
+  - {fileID: 3013676815889310574, guid: ff80c810daa7784469985e3191d7a343, type: 3}
+  witch:
+  - {fileID: 6677537645548095324, guid: 4380f3946a2a3f344a105c45d5035d79, type: 3}
+  - {fileID: 6340428364191556002, guid: b94cea9bf16d81b4683aee42734924b7, type: 3}
+  - {fileID: 3104906586337987899, guid: 0658958ae19c6ae41b39abe8f60005c1, type: 3}
+  - {fileID: 7296920496132467183, guid: 4e9f441e031ef4d40b7bab4d440e0690, type: 3}
+  - {fileID: 5568034529984875808, guid: a6b5df22806052c40b5597f70a493881, type: 3}

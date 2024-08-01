@@ -32,7 +32,6 @@ public class EnemyMovement : MonoBehaviour {
 	[SerializeField]
 	private Vector2 boxSize = new Vector2(2, 0.1f);
 
-	
 	public GameObject projectilePrefab;
 	private Rigidbody2D rigid2d;
 	private Animator animator;
@@ -88,34 +87,28 @@ public class EnemyMovement : MonoBehaviour {
 
 	public void isAttack() {
 		if (castleWall != null) {
-			if (normalState == 1f || skillState == 1f || normalState == 0.25f || skillState == 0.25f)
-			{
+			if (normalState == 1f || skillState == 1f || normalState == 0.25f || skillState == 0.25f) {
 				CollisionAttack();
-			}
-			else
-			{
+			} else {
 				castleWall.TakeDamage(attackDamage);
 			}
 		}
 	}
 
-	public void CollisionAttack()
-	{
-		if (castleWall != null)
-		{
+	public void CollisionAttack() {
+		if (castleWall != null) {
 			Vector3 spawnPosition = transform.position + new Vector3(0, GetComponent<Collider2D>().bounds.size.y, 0);
-			GameObject projectileInstance = Instantiate(projectilePrefab, spawnPosition, Quaternion.Euler(0,180,0));
+			GameObject projectileInstance = Instantiate(projectilePrefab, spawnPosition, Quaternion.Euler(0, 180, 0));
 			EnemyProjectile projectile = projectileInstance.GetComponent<EnemyProjectile>();
-			if (projectile != null)
-			{
+
+			if (projectile != null) {
 				projectile.Initialize(Vector3.left, attackDamage);
-			}
-			else
-			{
+			} else {
 				castleWall.TakeDamage(attackDamage);
 			}
 		}
 	}
+
 	public void TakeDamage(int damage) {
         health -= damage;
 
@@ -209,7 +202,7 @@ public class EnemyMovement : MonoBehaviour {
 	private void Die() {
 		// 적이 죽었을 때의 동작 (예: 오브젝트 비활성화)
 		gameObject.SetActive(false);
- 	}
+	}
 
 	private void OnDrawGizmos() {
 		Vector2 boxCenter = (Vector2)transform.position + new Vector2(-boxSize.x / 2, 0);
