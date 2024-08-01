@@ -8,7 +8,7 @@ public class EnemyMovement : MonoBehaviour {
 	[SerializeField] private int health = 10;
 
 	[SerializeField]
-	private float moveSpeed = 1.0f;
+	public float moveSpeed = 1.0f;
 
 	[SerializeField]
 	private LayerMask detectionLayerMask;
@@ -17,8 +17,8 @@ public class EnemyMovement : MonoBehaviour {
 
 	[SerializeField] private float attackSpeed = 1f;
 
-	//idle 0 , run 0.5, stun 1
-	[SerializeField] private float runState = 1f;
+	//idle 0 , run 0.25, stun 1
+	[SerializeField] public float runState = 0.25f;
 
 	//skill 0, normal 1
 	[SerializeField] private float attackState = 1f;
@@ -35,11 +35,11 @@ public class EnemyMovement : MonoBehaviour {
 	public GameObject projectilePrefab;
 	private Rigidbody2D rigid2d;
 	private Animator animator;
-	private Vector3 movementdirection;
+	public Vector3 movementdirection;
 	private CastleWall castleWall;
 	private Collider2D hit;
 	private bool isChangingBrightness = false;
-
+	public bool isKnockedBack = false;
 	private void Awake() {
 		// pos.position = new Vector2(0, 0);
 		rigid2d = GetComponent<Rigidbody2D>();
@@ -50,13 +50,25 @@ public class EnemyMovement : MonoBehaviour {
 		movementdirection = Vector3.left;
 	}
 
-	private void Update() {
-		if (CollisionCheck()) {
-			EnemyAttack();
-		} else {
-			EnemyMove();
+	private void Update()
+	{
+		if (!isKnockedBack)
+		{
+			if (CollisionCheck())
+			{
+				EnemyAttack();
+			}
+			else
+			{
+				EnemyMove();
+			}
+		}
+		else
+		{
+			EnemyNockout();
 		}
 
+		// 이동 방향에 따라 속도 적용
 		rigid2d.velocity = movementdirection * (moveSpeed * Time.timeScale);
 	}
 
@@ -75,7 +87,7 @@ public class EnemyMovement : MonoBehaviour {
 
 	private void EnemyMove() {
 		movementdirection = Vector3.left;
-		animator.SetFloat("RunState", 0.5f);
+		animator.SetFloat("RunState", runState);
 		animator.ResetTrigger("Attack");
 	}
 
@@ -83,6 +95,13 @@ public class EnemyMovement : MonoBehaviour {
 		movementdirection = Vector3.zero;
 		animator.SetFloat("AttackState", attackState);
 		animator.SetTrigger("Attack");
+	}
+
+	private void EnemyNockout()
+	{
+		animator.ResetTrigger("Attack");
+		movementdirection = Vector3.zero;
+		animator.SetFloat("RunState",1f);
 	}
 
 	public void isAttack() {
@@ -122,6 +141,11 @@ public class EnemyMovement : MonoBehaviour {
             Die();
         }
     }
+
+	public void SetMoveSpeed(float decrease)
+	{
+		moveSpeed = moveSpeed - decrease;
+	}
 
     private IEnumerator ChangeBrightnessTemporarily(float duration, float brightnessMultiplier)
     {
