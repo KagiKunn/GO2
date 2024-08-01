@@ -1,6 +1,7 @@
+using System;
 using UnityEngine;
 
-public class ClickObjectDetector2D : MonoBehaviour
+public class AllySwap : MonoBehaviour
 {
     public LayerMask clickableLayer; // 감지할 레이어 설정
     private GameObject unit1;
@@ -14,10 +15,33 @@ public class ClickObjectDetector2D : MonoBehaviour
     private Vector3 targetPosition1;
     private Vector3 targetPosition2;
 
+    private float originTime;
+
+    public GameObject playerObjCircle;
+    public GameObject playerObjCircle1;
+    public GameObject playerObjCircle2;
+    // void Start()
+    // {
+    //     // HoverEvent를 모든 유닛에 추가하고 playerObjCircle을 설정합니다.
+    //     foreach (var unit in GameObject.FindGameObjectsWithTag("Player"))
+    //     {
+    //         var hoverEvent = unit.AddComponent<AllyHoverEvent>();
+    //         hoverEvent.Initialize(playerObjCircle);
+    //     }
+    // }
+    private void Awake()
+    {
+        playerObjCircle1 = Instantiate(playerObjCircle, transform.position, Quaternion.identity);
+        playerObjCircle2 = Instantiate(playerObjCircle, transform.position, Quaternion.identity);
+        playerObjCircle1.SetActive(false);
+        playerObjCircle2.SetActive(false);
+    }
+
     void Update()
     {
         if (Input.GetMouseButtonDown(0) && !isMoving) // 마우스 왼쪽 버튼 클릭 확인 및 이동 중인지 확인
         {
+            
             Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector2 mousePosition2D = new Vector2(mousePosition.x, mousePosition.y);
 
@@ -30,29 +54,43 @@ public class ClickObjectDetector2D : MonoBehaviour
 
                 if (unit1 == null)
                 {
+                    originTime = Time.timeScale;
                     unit1 = clickedObject;
+                    if (unit1 != null)
+                    {
+                        Time.timeScale = 0.5f;
+                        playerObjCircle1.SetActive(true);
+                        playerObjCircle1.transform.position = unit1.transform.position;
+                    }
                     CustomLogger.Log("Selected unit1: " + unit1.name);
                 }
                 else
                 {
                     unit2 = clickedObject;
-                    CustomLogger.Log("Selected unit2: " + unit2.name);
+                    if (unit2 != null)
+                    {
+                        Time.timeScale = originTime;
+                        playerObjCircle2.SetActive(true);
+                        playerObjCircle2.transform.position = unit2.transform.position;
+                        
+                        CustomLogger.Log("Selected unit2: " + unit2.name);
 
-                    targetPosition1 = unit2.transform.position;
-                    targetPosition2 = unit1.transform.position;
-                    animator1 = unit1.GetComponent<Animator>();
-                    animator2 = unit2.GetComponent<Animator>();
-                    allyScan1 = unit1.GetComponent<AllyScan>();
-                    allyScan2 = unit2.GetComponent<AllyScan>();
-                    isMoving = true; // 이동 시작
+                        targetPosition1 = unit2.transform.position;
+                        targetPosition2 = unit1.transform.position;
+                        animator1 = unit1.GetComponent<Animator>();
+                        animator2 = unit2.GetComponent<Animator>();
+                        allyScan1 = unit1.GetComponent<AllyScan>();
+                        allyScan2 = unit2.GetComponent<AllyScan>();
+                        isMoving = true; // 이동 시작
+                        // 이동 시작 애니메이션 트리거
+                        animator1.SetTrigger("Run");
+                        animator2.SetTrigger("Run");
 
-                    // 이동 시작 애니메이션 트리거
-                    animator1.SetTrigger("Run");
-                    animator2.SetTrigger("Run");
+                        // AllyScan 스크립트 비활성화
+                        if (allyScan1 != null) allyScan1.enabled = false;
+                        if (allyScan2 != null) allyScan2.enabled = false;
+                    }
 
-                    // AllyScan 스크립트 비활성화
-                    if (allyScan1 != null) allyScan1.enabled = false;
-                    if (allyScan2 != null) allyScan2.enabled = false;
                 }
             }
             else
@@ -85,6 +123,8 @@ public class ClickObjectDetector2D : MonoBehaviour
             if (allyScan1 != null) allyScan1.enabled = true;
             if (allyScan2 != null) allyScan2.enabled = true;
 
+            playerObjCircle1.SetActive(false);
+            playerObjCircle2.SetActive(false);
             isMoving = false; // 이동 완료
             unit1 = null;
             unit2 = null;

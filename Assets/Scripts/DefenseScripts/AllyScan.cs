@@ -6,14 +6,11 @@ public class AllyScan : MonoBehaviour
     [SerializeField] private LayerMask enemyLayer;
     [SerializeField] private int attackDamage = 1;
     [SerializeField] private float attackSpeed = 1f;
-    //idle 0 , run 0.5, stun 1
     [SerializeField] private float runState = 0f;
-    //skill 0, normal 1
     [SerializeField] private float attackState = 1f;
-    //normal 0, bow 0.25 magic, 0.5 gun 0.75, crossbow 1
     [SerializeField] private float normalState = 0f;
-    //normal 0, bow 0.5, magic 1
     [SerializeField] private float skillState = 0f;
+    [SerializeField] private float aoe = 2f;
 
     [SerializeField] private DamageEffect damageEffect; // damageEffect를 SerializeField로 추가
     public GameObject projectilePrefab;
@@ -103,7 +100,7 @@ public class AllyScan : MonoBehaviour
         EnemyMovement enemy = closestObject.GetComponent<EnemyMovement>();
         if (enemy != null)
         {
-            damageEffect.ApplyEffect(enemy,null, attackDamage); // 데미지 효과 적용
+            damageEffect.ApplyEffect(enemy,null, attackDamage, aoe); // 데미지 효과 적용
             if (enemy.IsDead())
             {
                 closestObject = null;
@@ -120,7 +117,7 @@ public class AllyScan : MonoBehaviour
             AllyProjectile projectile = projectileInstance.GetComponent<AllyProjectile>();
             if (projectile != null)
             {
-                projectile.Initialize(closestObject.transform, attackDamage, damageEffect); // 데미지 효과 전달
+                projectile.Initialize(closestObject.transform, attackDamage, damageEffect, aoe); // 데미지 효과 전달
             }
             else
             {

@@ -2252,7 +2252,7 @@ GameObject:
   - component: {fileID: 4209559697399220482}
   m_Layer: 8
   m_Name: FireMage
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2266,7 +2266,7 @@ RectTransform:
   m_GameObject: {fileID: 5078748258946161633}
   m_LocalRotation: {x: -0, y: 0.008726557, z: -0, w: 0.9999619}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.2, y: 1.2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8955857017660083731}
@@ -3571,9 +3571,9 @@ GameObject:
   - component: {fileID: 8955857017660083731}
   - component: {fileID: 131510350273965332}
   - component: {fileID: 3522061262964474135}
-  - component: {fileID: 9108578487180535471}
-  - component: {fileID: 35192540501382211}
-  - component: {fileID: 7029098068493513042}
+  - component: {fileID: 8343883682433833194}
+  - component: {fileID: 7598385657093449526}
+  - component: {fileID: 4034562772263534572}
   m_Layer: 8
   m_Name: UnitRoot
   m_TagString: Untagged
@@ -3632,7 +3632,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &9108578487180535471
+--- !u!114 &8343883682433833194
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3654,10 +3654,11 @@ MonoBehaviour:
   attackState: 1
   normalState: 0.5
   skillState: 0
+  aoe: 2
   damageEffect: {fileID: 11400000, guid: b70796ffa5bf53d4e9afa165ba817333, type: 2}
   projectilePrefab: {fileID: 3517222318613418564, guid: 23f118fce268dd147a7c178931baf7db,
     type: 3}
---- !u!114 &35192540501382211
+--- !u!114 &7598385657093449526
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3669,7 +3670,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76c7a70ed6791a04797d89bb0504bacb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!70 &7029098068493513042
+--- !u!70 &4034562772263534572
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
