@@ -8,7 +8,7 @@ public class EnemyMovement : MonoBehaviour {
 	[SerializeField] private int health = 10;
 
 	[SerializeField]
-	private float moveSpeed = 1.0f;
+	public float moveSpeed = 1.0f;
 
 	[SerializeField]
 	private LayerMask detectionLayerMask;
@@ -129,6 +129,11 @@ public class EnemyMovement : MonoBehaviour {
             Die();
         }
     }
+
+	public void SetMoveSpeed(float decrease)
+	{
+		moveSpeed = moveSpeed - decrease;
+	}
 
     private IEnumerator ChangeBrightnessTemporarily(float duration, float brightnessMultiplier)
     {

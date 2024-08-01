@@ -1,6 +1,4 @@
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 public class AllyScan : MonoBehaviour
 {
@@ -19,8 +17,6 @@ public class AllyScan : MonoBehaviour
 
     private Animator animator;
     private GameObject closestObject;
-    
-    private ClickEvent clickEvent;
 
     private void Awake()
     {
@@ -30,8 +26,6 @@ public class AllyScan : MonoBehaviour
         animator.SetFloat("RunState", runState);
         animator.SetFloat("SkillState", skillState);
         animator.SetFloat("NormalState", normalState);
-
-        clickEvent = GetComponent<ClickEvent>();
     }
 
     private void Update()
@@ -68,9 +62,6 @@ public class AllyScan : MonoBehaviour
         if (closestCollider != null)
         {
             closestObject = closestCollider.gameObject;
-            // 클릭된 오브젝트 강조
-            clickEvent.ResetOutline();
-            closestObject.GetComponent<ClickEvent>()?.OnPointerClick(null);
         }
     }
 

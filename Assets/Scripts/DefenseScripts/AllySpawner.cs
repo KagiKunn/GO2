@@ -5,7 +5,8 @@ using System.Collections.Generic;
 
 public class AllySpawner : MonoBehaviour
 {
-    [SerializeField] private GameObject[] allies;
+    [SerializeField] public GameObject[] allies;
+    [SerializeField] public GameObject defaultObject;
     [SerializeField] private Tilemap tilemap;
     [SerializeField] private bool facingRight = false;
     [SerializeField] private float xSpacing = 1.0f;  // 타일 크기에 맞게 조정
@@ -33,12 +34,18 @@ public class AllySpawner : MonoBehaviour
 
                 // 스페이싱 값에 따라 월드 위치 조정
                 worldPosition += new Vector3(x * xSpacing, y * ySpacing, 0);
-                if (currentNumber < maxUnitCount)
+
+                GameObject ally = null;
+                if (currentNumber < maxUnitCount && allies[currentNumber] != null)
                 {
-                    GameObject ally = Instantiate(allies[currentNumber], worldPosition, facingRight ? Quaternion.Euler(0, 180, 0) : Quaternion.identity, transform);
-                    allyPositions[gridPosition] = ally;
-                    currentNumber++;
+                    ally = Instantiate(allies[currentNumber], worldPosition, facingRight ? Quaternion.Euler(0, 180, 0) : Quaternion.identity, transform);
                 }
+                else
+                {
+                    ally = Instantiate(defaultObject, worldPosition, facingRight ? Quaternion.Euler(0, 180, 0) : Quaternion.identity, transform);
+                }
+                allyPositions[gridPosition] = ally;
+                currentNumber++;
             }
         }
     }

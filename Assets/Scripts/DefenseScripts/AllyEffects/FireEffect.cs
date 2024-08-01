@@ -1,10 +1,10 @@
+using System.Collections;
 using UnityEngine;
 using System.Collections.Generic;
 
 [CreateAssetMenu(menuName = "DamageEffects/FireEffect")]
 public class FireEffect : DamageEffect
 {
-    public float detectionRadius = 5.0f;
 
     private readonly Dictionary<EnemyMovement, Coroutine> activeDamageCoroutines = new Dictionary<EnemyMovement, Coroutine>();
 
@@ -32,9 +32,22 @@ public class FireEffect : DamageEffect
                     activeDamageCoroutines.Remove(target);
                 }
 
-                Coroutine damageCoroutine = ApplyContinuousDamage(target, damage, activeDamageCoroutines, Color.red);
+                Coroutine damageCoroutine = ApplyContinuousDamage(target, activeDamageCoroutines, Color.red, FireDamage(target,damage));
                 activeDamageCoroutines[target] = damageCoroutine;
             }
+        }
+    }
+    public IEnumerator FireDamage(EnemyMovement target, int damage)
+    {
+        float duration = 5f; // 지속 시간 5초
+        float elapsedTime = 0f;
+
+        while (elapsedTime < duration)
+        {
+            target.TakeDamage(damage);
+            CustomLogger.Log("Damaged " + target.name + " with fire effect", "red");
+            elapsedTime += 1f;
+            yield return new WaitForSeconds(1f); // 1초마다 반복
         }
     }
 }
