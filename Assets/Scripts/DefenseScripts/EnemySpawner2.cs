@@ -5,30 +5,35 @@ using DefenseScripts;
 
 public class EnemySpawner2 : MonoBehaviour
 {
+    //스테이지 
     [SerializeField] private List<EnemyStage> stageEnemyPrefabs;
     [SerializeField] public int currentStage = 1;
     private List<GameObject> enemyPrefabs;
+    private List<int> usedStages = new List<int>();
+    private List<string> usedRaces = new List<string>();
+    
+    //스폰
     public float minY = -0f;
     public float maxY = 10f;
     private const float fixedX = 20f;
     [SerializeField] public int numberOfObjects = 10;
     private int spawnedEnemy = 0;
     public float maxSpawnInterval = 2f;
+    
+    //웨이브
     [SerializeField] private int totalWave = 3;
     private int currentWave = 0;
 
     //ProgressBar 스크립트 참조
     public ProgressBar progressBar; 
     
-    //ステージと種族マッチング
-    private List<int> usedStages = new List<int>();
-    private List<string> usedRaces = new List<string>();
 
     void Start()
     {
         // ProgressBar 초기화
         if (progressBar != null)
         {
+            //MaxValue　=　このステージで生成される敵の総数
             progressBar.SetMaxValue(numberOfObjects * totalWave);
             progressBar.SetValue(0);
         }
