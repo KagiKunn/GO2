@@ -75,18 +75,4 @@ public abstract class DamageEffect : ScriptableObject
 
         activeDamageCoroutines.Remove(target);
     }
-
-    // protected IEnumerator DurationDamage(EnemyMovement target, int damage)
-    // {
-    //     float duration = 5f; // 지속 시간 5초
-    //     float elapsedTime = 0f;
-    //
-    //     while (elapsedTime < duration)
-    //     {
-    //         target.TakeDamage(damage);
-    //         CustomLogger.Log("Damaged " + target.name + " with fire effect", "red");
-    //         elapsedTime += 1f;
-    //         yield return new WaitForSeconds(1f); // 1초마다 반복
-    //     }
-    // }
 }
