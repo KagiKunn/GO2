@@ -113,7 +113,7 @@ public class EnemyMovement : MonoBehaviour {
 
 	public void isAttack() {
 		if (castleWall != null) {
-			if (normalState == 1f || skillState == 1f || normalState == 0.25f || skillState == 0.25f) {
+			if (normalState == 1f || skillState == 1f || normalState == 0.25f || skillState == 0.25f || skillState == 0.75f || normalState == 0.5f){
 				CollisionAttack();
 			} else {
 				castleWall.TakeDamage(attackDamage);
