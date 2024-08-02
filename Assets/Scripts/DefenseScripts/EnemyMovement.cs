@@ -1,11 +1,12 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 #pragma warning disable CS0414
 
 public class EnemyMovement : MonoBehaviour {
-	[SerializeField] private int health = 10;
+	[SerializeField] private float health = 10f;
 
 	[SerializeField]
 	public float moveSpeed = 1.0f;
@@ -40,6 +41,7 @@ public class EnemyMovement : MonoBehaviour {
 	private Collider2D hit;
 	private bool isChangingBrightness = false;
 	public bool isKnockedBack = false;
+	public float percent = 0f;
 	private void Awake() {
 		// pos.position = new Vector2(0, 0);
 		rigid2d = GetComponent<Rigidbody2D>();
@@ -104,6 +106,11 @@ public class EnemyMovement : MonoBehaviour {
 		animator.SetFloat("RunState",1f);
 	}
 
+	void AdditionalDamage(float percent)
+	{
+		this.percent = percent;
+	}
+
 	public void isAttack() {
 		if (castleWall != null) {
 			if (normalState == 1f || skillState == 1f || normalState == 0.25f || skillState == 0.25f) {
@@ -128,8 +135,8 @@ public class EnemyMovement : MonoBehaviour {
 		}
 	}
 
-	public void TakeDamage(int damage) {
-        health -= damage;
+	public void TakeDamage(float damage) {
+		health -= damage * (1+(percent/100));
 
         // 코루틴이 실행 중이지 않을 때만 호출
         if (!isChangingBrightness)
@@ -141,11 +148,6 @@ public class EnemyMovement : MonoBehaviour {
             Die();
         }
     }
-
-	public void SetMoveSpeed(float decrease)
-	{
-		moveSpeed = moveSpeed - decrease;
-	}
 
     private IEnumerator ChangeBrightnessTemporarily(float duration, float brightnessMultiplier)
     {
