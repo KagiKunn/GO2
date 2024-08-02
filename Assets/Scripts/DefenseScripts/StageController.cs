@@ -23,6 +23,7 @@ public class StageController : MonoBehaviour
     private List<int> usedStages = new List<int>();
     private List<string> usedRaces = new List<string>();
     private List<GameObject> enemyPrefabs;
+    private GameObject bossEnemy;
 
     public int CurrentStage
     {
@@ -44,6 +45,11 @@ public class StageController : MonoBehaviour
         get { return enemyPrefabs; }
     }
 
+    public GameObject BossEnemy
+    {
+        get { return bossEnemy; }
+    }
+
     public void IncrementStage()
     {
         currentStage++;
@@ -51,7 +57,7 @@ public class StageController : MonoBehaviour
         CustomLogger.Log("IncrementStage: CurrentStage = " + currentStage + ", CurrentWave reset to 0", "blue");
     }
 
-    //웨이브 카운트 증가
+    // 웨이브 카운트 증가
     public void IncrementWave()
     {
         currentWave++;
@@ -74,6 +80,7 @@ public class StageController : MonoBehaviour
         {
             CustomLogger.Log("모든 종족이 이미 사용되었습니다.", "red");
             enemyPrefabs = selectedEnemies;
+            bossEnemy = null;
             return;
         }
 
@@ -87,22 +94,50 @@ public class StageController : MonoBehaviour
         {
             case "darkElf":
                 selectedEnemies.AddRange(stage.darkElf);
+                if (selectedEnemies.Count > 0)
+                {
+                    bossEnemy = selectedEnemies[selectedEnemies.Count - 1];
+                    selectedEnemies.RemoveAt(selectedEnemies.Count - 1);
+                }
                 break;
             case "human":
                 selectedEnemies.AddRange(stage.human);
+                if (selectedEnemies.Count > 0)
+                {
+                    bossEnemy = selectedEnemies[selectedEnemies.Count - 1];
+                    selectedEnemies.RemoveAt(selectedEnemies.Count - 1);
+                }
                 break;
             case "orc":
                 selectedEnemies.AddRange(stage.orc);
+                if (selectedEnemies.Count > 0)
+                {
+                    bossEnemy = selectedEnemies[selectedEnemies.Count - 1];
+                    selectedEnemies.RemoveAt(selectedEnemies.Count - 1);
+                }
                 break;
             case "skeleton":
                 selectedEnemies.AddRange(stage.skeleton);
+                if (selectedEnemies.Count > 0)
+                {
+                    bossEnemy = selectedEnemies[selectedEnemies.Count - 1];
+                    selectedEnemies.RemoveAt(selectedEnemies.Count - 1);
+                }
                 break;
             case "witch":
                 selectedEnemies.AddRange(stage.witch);
+                if (selectedEnemies.Count > 0)
+                {
+                    bossEnemy = selectedEnemies[selectedEnemies.Count - 1];
+                    selectedEnemies.RemoveAt(selectedEnemies.Count - 1);
+                }
                 break;
         }
 
         enemyPrefabs = selectedEnemies;
-        CustomLogger.Log("선택된 적 프리팹 수: " + enemyPrefabs.Count, "blue"); // 선택된 적 프리팹 수를 로그에 출력
+
+        CustomLogger.Log("선택된 적 프리팹 수: " + enemyPrefabs.Count, "blue");
+        CustomLogger.Log("보스 몬스터: " + (bossEnemy != null ? bossEnemy.name : "없음"), "red");
     }
+    
 }
