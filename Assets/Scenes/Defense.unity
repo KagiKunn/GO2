@@ -12878,6 +12878,7 @@ GameObject:
   - component: {fileID: 1155641491}
   - component: {fileID: 1155641490}
   - component: {fileID: 1155641492}
+  - component: {fileID: 1155641493}
   m_Layer: 0
   m_Name: UI
   m_TagString: Untagged
@@ -12946,6 +12947,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0d55229094e844449b17ac4db724f251, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uiDocument: {fileID: 1155641491}
+--- !u!114 &1155641493
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1155641488}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2678392b1111e944d913b3a128178c34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   uiDocument: {fileID: 1155641491}
@@ -26022,6 +26036,7 @@ MonoBehaviour:
   progressBar: {fileID: 1244472809}
   stageEndPopup: {fileID: 11798420}
   nextTurnButton: {fileID: 2139419812}
+  enemyLayerName: Enemy
 --- !u!1 &2139419810
 GameObject:
   m_ObjectHideFlags: 0
