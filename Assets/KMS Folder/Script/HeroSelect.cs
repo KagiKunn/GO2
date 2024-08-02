@@ -41,6 +41,7 @@ public class HeroSelect : MonoBehaviour
     {
         CustomLogger.Log("Heroes Button Clicked");
         selectedHeroIndex = index;
+        
         Sprite heroSprite = GetHeroMainImage(index); // 영웅의 메인 이미지 추출을 위한 메서드(누끼 이미지)
         
         // 이미 편성되어 있는 영웅인지 확인
