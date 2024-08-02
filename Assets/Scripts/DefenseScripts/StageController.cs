@@ -48,17 +48,20 @@ public class StageController : MonoBehaviour
     {
         currentStage++;
         currentWave = 0;
+        CustomLogger.Log("IncrementStage: CurrentStage = " + currentStage + ", CurrentWave reset to 0", "blue");
     }
 
     //웨이브 카운트 증가
     public void IncrementWave()
     {
         currentWave++;
+        CustomLogger.Log("IncrementWave: CurrentWave = " + currentWave, "blue");
     }
 
     public void ResetWave()
     {
         currentWave = 0;
+        CustomLogger.Log("ResetWave: CurrentWave reset to 0", "blue");
     }
 
     public void SelectRandomEnemyPrefabs()

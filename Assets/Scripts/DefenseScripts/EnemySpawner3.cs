@@ -23,6 +23,9 @@ public class EnemySpawner3 : MonoBehaviour
     public GameObject stageEndPopup;
     public Button nextTurnButton;
 
+    // 필드상 적을 찾기 위해 적 오브젝트의 공통속성인 레이어를 탐색
+    public string enemyLayerName = "Enemy";
+
     private void Start()
     {
         // 스테이지 진행도 바
@@ -37,7 +40,7 @@ public class EnemySpawner3 : MonoBehaviour
         {
             nextTurnButton.onClick.AddListener(OnNextTurnButtonClicked);
         }
-
+        stageController.ResetWave();
         StartCoroutine(ManageStages());
     }
 
@@ -46,10 +49,13 @@ public class EnemySpawner3 : MonoBehaviour
     {
         while (stageController.CurrentStage <= 5)
         {
-            CustomLogger.Log("Current Stage: " + stageController.CurrentStage, "yellow");
+            CustomLogger.Log("Current Stage: " + stageController.CurrentStage + ", TotalWave: " + stageController.TotalWave, "yellow");
 
             yield return StartCoroutine(SpawnWaves());
             CustomLogger.Log("스테이지 종료", "red");
+
+            // 웨이브 실행 + 게임상 적병이 모두 사라질 때까지 대기
+            yield return new WaitUntil(() => AllEnemiesDefeated());
 
             // 스테이지 종료 시 팝업 UI 활성화
             if (stageEndPopup != null)
@@ -80,6 +86,8 @@ public class EnemySpawner3 : MonoBehaviour
             stageController.SelectRandomEnemyPrefabs();
         }
 
+        CustomLogger.Log("CurrentWave: " + stageController.CurrentWave + ", TotalWave: " + stageController.TotalWave, "blue");
+
         // 전체 웨이브보다 현재 웨이브 카운트가 적을 경우에만 반복 스폰
         while (stageController.CurrentWave < stageController.TotalWave)
         {
@@ -102,26 +110,26 @@ public class EnemySpawner3 : MonoBehaviour
 
             if (stageController.CurrentWave < stageController.TotalWave)
             {
-                CustomLogger.Log("웨이브 " + stageController.CurrentWave + " 종료. 다음 웨이브까지 " + spawnInterval + "초 대기",
-                    "yellow");
+                CustomLogger.Log("웨이브 " + stageController.CurrentWave + " 종료. 다음 웨이브까지 " + spawnInterval + "초 대기", "yellow");
                 yield return new WaitForSeconds(spawnInterval);
             }
         }
     }
 
-
     // 적 스폰 담당
     IEnumerator SpawnObjects(List<GameObject> wavePrefabs)
     {
         CustomLogger.Log("SpawnObjects 진입", "blue");
-        CustomLogger.Log(wavePrefabs);
+        CustomLogger.Log("스폰할 적 프리팹 수: " + wavePrefabs.Count, "blue"); // 프리팹 수를 로그에 출력
 
         for (int i = 0; i < numberOfObjects; i++)
         {
             float randomY = Random.Range(minY, maxY);
             GameObject randomPrefab = GetRandomPrefab(wavePrefabs);
             Vector3 spawnPosition = new Vector3(fixedX, randomY, 0);
-            Instantiate(randomPrefab, spawnPosition, Quaternion.identity, transform);
+
+            GameObject enemyInstance = Instantiate(randomPrefab, spawnPosition, Quaternion.identity, transform);
+            CustomLogger.Log("적 스폰됨: " + enemyInstance.name + " 위치: " + spawnPosition);
 
             float waitTime = Random.Range(0, maxSpawnInterval);
             yield return new WaitForSeconds(waitTime);
@@ -175,6 +183,20 @@ public class EnemySpawner3 : MonoBehaviour
             default:
                 return new float[] { 1f };
         }
+    }
+
+    bool AllEnemiesDefeated()
+    {
+        int enemyLayer = LayerMask.NameToLayer(enemyLayerName);
+        GameObject[] allObjects = GameObject.FindObjectsByType<GameObject>(FindObjectsSortMode.None);
+        foreach (GameObject obj in allObjects)
+        {
+            if (obj.layer == enemyLayer)
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     // 버튼 클릭 시 호출
