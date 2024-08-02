@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 4721360996291860632}
   - component: {fileID: 1756499206735262269}
   - component: {fileID: 971248205669892279}
-  - component: {fileID: 3093788080581942961}
-  - component: {fileID: 3813284556652181990}
-  - component: {fileID: 4821769643333385606}
+  - component: {fileID: 3140031543809494843}
+  - component: {fileID: 4437321911593073470}
+  - component: {fileID: 2918269163172947492}
   m_Layer: 8
   m_Name: UnitRoot
   m_TagString: Untagged
@@ -72,7 +72,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &3093788080581942961
+--- !u!114 &3140031543809494843
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -94,9 +94,11 @@ MonoBehaviour:
   attackState: 1
   normalState: 0.5
   skillState: 0
-  projectilePrefab: {fileID: 478861297126206209, guid: 9541f96b100e19244813422b628cfe2c,
+  aoe: 2
+  damageEffect: {fileID: 11400000, guid: 2d71a008f31f4604f9520058c8e44eee, type: 2}
+  projectilePrefab: {fileID: 348023138124434644, guid: ec95b6afa0f000b4fb52e0d8aa94376a,
     type: 3}
---- !u!114 &3813284556652181990
+--- !u!114 &4437321911593073470
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -108,7 +110,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76c7a70ed6791a04797d89bb0504bacb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!70 &4821769643333385606
+--- !u!70 &2918269163172947492
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -968,7 +970,7 @@ GameObject:
   - component: {fileID: 3855407950219510971}
   m_Layer: 8
   m_Name: IceMage
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -982,7 +984,7 @@ RectTransform:
   m_GameObject: {fileID: 2144735349077494666}
   m_LocalRotation: {x: -0, y: 0.008726557, z: -0, w: 0.9999619}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.2, y: 1.2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4721360996291860632}

@@ -209,7 +209,7 @@ GameObject:
   - component: {fileID: 8833543132585958637}
   m_Layer: 8
   m_Name: GunMaster
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -223,7 +223,7 @@ RectTransform:
   m_GameObject: {fileID: 822987607556925277}
   m_LocalRotation: {x: -0, y: 0.008726557, z: -0, w: 0.9999619}
   m_LocalPosition: {x: 0, y: 0, z: 0.00015256465}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.2, y: 1.2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8999160962354089394}
@@ -1959,7 +1959,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: -15
-  m_Sprite: {fileID: 21300000, guid: 626c0a7954625bf49804e01c4dac40db, type: 3}
+  m_Sprite: {fileID: 21300000, guid: f5e39eefd845b5b4babdbfe41ab60672, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -3542,8 +3542,9 @@ GameObject:
   - component: {fileID: 8999160962354089394}
   - component: {fileID: 1598521869275498394}
   - component: {fileID: 5823632191439533354}
-  - component: {fileID: 8579171900822771901}
-  - component: {fileID: 2016897882533332541}
+  - component: {fileID: 3433832916750070472}
+  - component: {fileID: 8821846917392472277}
+  - component: {fileID: 4249808705237942701}
   m_Layer: 8
   m_Name: UnitRoot
   m_TagString: Untagged
@@ -3602,7 +3603,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &8579171900822771901
+--- !u!114 &3433832916750070472
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3624,8 +3625,10 @@ MonoBehaviour:
   attackState: 1
   normalState: 0.75
   skillState: 0
+  aoe: 2
+  damageEffect: {fileID: 11400000, guid: e75aeb6c76b413f43a14de623eb79a79, type: 2}
   projectilePrefab: {fileID: 0}
---- !u!114 &2016897882533332541
+--- !u!114 &8821846917392472277
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3637,6 +3640,43 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76c7a70ed6791a04797d89bb0504bacb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!70 &4249808705237942701
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7929067704627224628}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0.36}
+  m_Size: {x: 0.5, y: 0.9}
+  m_Direction: 0
 --- !u!1 &8076542572676004319
 GameObject:
   m_ObjectHideFlags: 0

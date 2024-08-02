@@ -2,14 +2,20 @@ using UnityEngine;
 
 public class AllyProjectile : MonoBehaviour
 {
+    //투사체 속도
     public float speed = 10f;
+    //투사체 반경
+    private float aoe;
     private int damage;
     private Transform target;
+    private DamageEffect damageEffect;
 
-    public void Initialize(Transform target, int damage)
+    public void Initialize(Transform target, int damage, DamageEffect effect, float aoe)
     {
         this.target = target;
         this.damage = damage;
+        this.damageEffect = effect;
+        this.aoe = aoe;
     }
 
     private void Update()
@@ -37,12 +43,22 @@ public class AllyProjectile : MonoBehaviour
         EnemyMovement enemy = target.GetComponent<EnemyMovement>();
         if (enemy != null)
         {
-            enemy.TakeDamage(damage);
-            if (enemy.IsDead())
-            {
-                CustomLogger.Log("적이 죽었습니다.");
-            }
+            damageEffect.ApplyEffect(enemy, transform, damage, aoe); // 데미지 효과 적용
         }
         Destroy(gameObject);
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.transform == target)
+        {
+            HitTarget();
+        }
+    }
+
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, aoe);
     }
 }
