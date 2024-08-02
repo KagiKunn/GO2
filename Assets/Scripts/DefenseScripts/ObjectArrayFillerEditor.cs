@@ -4,7 +4,7 @@ using UnityEditor;
 [CustomEditor(typeof(AllySpawner))]
 public class ObjectArrayFillerEditor : Editor
 {
-    public override void OnInspectorGUI()
+    /*public override void OnInspectorGUI()
     {
         DrawDefaultInspector();
 
@@ -28,5 +28,5 @@ public class ObjectArrayFillerEditor : Editor
 
         // 배열의 변경 사항을 저장합니다.
         EditorUtility.SetDirty(script);
-    }
+    }*/
 }
