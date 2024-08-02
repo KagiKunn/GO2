@@ -1,133 +1,83 @@
 using System;
 using UnityEngine;
 
-public class AllySwap : MonoBehaviour
-{
-    public LayerMask clickableLayer; // 감지할 레이어 설정
-    private GameObject unit1;
-    private GameObject unit2;
-    private bool isMoving = false;
-    private Animator animator1;
-    private Animator animator2;
-    private AllyScan allyScan1;
-    private AllyScan allyScan2;
+public class ClickObjectDetector2D : MonoBehaviour {
+	public LayerMask clickableLayer; // 감지할 레이어 설정
+	private GameObject unit1;
+	private GameObject unit2;
+	private bool isMoving = false;
+	private Animator animator1;
+	private Animator animator2;
+	private AllyScan allyScan1;
+	private AllyScan allyScan2;
 
-    private Vector3 targetPosition1;
-    private Vector3 targetPosition2;
+	private Vector3 targetPosition1;
+	private Vector3 targetPosition2;
 
-    private float originTime;
+	void Update() {
+		if (Input.GetMouseButtonDown(0) && !isMoving) // 마우스 왼쪽 버튼 클릭 확인 및 이동 중인지 확인
+		{
+			Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+			Vector2 mousePosition2D = new Vector2(mousePosition.x, mousePosition.y);
 
-    public GameObject playerObjCircle;
-    public GameObject playerObjCircle1;
-    public GameObject playerObjCircle2;
-    // void Start()
-    // {
-    //     // HoverEvent를 모든 유닛에 추가하고 playerObjCircle을 설정합니다.
-    //     foreach (var unit in GameObject.FindGameObjectsWithTag("Player"))
-    //     {
-    //         var hoverEvent = unit.AddComponent<AllyHoverEvent>();
-    //         hoverEvent.Initialize(playerObjCircle);
-    //     }
-    // }
-    private void Awake()
-    {
-        playerObjCircle1 = Instantiate(playerObjCircle, transform.position, Quaternion.identity);
-        playerObjCircle2 = Instantiate(playerObjCircle, transform.position, Quaternion.identity);
-        playerObjCircle1.SetActive(false);
-        playerObjCircle2.SetActive(false);
-    }
+			Collider2D collider = Physics2D.OverlapPoint(mousePosition2D, clickableLayer); // 특정 레이어만 감지
 
-    void Update()
-    {
-        if (Input.GetMouseButtonDown(0) && !isMoving) // 마우스 왼쪽 버튼 클릭 확인 및 이동 중인지 확인
-        {
-            
-            Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Vector2 mousePosition2D = new Vector2(mousePosition.x, mousePosition.y);
+			if (collider != null) {
+				GameObject clickedObject = collider.gameObject;
+				CustomLogger.Log("Clicked on object: " + clickedObject.name, "blue");
 
-            Collider2D collider = Physics2D.OverlapPoint(mousePosition2D, clickableLayer); // 특정 레이어만 감지
+				if (unit1 == null) {
+					unit1 = clickedObject;
+					CustomLogger.Log("Selected unit1: " + unit1.name);
+				} else {
+					unit2 = clickedObject;
+					CustomLogger.Log("Selected unit2: " + unit2.name);
 
-            if (collider != null)
-            {
-                GameObject clickedObject = collider.gameObject;
-                CustomLogger.Log("Clicked on object: " + clickedObject.name, "blue");
+					targetPosition1 = unit2.transform.position;
+					targetPosition2 = unit1.transform.position;
+					animator1 = unit1.GetComponent<Animator>();
+					animator2 = unit2.GetComponent<Animator>();
+					allyScan1 = unit1.GetComponent<AllyScan>();
+					allyScan2 = unit2.GetComponent<AllyScan>();
+					isMoving = true; // 이동 시작
 
-                if (unit1 == null)
-                {
-                    originTime = Time.timeScale;
-                    unit1 = clickedObject;
-                    if (unit1 != null)
-                    {
-                        Time.timeScale = 0.5f;
-                        playerObjCircle1.SetActive(true);
-                        playerObjCircle1.transform.position = unit1.transform.position;
-                    }
-                    CustomLogger.Log("Selected unit1: " + unit1.name);
-                }
-                else
-                {
-                    unit2 = clickedObject;
-                    if (unit2 != null)
-                    {
-                        Time.timeScale = originTime;
-                        playerObjCircle2.SetActive(true);
-                        playerObjCircle2.transform.position = unit2.transform.position;
-                        
-                        CustomLogger.Log("Selected unit2: " + unit2.name);
+					// 이동 시작 애니메이션 트리거
+					animator1.SetTrigger("Run");
+					animator2.SetTrigger("Run");
 
-                        targetPosition1 = unit2.transform.position;
-                        targetPosition2 = unit1.transform.position;
-                        animator1 = unit1.GetComponent<Animator>();
-                        animator2 = unit2.GetComponent<Animator>();
-                        allyScan1 = unit1.GetComponent<AllyScan>();
-                        allyScan2 = unit2.GetComponent<AllyScan>();
-                        isMoving = true; // 이동 시작
-                        // 이동 시작 애니메이션 트리거
-                        animator1.SetTrigger("Run");
-                        animator2.SetTrigger("Run");
+					// AllyScan 스크립트 비활성화
+					if (allyScan1 != null) allyScan1.enabled = false;
+					if (allyScan2 != null) allyScan2.enabled = false;
+				}
+			} else {
+				CustomLogger.LogWarning("No object clicked");
+			}
+		}
 
-                        // AllyScan 스크립트 비활성화
-                        if (allyScan1 != null) allyScan1.enabled = false;
-                        if (allyScan2 != null) allyScan2.enabled = false;
-                    }
+		if (isMoving) {
+			MoveUnits();
+		}
+	}
 
-                }
-            }
-            else
-            {
-                CustomLogger.LogWarning("No object clicked");
-            }
-        }
+	void MoveUnits() {
+		unit1.transform.position = Vector3.MoveTowards(unit1.transform.position, targetPosition1, 1 * Time.deltaTime);
+		unit2.transform.position = Vector3.MoveTowards(unit2.transform.position, targetPosition2, 1 * Time.deltaTime);
 
-        if (isMoving)
-        {
-            MoveUnits();
-        }
-    }
+		animator1.SetTrigger("Idle");
+		animator2.SetTrigger("Idle");
+		animator1.SetFloat("RunState", 0.5f);
+		animator2.SetFloat("RunState", 0.5f);
 
-    void MoveUnits()
-    {
-        unit1.transform.position = Vector3.MoveTowards(unit1.transform.position, targetPosition1, 1 * Time.deltaTime);
-        unit2.transform.position = Vector3.MoveTowards(unit2.transform.position, targetPosition2, 1 * Time.deltaTime);
+		if (unit1.transform.position == targetPosition1 && unit2.transform.position == targetPosition2) {
+			// 이동 완료 애니메이션 트리거
 
-        animator1.SetTrigger("Idle");
-        animator2.SetTrigger("Idle");
-        animator1.SetFloat("RunState",0.5f);
-        animator2.SetFloat("RunState",0.5f);
-        if (unit1.transform.position == targetPosition1 && unit2.transform.position == targetPosition2)
-        {
-            // 이동 완료 애니메이션 트리거
-            
+			// AllyScan 스크립트 활성화
+			if (allyScan1 != null) allyScan1.enabled = true;
+			if (allyScan2 != null) allyScan2.enabled = true;
 
-            // AllyScan 스크립트 활성화
-            if (allyScan1 != null) allyScan1.enabled = true;
-            if (allyScan2 != null) allyScan2.enabled = true;
-
-            playerObjCircle1.SetActive(false);
-            playerObjCircle2.SetActive(false);
-            isMoving = false; // 이동 완료
-            unit1 = null;
-            unit2 = null;
-        }
-    }
+			isMoving = false; // 이동 완료
+			unit1 = null;
+			unit2 = null;
+		}
+	}
 }
