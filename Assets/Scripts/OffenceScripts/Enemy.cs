@@ -86,6 +86,8 @@ public class Enemy : MonoBehaviour {
 
 		if (health > 0) {
 			animator.SetTrigger("Hit");
+
+			AudioManager.Instance.PlaySfx(AudioManager.Sfx.Hit);
 		} else {
 			isLive = false;
 			collider2D.enabled = false;
@@ -96,6 +98,8 @@ public class Enemy : MonoBehaviour {
 			if (gameManager.IsLive) {
 				gameManager.Kill++;
 				gameManager.GetExp();
+
+				AudioManager.Instance.PlaySfx(AudioManager.Sfx.Dead);
 			}
 		}
 	}

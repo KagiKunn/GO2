@@ -125,7 +125,9 @@ public class Weapon : MonoBehaviour {
 			bullet.Rotate(rotateVector3);
 			bullet.Translate(bullet.up * 1.5f, Space.World);
 
-			bullet.GetComponent<Bullet>().Initialized(damage, -1, Vector3.zero); // -1 is Infinity penetration.
+			bullet.GetComponent<Bullet>().Initialized(damage, -100, Vector3.zero); // -1 is Infinity penetration.
+
+			AudioManager.Instance.PlaySfx(AudioManager.Sfx.Melee);
 		}
 	}
 
@@ -143,6 +145,8 @@ public class Weapon : MonoBehaviour {
 		bullet.rotation = Quaternion.FromToRotation(Vector3.up, direction);
 
 		bullet.GetComponent<Bullet>().Initialized(damage, count, direction); // -1 is Infinity penetration.
+
+		AudioManager.Instance.PlaySfx(AudioManager.Sfx.Range);
 	}
 
 	public int ID => id;

@@ -518,11 +518,13 @@ MonoBehaviour:
     m_Bits: 64
   attackDamage: 2
   attackSpeed: 1
-  runState: 1
+  runState: 0.25
   attackState: 1
   normalState: 0
   skillState: 0
   boxSize: {x: 3, y: 0.1}
+  projectilePrefab: {fileID: 0}
+  movementdirection: {x: 0, y: 0, z: 0}
 --- !u!58 &931396504109490392
 CircleCollider2D:
   m_ObjectHideFlags: 0
