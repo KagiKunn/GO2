@@ -1,32 +1,35 @@
+﻿using UnityEditor;
 using UnityEngine;
-using UnityEditor;
 
-[CustomEditor(typeof(AllySpawner))]
-public class ObjectArrayFillerEditor : Editor
+namespace DefenseScripts
 {
-    /*public override void OnInspectorGUI()
+    [CustomEditor(typeof(AllySpawner))]
+    public class ObjectArrayFillerEditor : Editor
     {
-        DrawDefaultInspector();
-
-        AllySpawner script = (AllySpawner)target;
-
-        if (GUILayout.Button("Fill Empty Slots"))
+        public override void OnInspectorGUI()
         {
-            FillEmptySlots(script);
-        }
-    }
+            DrawDefaultInspector();
 
-    private void FillEmptySlots(AllySpawner script)
-    {
-        for (int i = 0; i < script.allies.Length; i++)
-        {
-            if (script.allies[i] == null)
+            AllySpawner script = (AllySpawner)target;
+
+            if (GUILayout.Button("Fill Empty Slots"))
             {
-                script.allies[i] = script.defaultObject;
+                FillEmptySlots(script);
             }
         }
 
-        // 배열의 변경 사항을 저장합니다.
-        EditorUtility.SetDirty(script);
-    }*/
+        private void FillEmptySlots(AllySpawner script)
+        {
+            for (int i = 0; i < script.allies.Length; i++)
+            {
+                if (script.allies[i] == null)
+                {
+                    script.allies[i] = script.defaultObject;
+                }
+            }
+
+            // 배열의 변경 사항을 저장합니다.
+            EditorUtility.SetDirty(script);
+        }
+    }
 }
