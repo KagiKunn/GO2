@@ -13,9 +13,9 @@ public class EnemySpawner2 : MonoBehaviour
     [SerializeField] public WitchPrefabs witchPrefabs;
 
     // 스폰
-    public float minY = -0f;
-    public float maxY = 10f;
-    private const float fixedX = 20f;
+    public float minY = -9f;
+    public float maxY = 110f;
+    private const float fixedX = 200f;
     [SerializeField] public int numberOfObjects = 10;
     private int spawnedEnemy = 0;
     public float maxSpawnInterval = 2f;
@@ -93,6 +93,7 @@ public class EnemySpawner2 : MonoBehaviour
             {
                 progressBar.SetValue(spawnedEnemy + (currentWave - 1) * numberOfObjects);
             }
+
 
             if (spawnedEnemy >= numberOfObjects)
             {

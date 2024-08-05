@@ -1563,7 +1563,6 @@ GameObject:
   - component: {fileID: 863010275469712399}
   - component: {fileID: 900195793151100152}
   - component: {fileID: 3745978659109239786}
-  - component: {fileID: 3046005196779452800}
   - component: {fileID: 182812178885286203}
   - component: {fileID: 730446133670312697}
   - component: {fileID: 5235464609149081821}
@@ -1584,7 +1583,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.0000012172386, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0.000016897413}
-  m_LocalScale: {x: 1.2, y: 1.2, z: 1}
+  m_LocalScale: {x: 12, y: 12, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3560764293217785811}
@@ -1665,7 +1664,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 10
-  moveSpeed: 1.2
+  moveSpeed: 12
   detectionLayerMask:
     serializedVersion: 2
     m_Bits: 64
@@ -1675,24 +1674,12 @@ MonoBehaviour:
   attackState: 0
   normalState: 0
   skillState: 0
-  boxSize: {x: 3, y: 0.1}
+  boxSize: {x: 30, y: 0.1}
   projectilePrefab: {fileID: 0}
   movementdirection: {x: 0, y: 0, z: 0}
   isKnockedBack: 0
   percent: 0
   isBoss: 1
---- !u!114 &3046005196779452800
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2160878103218979641}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b7531dcd59ff4d9b9af94048a7b42c22, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!50 &182812178885286203
 Rigidbody2D:
   serializedVersion: 4
