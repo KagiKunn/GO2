@@ -6,6 +6,11 @@ public abstract class HeroSkill : ScriptableObject
     public virtual void HeroSkillAction()
     {
         Time.timeScale = 0.5f;
-        CustomLogger.Log("Skill activated");
+        CustomLogger.Log("Action Skill activated");
+    }
+
+    public virtual void HeroSkillEffect()
+    {
+        CustomLogger.Log("Effect Skill activated");
     }
 }

@@ -11,7 +11,8 @@ public class AllyScan : MonoBehaviour
     [SerializeField] private float normalState;
     [SerializeField] private float skillState;
     [SerializeField] private float aoe = 2f;
-
+    public float movementSpeed = 10f;
+    
     [SerializeField] private DamageEffect damageEffect; // damageEffect를 SerializeField로 추가
     public GameObject projectilePrefab;
 
