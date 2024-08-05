@@ -7494,7 +7494,7 @@ PrefabInstance:
     - target: {fileID: 4375985981601582958, guid: ecbf48371fd6b7a43a609b4f84b7f769,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -1
+      value: -10
       objectReference: {fileID: 0}
     - target: {fileID: 4375985981601582958, guid: ecbf48371fd6b7a43a609b4f84b7f769,
         type: 3}
@@ -8724,8 +8724,8 @@ MonoBehaviour:
     type: 3}
   tilemap: {fileID: 294567138}
   facingRight: 1
-  xSpacing: 1
-  ySpacing: 1
+  xSpacing: 10
+  ySpacing: 10
 --- !u!114 &294567140
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9790,7 +9790,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1329894062}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.25}
   m_AnchorMax: {x: 1, y: 0.75}
@@ -10048,7 +10048,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 50
   m_Depth: 1
   m_CullingMask:
     serializedVersion: 2
@@ -24538,7 +24538,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 50
   m_Depth: 1
   m_CullingMask:
     serializedVersion: 2
@@ -25592,7 +25592,7 @@ Transform:
   m_GameObject: {fileID: 2043143689}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 20.9, y: 11, z: 1}
+  m_LocalPosition: {x: 200, y: 115, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -26257,3 +26257,4 @@ SceneRoots:
   - {fileID: 1216140838392431127}
   - {fileID: 1220902264867911266}
   - {fileID: 2080202500784533587}
+  - {fileID: 536239461}
