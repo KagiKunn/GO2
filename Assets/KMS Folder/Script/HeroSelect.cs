@@ -1,9 +1,11 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class HeroSelect2 : MonoBehaviour
 {
+    public NoticeUI _notice;
     public HeroGameManager heroGameManager;
     public Image CharacterImage;
     public Button[] heroButtons;
@@ -11,6 +13,11 @@ public class HeroSelect2 : MonoBehaviour
     public Button resetBtn, saveBtn;
 
     private List<HeroData> heroes;
+
+    void Awake()
+    {
+        _notice = FindFirstObjectByType<NoticeUI>();
+    }
 
     private void Start()
     {
@@ -105,6 +112,7 @@ public class HeroSelect2 : MonoBehaviour
     private void SaveHeroSelection()
     {
         heroGameManager.SaveHeroFormation();
+        _notice.SUB("Save Successefully!");
     }
 
     private void LoadHeroFormation()
