@@ -9910,18 +9910,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 536239460}
   m_CullTransparentMesh: 1
---- !u!114 &584456704 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3079898242129481341, guid: b823931dfc2fabf46961503aed6d9e7e,
-    type: 3}
-  m_PrefabInstance: {fileID: 2080202500784533587}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 466e9195a7664791bda0bf6efc55d65c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &660744209
 GameObject:
   m_ObjectHideFlags: 0
@@ -11850,7 +11838,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 482274920}
-  m_Father: {fileID: 1329894062}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -15043,6 +15031,114 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!1 &1416351140 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2867961481758099786, guid: 469c90ad907c2c8458743b966d0bf65e,
+    type: 3}
+  m_PrefabInstance: {fileID: 1220902264867911266}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1416351143
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1416351140}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbc363c685724fcf89fef2c16bb11a55, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skeletonPrefabs:
+  - {fileID: 8765090358203190414, guid: f2fe3c1332333c048b6eb78b67c943c6, type: 3}
+  - {fileID: 1822805178930394091, guid: 4eb489848a1668442bfb722a7e14522a, type: 3}
+  - {fileID: 7996934490576644032, guid: 2c25fe2a3f95bbe42a553e83d5f4b020, type: 3}
+  - {fileID: 4888487255515548889, guid: ec04a436597427d45aebebe20700b752, type: 3}
+  - {fileID: 3013676815889310574, guid: ff80c810daa7784469985e3191d7a343, type: 3}
+  skeletonBossPrefab: {fileID: 3013676815889310574, guid: 8ad8f553d86fb494189d4ecdbb41f79c,
+    type: 3}
+--- !u!114 &1416351144
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1416351140}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41c69ba1619141e5b674f77204552e34, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  humanPrefabs: []
+  humanBossPrefab: {fileID: 0}
+--- !u!114 &1416351145
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1416351140}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9056a5e7f5c4ce28ee0f9c760d61bbf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  witchPrefabs: []
+  witchBossPrefab: {fileID: 0}
+--- !u!114 &1416351146
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1416351140}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3369bfbb169b4fecb0c0221df3929bfc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  darkElfPrefabs: []
+  darkElfBossPrefab: {fileID: 0}
+--- !u!114 &1416351147
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1416351140}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbc363c685724fcf89fef2c16bb11a55, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skeletonPrefabs:
+  - {fileID: 8765090358203190414, guid: f2fe3c1332333c048b6eb78b67c943c6, type: 3}
+  - {fileID: 1822805178930394091, guid: 4eb489848a1668442bfb722a7e14522a, type: 3}
+  - {fileID: 7996934490576644032, guid: 2c25fe2a3f95bbe42a553e83d5f4b020, type: 3}
+  - {fileID: 4888487255515548889, guid: ec04a436597427d45aebebe20700b752, type: 3}
+  - {fileID: 3013676815889310574, guid: ff80c810daa7784469985e3191d7a343, type: 3}
+  skeletonBossPrefab: {fileID: 3013676815889310574, guid: 8ad8f553d86fb494189d4ecdbb41f79c,
+    type: 3}
+--- !u!114 &1416351148
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1416351140}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e883d7ff93d45d2b3486971ab10d606, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  orcPrefabs:
+  - {fileID: 7829867968762000690, guid: fdc5b4d02bfd7074282e501465a4391a, type: 3}
+  - {fileID: 4200133173619688769, guid: 264ea89df369aa74e92dc08b2388f3bb, type: 3}
+  - {fileID: 7259552809771645439, guid: ea2804e7b2b7c7d4991d97a0e655589b, type: 3}
+  - {fileID: 22752085748122022, guid: 463a4b97e195f774cb6d458dc74dd015, type: 3}
+  - {fileID: 2841263313334068932, guid: 3dafbbd16b8210242b4db8fc01007d90, type: 3}
+  orcBossPrefab: {fileID: 2841263313334068932, guid: 236f0ee919cc12c489c6f0ff3491dc6d,
+    type: 3}
 --- !u!1 &1437715307
 GameObject:
   m_ObjectHideFlags: 0
@@ -16975,7 +17071,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 805951405}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -25706,6 +25802,7 @@ GameObject:
   - component: {fileID: 2043143692}
   - component: {fileID: 2043143691}
   - component: {fileID: 2043143693}
+  - component: {fileID: 2043143694}
   m_Layer: 0
   m_Name: Spawner
   m_TagString: Untagged
@@ -25796,8 +25893,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e68b66f2b15470ea5231b6d25ab8d4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  totalStages: 5
-  enemySpawner: {fileID: 584456704}
+  darkElfPrefabs: {fileID: 11400000, guid: 01784bd50b3f91e439b610c9259ed44e, type: 2}
+  humanPrefabs: {fileID: 11400000, guid: 9a29d8e520e40644c97b7936935cb585, type: 2}
+  orcPrefabs: {fileID: 11400000, guid: 6e6b6f409baa246439db655cc0f06d35, type: 2}
+  skeletonPrefabs: {fileID: 11400000, guid: d1032d1ab4141e6448738826ef551b30, type: 2}
+  witchPrefabs: {fileID: 11400000, guid: 696d9bd17fece0743afc4ddd38d6d881, type: 2}
+  enemySpawner: {fileID: 2043143694}
+--- !u!114 &2043143694
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2043143689}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 466e9195a7664791bda0bf6efc55d65c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minY: -0
+  maxY: 10
+  numberOfObjects: 10
+  maxSpawnInterval: 2
+  totalWave: 3
+  progressBar: {fileID: 1244472809}
+  stageEndUI: {fileID: 0}
 --- !u!1 &2139419810
 GameObject:
   m_ObjectHideFlags: 0
@@ -26134,12 +26254,35 @@ PrefabInstance:
         type: 3}
       propertyPath: enemySpawner
       value: 
-      objectReference: {fileID: 3079898242129481341, guid: b823931dfc2fabf46961503aed6d9e7e,
-        type: 3}
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2867961481758099786, guid: 469c90ad907c2c8458743b966d0bf65e,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1416351148}
+    - targetCorrespondingSourceObject: {fileID: 2867961481758099786, guid: 469c90ad907c2c8458743b966d0bf65e,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1416351147}
+    - targetCorrespondingSourceObject: {fileID: 2867961481758099786, guid: 469c90ad907c2c8458743b966d0bf65e,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1416351146}
+    - targetCorrespondingSourceObject: {fileID: 2867961481758099786, guid: 469c90ad907c2c8458743b966d0bf65e,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1416351145}
+    - targetCorrespondingSourceObject: {fileID: 2867961481758099786, guid: 469c90ad907c2c8458743b966d0bf65e,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1416351144}
+    - targetCorrespondingSourceObject: {fileID: 2867961481758099786, guid: 469c90ad907c2c8458743b966d0bf65e,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1416351143}
   m_SourcePrefab: {fileID: 100100000, guid: 469c90ad907c2c8458743b966d0bf65e, type: 3}
 --- !u!1001 &2080202500784533587
 PrefabInstance:
@@ -26418,7 +26561,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 385ba2e978bfac3438e6610cf2a9cfd9, type: 3}
-
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -26445,3 +26587,5 @@ SceneRoots:
   - {fileID: 1220902264867911266}
   - {fileID: 2080202500784533587}
   - {fileID: 536239461}
+  - {fileID: 1059032586}
+  - {fileID: 1660223212}
