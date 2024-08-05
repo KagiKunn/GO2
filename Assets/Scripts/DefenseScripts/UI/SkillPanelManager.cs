@@ -2,10 +2,11 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class SlidePanel : MonoBehaviour
+public class SkillPanelManager : MonoBehaviour
 {
     [SerializeField]
     private UIDocument uiDocument;
+    public HeroSkill[] heroSkillArray;
 
     private VisualElement bottomPanel;
     private bool isPanelVisible = false;
@@ -14,10 +15,16 @@ public class SlidePanel : MonoBehaviour
 
     private void Awake()
     {
-        var root = uiDocument.rootVisualElement;
+        // UIDocument의 루트 요소 가져오기
+        VisualElement root = uiDocument.rootVisualElement;
 
-        // 패널 요소 가져오기
+        // 스킬 패널 요소 가져오기
         bottomPanel = root.Q<VisualElement>("skill-panel");
+        if (bottomPanel == null)
+        {
+            Debug.LogError("Skill panel not found.");
+            return;
+        }
 
         // 패널 초기 위치 설정
         bottomPanel.style.bottom = visiblePosition;
@@ -27,6 +34,9 @@ public class SlidePanel : MonoBehaviour
 
         // 패널의 자식 요소들에 대해 이벤트 등록
         RegisterChildClickEvents(bottomPanel);
+
+        // 기존 UI 요소를 설정
+        SetupSkillButtons(bottomPanel);
     }
 
     private void RegisterChildClickEvents(VisualElement parent)
@@ -39,6 +49,40 @@ public class SlidePanel : MonoBehaviour
             if (child.childCount > 0)
             {
                 RegisterChildClickEvents(child);
+            }
+        }
+    }
+
+    private void SetupSkillButtons(VisualElement root)
+    {
+        // 버튼을 찾습니다.
+        var buttons = new Button[3];
+        buttons[0] = root.Q<Button>("skill-icn1");
+        buttons[1] = root.Q<Button>("skill-icn2");
+        buttons[2] = root.Q<Button>("skill-icn3");
+
+        // 각 버튼이 null이 아닌지 확인합니다.
+        for (int i = 0; i < buttons.Length; i++)
+        {
+            if (buttons[i] == null)
+            {
+                Debug.LogError($"Button {i} is not found.");
+                return;
+            }
+        }
+
+        // 버튼 텍스트를 ScriptableObject 값으로 설정하고 클릭 이벤트를 추가합니다.
+        for (int i = 0; i < buttons.Length && i < heroSkillArray.Length; i++)
+        {
+            int index = i; // 로컬 변수로 인덱스를 캡처합니다.
+            HeroSkill heroSkill = heroSkillArray[index];
+            buttons[i].clicked += () => OnButtonClicked(heroSkill);
+
+            // 버튼 배경 이미지를 설정합니다.
+            HeroSkill skillIcon = heroSkill as KnightSkill;
+            if (skillIcon != null && skillIcon.skillIcon != null)
+            {
+                buttons[i].style.backgroundImage = new StyleBackground(skillIcon.skillIcon);
             }
         }
     }
@@ -74,5 +118,10 @@ public class SlidePanel : MonoBehaviour
 
         // 최종 위치를 정확히 설정
         bottomPanel.style.bottom = targetPosition;
+    }
+
+    void OnButtonClicked(HeroSkill heroSkill)
+    {
+        heroSkill.HeroSkillAction();
     }
 }
