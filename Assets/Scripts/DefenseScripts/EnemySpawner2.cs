@@ -94,6 +94,7 @@ public class EnemySpawner2 : MonoBehaviour
                 progressBar.SetValue(spawnedEnemy + (currentWave - 1) * numberOfObjects);
             }
 
+
             if (spawnedEnemy >= numberOfObjects)
             {
                 break;
