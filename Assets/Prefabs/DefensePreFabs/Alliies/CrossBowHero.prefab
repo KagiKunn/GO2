@@ -1079,9 +1079,9 @@ GameObject:
   - component: {fileID: 3044946811021212044}
   - component: {fileID: 2890269288852596841}
   - component: {fileID: 9202366718087443813}
-  - component: {fileID: 6584418544655054706}
-  - component: {fileID: 520514158071385767}
-  - component: {fileID: 2450972050246633584}
+  - component: {fileID: 1609816767985789624}
+  - component: {fileID: 3080121234815794973}
+  - component: {fileID: 7031358626277370678}
   m_Layer: 8
   m_Name: UnitRoot
   m_TagString: Untagged
@@ -1140,7 +1140,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &6584418544655054706
+--- !u!114 &1609816767985789624
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1158,13 +1158,15 @@ MonoBehaviour:
     m_Bits: 128
   attackDamage: 1
   attackSpeed: 1
-  runState: 1
+  runState: 0
   attackState: 0
   normalState: 1
   skillState: 1
-  projectilePrefab: {fileID: 8172912759357463194, guid: 36a426832f5148a4d994235d6893d79c,
+  aoe: 2
+  damageEffect: {fileID: 11400000, guid: e75aeb6c76b413f43a14de623eb79a79, type: 2}
+  projectilePrefab: {fileID: 3662229225026242780, guid: 9ec232a4266e9484c838a238dcf3e5c7,
     type: 3}
---- !u!114 &520514158071385767
+--- !u!114 &3080121234815794973
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1176,7 +1178,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76c7a70ed6791a04797d89bb0504bacb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!70 &2450972050246633584
+--- !u!70 &7031358626277370678
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3878,7 +3880,7 @@ GameObject:
   - component: {fileID: 404780710729405242}
   m_Layer: 8
   m_Name: CrossBowHero
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3892,7 +3894,7 @@ RectTransform:
   m_GameObject: {fileID: 8617405725351149479}
   m_LocalRotation: {x: -0, y: 0.008726557, z: -0, w: 0.9999619}
   m_LocalPosition: {x: 0, y: 0, z: 0.00015256465}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.2, y: 1.2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3044946811021212044}
