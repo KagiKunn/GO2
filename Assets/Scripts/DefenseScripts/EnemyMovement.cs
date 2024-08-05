@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
@@ -42,6 +43,10 @@ public class EnemyMovement : MonoBehaviour {
 	private bool isChangingBrightness = false;
 	public bool isKnockedBack = false;
 	public float percent = 0f;
+
+	public bool isBoss; //보스 여부 확인
+	public event Action OnBossDisabledEvent; //보스 비활성화 이벤트
+	
 	private void Awake() {
 		// pos.position = new Vector2(0, 0);
 		rigid2d = GetComponent<Rigidbody2D>();
@@ -226,8 +231,24 @@ public class EnemyMovement : MonoBehaviour {
 	}
 
 	private void Die() {
+		CustomLogger.Log("Die()호출됨", "red");
 		// 적이 죽었을 때의 동작 (예: 오브젝트 비활성화)
+		if (isBoss) {
+			CustomLogger.Log("보스 비활성화 이벤트 호출됨", "red");
+			OnBossDisabledEvent?.Invoke();
+		}
+		CustomLogger.Log("gameObject.SetActive(false) 호출됨", "red");
 		gameObject.SetActive(false);
+	}
+
+	private void OnDisable()
+	{
+		CustomLogger.Log("OnDisable 호출됨", "yellow");
+		if (isBoss)
+		{
+			CustomLogger.Log("OnDisable에서 보스 비활성화 이벤트 호출됨", "yellow");
+			OnBossDisabledEvent?.Invoke();
+		}
 	}
 
 	private void OnDrawGizmos() {

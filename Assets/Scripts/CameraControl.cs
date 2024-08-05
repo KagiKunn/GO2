@@ -139,19 +139,19 @@ public class CameraControl : MonoBehaviour
     {
         float scroll = Input.GetAxis("Mouse ScrollWheel") * speed;
 
-        if (_camera.orthographicSize <= 2.67f && scroll > 0)
+        if (_camera.orthographicSize <= 26.7f && scroll > 0)
         {
             temp_value = _camera.orthographicSize;
             _camera.orthographicSize = temp_value;
         }
-        else if (_camera.orthographicSize >= 5.03f && scroll < 0)
+        else if (_camera.orthographicSize >= 50.3f && scroll < 0)
         {
             temp_value = _camera.orthographicSize;
             _camera.orthographicSize = temp_value;
         }
         else
         {
-            _camera.orthographicSize -= scroll * 0.5f;
+            _camera.orthographicSize -= scroll * 5f;
         }
 
         halfHeight = _camera.orthographicSize;

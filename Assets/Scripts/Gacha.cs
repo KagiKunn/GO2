@@ -10,7 +10,6 @@ public class Gacha : MonoBehaviour
     public List<ItemSO> items;
     private ItemRarity[] itemList;
     private System.Random rand;
-    private Randomizer rand2;
     public int normalProbability = 70;
     public int rareProbability = 25;
     public int uniqueProbability = 5;
@@ -20,6 +19,9 @@ public class Gacha : MonoBehaviour
     public Text multiGachaResultText;
 
     private GameObject previousResultsParent;
+    public InventoryUI inventoryUI;
+    public Text warningText;
+
 
     private void Awake()
     {
@@ -49,7 +51,16 @@ public class Gacha : MonoBehaviour
         {
             resultText.enabled = false;
         }
-        
+
+        if (inventoryUI == null)
+        {
+            inventoryUI = FindObjectOfType<InventoryUI>();
+        }
+
+        if (warningText != null)
+        {
+            warningText.enabled = false;
+        }
         
     }
 
@@ -111,6 +122,7 @@ public class Gacha : MonoBehaviour
     {
         ItemSO GachaItem = GachaRandomItem();
         DisplayResult(GachaItem);
+        AddItemToInventory(GachaItem);
     }
 
     public void OnMultiGachaButtonClicked(int GachaCount)
@@ -132,6 +144,24 @@ public class Gacha : MonoBehaviour
         }
 
         DisplayMultiGachaResult(gachaResults, GachaCount, gachaItems);
+
+        foreach (var item in gachaItems)
+        {
+            AddItemToInventory(item);
+        }
+    }
+
+    private void AddItemToInventory(ItemSO item)
+    {
+        if (inventoryUI != null)
+        {
+            inventoryUI.AddItemToInventory(item);
+            inventoryUI.UpdateInventoryUI();
+        }
+        else
+        {
+            CustomLogger.LogWarning("InventoryUI is not assigned.");
+        }
     }
 
     private ItemSO GachaRandomItem()
@@ -162,7 +192,7 @@ public class Gacha : MonoBehaviour
         
     }
 
-    void DisplayMultiGachaResult(Dictionary<ItemRarity, int> gachaResults, int gachaCount, List<ItemSO> gachaItems)
+    private void DisplayMultiGachaResult(Dictionary<ItemRarity, int> gachaResults, int gachaCount, List<ItemSO> gachaItems)
     {
         foreach (Transform child in multiGachaResultText.transform.parent)
         {

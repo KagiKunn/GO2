@@ -41,11 +41,6 @@ public class GachaBoxController : MonoBehaviour
 
         if (isMultiGacha)
         {
-            // if (Gacha.Instance.multiGachaResultText != null)
-            // {
-            //     Gacha.Instance.multiGachaResultText.enabled = true;
-            // }
-
             if (Gacha.Instance.resultText != null)
             {
                 Gacha.Instance.resultText.enabled = false;
@@ -68,6 +63,17 @@ public class GachaBoxController : MonoBehaviour
             {
                 Gacha.Instance.multiGachaResultText.enabled = false;
             }
+
+            Transform multiGachaParent = Gacha.Instance.multiGachaResultText.transform.parent;
+            foreach (Transform child in multiGachaParent)
+            {
+                if (child.name.StartsWith("GachaItem"))
+                {
+                    child.gameObject.SetActive(false);
+                }
+            }
+
+            
         }
     }
     
@@ -77,7 +83,7 @@ public class GachaBoxController : MonoBehaviour
         gachaCount = count;
     }
 
-    public void SingGacha()
+    public void SingleGacha()
     {
         SetMultiGacha(false,1);
         OpenBox();

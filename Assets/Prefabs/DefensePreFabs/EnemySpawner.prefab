@@ -1,0 +1,62 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3892071678144482267
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1616869904332839593}
+  - component: {fileID: 3079898242129481341}
+  m_Layer: 0
+  m_Name: EnemySpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1616869904332839593
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3892071678144482267}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2.4602618, y: 54.39324, z: 3.7878866}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3079898242129481341
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3892071678144482267}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 466e9195a7664791bda0bf6efc55d65c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  darkElfPrefabs: {fileID: 2591304678351648756, guid: fa99c3ba663e50447b89ba07d2ecbe64,
+    type: 3}
+  humanPrefabs: {fileID: 5141043883239657371, guid: 6c054acffd78a17468917776de327bb2,
+    type: 3}
+  orcPrefabs: {fileID: 6359422950056205640, guid: 16b1a2d0d1585514bbf6e6048fee6b73,
+    type: 3}
+  skeletonPrefabs: {fileID: 8249827239841424980, guid: 96c5007163012d940b6de82ecdd0053f,
+    type: 3}
+  witchPrefabs: {fileID: 842709925690230574, guid: 385ba2e978bfac3438e6610cf2a9cfd9,
+    type: 3}
+  minY: -0
+  maxY: 10
+  numberOfObjects: 10
+  maxSpawnInterval: 2
+  totalWave: 3
+  progressBar: {fileID: 0}

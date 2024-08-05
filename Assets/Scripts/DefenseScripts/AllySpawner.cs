@@ -12,8 +12,8 @@ public class AllySpawner : MonoBehaviour {
 	[SerializeField] public GameObject defaultObject;
 	[SerializeField] private Tilemap tilemap;
 	[SerializeField] private bool facingRight = false;
-	[SerializeField] private float xSpacing = 1.0f; // 타일 크기에 맞게 조정
-	[SerializeField] private float ySpacing = 1.0f; // 타일 크기에 맞게 조정
+	[SerializeField] private float xSpacing = 10f; // 타일 크기에 맞게 조정
+	[SerializeField] private float ySpacing = 10f; // 타일 크기에 맞게 조정
 	private Dictionary<Vector3Int, GameObject> allyPositions = new Dictionary<Vector3Int, GameObject>();
 	private Vector3Int? selectedPosition = null;
 

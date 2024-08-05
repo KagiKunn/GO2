@@ -40,7 +40,7 @@ public class CannonEffect : DamageEffect
     {
         // 적의 위치를 x 좌표로 +1만큼 이동
         Vector3 targetKnockback = target.transform.position;
-        targetKnockback.x = target.transform.position.x + 0.5f;
+        targetKnockback.x = target.transform.position.x + 5f;
         target.transform.position = targetKnockback;
 
         // 데미지 적용

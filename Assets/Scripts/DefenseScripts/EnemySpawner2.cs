@@ -5,140 +5,76 @@ using DefenseScripts;
 
 public class EnemySpawner2 : MonoBehaviour
 {
-    //스테이지 
-    [SerializeField] private List<EnemyStage> stageEnemyPrefabs;
-    [SerializeField] public int currentStage = 1;
-    private List<GameObject> enemyPrefabs;
-    private List<int> usedStages = new List<int>();
-    private List<string> usedRaces = new List<string>();
-    
-    //스폰
-    public float minY = -0f;
-    public float maxY = 10f;
-    private const float fixedX = 20f;
+    // 종족별 프리팹 관리 스크립트
+    [SerializeField] public DarkElfPrefabs darkElfPrefabs;
+    [SerializeField] public HumanPrefabs humanPrefabs;
+    [SerializeField] public OrcPrefabs orcPrefabs;
+    [SerializeField] public SkeletonPrefabs skeletonPrefabs;
+    [SerializeField] public WitchPrefabs witchPrefabs;
+
+    // 스폰
+    public float minY = -9f;
+    public float maxY = 110f;
+    private const float fixedX = 200f;
     [SerializeField] public int numberOfObjects = 10;
     private int spawnedEnemy = 0;
     public float maxSpawnInterval = 2f;
-    
-    //웨이브
+
+    // 웨이브
     [SerializeField] private int totalWave = 3;
     private int currentWave = 0;
 
-    //ProgressBar 스크립트 참조
-    public ProgressBar progressBar; 
-    
+    // ProgressBar 스크립트 참조
+    public ProgressBar progressBar;
 
     void Start()
     {
+        Debug.Log("EnemySpawner2: Start() 호출됨");
         // ProgressBar 초기화
         if (progressBar != null)
         {
-            //MaxValue　=　このステージで生成される敵の総数
             progressBar.SetMaxValue(numberOfObjects * totalWave);
             progressBar.SetValue(0);
         }
-
-        StartCoroutine(ManageStages());
     }
 
-    //ステージ決定
-    IEnumerator ManageStages()
+    public IEnumerator SpawnWaves(List<GameObject> enemyPrefabs, GameObject bossPrefab)
     {
-        while (currentStage <= 5)
-        {
-            CustomLogger.Log("Current Stage: " + currentStage, "yellow");
-            
-            //SpawnWaves()でWave生成が終わるまで保留、
-            //３Waveまで進行した後に実行を再開
-            yield return StartCoroutine(SpawnWaves());
-            CustomLogger.Log("스테이지 종료", "red");
-            yield return new WaitForSeconds(5f);
-
-            currentStage++;
-            currentWave = 0;
-        }
-
-        CustomLogger.Log("모든 스테이지가 완료되었습니다.", "red");
-    }
-
-    IEnumerator SpawnWaves()
-    {
-        // 각 스테이지마다 등장할 종족을 랜덤하게 선택
-        if (!usedStages.Contains(currentStage))
-        {
-            enemyPrefabs = SelectRandomEnemyPrefabs();
-            usedStages.Add(currentStage);
-        }
+        Debug.Log("SpawnWaves() 시작됨");
 
         while (currentWave < totalWave)
         {
             currentWave++;
-            
-            List<GameObject> wavePrefabs = new List<GameObject>(enemyPrefabs);
+            Debug.Log(currentWave + " 웨이브 시작");
 
-            CustomLogger.Log(currentWave + "웨이브 시작");
+            List<GameObject> wavePrefabs = new List<GameObject>(enemyPrefabs);
             yield return StartCoroutine(SpawnObjects(wavePrefabs));
 
             spawnedEnemy = 0;
 
             if (currentWave < totalWave)
             {
-                CustomLogger.Log("웨이브 " + currentWave + " 종료. 다음 웨이브까지 5초 대기.", "yellow");
+                Debug.Log("웨이브 " + currentWave + " 종료. 다음 웨이브까지 5초 대기.");
                 yield return new WaitForSeconds(5f);
+            }
+            else
+            {
+                // 3번째 웨이브 종료 후 보스 소환
+                Debug.Log("보스 소환");
+                SpawnBoss(bossPrefab);
             }
         }
     }
 
-    //ステージごとランダムで種族を選び、その種族のPrefabをreturn
-    List<GameObject> SelectRandomEnemyPrefabs()
+    public void ResetWave()
     {
-        //最終的にreturnされる敵兵PrefabのList宣言
-        List<GameObject> selectedEnemies = new List<GameObject>();
-        
-        //使用可能な種族のListを作成+usedRacesに含まれてる種族を削除
-        //今回のステージで使用可能な種族だけがList内に残る。
-        List<string> availableRaces = new List<string> { "darkElf", "human", "orc", "skeleton", "witch" };
-        availableRaces.RemoveAll(race => usedRaces.Contains(race));
-
-        //使用可能な種族が残っていない場合の例外処理
-        if (availableRaces.Count == 0)
-        {
-            CustomLogger.Log("모든 종족이 이미 사용되었습니다.", "red");
-            return selectedEnemies;
-        }
-
-        //availableRaves[]の中からランダムで選んで、usedRacesに追加する。
-        string selectedRace = availableRaces[Random.Range(0, availableRaces.Count)];
-        usedRaces.Add(selectedRace);
-        CustomLogger.Log("선택된 종족 : "+selectedRace,"yellow");
-
-        //選ばれた種族のPrefabのListを持ち込んで、selectedEnemiesに入れてreturn
-        EnemyStage stage = stageEnemyPrefabs[currentStage - 1];
-
-        switch (selectedRace)
-        {
-            case "darkElf":
-                selectedEnemies.AddRange(stage.darkElf);
-                break;
-            case "human":
-                selectedEnemies.AddRange(stage.human);
-                break;
-            case "orc":
-                selectedEnemies.AddRange(stage.orc);
-                break;
-            case "skeleton":
-                selectedEnemies.AddRange(stage.skeleton);
-                break;
-            case "witch":
-                selectedEnemies.AddRange(stage.witch);
-                break;
-        }
-
-        return selectedEnemies;
+        Debug.Log("ResetWave() 호출됨");
+        currentWave = 0;
     }
 
-    IEnumerator SpawnObjects(List<GameObject> wavePrefabs)
+    private IEnumerator SpawnObjects(List<GameObject> wavePrefabs)
     {
+        Debug.Log("SpawnObjects() 시작됨");
         for (int i = 0; i < numberOfObjects; i++)
         {
             float randomY = Random.Range(minY, maxY);
@@ -166,7 +102,17 @@ public class EnemySpawner2 : MonoBehaviour
         }
     }
 
-    GameObject GetRandomPrefab(List<GameObject> wavePrefabs)
+    private void SpawnBoss(GameObject bossPrefab)
+    {
+        Debug.Log("SpawnBoss() 호출됨");
+        if (bossPrefab != null)
+        {
+            Vector3 spawnPosition = new Vector3(fixedX, (minY + maxY) / 2, 0);
+            Instantiate(bossPrefab, spawnPosition, Quaternion.identity, transform);
+        }
+    }
+
+    private GameObject GetRandomPrefab(List<GameObject> wavePrefabs)
     {
         float randomValue = Random.Range(0f, 1f);
         float[] percentages = GetPercentages(wavePrefabs.Count);
@@ -184,7 +130,7 @@ public class EnemySpawner2 : MonoBehaviour
         return wavePrefabs[wavePrefabs.Count - 1];
     }
 
-    float[] GetPercentages(int prefabCount)
+    private float[] GetPercentages(int prefabCount)
     {
         switch (currentWave)
         {
