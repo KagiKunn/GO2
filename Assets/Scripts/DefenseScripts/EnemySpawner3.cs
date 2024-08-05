@@ -52,7 +52,9 @@ public class EnemySpawner3 : MonoBehaviour
 
         while (stageController.CurrentStage <= 5)
         {
-            CustomLogger.Log("Current Stage: " + stageController.CurrentStage + ", TotalWave: " + stageController.TotalWave, "yellow");
+            CustomLogger.Log(
+                "Current Stage: " + stageController.CurrentStage + ", TotalWave: " + stageController.TotalWave,
+                "yellow");
 
             yield return StartCoroutine(SpawnWaves());
             CustomLogger.Log("스테이지 종료", "red");
@@ -63,18 +65,19 @@ public class EnemySpawner3 : MonoBehaviour
 
             // 보스 몬스터가 비활성화될 때까지 대기
             Debug.Log("while 진입 직전--");
+            CustomLogger.Log("현재 보스 상태: " + (currentBoss != null ? currentBoss.activeSelf.ToString() : "null"), "yellow");
             while (currentBoss != null && currentBoss.activeSelf)
             {
+                CustomLogger.Log("while 루프 안: 보스 상태 " + currentBoss.activeSelf, "yellow");
                 Debug.Log(currentBoss.activeSelf);
-                Debug.Log(currentBoss != null);
                 yield return null;
             }
 
             CustomLogger.Log("보스 몬스터 비활성화됨", "red");
 
             // 스테이지 종료 시 팝업 UI 활성화
-                CustomLogger.Log("stageEndPopup 활성화", "green");
-                stageEndPopup.SetActive(true);
+            CustomLogger.Log("stageEndPopup 활성화", "green");
+            stageEndPopup.SetActive(true);
 
             // 팝업에서 버튼이 클릭될 때까지 대기
             while (stageEndPopup != null && stageEndPopup.activeSelf)
@@ -100,7 +103,8 @@ public class EnemySpawner3 : MonoBehaviour
             stageController.SelectRandomEnemyPrefabs();
         }
 
-        CustomLogger.Log("CurrentWave: " + stageController.CurrentWave + ", TotalWave: " + stageController.TotalWave, "blue");
+        CustomLogger.Log("CurrentWave: " + stageController.CurrentWave + ", TotalWave: " + stageController.TotalWave,
+            "blue");
 
         // 전체 웨이브보다 현재 웨이브 카운트가 적을 경우에만 반복 스폰
         while (stageController.CurrentWave < stageController.TotalWave)
@@ -124,7 +128,8 @@ public class EnemySpawner3 : MonoBehaviour
 
             if (stageController.CurrentWave < stageController.TotalWave)
             {
-                CustomLogger.Log("웨이브 " + stageController.CurrentWave + " 종료. 다음 웨이브까지 " + spawnInterval + "초 대기", "yellow");
+                CustomLogger.Log("웨이브 " + stageController.CurrentWave + " 종료. 다음 웨이브까지 " + spawnInterval + "초 대기",
+                    "yellow");
                 yield return new WaitForSeconds(spawnInterval);
             }
         }
@@ -185,9 +190,9 @@ public class EnemySpawner3 : MonoBehaviour
     // 보스 몬스터 스폰
     IEnumerator SpawnBoss()
     {
-        CustomLogger.Log("보스 몬스터 스폰", "purple");
+        CustomLogger.Log("SpawnBoss()진입", "purple");
 
-        GameObject bossPrefab = stageController.BossEnemy; // 스테이지 컨트롤러에서 보스 몬스터 프리팹 가져오기
+        GameObject bossPrefab = stageController.BossEnemy;
 
         if (bossPrefab == null)
         {
@@ -197,15 +202,42 @@ public class EnemySpawner3 : MonoBehaviour
 
         Vector3 spawnPosition = new Vector3(fixedX, (minY + maxY) / 2, 0);
         currentBoss = Instantiate(bossPrefab, spawnPosition, Quaternion.identity, transform);
-        
+        CustomLogger.Log("보스 몬스터 생성됨: " + currentBoss.name, "purple");
+
+        EnemyMovement bossMovement = currentBoss.GetComponent<EnemyMovement>();
+        if (bossMovement != null)
+        {
+            bossMovement.isBoss = true;
+            bossMovement.OnBossDisabledEvent += OnBossDisabled;
+        }
+        else
+        {
+            CustomLogger.Log("EnemyMovement 컴포넌트를 찾을 수 없음", "red");
+        }
+
         yield return null;
     }
-
-    // 보스 몬스터 파괴 시 호출
-    private void OnBossDestroyed()
+    
+    private void OnBossDisabled()
     {
-        CustomLogger.Log("보스 몬스터 파괴", "purple");
+        CustomLogger.Log("에너미 스포너3의 OnBossDisabled()호출됨", "white");
         currentBoss = null;
+        CustomLogger.Log("currentBoss가 null로 설정됨", "green");
+        
+        if (stageEndPopup != null)
+        {
+            CustomLogger.Log("stageEndPopup활성화", "green");
+            stageEndPopup.SetActive(true);
+        }
+        else
+        {
+            CustomLogger.Log("stageEndPopUp = null", "white");
+        }
+    }
+
+    private void Update()
+    {
+        Debug.Log(currentBoss != null ? currentBoss.activeSelf.ToString() : "null");
     }
 
     // 적 병종 랜덤 생성
