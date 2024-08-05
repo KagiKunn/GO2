@@ -94,9 +94,7 @@ public class Gacha : MonoBehaviour
         for (var i = array.Length - 1 ; i > 0; i--)
         {
             var j = rand.Next(0, i + 1);
-            var temp = array[i];
-            array[i] = array[j];
-            array[j] = temp;
+            (array[i], array[j]) = (array[j], array[i]);
         }
     }
 
@@ -191,6 +189,7 @@ public class Gacha : MonoBehaviour
             resultText.text = $"Item: {item.itemName}\nRarity: {item.rarity}";
             resultText.enabled = true;
         }
+        
     }
 
     private void DisplayMultiGachaResult(Dictionary<ItemRarity, int> gachaResults, int gachaCount, List<ItemSO> gachaItems)
