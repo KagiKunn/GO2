@@ -1,11 +1,10 @@
 <engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/UI/Uss/DefenseUss.uss?fileID=7433441132597879392&amp;guid=b9e5e808b08d63e44a9ffaf6280aaad3&amp;type=3#DefenseUss" />
     <engine:VisualElement name="Container" style="flex-grow: 1; height: 100%; width: 100%; background-color: rgba(255, 113, 113, 0);">
-        <engine:VisualElement name="SKillBtnRow" style="position: absolute; bottom: 0; flex-direction: row; justify-content: space-evenly; width: 100%; min-width: 400px; max-width: 500px; align-content: center; align-self: center;">
-            <engine:VisualElement name="skill-icn" style="background-image: url(&quot;project://database/Assets/Image/Portrait/Knight.png?fileID=2800000&amp;guid=eea59b63d05fe8f428620070ba16fcdf&amp;type=3#Knight&quot;);" />
-            <engine:VisualElement name="skill-icn" style="background-image: url(&quot;project://database/Assets/Image/Portrait/Knight.png?fileID=2800000&amp;guid=eea59b63d05fe8f428620070ba16fcdf&amp;type=3#Knight&quot;);" />
-            <engine:VisualElement name="skill-icn" style="background-image: url(&quot;project://database/Assets/Image/Portrait/Knight.png?fileID=2800000&amp;guid=eea59b63d05fe8f428620070ba16fcdf&amp;type=3#Knight&quot;);" />
-            <engine:VisualElement name="skill-icn" style="background-image: url(&quot;project://database/Assets/Image/Portrait/Knight.png?fileID=2800000&amp;guid=eea59b63d05fe8f428620070ba16fcdf&amp;type=3#Knight&quot;);" />
+        <engine:VisualElement name="skill-panel" style="flex-direction: row; bottom: 0; position: absolute; background-color: rgb(0, 0, 0); padding-left: 10px; padding-right: 10px; padding-top: 10px; padding-bottom: 0; align-self: center;">
+            <engine:Button name="skill-icn1" style="background-image: none;" />
+            <engine:Button name="skill-icn2" style="background-image: none;" />
+            <engine:Button name="skill-icn3" style="background-image: none;" />
         </engine:VisualElement>
         <engine:Button name="CameraButton" style="height: 40px; width: 40px; background-image: url(&quot;project://database/Assets/DownlodedAssets/SkymonIconPackFree/skymon-icons-white/tower.png?fileID=2800000&amp;guid=4f1aa8747eacb264dae602893e1c6ae8&amp;type=3#tower&quot;); top: 10px; left: 10px; border-left-color: rgba(255, 0, 0, 0.39); border-right-color: rgba(255, 0, 0, 0.39); border-top-color: rgba(255, 0, 0, 0.39); border-bottom-color: rgba(255, 0, 0, 0.39); border-top-left-radius: 10px; border-top-right-radius: 10px; border-bottom-right-radius: 10px; border-bottom-left-radius: 10px; background-color: rgba(0, 0, 0, 0.39);" />
         <engine:VisualElement name="VisualElement" style="flex-grow: 1; position: absolute; flex-direction: row; top: 1%; right: 1%; margin-left: 0;">

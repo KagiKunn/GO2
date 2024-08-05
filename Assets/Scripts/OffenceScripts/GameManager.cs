@@ -147,6 +147,8 @@ public class GameManager : MonoBehaviour {
 			level++;
 			exp = 0;
 
+			maxHealth += 10;
+
 			uiLevelUp.Show();
 		}
 	}

@@ -1357,7 +1357,7 @@ GameObject:
   - component: {fileID: 8999093255860841194}
   m_Layer: 8
   m_Name: GunHero
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1371,7 +1371,7 @@ RectTransform:
   m_GameObject: {fileID: 3133274129896086462}
   m_LocalRotation: {x: -0, y: 0.008726557, z: -0, w: 0.9999619}
   m_LocalPosition: {x: 0, y: 0, z: 0.00015256465}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.2, y: 1.2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2875575631361004384}
@@ -1590,9 +1590,9 @@ GameObject:
   - component: {fileID: 2875575631361004384}
   - component: {fileID: 5065001539794980431}
   - component: {fileID: 8755001227804626616}
-  - component: {fileID: 4593864311206679602}
-  - component: {fileID: 6007020352302594063}
-  - component: {fileID: 2909123749587281496}
+  - component: {fileID: 5418515213722660244}
+  - component: {fileID: 301349474998194120}
+  - component: {fileID: 7861432962960186819}
   m_Layer: 8
   m_Name: UnitRoot
   m_TagString: Untagged
@@ -1651,7 +1651,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &4593864311206679602
+--- !u!114 &5418515213722660244
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1663,19 +1663,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22d2f6f63e7a499eb8f868c773c2ff64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detectionRadius: 10
+  detectionRadius: 150
   enemyLayer:
     serializedVersion: 2
     m_Bits: 128
   attackDamage: 1
-  attackSpeed: 1
+  attackSpeed: 0.2
   runState: 0.75
   attackState: 0
   normalState: 0.75
   skillState: 0.75
+  aoe: 2
+  damageEffect: {fileID: 11400000, guid: 5366b946b2f8d644fb3c6d8d00dc2f48, type: 2}
   projectilePrefab: {fileID: 9079097523562783990, guid: bf5da1b58b98d4f418b51159c703fe47,
     type: 3}
---- !u!114 &6007020352302594063
+--- !u!114 &301349474998194120
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1687,7 +1689,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76c7a70ed6791a04797d89bb0504bacb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!70 &2909123749587281496
+--- !u!70 &7861432962960186819
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

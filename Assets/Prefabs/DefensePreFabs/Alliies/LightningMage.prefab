@@ -320,7 +320,7 @@ GameObject:
   - component: {fileID: 2713465910322884115}
   m_Layer: 8
   m_Name: LightningMage
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -334,7 +334,7 @@ RectTransform:
   m_GameObject: {fileID: 773221152859356726}
   m_LocalRotation: {x: -0, y: 0.008726557, z: -0, w: 0.9999619}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.2, y: 1.2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4917182372516275250}
@@ -4001,9 +4001,9 @@ GameObject:
   - component: {fileID: 4917182372516275250}
   - component: {fileID: 758098681936455115}
   - component: {fileID: 4551722488971051039}
-  - component: {fileID: 6747374629581713740}
-  - component: {fileID: 28785219181808396}
-  - component: {fileID: 6097858903742683195}
+  - component: {fileID: 3168220631715406393}
+  - component: {fileID: 8715072124665035786}
+  - component: {fileID: 3913150991724748638}
   m_Layer: 8
   m_Name: UnitRoot
   m_TagString: Untagged
@@ -4062,7 +4062,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &6747374629581713740
+--- !u!114 &3168220631715406393
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4074,7 +4074,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22d2f6f63e7a499eb8f868c773c2ff64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detectionRadius: 10
+  detectionRadius: 100
   enemyLayer:
     serializedVersion: 2
     m_Bits: 128
@@ -4084,9 +4084,11 @@ MonoBehaviour:
   attackState: 1
   normalState: 0.5
   skillState: 0
-  projectilePrefab: {fileID: 478861297126206209, guid: 9541f96b100e19244813422b628cfe2c,
+  aoe: 2
+  damageEffect: {fileID: 11400000, guid: 7487dac5ef102ee4ea85d0371b9117dd, type: 2}
+  projectilePrefab: {fileID: 4336676969756954808, guid: 680c878c63ff174498151801439e1252,
     type: 3}
---- !u!114 &28785219181808396
+--- !u!114 &8715072124665035786
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4098,7 +4100,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76c7a70ed6791a04797d89bb0504bacb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!70 &6097858903742683195
+--- !u!70 &3913150991724748638
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

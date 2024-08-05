@@ -2830,7 +2830,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 10, y: 10, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7771775256145047832}
@@ -2884,18 +2884,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 10
-  moveSpeed: 1
+  moveSpeed: 10
   detectionLayerMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   attackDamage: 1
   attackSpeed: 1
-  runState: 1
+  runState: 0.25
   attackState: 1
   normalState: 0.5
   skillState: 0
   boxSize: {x: 3, y: 0.1}
-  projectilePrefab: {fileID: 0}
+  projectilePrefab: {fileID: 8172912759357463194, guid: 38c3d5abd431f1b48a9b27f0b52bdea4,
+    type: 3}
+  movementdirection: {x: 0, y: 0, z: 0}
+  isKnockedBack: 0
+  percent: 0
+  isBoss: 0
 --- !u!50 &6041942469733279053
 Rigidbody2D:
   serializedVersion: 4

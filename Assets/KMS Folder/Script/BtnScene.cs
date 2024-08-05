@@ -17,4 +17,11 @@ public class BtnScene : MonoBehaviour
        SceneManager.LoadScene("InternalAffairs");
        CustomLogger.Log("Change InternalAffairsScene successfuly!");
    }
+
+   public void DefenseSceneChange()
+   {
+       SceneManager.LoadScene("Defense");
+       CustomLogger.Log("Change Defense successfuly!");
+   }
+   
 }

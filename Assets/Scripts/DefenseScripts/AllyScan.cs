@@ -1,39 +1,33 @@
-using System;
-
 using UnityEngine;
 
-#pragma warning disable CS0219 // 변수가 할당되었지만 해당 값이 사용되지 않았습니다.
-#pragma warning disable CS0414
-
-public class AllyScan : MonoBehaviour {
+public class AllyScan : MonoBehaviour
+{
     public float detectionRadius = 5.0f;
     [SerializeField] private LayerMask enemyLayer;
     [SerializeField] private int attackDamage = 1;
     [SerializeField] private float attackSpeed = 1f;
-    //idle 0 , run 0.5, stun 1
     [SerializeField] private float runState = 0f;
-    //skill 0, normal 1
-    [SerializeField] private float attackState = 1f;
-    //normal 0, bow 0.25 magic, 0.5 gun 0.75, crossbow 1
-    [SerializeField] private float normalState = 0f;
-    //normal 0, bow 0.5, magic 1
-    [SerializeField] private float skillState = 0f;
-    
+    [SerializeField] private float attackState;
+    [SerializeField] private float normalState;
+    [SerializeField] private float skillState;
+    [SerializeField] private float aoe = 2f;
+
+    [SerializeField] private DamageEffect damageEffect; // damageEffect를 SerializeField로 추가
     public GameObject projectilePrefab;
-    
+
     private Animator animator;
     private GameObject closestObject;
+
     private void Awake()
     {
         animator = GetComponent<Animator>();
-        animator.speed = attackSpeed;
-        animator.speed = attackSpeed;
-        animator.SetFloat("RunState",runState);
-        animator.SetFloat("SkillState",skillState);
-        animator.SetFloat("NormalState",normalState);
+        animator.SetFloat("RunState", runState);
+        animator.SetFloat("SkillState", skillState);
+        animator.SetFloat("NormalState", normalState);
     }
 
-    private void Update() {
+    private void Update()
+    {
         if (closestObject == null)
         {
             AllyIdle();
@@ -43,8 +37,21 @@ public class AllyScan : MonoBehaviour {
         {
             AllyAttack();
         }
+        SetAnimationSpeed("AttackState",attackSpeed);
     }
-    
+    public void SetAnimationSpeed(string name, float speed)
+    {
+        // AnimatorStateInfo를 사용하여 현재 상태가 공격 상태인지 확인하고, 속도를 변경합니다.
+        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+        if (stateInfo.IsName(name))
+        {
+            animator.speed = speed;
+        }
+        else
+        {
+            animator.speed = 1f;
+        }
+    }
     void FindClosestObject()
     {
         Vector2 point = transform.position;
@@ -66,25 +73,23 @@ public class AllyScan : MonoBehaviour {
         if (closestCollider != null)
         {
             closestObject = closestCollider.gameObject;
-            // CustomLogger.Log("Closest object found: " + closestObject.name);
-        }
-        else
-        {
-            // CustomLogger.Log("No object found in range.","yellow");
         }
     }
+
     private void AllyAttack()
     {
         animator.ResetTrigger("Idle");
-        animator.SetFloat("AttackState",attackState);
+        animator.SetFloat("AttackState", attackState);
         animator.SetTrigger("Attack");
     }
+
     private void AllyIdle()
     {
         animator.ResetTrigger("Attack");
-        animator.SetFloat("RunState",runState);
+        animator.SetFloat("RunState", runState);
         animator.SetTrigger("Idle");
     }
+
     public void isAttack()
     {
         if (closestObject != null)
@@ -106,23 +111,24 @@ public class AllyScan : MonoBehaviour {
         EnemyMovement enemy = closestObject.GetComponent<EnemyMovement>();
         if (enemy != null)
         {
-            enemy.TakeDamage(attackDamage);
+            damageEffect.ApplyEffect(enemy,null, attackDamage, aoe); // 데미지 효과 적용
             if (enemy.IsDead())
             {
                 closestObject = null;
             }
         }
     }
+
     public void CollisionAttack()
     {
         if (closestObject != null)
         {
-            Vector3 spawnPosition = transform.position + new Vector3(0, GetComponent<Collider2D>().bounds.size.y/3, 0);
+            Vector3 spawnPosition = transform.position + new Vector3(0, GetComponent<Collider2D>().bounds.size.y / 3, 0);
             GameObject projectileInstance = Instantiate(projectilePrefab, spawnPosition, Quaternion.identity);
             AllyProjectile projectile = projectileInstance.GetComponent<AllyProjectile>();
             if (projectile != null)
             {
-                projectile.Initialize(closestObject.transform, attackDamage);
+                projectile.Initialize(closestObject.transform, attackDamage, damageEffect, aoe); // 데미지 효과 전달
             }
             else
             {
