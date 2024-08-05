@@ -4,4 +4,5 @@ using System.Collections.Generic;
 public class InventoryData
 {
     public List<ItemSO> items = new List<ItemSO>();
+    public int additionalSlotCount = 0;
 }

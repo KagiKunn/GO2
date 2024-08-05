@@ -1,5 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
+using UnityEditor;
+
 
 public class InventoryUI : MonoBehaviour
 {
@@ -70,7 +73,16 @@ public class InventoryUI : MonoBehaviour
     private void UpdateSlotUI(Transform slot, ItemSO item)
     {
         Image itemImage = slot.Find("ItemImage").GetComponent<Image>();
-        Text itemName = slot.Find("ItemName").GetComponent<Text>();
+        TextMeshProUGUI itemName = slot.Find("ItemName").GetComponent<TextMeshProUGUI>();
+
+        if (itemImage == null)
+        {
+            CustomLogger.LogError("ItemImage component is missing on ItemImage GameObject.");
+        }
+        if (itemName == null)
+        {
+            CustomLogger.LogError("Text component is missing on ItemName GameObject.");
+        }
 
         if (item != null)
         {
@@ -92,9 +104,56 @@ public class InventoryUI : MonoBehaviour
     void LoadInventory()
     {
         inventoryData = JsonInventory.LoadFromJson<InventoryData>(inventoryFilePath) ?? new InventoryData();
+
+        int currentSlotCount = inventoryContent.childCount;
+
+        for (int i = 0; i < inventoryData.additionalSlotCount; i++)
+        {
+            GameObject newSlot =
+                (GameObject)AssetDatabase.LoadAssetAtPath("Assets/JSFolder/PreFab/Slot.prefab", typeof(GameObject));
+            if (newSlot != null)
+            {
+                Instantiate(newSlot, inventoryContent);
+            }
+        }
+        
         UpdateInventoryUI();
     }
 
-    
+    public void ClearInventory()
+    {
+        inventoryData.items.Clear();
 
+        int baseSlotCount = inventoryContent.childCount - inventoryData.additionalSlotCount;
+        for (int i = inventoryContent.childCount - 1; i >= baseSlotCount; i--)
+        {
+            Destroy(inventoryContent.GetChild(i).gameObject);
+        }
+        
+        inventoryData.additionalSlotCount = 0;
+        SaveInventory();
+        UpdateInventoryUI();
+    }
+
+    public void ExpandInventory(int additionalSlots)
+    {
+        for (int i = 0; i < additionalSlots; i++)
+        {
+            GameObject newSlot =
+                (GameObject)AssetDatabase.LoadAssetAtPath("Assets/JSFolder/PreFab/Slot.prefab", typeof(GameObject));
+            if (newSlot != null)
+            {
+                Instantiate(newSlot, inventoryContent);
+            }
+        }
+
+        inventoryData.additionalSlotCount += additionalSlots;
+        SaveInventory();
+        UpdateInventoryUI();
+    }
+
+    public void OnExpandButtonClicked()
+    {
+        ExpandInventory(4);
+    }
 }
