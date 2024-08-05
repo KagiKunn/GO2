@@ -56,8 +56,12 @@ public class Player : MonoBehaviour {
 
 	private void LateUpdate() {
 		if (!gameManager.IsLive) return;
-
-		animator.SetFloat("Speed", inputVector2.magnitude);
+		
+		if(inputVector2.x == 0 && inputVector2.y == 0){
+			animator.SetFloat("RunState", 0);
+		} else {
+			animator.SetFloat("RunState", 0.25f);
+		}
 
 		if (inputVector2.x != 0) {
 			spriteRenderer.flipX = inputVector2.x < 0;
@@ -74,7 +78,7 @@ public class Player : MonoBehaviour {
 				transform.GetChild(i).gameObject.SetActive(false);
 			}
 
-			animator.SetTrigger("Dead");
+			animator.SetTrigger("Die");
 
 			gameManager.GameOver();
 		}

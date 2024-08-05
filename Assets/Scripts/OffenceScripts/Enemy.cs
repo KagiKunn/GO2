@@ -63,7 +63,7 @@ public class Enemy : MonoBehaviour {
 		collider2D.enabled = true;
 		rigidbody2D.simulated = true;
 		spriteRenderer.sortingOrder = 2;
-		animator.SetBool("Dead", false);
+		animator.SetBool("Die", false);
 
 		health = maxHealth;
 	}
@@ -93,7 +93,7 @@ public class Enemy : MonoBehaviour {
 			collider2D.enabled = false;
 			rigidbody2D.simulated = false;
 			spriteRenderer.sortingOrder = 1;
-			animator.SetBool("Dead", true);
+			animator.SetBool("Die", true);
 
 			if (gameManager.IsLive) {
 				gameManager.Kill++;
