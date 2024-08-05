@@ -1,108 +1,67 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class StageManager : MonoBehaviour
 {
-    public static StageManager Instance { get; private set; }
+    [SerializeField] public RacePrefabs darkElfPrefabs;
+    [SerializeField] public RacePrefabs humanPrefabs;
+    [SerializeField] public RacePrefabs orcPrefabs;
+    [SerializeField] public RacePrefabs skeletonPrefabs;
+    [SerializeField] public RacePrefabs witchPrefabs;
 
-    [SerializeField] private int totalStages = 5;
-    [SerializeField] private EnemySpawner2 enemySpawner;
-    public int CurrentStage { get; private set; } = 1;
-
-    private List<int> usedStages = new List<int>();
-    private List<string> usedRaces = new List<string>();
-    private GameObject bossPrefab;
-    private List<GameObject> enemyPrefabs;
-
-    private void Awake()
+    private List<RacePrefabs> racePrefabsList;
+    private Dictionary<string, RacePrefabs> selectedRaces;
+    private List<GameObject> crntRace;
+    public EnemySpawner2 enemySpawner=null;
+    void Start()
     {
-        if (Instance == null)
+        racePrefabsList = new List<RacePrefabs> { darkElfPrefabs, humanPrefabs, orcPrefabs, skeletonPrefabs, witchPrefabs };
+        selectedRaces = new Dictionary<string, RacePrefabs>();
+        crntRace = new List<GameObject>();
+        enemySpawner = GetComponent<EnemySpawner2>();
+        SelectRandomRaceAndShowUnits();
+    }
+
+    void SelectRandomRaceAndShowUnits()
+    {
+        if (racePrefabsList.Count > 0)
         {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
+            int randomRaceIndex = Random.Range(0, racePrefabsList.Count);
+            RacePrefabs selectedRace = racePrefabsList[randomRaceIndex];
+            selectedRaces[selectedRace.GetType().Name] = selectedRace;
+            racePrefabsList.RemoveAt(randomRaceIndex);
+
+            Debug.Log($"Selected Race: {selectedRace.GetType().Name}");
+
+            if (selectedRace.unitPrefabs.Length > 0)
+            {
+                Debug.Log("Unit Prefabs in Selected Race:");
+                 foreach (GameObject unitPrefab in selectedRace.unitPrefabs)
+                 {
+                     Debug.Log(unitPrefab.name);
+                     crntRace.Add(unitPrefab);
+                 }
+                
+                    
+                int randomUnitIndex = Random.Range(0, selectedRace.unitPrefabs.Length);
+                GameObject selectedUnit = selectedRace.unitPrefabs[randomUnitIndex];
+
+                Debug.Log($"Selected Unit: {selectedUnit.name}");
+                // 여기서 selectedUnit을 사용하여 원하는 동작을 수행할 수 있습니다.
+
+                CustomLogger.Log(crntRace);
+                CustomLogger.Log(selectedUnit);
+                enemySpawner.SpawnWaves(crntRace, selectedUnit);
+            }
+            else
+            {
+                Debug.Log("No unit prefabs available in selected race.");
+            }
         }
         else
         {
-            Destroy(gameObject);
+            Debug.Log("No more races to select.");
         }
-    }
-
-    private void Start()
-    {
-        Debug.Log("StageManager: Start() 호출됨");
-        StartCoroutine(ManageStages());
-    }
-
-    private IEnumerator ManageStages()
-    {
-        Debug.Log("ManageStages() 시작됨");
-        while (CurrentStage <= totalStages)
-        {
-            CustomLogger.Log("Current Stage: " + CurrentStage, "yellow");
-
-            if (!usedStages.Contains(CurrentStage))
-            {
-                SelectRandomEnemyPrefabs(CurrentStage);
-                usedStages.Add(CurrentStage);
-            }
-
-            Debug.Log("Spawning waves for stage " + CurrentStage);
-            yield return StartCoroutine(enemySpawner.SpawnWaves(enemyPrefabs, bossPrefab));
-            CustomLogger.Log("스테이지 종료", "red");
-            yield return new WaitForSeconds(5f);
-
-            CurrentStage++;
-            enemySpawner.ResetWave();
-        }
-
-        CustomLogger.Log("모든 스테이지가 완료되었습니다.", "red");
-    }
-
-    private void SelectRandomEnemyPrefabs(int currentStage)
-    {
-        Debug.Log("SelectRandomEnemyPrefabs() 호출됨");
-        List<GameObject> selectedEnemies = new List<GameObject>();
-        List<string> availableRaces = new List<string> { "darkElf", "human", "orc", "skeleton", "witch" };
-        availableRaces.RemoveAll(race => usedRaces.Contains(race));
-
-        if (availableRaces.Count == 0)
-        {
-            CustomLogger.Log("모든 종족이 이미 사용되었습니다.", "red");
-            enemyPrefabs = selectedEnemies;
-            return;
-        }
-
-        string selectedRace = availableRaces[Random.Range(0, availableRaces.Count)];
-        usedRaces.Add(selectedRace);
-        CustomLogger.Log("선택된 종족 : " + selectedRace, "yellow");
-
-        switch (selectedRace)
-        {
-            case "darkElf":
-                selectedEnemies.AddRange(enemySpawner.darkElfPrefabs.GetPrefabs());
-                bossPrefab = enemySpawner.darkElfPrefabs.GetBossPrefab();
-                break;
-            case "human":
-                selectedEnemies.AddRange(enemySpawner.humanPrefabs.GetPrefabs());
-                bossPrefab = enemySpawner.humanPrefabs.GetBossPrefab();
-                break;
-            case "orc":
-                selectedEnemies.AddRange(enemySpawner.orcPrefabs.GetPrefabs());
-                bossPrefab = enemySpawner.orcPrefabs.GetBossPrefab();
-                break;
-            case "skeleton":
-                selectedEnemies.AddRange(enemySpawner.skeletonPrefabs.GetPrefabs());
-                bossPrefab = enemySpawner.skeletonPrefabs.GetBossPrefab();
-                break;
-            case "witch":
-                selectedEnemies.AddRange(enemySpawner.witchPrefabs.GetPrefabs());
-                bossPrefab = enemySpawner.witchPrefabs.GetBossPrefab();
-                break;
-        }
-
-        enemyPrefabs = selectedEnemies;
-        Debug.Log("Selected enemy prefabs count: " + enemyPrefabs.Count);
-        Debug.Log("Selected boss prefab: " + (bossPrefab != null ? bossPrefab.name : "null"));
     }
 }

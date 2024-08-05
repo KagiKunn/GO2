@@ -42,6 +42,8 @@ public class GameManager : MonoBehaviour {
 		} else if (instance != this) {
 			Destroy(this.gameObject);
 		}
+		
+		CustomLogger.Log(playerId);
 	}
 
 	public void GameStart(int id) {
