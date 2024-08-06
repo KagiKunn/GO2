@@ -16,7 +16,7 @@ public class GachaBoxController : MonoBehaviour
     public void OpenBox()
     {
         animator.SetTrigger("Open");
-        Invoke("ShowItemInfo",0.65f);
+        Invoke("ShowItemInfo", 0.65f);
     }
 
     public void ShowItemInfo()
@@ -29,16 +29,12 @@ public class GachaBoxController : MonoBehaviour
         {
             gacha.OnGachaButtonClicked();
         }
+
         EnableUIElements();
     }
 
     void EnableUIElements()
     {
-        if (Gacha.Instance.resultImage != null)
-        {
-            Gacha.Instance.resultImage.enabled = true;
-        }
-
         if (isMultiGacha)
         {
             if (Gacha.Instance.resultText != null)
@@ -50,10 +46,14 @@ public class GachaBoxController : MonoBehaviour
             {
                 Gacha.Instance.resultImage.enabled = false;
             }
-
         }
         else
         {
+            if (Gacha.Instance.resultImage != null)
+            {
+                Gacha.Instance.resultImage.enabled = true;
+            }
+
             if (Gacha.Instance.resultText != null)
             {
                 Gacha.Instance.resultText.enabled = true;
@@ -72,11 +72,9 @@ public class GachaBoxController : MonoBehaviour
                     child.gameObject.SetActive(false);
                 }
             }
-
-            
         }
     }
-    
+
     public void SetMultiGacha(bool isMulti, int count)
     {
         isMultiGacha = isMulti;
@@ -85,7 +83,7 @@ public class GachaBoxController : MonoBehaviour
 
     public void SingleGacha()
     {
-        SetMultiGacha(false,1);
+        SetMultiGacha(false, 1);
         OpenBox();
     }
 
