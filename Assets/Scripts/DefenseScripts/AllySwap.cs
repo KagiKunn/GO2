@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class ClickObjectDetector2D : MonoBehaviour {
+public class AllySwap : MonoBehaviour {
 	public LayerMask clickableLayer; // 감지할 레이어 설정
 	private GameObject unit1;
 	private GameObject unit2;
@@ -10,10 +10,26 @@ public class ClickObjectDetector2D : MonoBehaviour {
 	private Animator animator2;
 	private AllyScan allyScan1;
 	private AllyScan allyScan2;
+	private AllyScan unitInfo1;
+	private AllyScan unitInfo2;
 
+	private GameObject highlight;
 	private Vector3 targetPosition1;
 	private Vector3 targetPosition2;
 
+	private float originTime;
+	
+	public GameObject playerObjCircle;
+	private GameObject playerObjCircle1;
+	private GameObject playerObjCircle2;
+	
+	private void Awake()
+	{
+		playerObjCircle1 = Instantiate(playerObjCircle, transform.position, Quaternion.identity);
+		playerObjCircle2 = Instantiate(playerObjCircle, transform.position, Quaternion.identity);
+		playerObjCircle1.SetActive(false);
+		playerObjCircle2.SetActive(false);
+	}
 	void Update() {
 		if (Input.GetMouseButtonDown(0) && !isMoving) // 마우스 왼쪽 버튼 클릭 확인 및 이동 중인지 확인
 		{
@@ -26,28 +42,41 @@ public class ClickObjectDetector2D : MonoBehaviour {
 				GameObject clickedObject = collider.gameObject;
 				CustomLogger.Log("Clicked on object: " + clickedObject.name, "blue");
 
-				if (unit1 == null) {
+				if (unit1 == null)
+				{
+					originTime = Time.timeScale;
 					unit1 = clickedObject;
+					if (unit1 != null)
+					{
+						Time.timeScale = 0.5f;
+						playerObjCircle1.SetActive(true);
+						playerObjCircle1.transform.position = unit1.transform.position;
+					}
 					CustomLogger.Log("Selected unit1: " + unit1.name);
 				} else {
 					unit2 = clickedObject;
-					CustomLogger.Log("Selected unit2: " + unit2.name);
+					if (unit2 != null)
+					{
+						Time.timeScale = originTime;
+						playerObjCircle2.SetActive(true);
+						playerObjCircle2.transform.position = unit2.transform.position;
+						CustomLogger.Log("Selected unit2: " + unit2.name);
+						targetPosition1 = unit2.transform.position;
+						targetPosition2 = unit1.transform.position;
+						animator1 = unit1.GetComponent<Animator>();
+						animator2 = unit2.GetComponent<Animator>();
+						allyScan1 = unit1.GetComponent<AllyScan>();
+						allyScan2 = unit2.GetComponent<AllyScan>();
+						isMoving = true; // 이동 시작
+						// 이동 시작 애니메이션 트리거
+						animator1.SetTrigger("Run");
+						animator2.SetTrigger("Run");
 
-					targetPosition1 = unit2.transform.position;
-					targetPosition2 = unit1.transform.position;
-					animator1 = unit1.GetComponent<Animator>();
-					animator2 = unit2.GetComponent<Animator>();
-					allyScan1 = unit1.GetComponent<AllyScan>();
-					allyScan2 = unit2.GetComponent<AllyScan>();
-					isMoving = true; // 이동 시작
-
-					// 이동 시작 애니메이션 트리거
-					animator1.SetTrigger("Run");
-					animator2.SetTrigger("Run");
-
-					// AllyScan 스크립트 비활성화
-					if (allyScan1 != null) allyScan1.enabled = false;
-					if (allyScan2 != null) allyScan2.enabled = false;
+						// AllyScan 스크립트 비활성화
+						if (allyScan1 != null) allyScan1.enabled = false;
+						if (allyScan2 != null) allyScan2.enabled = false;
+					}
+					
 				}
 			} else {
 				CustomLogger.LogWarning("No object clicked");
@@ -56,12 +85,17 @@ public class ClickObjectDetector2D : MonoBehaviour {
 
 		if (isMoving) {
 			MoveUnits();
+			playerObjCircle1.SetActive(false);
+			playerObjCircle2.SetActive(false);
 		}
 	}
 
-	void MoveUnits() {
-		unit1.transform.position = Vector3.MoveTowards(unit1.transform.position, targetPosition1, 1 * Time.deltaTime);
-		unit2.transform.position = Vector3.MoveTowards(unit2.transform.position, targetPosition2, 1 * Time.deltaTime);
+	void MoveUnits()
+	{
+		float speed1 = allyScan1.movementSpeed;
+		float speed2 = allyScan2.movementSpeed;
+		unit1.transform.position = Vector3.MoveTowards(unit1.transform.position, targetPosition1, speed1 * Time.deltaTime);
+		unit2.transform.position = Vector3.MoveTowards(unit2.transform.position, targetPosition2, speed2 * Time.deltaTime);
 
 		animator1.SetTrigger("Idle");
 		animator2.SetTrigger("Idle");
