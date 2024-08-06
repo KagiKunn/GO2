@@ -10153,37 +10153,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c51aaa46189252447b799a2fc161072b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &803794498
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 803794499}
-  m_Layer: 0
-  m_Name: 
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &803794499
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 803794498}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &847606942
 GameObject:
   m_ObjectHideFlags: 0
@@ -12818,6 +12787,7 @@ MonoBehaviour:
   - {fileID: 1353238832}
   allway: 1
   uiDocument: {fileID: 1155641491}
+  flipMaterial: {fileID: 2100000, guid: 095d73b75264dd44bac110b02446aa81, type: 2}
 --- !u!114 &1244472809 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8965467376334499265, guid: aa9b857646f1a784db94a18e067f23ba,
@@ -26415,7 +26385,6 @@ PrefabInstance:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 803794499}
   - {fileID: 800933945}
   - {fileID: 660744211}
   - {fileID: 1832681954}

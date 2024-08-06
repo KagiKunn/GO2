@@ -20,11 +20,13 @@ public class CameraControl : MonoBehaviour
     [SerializeField] private Tilemap[] tilemaps; // 타일맵 배열
     [SerializeField] private bool allway; // xy이동 / false면 y축만이동
     [SerializeField] private UIDocument uiDocument; // 최상단에 위치한 UI 도큐먼트
+    [SerializeField] private Material flipMaterial; // 셰이더를 담을 Material
 
     private Vector3 minBounds;
     private Vector3 maxBounds;
     private float halfHeight;
     private float halfWidth;
+    private bool isFlipped = false; // 좌우 반전 상태를 추적하는 변수
 
     private Button cameraButton;
 
@@ -195,5 +197,21 @@ public class CameraControl : MonoBehaviour
         UpdateBounds(tilemaps[currentCameraIndex]);
 
         camera.transform.position = initialCameraPositions[currentCameraIndex];
+        isFlipped = !isFlipped;
+        flipMaterial.SetInt("_FlipX", isFlipped ? 1 : 0);
+        
+    }
+    
+    
+    private void OnRenderImage(RenderTexture source, RenderTexture destination)
+    {
+        if (flipMaterial != null)
+        {
+            Graphics.Blit(source, destination, flipMaterial);
+        }
+        else
+        {
+            Graphics.Blit(source, destination);
+        }
     }
 }
