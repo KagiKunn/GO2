@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HeroSelect2 : MonoBehaviour
+public class HeroSelect : MonoBehaviour
 {
     public NoticeUI _notice;
     public HeroGameManager heroGameManager;
