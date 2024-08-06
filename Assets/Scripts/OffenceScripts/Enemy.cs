@@ -10,7 +10,7 @@ public class Enemy : MonoBehaviour {
 	[SerializeField] private float health;
 	[SerializeField] private float maxHealth;
 
-	[SerializeField] private RuntimeAnimatorController[] runtimeAnimatorController;
+	[SerializeField] private RuntimeAnimatorController[] runtimeAnimatorControllers;
 
 	[SerializeField] private Rigidbody2D target;
 
@@ -25,6 +25,8 @@ public class Enemy : MonoBehaviour {
 	private GameManager gameManager;
 	private Player player;
 
+	private Vector3 scale;
+
 	private void Awake() {
 		rigidbody2D = GetComponent<Rigidbody2D>();
 		collider2D = GetComponent<Collider2D>();
@@ -34,6 +36,10 @@ public class Enemy : MonoBehaviour {
 
 		gameManager = GameManager.Instance;
 		player = GameManager.Instance.Player;
+
+		scale = transform.localScale;
+
+		animator.SetFloat("RunState", 0.25f);
 	}
 
 	private void FixedUpdate() {
@@ -53,7 +59,10 @@ public class Enemy : MonoBehaviour {
 
 		if (!isLive) return;
 
-		spriteRenderer.flipX = target.position.x < rigidbody2D.position.x;
+		if (target.position.x < rigidbody2D.position.x) scale.x = 1;
+		else if (target.position.x > rigidbody2D.position.x) scale.x = -1;
+
+		transform.localScale = scale;
 	}
 
 	private void OnEnable() {
@@ -69,7 +78,7 @@ public class Enemy : MonoBehaviour {
 	}
 
 	public void Initialized(SpawnData spawnData) {
-		animator.runtimeAnimatorController = runtimeAnimatorController[spawnData.SpriteType];
+		animator.runtimeAnimatorController = runtimeAnimatorControllers[spawnData.SpriteType];
 
 		speed = spawnData.Speed;
 		maxHealth = spawnData.Health;
@@ -85,7 +94,7 @@ public class Enemy : MonoBehaviour {
 		// StartCoroutine("KnockBack");
 
 		if (health > 0) {
-			animator.SetTrigger("Hit");
+			animator.SetFloat("RunState", 1);
 
 			AudioManager.Instance.PlaySfx(AudioManager.Sfx.Hit);
 		} else {
