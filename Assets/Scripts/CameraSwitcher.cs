@@ -1,113 +1,199 @@
 using System;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 using UnityEngine.UIElements;
 
 public class CameraSwitcher : MonoBehaviour
 {
-    [SerializeField]
-    private Camera[] cameras; // 여러 카메라를 받기 위한 배열
-    [SerializeField]
-    private UIDocument uiDocument; // 최상단에 위치한 UI 도큐먼트
+    private const float DirectionForceReduceRate = 0.935f; // 감속비율
+    private const float DirectionForceMin = 0.001f; // 설정치 이하일 경우 움직임을 멈춤
 
-    private int currentCameraIndex = 1; // 현재 활성화된 카메라 인덱스 (0 Left, 1 Center, 2 Right)
+    private bool _userMoveInput; // 현재 조작을 하고있는지 확인을 위한 변수
+    private Vector3 _startPosition; // 입력 시작 위치를 기억
+    private Vector3 _directionForce; // 조작을 멈췄을때 서서히 감속하면서 이동 시키기 위한 변수
+
+    [SerializeField] private Camera camera;
+    private int currentCameraIndex = 0;
+    [SerializeField] private Vector3[] initialCameraPositions;
+    private float temp_value;
+    [SerializeField] private float speed = 10.0f;
+    [SerializeField] private Tilemap[] tilemaps; // 타일맵 배열
+    [SerializeField] private bool allway; // xy이동 / false면 y축만이동
+    [SerializeField] private UIDocument uiDocument; // 최상단에 위치한 UI 도큐먼트
+
+    private Vector3 minBounds;
+    private Vector3 maxBounds;
+    private float halfHeight;
+    private float halfWidth;
+
     private Button cameraButton;
-    private AudioListener[] audioListeners;
-    private CameraControl[] cameraControls; // CameraControl 스크립트 배열
-    private Vector3[] initialCameraPositions; // 각 카메라의 초기 위치 저장 배열
 
     private void Awake()
     {
         cameraButton = uiDocument.rootVisualElement.Q<Button>("CameraButton");
-        cameraButton.clicked += nextCamera;
-
-        // 각 카메라에 AudioListener와 CameraControl이 있는지 확인하고 배열에 저장
-        audioListeners = new AudioListener[cameras.Length];
-        cameraControls = new CameraControl[cameras.Length];
-        initialCameraPositions = new Vector3[cameras.Length];
-        for (int i = 0; i < cameras.Length; i++)
-        {
-            audioListeners[i] = cameras[i].GetComponent<AudioListener>();
-            if (audioListeners[i] == null)
-            {
-                audioListeners[i] = cameras[i].gameObject.AddComponent<AudioListener>();
-            }
-
-            cameraControls[i] = cameras[i].GetComponent<CameraControl>();
-
-            // 각 카메라의 초기 위치 저장
-            initialCameraPositions[i] = cameras[i].transform.position;
-        }
+        cameraButton.clicked += SwitchTilemap;
     }
 
-    void Start()
+    private void Start()
     {
-        // 모든 카메라와 AudioListener, CameraControl을 비활성화하고 현재 카메라와 AudioListener, CameraControl을 활성화합니다.
-        for (int i = 0; i < cameras.Length; i++)
-        {
-            bool isActive = (i == currentCameraIndex);
-            cameras[i].enabled = isActive;
-            audioListeners[i].enabled = isActive;
-            if (cameraControls[i] != null)
-            {
-                cameraControls[i].enabled = isActive;
-
-                // CameraControl 초기화
-                if (isActive)
-                {
-                    cameraControls[i].InitializeCamera();
-                }
-            }
-        }
+        InitializeCamera();
     }
 
-    void nextCamera()
+    public void InitializeCamera()
     {
-        if (currentCameraIndex == cameras.Length - 1)
+        // 카메라의 반높이와 반너비를 계산
+        halfHeight = camera.orthographicSize;
+        halfWidth = halfHeight * camera.aspect;
+
+        // 현재 타일맵의 경계를 가져옴
+        UpdateBounds(tilemaps[currentCameraIndex]);
+    }
+
+    private void UpdateBounds(Tilemap tilemap)
+    {
+        Transform gridTransform = tilemap.layoutGrid.transform;
+        Bounds tilemapBounds = tilemap.localBounds;
+
+        minBounds = gridTransform.TransformPoint(tilemapBounds.min);
+        maxBounds = gridTransform.TransformPoint(tilemapBounds.max);
+    }
+
+    private void Update()
+    {
+        ControlCameraPosition();
+        ReduceDirectionForce();
+        UpdateCameraPosition();
+        CameraZoom();
+    }
+
+    private void ControlCameraPosition()
+    {
+        var mouseWorldPosition = camera.ScreenToWorldPoint(Input.mousePosition);
+        if (Input.GetMouseButtonDown(0))
         {
-            SwitchToCamera(0);
+            CameraPositionMoveStart(mouseWorldPosition);
+        }
+        else if (Input.GetMouseButton(0))
+        {
+            CameraPositionMoveProgress(mouseWorldPosition);
         }
         else
         {
-            SwitchToCamera(currentCameraIndex + 1);
+            CameraPositionMoveEnd();
         }
     }
 
-    public void SwitchToCamera(int cameraIndex)
+    private void CameraPositionMoveStart(Vector3 startPosition)
     {
-        if (cameraIndex < 0 || cameraIndex >= cameras.Length)
+        _userMoveInput = true;
+        _startPosition = startPosition;
+        _directionForce = Vector2.zero;
+    }
+
+    private void CameraPositionMoveProgress(Vector3 targetPosition)
+    {
+        if (!_userMoveInput)
         {
-            CustomLogger.LogError("Invalid camera index: " + cameraIndex);
-            // Debug.LogError("Invalid camera index: " + cameraIndex);
+            CameraPositionMoveStart(targetPosition);
             return;
         }
 
-        // 현재 카메라 위치 저장
-        Vector3 currentCameraPosition = cameras[currentCameraIndex].transform.position;
-
-        // 현재 카메라와 AudioListener, CameraControl 비활성화
-        cameras[currentCameraIndex].enabled = false;
-        audioListeners[currentCameraIndex].enabled = false;
-        if (cameraControls[currentCameraIndex] != null)
+        Vector3 movement = _startPosition - targetPosition;
+        if (!allway)
         {
-            cameraControls[currentCameraIndex].enabled = false;
+            movement.x = 0; // y축으로만 이동하도록 제한
+        }
+        _directionForce = movement;
+    }
+
+    private void CameraPositionMoveEnd()
+    {
+        _userMoveInput = false;
+    }
+
+    private void ReduceDirectionForce()
+    {
+        if (_userMoveInput)
+        {
+            return;
         }
 
-        // 새로운 카메라와 AudioListener 활성화
-        currentCameraIndex = cameraIndex;
-        cameras[currentCameraIndex].enabled = true;
-        audioListeners[currentCameraIndex].enabled = true;
+        _directionForce *= DirectionForceReduceRate;
 
-        // 새로운 카메라를 초기 위치로 이동
-        cameras[currentCameraIndex].transform.position = initialCameraPositions[currentCameraIndex];
-
-        // CameraControl 초기화 및 활성화
-        if (cameraControls[currentCameraIndex] != null)
+        if (_directionForce.magnitude < DirectionForceMin)
         {
-            cameraControls[currentCameraIndex].enabled = true;
-            cameraControls[currentCameraIndex].InitializeCamera();
+            _directionForce = Vector3.zero;
         }
-        CustomLogger.Log(currentCameraIndex + " Camera is Enabled","yellow");
-        CustomLogger.Log(cameras[currentCameraIndex].transform.position + ": Camera position","yellow");
-        //Debug.LogWarning(currentCameraIndex + " Camera is Enabled");
+    }
+
+    private void UpdateCameraPosition()
+    {
+        if (_directionForce == Vector3.zero)
+        {
+            return;
+        }
+
+        var currentPosition = camera.transform.position;
+        var targetPosition = currentPosition + _directionForce;
+        float clampedX = Mathf.Clamp(targetPosition.x, minBounds.x + halfWidth, maxBounds.x - halfWidth);
+        if (minBounds.x > maxBounds.x)
+        {
+            clampedX = Mathf.Clamp(targetPosition.x, maxBounds.x + halfWidth, minBounds.x - halfWidth);
+        }
+        float clampedY = Mathf.Clamp(targetPosition.y, minBounds.y + halfHeight, maxBounds.y - halfHeight);
+
+        if (!allway)
+        {
+            clampedX = currentPosition.x; // y축으로만 이동하도록 제한
+        }
+
+        camera.transform.position = new Vector3(clampedX, clampedY, targetPosition.z);
+    }
+
+    private void CameraZoom()
+    {
+        float scroll = Input.GetAxis("Mouse ScrollWheel") * speed;
+
+        if (camera.orthographicSize <= 26.7f && scroll > 0)
+        {
+            temp_value = camera.orthographicSize;
+            camera.orthographicSize = temp_value;
+        }
+        else if (camera.orthographicSize >= 50.3f && scroll < 0)
+        {
+            temp_value = camera.orthographicSize;
+            camera.orthographicSize = temp_value;
+        }
+        else
+        {
+            camera.orthographicSize -= scroll * 5f;
+        }
+
+        halfHeight = camera.orthographicSize;
+        halfWidth = halfHeight * camera.aspect;
+
+        // 카메라의 위치를 경계 내로 조정
+        var currentPosition = camera.transform.position;
+        float clampedX = Mathf.Clamp(currentPosition.x, minBounds.x + halfWidth, maxBounds.x - halfWidth);
+        if (minBounds.x > maxBounds.x)
+        {
+            clampedX = Mathf.Clamp(currentPosition.x, maxBounds.x + halfWidth, minBounds.x - halfWidth);
+        }
+        float clampedY = Mathf.Clamp(currentPosition.y, minBounds.y + halfHeight, maxBounds.y - halfHeight);
+        camera.transform.position = new Vector3(clampedX, clampedY, currentPosition.z);
+    }
+
+    private void SwitchTilemap()
+    {
+        // 현재 카메라 위치를 저장
+        initialCameraPositions[currentCameraIndex] = camera.transform.position;
+
+        // 다음 카메라 인덱스로 증가
+        currentCameraIndex = (currentCameraIndex + 1) % tilemaps.Length;
+        
+        // 새로운 타일맵의 경계를 가져옴
+        UpdateBounds(tilemaps[currentCameraIndex]);
+
+        camera.transform.position = initialCameraPositions[currentCameraIndex];
     }
 }

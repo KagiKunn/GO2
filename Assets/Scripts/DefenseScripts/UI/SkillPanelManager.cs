@@ -79,7 +79,7 @@ public class SkillPanelManager : MonoBehaviour
             buttons[i].clicked += () => OnButtonClicked(heroSkill);
 
             // 버튼 배경 이미지를 설정합니다.
-            HeroSkill skillIcon = heroSkill as KnightSkill;
+            HeroSkill skillIcon = heroSkill;
             if (skillIcon != null && skillIcon.skillIcon != null)
             {
                 buttons[i].style.backgroundImage = new StyleBackground(skillIcon.skillIcon);
@@ -122,6 +122,6 @@ public class SkillPanelManager : MonoBehaviour
 
     void OnButtonClicked(HeroSkill heroSkill)
     {
-        heroSkill.HeroSkillAction();
+        heroSkill.HeroSkillStart();
     }
 }
