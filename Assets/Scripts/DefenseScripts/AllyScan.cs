@@ -1,22 +1,25 @@
 using UnityEngine;
+using System.Collections;
 
 public class AllyScan : MonoBehaviour
 {
     public float detectionRadius = 5.0f;
     [SerializeField] private LayerMask enemyLayer;
-    [SerializeField] private int attackDamage = 1;
-    [SerializeField] private float attackSpeed = 1f;
+    [SerializeField] public int attackDamage = 1;
+    [SerializeField] public float attackSpeed = 1f;
     [SerializeField] private float runState = 0f;
     [SerializeField] private float attackState;
     [SerializeField] private float normalState;
     [SerializeField] private float skillState;
     [SerializeField] private float aoe = 2f;
+    public float movementSpeed = 10f;
 
     [SerializeField] private DamageEffect damageEffect; // damageEffect를 SerializeField로 추가
     public GameObject projectilePrefab;
 
     private Animator animator;
     private GameObject closestObject;
+    private Coroutine attackSpeedCoroutine;
 
     private void Awake()
     {
@@ -37,8 +40,9 @@ public class AllyScan : MonoBehaviour
         {
             AllyAttack();
         }
-        SetAnimationSpeed("AttackState",attackSpeed);
+        SetAnimationSpeed("AttackState", attackSpeed);
     }
+
     public void SetAnimationSpeed(string name, float speed)
     {
         // AnimatorStateInfo를 사용하여 현재 상태가 공격 상태인지 확인하고, 속도를 변경합니다.
@@ -52,6 +56,7 @@ public class AllyScan : MonoBehaviour
             animator.speed = 1f;
         }
     }
+
     void FindClosestObject()
     {
         Vector2 point = transform.position;
@@ -111,7 +116,7 @@ public class AllyScan : MonoBehaviour
         EnemyMovement enemy = closestObject.GetComponent<EnemyMovement>();
         if (enemy != null)
         {
-            damageEffect.ApplyEffect(enemy,null, attackDamage, aoe); // 데미지 효과 적용
+            damageEffect.ApplyEffect(enemy, null, attackDamage, aoe); // 데미지 효과 적용
             if (enemy.IsDead())
             {
                 closestObject = null;
@@ -137,6 +142,30 @@ public class AllyScan : MonoBehaviour
 
             closestObject = null;
         }
+    }
+
+    public void EnhanceAttack(float duration)
+    {
+        // 기존의 코루틴이 실행 중이면 중지합니다.
+        if (attackSpeedCoroutine != null)
+        {
+            StopCoroutine(attackSpeedCoroutine);
+        }
+
+        // 공격력을 두 배로 증가시킵니다.
+        attackDamage *= 2;
+        attackSpeed *= 2;
+
+        // 10초 동안 효과를 유지하는 코루틴을 시작합니다.
+        attackSpeedCoroutine = StartCoroutine(ResetAttackSpeedAfterDelay(duration));
+    }
+
+    private IEnumerator ResetAttackSpeedAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        attackSpeed /= 2; // 공격 속도를 원래대로 되돌립니다.
+        attackDamage /= 2; // 공격력을 원래대로 되돌립니다.
+        Debug.Log("Attack speed and damage reset to original values for: " + gameObject.name);
     }
 
     void OnDrawGizmos()
