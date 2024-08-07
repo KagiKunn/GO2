@@ -120,12 +120,6 @@ public class Gacha : MonoBehaviour
 
     public void OnGachaButtonClicked()
     {
-        if (inventoryUI != null && !inventoryUI.CanAdditems(1))
-        {
-            CustomLogger.LogWarning("인벤토리에 충분한 공간이 없습니다.");
-            return;
-        }
-
         ItemSO GachaItem = GachaRandomItem();
         DisplayResult(GachaItem);
         AddItemToInventory(GachaItem);
@@ -133,12 +127,6 @@ public class Gacha : MonoBehaviour
 
     public void OnMultiGachaButtonClicked(int GachaCount)
     {
-        if (inventoryUI != null && !inventoryUI.CanAdditems(GachaCount))
-        {
-            CustomLogger.LogWarning("인벤토리에 충분한 공간이 없습니다.");
-            return;
-        }
-
         Dictionary<ItemRarity, int> gachaResults = new Dictionary<ItemRarity, int>
         {
             { ItemRarity.Normal, 0 },
