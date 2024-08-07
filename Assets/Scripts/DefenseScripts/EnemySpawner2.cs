@@ -2,12 +2,6 @@ using UnityEngine;
 
 using System.Collections;
 using System.Collections.Generic;
-using System.Numerics;
-
-using DefenseScripts;
-
-using Unity.Mathematics;
-
 using Quaternion = UnityEngine.Quaternion;
 using Random = UnityEngine.Random;
 using Vector3 = UnityEngine.Vector3;
