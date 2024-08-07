@@ -21,5 +21,10 @@ public class BtnScene : MonoBehaviour
        SceneManager.LoadScene("Defense");
        CustomLogger.Log("Change Defense successfuly!");
    }
-   
+
+   public void OffenceSceneChange()
+   {
+       SceneManager.LoadScene("Offence");
+       CustomLogger.Log("Change Offence successfuly!");
+   }
 }
