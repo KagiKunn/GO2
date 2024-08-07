@@ -497,6 +497,78 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &793670735
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 793670737}
+  - component: {fileID: 793670736}
+  m_Layer: 0
+  m_Name: UnitUpgrade
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &793670736
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 793670735}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c975310bf5c9cc469e6f973bf152e07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  upgradeList:
+  - className: Bow
+    unitList:
+    - {fileID: 7888996360327651887, guid: f251d4c264061504cb5e63cf7c50f8b5, type: 3}
+    - {fileID: 6098444360452790214, guid: 313cc5626bdb40c4caba5cde9da777f3, type: 3}
+    - {fileID: 3534444474618446514, guid: ba343ca9333df6047a1c120aa1018b6d, type: 3}
+  - className: Crossbow
+    unitList:
+    - {fileID: 6179158954207379504, guid: 15accb8dcd196fc4086a8f8903abddd9, type: 3}
+    - {fileID: 6781188755031549437, guid: 14d80addf33070f4ead56f9d39ceb9b1, type: 3}
+    - {fileID: 8617405725351149479, guid: 8db7b256470b988418cfaff97d130bcf, type: 3}
+  - className: Gun
+    unitList:
+    - {fileID: 50039320965488619, guid: 87decbef580085b42b7fdc58b15ca962, type: 3}
+    - {fileID: 822987607556925277, guid: 03d9eaad2e9bb544a97df8ae4837e79f, type: 3}
+    - {fileID: 3133274129896086462, guid: 25b9622195d1df44ab4aaf85495f6a06, type: 3}
+  - className: Mage
+    unitList:
+    - {fileID: 299709998097345282, guid: ccf832e4061b599449b1f3ef3956242b, type: 3}
+    - {fileID: 1591793750267026000, guid: 1530cb08789302e4c9bbb07a8df0b7a4, type: 3}
+    - {fileID: 5078748258946161633, guid: 2422acea0e1021648b6552d117bfe5f7, type: 3}
+    - {fileID: 2144735349077494666, guid: 9f9cc971460371147a42f8ea4777cd66, type: 3}
+    - {fileID: 773221152859356726, guid: 8a2ca8890f65c2e4086affdfe699f1b3, type: 3}
+  leftBox: {fileID: 0}
+  rightBox: {fileID: 0}
+  origin: {fileID: 0}
+  upgrade: {fileID: 0}
+  levelList: 00000000000000000000000000000000
+--- !u!4 &793670737
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 793670735}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.3609902, y: -0.51291424, z: 0.047886033}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1036961003
 GameObject:
   m_ObjectHideFlags: 0
@@ -729,8 +801,8 @@ Canvas:
   m_GameObject: {fileID: 1620710773}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
-  m_Camera: {fileID: 0}
+  m_RenderMode: 1
+  m_Camera: {fileID: 747162663}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -849,7 +921,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1645138441}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 793670736}
+        m_TargetAssemblyTypeName: UnitUpgrade, Assembly-CSharp
+        m_MethodName: Upgrade
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1645138441
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1033,3 +1117,4 @@ SceneRoots:
   - {fileID: 747162664}
   - {fileID: 1620710777}
   - {fileID: 1424287403}
+  - {fileID: 793670737}
