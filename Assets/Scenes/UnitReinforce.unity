@@ -549,6 +549,11 @@ MonoBehaviour:
     - {fileID: 5078748258946161633, guid: 2422acea0e1021648b6552d117bfe5f7, type: 3}
     - {fileID: 2144735349077494666, guid: 9f9cc971460371147a42f8ea4777cd66, type: 3}
     - {fileID: 773221152859356726, guid: 8a2ca8890f65c2e4086affdfe699f1b3, type: 3}
+  leftBox: {fileID: 0}
+  rightBox: {fileID: 0}
+  origin: {fileID: 0}
+  upgrade: {fileID: 0}
+  levelList: 00000000000000000000000000000000
 --- !u!4 &793670737
 Transform:
   m_ObjectHideFlags: 0
@@ -796,8 +801,8 @@ Canvas:
   m_GameObject: {fileID: 1620710773}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
-  m_Camera: {fileID: 0}
+  m_RenderMode: 1
+  m_Camera: {fileID: 747162663}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -916,7 +921,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1645138441}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 793670736}
+        m_TargetAssemblyTypeName: UnitUpgrade, Assembly-CSharp
+        m_MethodName: Upgrade
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1645138441
 MonoBehaviour:
   m_ObjectHideFlags: 0
