@@ -85,8 +85,6 @@ public class AllySwap : MonoBehaviour {
 
 		if (isMoving) {
 			MoveUnits();
-			playerObjCircle1.SetActive(false);
-			playerObjCircle2.SetActive(false);
 		}
 	}
 
@@ -110,6 +108,8 @@ public class AllySwap : MonoBehaviour {
 			if (allyScan2 != null) allyScan2.enabled = true;
 
 			isMoving = false; // 이동 완료
+			playerObjCircle1.SetActive(false);
+			playerObjCircle2.SetActive(false);
 			unit1 = null;
 			unit2 = null;
 		}

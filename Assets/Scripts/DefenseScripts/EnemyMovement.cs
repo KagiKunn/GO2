@@ -160,7 +160,7 @@ public class EnemyMovement : MonoBehaviour {
 
 	public void TakeDamage(float damage) {
 		health -= damage * (1+(percent/100));
-
+		
         // 코루틴이 실행 중이지 않을 때만 호출
         if (!isChangingBrightness)
         {

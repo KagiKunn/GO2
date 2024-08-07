@@ -197,8 +197,10 @@ public class CameraControl : MonoBehaviour
         UpdateBounds(tilemaps[currentCameraIndex]);
 
         camera.transform.position = initialCameraPositions[currentCameraIndex];
-        isFlipped = !isFlipped;
-        flipMaterial.SetInt("_FlipX", isFlipped ? 1 : 0);
+        
+        Matrix4x4 matrix = camera.projectionMatrix;
+        matrix.m00 *= -1; // x축 반전
+        camera.projectionMatrix = matrix;
         
     }
     
