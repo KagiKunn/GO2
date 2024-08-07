@@ -53,7 +53,7 @@ public class EnemyMovement : MonoBehaviour {
 
 	private GameObject horseRoot;
 	public NoticeUI stageEndNotice;
-    
+	public StageEndUI stageEndUI;
 	
 	private void Awake() {
 		// HorseRoot 오브젝트 찾기
@@ -253,16 +253,21 @@ public class EnemyMovement : MonoBehaviour {
 		Debug.Log("Die 호출");
 		
 		// 적의 root 의 태그 출력
-		CustomLogger.Log(gameObject.tag);
+		CustomLogger.Log("적 Root 태그 : "+gameObject.tag);
 		// 적의 태그가 EnemyBoss 일때 실행
 		if (gameObject.tag == "EnemyBoss")
 		{
 			//여기에 보스가 죽었을때의 이벤트
 			//ex) 다른 스크립트로 값 전송, 메서드 실행
 			// find name stageManager -> 그 안에있는 메서드 실행
-			// 아니면 true값을 보내서 다른 스크립트에서 받은 값이 ture 일때 메서드 실행 등...
-			stageEndNotice.SUB("Stage END YEAHHH");
+			// 아니면 true값을 보내서 다른 스크립트에서 받은 값이 true 일때 메서드 실행 등...
 			CustomLogger.Log("보스 사망..............","red");
+			
+			Time.timeScale = 0;
+			CustomLogger.Log("게임이 정지되었습니다.");
+			
+			stageEndUI.ShowChangeSceneButton();
+			
 		}
 		gameObject.SetActive(false);
 		deadJudge = false;
