@@ -17,6 +17,7 @@ public class AllyScan : MonoBehaviour
     [SerializeField] private DamageEffect damageEffect; // damageEffect를 SerializeField로 추가
     public GameObject projectilePrefab;
 
+    private GameObject currentEffect; // 현재 효과 오브젝트를 저장할 필드
     private Animator animator;
     private GameObject closestObject;
     private Coroutine attackSpeedCoroutine;
@@ -144,7 +145,7 @@ public class AllyScan : MonoBehaviour
         }
     }
 
-    public void EnhanceAttack(float duration)
+    public void EnhanceAttack(float duration, GameObject effectPrefab)
     {
         // 기존의 코루틴이 실행 중이면 중지합니다.
         if (attackSpeedCoroutine != null)
@@ -152,11 +153,29 @@ public class AllyScan : MonoBehaviour
             StopCoroutine(attackSpeedCoroutine);
         }
 
+        // 기존 효과 오브젝트가 있다면 삭제합니다.
+        if (currentEffect != null)
+        {
+            Destroy(currentEffect);
+        }
+
         // 공격력을 두 배로 증가시킵니다.
         attackDamage *= 2;
         attackSpeed *= 2;
 
-        // 10초 동안 효과를 유지하는 코루틴을 시작합니다.
+        // 새로운 효과 오브젝트를 생성합니다.
+        Vector3 pos = new Vector3(transform.position.x, transform.position.y, 100);
+        currentEffect = Instantiate(effectPrefab, pos, Quaternion.identity, transform);
+
+        Canvas canvas = currentEffect.GetComponent<Canvas>();
+        if (canvas == null)
+        {
+            canvas = currentEffect.AddComponent<Canvas>();
+            canvas.overrideSorting = true;
+        }
+        canvas.sortingOrder = 100;
+
+        // 지정된 기간 동안 효과를 유지하는 코루틴을 시작합니다.
         attackSpeedCoroutine = StartCoroutine(ResetAttackSpeedAfterDelay(duration));
     }
 
@@ -165,6 +184,17 @@ public class AllyScan : MonoBehaviour
         yield return new WaitForSeconds(delay);
         attackSpeed /= 2; // 공격 속도를 원래대로 되돌립니다.
         attackDamage /= 2; // 공격력을 원래대로 되돌립니다.
+
+        // 효과 오브젝트가 있다면 삭제합니다.
+        if (currentEffect != null)
+        {
+            Destroy(currentEffect);
+            currentEffect = null;
+        }
+        else
+        {
+            CustomLogger.LogError("no effect!");
+        }
         Debug.Log("Attack speed and damage reset to original values for: " + gameObject.name);
     }
 

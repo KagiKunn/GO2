@@ -189,15 +189,19 @@ public class EnemyMovement : MonoBehaviour {
         return Color.HSVToRGB(h, s, v);
     }
 
-    private IEnumerator RestoreOriginalColors(Dictionary<Transform, Color> originalColors) {
-        foreach (KeyValuePair<Transform, Color> entry in originalColors) {
+    private IEnumerator RestoreOriginalColors(Dictionary<Transform, Color> originalColors)
+    {
+        foreach (KeyValuePair<Transform, Color> entry in originalColors)
+        {
             SpriteRenderer spriteRenderer = entry.Key.GetComponent<SpriteRenderer>();
-            if (spriteRenderer != null) {
+            if (spriteRenderer != null)
+            {
                 spriteRenderer.color = entry.Value;
             }
 
             // 작업을 한 프레임에 모두 처리하지 않도록 대기
-            if (entry.Key.GetSiblingIndex() % 15 == 0) {
+            if (entry.Key.GetSiblingIndex() % 15 == 0)
+            {
                 yield return null;
             }
         }

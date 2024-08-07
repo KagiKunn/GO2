@@ -127,6 +127,6 @@ public class Enemy : MonoBehaviour {
 	}
 
 	private void Dead() {
-		gameObject.SetActive(false);
+		transform.parent.gameObject.SetActive(false);
 	}
 }

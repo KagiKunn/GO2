@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
 
 public abstract class HeroSkill : ScriptableObject
 {
@@ -9,6 +8,8 @@ public abstract class HeroSkill : ScriptableObject
 
     public bool isActive = true;
     public float cooldown = 10f;
+ 
+    public GameObject effect;
     public virtual void HeroSkillAction()
     {
         Time.timeScale /= 2;
@@ -34,13 +35,30 @@ public abstract class HeroSkill : ScriptableObject
         if (skillCanvasObject != null && skillImagePrefab != null)
         {
             Canvas skillCanvas = skillCanvasObject.GetComponent<Canvas>();
+            RectTransform skillCanvasRect = skillCanvasObject.GetComponent<RectTransform>();
+        
             if (skillCanvas != null)
             {
                 // 이미지 오브젝트 생성
                 GameObject skillImage = Instantiate(skillImagePrefab, skillCanvas.transform);
 
                 RectTransform rectTransform = skillImage.GetComponent<RectTransform>();
-                rectTransform.anchoredPosition = new Vector2(1300f, rectTransform.anchoredPosition.y);
+
+                // 캔버스의 실제 크기를 구합니다.
+                Vector2 canvasSize = skillCanvasRect.rect.size; // Canvas의 실제 크기 가져오기
+    
+                // 오브젝트의 크기를 캔버스 크기에 비례하여 조정합니다.
+                float scaleFactor = canvasSize.y * 10f / rectTransform.rect.height; // 오브젝트 높이의 80%로 설정
+                rectTransform.localScale = new Vector3(scaleFactor, scaleFactor, 1);
+
+                // 앵커 포인트를 중앙으로 설정
+                rectTransform.anchorMin = new Vector2(0.5f, 0.5f);
+                rectTransform.anchorMax = new Vector2(0.5f, 0.5f);
+                rectTransform.pivot = new Vector2(0.5f, 0.5f);
+
+                // 원하는 위치에 배치합니다.
+                float outsideRightPositionX = canvasSize.x / 2 + rectTransform.rect.width * scaleFactor / 2;
+                rectTransform.anchoredPosition = new Vector2(outsideRightPositionX, 0);
 
                 // 왼쪽으로 이동 시작
                 CoroutineRunner.Instance.StartCoroutine(MoveAndPauseImage(skillImage));
@@ -48,10 +66,12 @@ public abstract class HeroSkill : ScriptableObject
         }
     }
 
+
+
     private IEnumerator MoveAndPauseImage(GameObject skillImage)
     {
         RectTransform rectTransform = skillImage.GetComponent<RectTransform>();
-        Vector2 targetPosition = new Vector2(rectTransform.anchoredPosition.x - 600, rectTransform.anchoredPosition.y);
+        Vector2 targetPosition = new Vector2(rectTransform.anchoredPosition.x - 300, rectTransform.anchoredPosition.y);
         float duration = 0.5f;
 
         Vector2 startPosition = rectTransform.anchoredPosition;
