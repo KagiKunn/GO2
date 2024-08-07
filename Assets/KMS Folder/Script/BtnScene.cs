@@ -7,8 +7,6 @@ public class BtnScene : MonoBehaviour
    public void heroSceneChange()
    {
        SceneManager.LoadScene("HeroManagement");
-       // 편성한 영웅 정보 불러오기
-       
        CustomLogger.Log("Change HeroManagementScene successfuly!");
    }
 
