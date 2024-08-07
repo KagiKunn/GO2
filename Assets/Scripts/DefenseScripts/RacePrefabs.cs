@@ -2,7 +2,10 @@
 
 public abstract class RacePrefabs : ScriptableObject
 {
-    public GameObject[] unitPrefabs;
+    public GameObject[] unitPrefabs; // 일반 적 및 보스 몬스터를 포함한 프리팹 배열
+
+    
+    public GameObject bossPrefab;  
 
     public virtual void Races()
     {
