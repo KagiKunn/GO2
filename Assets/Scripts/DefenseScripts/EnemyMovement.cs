@@ -1,5 +1,7 @@
 using System;
+
 using UnityEngine;
+
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -46,7 +48,7 @@ public class EnemyMovement : MonoBehaviour {
 
 	public bool isBoss; //보스 여부 확인
 	public event Action OnBossDisabledEvent; //보스 비활성화 이벤트
-	
+
 	private void Awake() {
 		// pos.position = new Vector2(0, 0);
 		rigid2d = GetComponent<Rigidbody2D>();
@@ -57,21 +59,14 @@ public class EnemyMovement : MonoBehaviour {
 		movementdirection = Vector3.left;
 	}
 
-	private void Update()
-	{
-		if (!isKnockedBack)
-		{
-			if (CollisionCheck())
-			{
+	private void Update() {
+		if (!isKnockedBack) {
+			if (CollisionCheck()) {
 				EnemyAttack();
-			}
-			else
-			{
+			} else {
 				EnemyMove();
 			}
-		}
-		else
-		{
+		} else {
 			EnemyNockout();
 		}
 
@@ -104,21 +99,19 @@ public class EnemyMovement : MonoBehaviour {
 		animator.SetTrigger("Attack");
 	}
 
-	private void EnemyNockout()
-	{
+	private void EnemyNockout() {
 		animator.ResetTrigger("Attack");
 		movementdirection = Vector3.zero;
-		animator.SetFloat("RunState",1f);
+		animator.SetFloat("RunState", 1f);
 	}
 
-	void AdditionalDamage(float percent)
-	{
+	void AdditionalDamage(float percent) {
 		this.percent = percent;
 	}
 
 	public void isAttack() {
 		if (castleWall != null) {
-			if (normalState == 1f || skillState == 1f || normalState == 0.25f || skillState == 0.25f || skillState == 0.75f || normalState == 0.5f){
+			if (normalState == 1f || skillState == 1f || normalState == 0.25f || skillState == 0.25f || skillState == 0.75f || normalState == 0.5f) {
 				CollisionAttack();
 			} else {
 				castleWall.TakeDamage(attackDamage);
@@ -141,111 +134,104 @@ public class EnemyMovement : MonoBehaviour {
 	}
 
 	public void TakeDamage(float damage) {
-		health -= damage * (1+(percent/100));
+		health -= damage * (1 + (percent / 100));
 
-        // 코루틴이 실행 중이지 않을 때만 호출
-        if (!isChangingBrightness)
-        {
-            StartCoroutine(ChangeBrightnessTemporarily(0.1f, 0.6f)); // 예: 명도를 50%로 줄임
-        }
+		// 코루틴이 실행 중이지 않을 때만 호출
+		if (!isChangingBrightness) {
+			StartCoroutine(ChangeBrightnessTemporarily(0.1f, 0.6f)); // 예: 명도를 50%로 줄임
+		}
 
-        if (health <= 0) {
-            Die();
-        }
-    }
+		if (health <= 0) {
+			animator.SetBool("Die", true);
+		}
+	}
 
-    private IEnumerator ChangeBrightnessTemporarily(float duration, float brightnessMultiplier)
-    {
-        isChangingBrightness = true;  // 코루틴이 실행 중임을 표시
+	private IEnumerator ChangeBrightnessTemporarily(float duration, float brightnessMultiplier) {
+		isChangingBrightness = true; // 코루틴이 실행 중임을 표시
 
-        Transform parent = transform;
-        Dictionary<Transform, Color> originalColors = new Dictionary<Transform, Color>();
+		Transform parent = transform;
+		Dictionary<Transform, Color> originalColors = new Dictionary<Transform, Color>();
 
-        // 부모 오브젝트와 자식 오브젝트의 원래 색상을 저장하고 명도를 변경
-        yield return StoreAndChangeBrightnessRecursively(parent, brightnessMultiplier, originalColors);
+		// 부모 오브젝트와 자식 오브젝트의 원래 색상을 저장하고 명도를 변경
+		yield return StoreAndChangeBrightnessRecursively(parent, brightnessMultiplier, originalColors);
 
-        // 지정된 시간 동안 대기
-        yield return new WaitForSeconds(duration);
+		// 지정된 시간 동안 대기
+		yield return new WaitForSeconds(duration);
 
-        // 원래 색상으로 복원
-        yield return RestoreOriginalColors(originalColors);
+		// 원래 색상으로 복원
+		yield return RestoreOriginalColors(originalColors);
 
-        isChangingBrightness = false;  // 코루틴 실행 종료 표시
-    }
+		isChangingBrightness = false; // 코루틴 실행 종료 표시
+	}
 
-    private IEnumerator StoreAndChangeBrightnessRecursively(Transform parent, float brightnessMultiplier, Dictionary<Transform, Color> originalColors)
-    {
-        Queue<Transform> queue = new Queue<Transform>();
-        queue.Enqueue(parent);
+	private IEnumerator StoreAndChangeBrightnessRecursively(Transform parent, float brightnessMultiplier, Dictionary<Transform, Color> originalColors) {
+		Queue<Transform> queue = new Queue<Transform>();
+		queue.Enqueue(parent);
 
-        while (queue.Count > 0)
-        {
-            Transform current = queue.Dequeue();
-            SpriteRenderer spriteRenderer = current.GetComponent<SpriteRenderer>();
-            if (spriteRenderer != null)
-            {
-                originalColors[current] = spriteRenderer.color;
-                spriteRenderer.color = ChangeBrightness(spriteRenderer.color, brightnessMultiplier);
-            }
+		while (queue.Count > 0) {
+			Transform current = queue.Dequeue();
+			SpriteRenderer spriteRenderer = current.GetComponent<SpriteRenderer>();
 
-            foreach (Transform child in current)
-            {
-                queue.Enqueue(child);
-            }
+			if (spriteRenderer != null) {
+				originalColors[current] = spriteRenderer.color;
+				spriteRenderer.color = ChangeBrightness(spriteRenderer.color, brightnessMultiplier);
+			}
 
-            // 작업을 한 프레임에 모두 처리하지 않도록 대기
-            if (queue.Count % 15 == 0)
-            {
-                yield return null;
-            }
-        }
-    }
+			foreach (Transform child in current) {
+				queue.Enqueue(child);
+			}
 
-    private Color ChangeBrightness(Color color, float multiplier)
-    {
-        float h, s, v;
-        Color.RGBToHSV(color, out h, out s, out v);
-        v *= multiplier;
-        return Color.HSVToRGB(h, s, v);
-    }
+			// 작업을 한 프레임에 모두 처리하지 않도록 대기
+			if (queue.Count % 15 == 0) {
+				yield return null;
+			}
+		}
+	}
 
-    private IEnumerator RestoreOriginalColors(Dictionary<Transform, Color> originalColors)
-    {
-        foreach (KeyValuePair<Transform, Color> entry in originalColors)
-        {
-            SpriteRenderer spriteRenderer = entry.Key.GetComponent<SpriteRenderer>();
-            if (spriteRenderer != null)
-            {
-                spriteRenderer.color = entry.Value;
-            }
+	private Color ChangeBrightness(Color color, float multiplier) {
+		float h, s, v;
+		Color.RGBToHSV(color, out h, out s, out v);
+		v *= multiplier;
 
-            // 작업을 한 프레임에 모두 처리하지 않도록 대기
-            if (entry.Key.GetSiblingIndex() % 15 == 0)
-            {
-                yield return null;
-            }
-        }
-    }
+		return Color.HSVToRGB(h, s, v);
+	}
+
+	private IEnumerator RestoreOriginalColors(Dictionary<Transform, Color> originalColors) {
+		foreach (KeyValuePair<Transform, Color> entry in originalColors) {
+			SpriteRenderer spriteRenderer = entry.Key.GetComponent<SpriteRenderer>();
+
+			if (spriteRenderer != null) {
+				spriteRenderer.color = entry.Value;
+			}
+
+			// 작업을 한 프레임에 모두 처리하지 않도록 대기
+			if (entry.Key.GetSiblingIndex() % 15 == 0) {
+				yield return null;
+			}
+		}
+	}
+
 	public bool IsDead() {
 		return health <= 0;
 	}
 
 	private void Die() {
 		CustomLogger.Log("Die()호출됨", "red");
+
 		// 적이 죽었을 때의 동작 (예: 오브젝트 비활성화)
 		if (isBoss) {
 			CustomLogger.Log("보스 비활성화 이벤트 호출됨", "red");
 			OnBossDisabledEvent?.Invoke();
 		}
+
 		CustomLogger.Log("gameObject.SetActive(false) 호출됨", "red");
-		gameObject.SetActive(false);
+		transform.parent.gameObject.SetActive(false);
 	}
 
-	private void OnDisable()
-	{
+	private void OnDisable() {
 		CustomLogger.Log("OnDisable 호출됨", "yellow");
-		if (isBoss)
-		{
+
+		if (isBoss) {
 			CustomLogger.Log("OnDisable에서 보스 비활성화 이벤트 호출됨", "yellow");
 			OnBossDisabledEvent?.Invoke();
 		}
