@@ -1,3 +1,4 @@
+using System;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -27,9 +28,12 @@ public class UnitUpgrade : MonoBehaviour
     public UnitList[] upgradeList;
 
 
-    public GameObject leftBox, rightBox, origin, upgrade;
+    public GameObject leftBox, rightBox, origin, upgrade, prevMage, nextMage;
     public int[] levelList = new int[4];
     public int classNum = 0;
+    //0 Bow, 1 Crossbow, 2 Gun, 3 Mage
+    public int mageClass = 0;
+    //Mage Class Value 0 = fire, 1 = ice, 2 = lightning
 
     void Start()
     {
@@ -39,6 +43,8 @@ public class UnitUpgrade : MonoBehaviour
     {
         leftBox = GameObject.Find("UnitFormation");
         rightBox = GameObject.Find("UnitFormation(Reinforce)");
+        prevMage = GameObject.Find("PrevMage");
+        nextMage = GameObject.Find("NextMage");
         origin = Instantiate(upgradeList[classNum].UnitListArray[levelList[0]]);
         upgrade = Instantiate(upgradeList[classNum].UnitListArray[levelList[0] + 1]);
         origin.transform.localScale = new Vector3(2.5f, 2.5f);
@@ -47,27 +53,89 @@ public class UnitUpgrade : MonoBehaviour
         upgrade.transform.position = rightBox.transform.position;
     }
 
-    public void Upgrade()
+    private void Update()
     {
-        if (classNum == 3)
+        if (classNum != 3)
         {
+            prevMage.SetActive(false);
+            nextMage.SetActive(false);
         }
         else
         {
-            if (levelList[classNum] >= upgradeList[classNum].UnitListArray.Length - 1) return;
-            Destroy(origin);
-            Destroy(upgrade);
-            levelList[classNum] += 1;
-            origin = Instantiate(upgradeList[classNum].UnitListArray[levelList[classNum]]);
-            origin.transform.localScale = new Vector3(2.5f, 2.5f);
-            origin.transform.position = leftBox.transform.position;
+            if (levelList[3] == 1)
+            {
+                prevMage.SetActive(true);
+                nextMage.SetActive(true);
+            }
+            else
+            {
+                prevMage.SetActive(false);
+                nextMage.SetActive(false);
+            }
+        }
+    }
+
+    void updateHero()
+    {
+        Destroy(origin);
+        Destroy(upgrade);
+        origin = Instantiate(upgradeList[classNum].UnitListArray[levelList[classNum]]);
+        origin.transform.localScale = new Vector3(2.5f, 2.5f);
+        origin.transform.position = leftBox.transform.position;
+        if (classNum != 3)
+        {
             if (levelList[classNum] < upgradeList[classNum].UnitListArray.Length - 1)
             {
-                upgrade = Instantiate(upgradeList[classNum].UnitListArray[levelList[0] + 1]);
+                upgrade = Instantiate(upgradeList[classNum].UnitListArray[levelList[classNum] + 1]);
                 upgrade.transform.localScale = new Vector3(2.5f, 2.5f);
                 upgrade.transform.position = rightBox.transform.position;
             }
         }
+        else
+        {
+            if (levelList[classNum] < 2)
+            {
+                upgrade = Instantiate(upgradeList[classNum].UnitListArray[levelList[classNum] + 1 + mageClass]);
+                upgrade.transform.localScale = new Vector3(2.5f, 2.5f);
+                upgrade.transform.position = rightBox.transform.position;
+            }
+        }
+    }
+
+    public void Upgrade()
+    {
+        if (classNum == 3)
+        {
+            if (levelList[classNum] == 0)
+            {
+                levelList[classNum] += 1;
+                updateHero();
+            }
+            else if (levelList[classNum] == 1)
+            {
+                levelList[classNum] += 1 + mageClass;
+                updateHero();
+            }
+        }
+        else
+        {
+            if (levelList[classNum] >= upgradeList[classNum].UnitListArray.Length - 1) return;
+            levelList[classNum] += 1;
+            updateHero();
+        }
+    }
+
+    public void changeClass(int val)
+    {
+        var maxIndex = upgradeList.Length - 1;
+        classNum = (classNum + val + maxIndex + 1) % (maxIndex + 1);
+        updateHero();
+    }
+    public void changeMageClass(int val)
+    {
+        var maxIndex = 2;
+        mageClass = (mageClass + val + maxIndex + 1) % (maxIndex + 1);
+        updateHero();
     }
 
     void debugOutput()
