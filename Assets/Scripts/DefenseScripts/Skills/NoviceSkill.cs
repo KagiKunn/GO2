@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -5,7 +6,13 @@ using UnityEngine;
 public class NoviceSkill : HeroSkill
 {
     public float shield;
-    public bool noviceActive = true;
+    public bool noviceActive;
+
+    private void OnEnable()
+    {
+        noviceActive = true;
+    }
+
     public override void HeroSkillStart()
     {
         if (noviceActive)
