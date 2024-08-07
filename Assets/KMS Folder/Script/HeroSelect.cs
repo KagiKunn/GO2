@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class HeroSelect : MonoBehaviour
@@ -10,9 +11,13 @@ public class HeroSelect : MonoBehaviour
     public Image CharacterImage;
     public Button[] heroButtons;
     public Button[] selectedHeroSlots;
-    public Button resetBtn, saveBtn;
+    public Button resetBtn, saveBtn, reinforceBtn;
 
     private List<HeroData> heroes;
+    
+    // 추가된 부분
+    private int clickedHeroIndex = -1;
+    private Sprite clickedHeroProfileImg;
 
     void Awake()
     {
@@ -28,13 +33,13 @@ public class HeroSelect : MonoBehaviour
 
         resetBtn.onClick.AddListener(ResetHeroSelection);
         saveBtn.onClick.AddListener(SaveHeroSelection);
+        reinforceBtn.onClick.AddListener(ReinforceBtnClicked);
 
         LoadHeroFormation();
     }
 
     private void InitializeHeroButtons()
     {
-        // Ensure we do not exceed the bounds of the heroButtons array or heroes list
         int buttonCount = Mathf.Min(heroButtons.Length, heroes.Count);
         for (int i = 0; i < buttonCount; i++)
         {
@@ -62,6 +67,11 @@ public class HeroSelect : MonoBehaviour
         if (heroGameManager.GetSelectedHeroes().Exists(h => h.Name == selectedHeroData.Name)) return;
 
         AddHeroToSlot(selectedHeroData);
+        
+        // 강화 구현 위해 추가한 로직, 안되면 수정(편성 중인 영웅-> selectedHeroes, 클릭한 영웅-> clickedHero)
+        clickedHeroIndex = index;
+        clickedHeroProfileImg = heroes[index].ProfileImg;
+        heroButtons[index].Select();
     }
 
     private void AddHeroToSlot(HeroData heroData)
@@ -79,7 +89,7 @@ public class HeroSelect : MonoBehaviour
             }
         }
     }
-
+    // 배치한 영웅 슬롯 클릭 시 슬롯에서 제거
     private void OnSelectedHeroSlotClicked(int index)
     {
         Image slotImage = selectedHeroSlots[index].GetComponent<Image>();
@@ -90,13 +100,13 @@ public class HeroSelect : MonoBehaviour
             slotImage.enabled = false;
         }
     }
-
+    // 선택해서 배치 슬롯에 들어간 영웅 전신 이미지 표시
     private void SetMainCharacterImage(Sprite mainSprite)
     {
         CharacterImage.sprite = mainSprite;
         CharacterImage.gameObject.SetActive(mainSprite != null);
     }
-
+    // 리셋 버튼(리셋시 영웅 편성 정보도 날라감)
     private void ResetHeroSelection()
     {
         foreach (var slot in selectedHeroSlots)
@@ -108,13 +118,14 @@ public class HeroSelect : MonoBehaviour
         heroGameManager.ClearHeroFormation();
         SetMainCharacterImage(null);
     }
-
+    // 영웅 편성 정보 저장
     private void SaveHeroSelection()
     {
         heroGameManager.SaveHeroFormation();
         _notice.SUB("Save Successefully!");
     }
-
+    
+    //  시작할때 영웅 편성 정보 가져오는 메서드
     private void LoadHeroFormation()
     {
         heroGameManager.LoadHeroFormation();
@@ -130,4 +141,21 @@ public class HeroSelect : MonoBehaviour
         }
         SetMainCharacterImage(selectedHeroes.Count > 0 ? selectedHeroes[0].CharacterImg : null);
     }
+    
+    // 영웅 클릭한 상태로 강화 버튼 누를 시 선택한 영웅 정보가 HeroUpgrade Scene으로 전달
+    private void ReinforceBtnClicked()
+    {
+        if (clickedHeroIndex != -1)
+        {
+            HeroData clickedHero = heroes[clickedHeroIndex];
+            heroGameManager.SetUpgradeHero(clickedHero);
+            SceneManager.LoadScene("HeroUpgrade");
+        }
+        else
+        {
+            CustomLogger.Log("No Hero selected for upgrade");
+        }
+        
+    }
+    
 }
