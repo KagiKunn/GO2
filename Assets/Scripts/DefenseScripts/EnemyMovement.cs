@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Debug = UnityEngine.Debug;
 
 #pragma warning disable CS0414
 
@@ -43,18 +44,35 @@ public class EnemyMovement : MonoBehaviour {
 	private bool isChangingBrightness = false;
 	public bool isKnockedBack = false;
 	public float percent = 0f;
+	private bool deadJudge = true;
 
 	public bool isBoss; //보스 여부 확인
-	public event Action OnBossDisabledEvent; //보스 비활성화 이벤트
+	public static event Action OnBossDisabledEvent; // 보스 비활성화 이벤트
+	
+	public static event Action OnHorseRootDisabledEvent; // HorseRoot 비활성화 이벤트
+
+	private GameObject horseRoot;
+	public NoticeUI stageEndNotice;
+    
 	
 	private void Awake() {
+		// HorseRoot 오브젝트 찾기
+		Transform horseRootTransform = transform.Find("HorseRoot");
+		if (horseRootTransform != null)
+		{
+			horseRoot = horseRootTransform.gameObject;
+		}
+		
 		// pos.position = new Vector2(0, 0);
+		
 		rigid2d = GetComponent<Rigidbody2D>();
 		animator = GetComponent<Animator>();
 		animator.speed = attackSpeed;
 		animator.SetFloat("SkillState", skillState);
 		animator.SetFloat("NormalState", normalState);
 		movementdirection = Vector3.left;
+
+		stageEndNotice = FindFirstObjectByType<NoticeUI>();
 	}
 
 	private void Update()
@@ -149,8 +167,8 @@ public class EnemyMovement : MonoBehaviour {
             StartCoroutine(ChangeBrightnessTemporarily(0.1f, 0.6f)); // 예: 명도를 50%로 줄임
         }
 
-        if (health <= 0) {
-	        animator.SetBool("Die",true);
+        if (health <= 0 && deadJudge) {
+            Die();
         }
     }
 
@@ -231,26 +249,33 @@ public class EnemyMovement : MonoBehaviour {
 	}
 
 	private void Die() {
-		CustomLogger.Log("Die()호출됨", "red");
 		// 적이 죽었을 때의 동작 (예: 오브젝트 비활성화)
-		if (isBoss) {
-			CustomLogger.Log("보스 비활성화 이벤트 호출됨", "red");
-			OnBossDisabledEvent?.Invoke();
+		Debug.Log("Die 호출");
+		
+		// 적의 root 의 태그 출력
+		CustomLogger.Log(gameObject.tag);
+		// 적의 태그가 EnemyBoss 일때 실행
+		if (gameObject.tag == "EnemyBoss")
+		{
+			//여기에 보스가 죽었을때의 이벤트
+			//ex) 다른 스크립트로 값 전송, 메서드 실행
+			// find name stageManager -> 그 안에있는 메서드 실행
+			// 아니면 true값을 보내서 다른 스크립트에서 받은 값이 ture 일때 메서드 실행 등...
+			stageEndNotice.SUB("Stage END YEAHHH");
+			CustomLogger.Log("보스 사망..............","red");
 		}
-		CustomLogger.Log("gameObject.SetActive(false) 호출됨", "red");
-		
-		animator.SetBool("Die",true);
-		
 		gameObject.SetActive(false);
+		deadJudge = false;
 	}
 
 	private void OnDisable()
 	{
-		CustomLogger.Log("OnDisable 호출됨", "yellow");
-		if (isBoss)
+		if (gameObject.name == "DarkElfBoss(Clone)")
 		{
-			CustomLogger.Log("OnDisable에서 보스 비활성화 이벤트 호출됨", "yellow");
-			OnBossDisabledEvent?.Invoke();
+			if (horseRoot != null && !horseRoot.activeInHierarchy)
+			{
+				OnHorseRootDisabledEvent?.Invoke();
+			}
 		}
 	}
 
