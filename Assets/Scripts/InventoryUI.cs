@@ -37,22 +37,20 @@ public class InventoryUI : MonoBehaviour
 
     public void AddItemToInventory(ItemSO item)
     {
-        if (CanAddItem())
-        {
-            inventoryData.items.Add(item);
-            SaveInventory();
-            UpdateInventoryUI();    
-        }
-        else
-        {
-            CustomLogger.LogWarning("인벤토리에 더 이상 아이템을 추가할 수 없습니다.");
-        }
-        
+        CanAddItem();
+        inventoryData.items.Add(item);
+        SaveInventory();
+        UpdateInventoryUI();
     }
 
     public bool CanAddItem()
     {
         return inventoryData.items.Count < inventoryContent.childCount;
+    }
+
+    public bool CanAdditems(int itemCount)
+    {
+        return inventoryData.items.Count + itemCount <= inventoryContent.childCount;
     }
 
     public void UpdateInventoryUI()
@@ -79,6 +77,7 @@ public class InventoryUI : MonoBehaviour
         {
             CustomLogger.LogError("ItemImage component is missing on ItemImage GameObject.");
         }
+
         if (itemName == null)
         {
             CustomLogger.LogError("Text component is missing on ItemName GameObject.");
@@ -110,13 +109,13 @@ public class InventoryUI : MonoBehaviour
         for (int i = 0; i < inventoryData.additionalSlotCount; i++)
         {
             GameObject newSlot =
-                (GameObject)AssetDatabase.LoadAssetAtPath("Assets/JSFolder/PreFab/Slot.prefab", typeof(GameObject));
+                Resources.Load<GameObject>("Assets/JSFolder/PreFab/Slot.prefab");
             if (newSlot != null)
             {
                 Instantiate(newSlot, inventoryContent);
             }
         }
-        
+
         UpdateInventoryUI();
     }
 
@@ -129,7 +128,7 @@ public class InventoryUI : MonoBehaviour
         {
             Destroy(inventoryContent.GetChild(i).gameObject);
         }
-        
+
         inventoryData.additionalSlotCount = 0;
         SaveInventory();
         UpdateInventoryUI();
@@ -140,7 +139,7 @@ public class InventoryUI : MonoBehaviour
         for (int i = 0; i < additionalSlots; i++)
         {
             GameObject newSlot =
-                (GameObject)AssetDatabase.LoadAssetAtPath("Assets/JSFolder/PreFab/Slot.prefab", typeof(GameObject));
+                Resources.Load<GameObject>("Assets/JSFolder/PreFab/Slot.prefab");
             if (newSlot != null)
             {
                 Instantiate(newSlot, inventoryContent);
@@ -155,5 +154,9 @@ public class InventoryUI : MonoBehaviour
     public void OnExpandButtonClicked()
     {
         ExpandInventory(4);
+    }
+
+    public void Iteminfo()
+    {
     }
 }
