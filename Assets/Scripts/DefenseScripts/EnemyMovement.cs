@@ -142,7 +142,7 @@ public class EnemyMovement : MonoBehaviour {
 
 	public void TakeDamage(float damage) {
 		health -= damage * (1+(percent/100));
-
+		
         // 코루틴이 실행 중이지 않을 때만 호출
         if (!isChangingBrightness)
         {
@@ -150,7 +150,7 @@ public class EnemyMovement : MonoBehaviour {
         }
 
         if (health <= 0) {
-            Die();
+	        animator.SetBool("Die",true);
         }
     }
 
@@ -238,6 +238,9 @@ public class EnemyMovement : MonoBehaviour {
 			OnBossDisabledEvent?.Invoke();
 		}
 		CustomLogger.Log("gameObject.SetActive(false) 호출됨", "red");
+		
+		animator.SetBool("Die",true);
+		
 		gameObject.SetActive(false);
 	}
 
