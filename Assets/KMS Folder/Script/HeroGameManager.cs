@@ -14,7 +14,6 @@ public class HeroGameManager : MonoBehaviour
     public List<HeroData> heroDataList; // ScriptableObject 목록
     public List<HeroData> selectedHeroes = new List<HeroData>(); // 영웅 편성 정보 저장(save)
     private string filePath;
-    public HeroData upgradeHero;// 강화할 영웅 정보
 
     void Awake()
     {
@@ -28,7 +27,7 @@ public class HeroGameManager : MonoBehaviour
     }
 
     public void LoadHeroFormation()
-    {   
+    {
         if (File.Exists(filePath))
         {
             try
@@ -49,7 +48,6 @@ public class HeroGameManager : MonoBehaviour
             catch (Exception e)
             {
                 CustomLogger.Log($"Error loading hero formation: {e.Message}", "red");
-                selectedHeroes.Clear();
             }
         }
     }
@@ -81,15 +79,4 @@ public class HeroGameManager : MonoBehaviour
     {
         return selectedHeroes;
     }
-
-    public void SetUpgradeHero(HeroData hero)
-    {
-        upgradeHero = hero;
-    }
-
-    public HeroData GetUpgradeHero()
-    {
-        return upgradeHero;
-    }
-    
 }

@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.IO;
 
 using UnityEngine;
 using UnityEngine.Animations;
@@ -34,6 +36,9 @@ public class GameManager : MonoBehaviour {
 	[SerializeField] private Result uiResult;
 	[SerializeField] private GameObject enemyCleaner;
 
+	private List<HeroData> selectedHeroes = new List<HeroData>();
+	private string filePath;
+
 	private void Awake() {
 		if (instance == null) {
 			instance = this;
@@ -42,6 +47,8 @@ public class GameManager : MonoBehaviour {
 		} else if (instance != this) {
 			Destroy(this.gameObject);
 		}
+
+		filePath = Path.Combine(Application.persistentDataPath, "selectedHeroes.json");
 	}
 
 	public void GameStart(int id) {
@@ -222,4 +229,16 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public int PlayerId => playerId;
+
+	public List<HeroData> SelectedHeroes {
+		get => selectedHeroes;
+
+		set => selectedHeroes = value;
+	}
+
+	public string FilePath {
+		get => filePath;
+
+		set => filePath = value;
+	}
 }
