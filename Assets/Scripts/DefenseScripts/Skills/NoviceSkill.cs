@@ -17,10 +17,7 @@ public class NoviceSkill : HeroSkill
         if (noviceActive)
         {
             base.HeroSkillStart();
-            WallShield();
-            Debug.Log("Novice skill activated.");
-            noviceActive = false;
-            CoroutineRunner.Instance.StartCoroutine(NoviceCooldown(cooldown));
+            
         }
         else
         {
@@ -28,6 +25,17 @@ public class NoviceSkill : HeroSkill
         }
     }
 
+    protected override void OnSkillImageComplete()
+    {
+        base.OnSkillImageComplete();
+        if (noviceActive)
+        {
+            WallShield();
+            Debug.Log("Novice skill activated.");
+            noviceActive = false;
+            CoroutineRunner.Instance.StartCoroutine(NoviceCooldown(cooldown));
+        }
+    }
     private IEnumerator NoviceCooldown(float cool)
     {
         yield return new WaitForSeconds(cool);

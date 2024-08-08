@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class ArcherSkill : HeroSkill
@@ -8,19 +9,34 @@ public class ArcherSkill : HeroSkill
     private GameObject currentEllipse;
     public bool isEllipseActive = false;
     public float damage = 10f;
+    public bool archerActive;
 
+    private void OnEnable()
+    {
+        archerActive = true;
+    }
     public override void HeroSkillStart()
     {
-        base.HeroSkillStart();
-        Debug.Log("Archer skill activated.");
-        if (!isEllipseActive)
-        {
-            CustomLogger.Log("!isEllipseActive");
-            CreateEllipse();
-            isEllipseActive = true;
+        if(archerActive){
+            base.HeroSkillStart();
+
         }
     }
 
+    protected override void OnSkillImageComplete()
+    {
+        base.OnSkillImageComplete();
+        if (archerActive)
+        {
+            Debug.Log("Archer skill activated.");
+            if (!isEllipseActive)
+            {
+                CustomLogger.Log("!isEllipseActive");
+                CreateEllipse();
+                isEllipseActive = true;
+            }
+        }
+    }
     private void Awake()
     {
         isEllipseActive = false;
@@ -37,6 +53,8 @@ public class ArcherSkill : HeroSkill
             if (isEllipseActive)
             {
                 DetectEnemiesAndDestroyEllipse();
+                archerActive = false;
+                CoroutineRunner.Instance.StartCoroutine(ArcherCooldown(cooldown));
             }
             else
             {
@@ -50,6 +68,12 @@ public class ArcherSkill : HeroSkill
         }
     }
 
+    private IEnumerator ArcherCooldown(float cool)
+    {
+        yield return new WaitForSeconds(cool);
+        archerActive = true;
+        CustomLogger.Log("Archer SKill Ready", "white");
+    }
     void CreateEllipse()
     {
         CustomLogger.Log("-CreateEllipse-");

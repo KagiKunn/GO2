@@ -10,7 +10,6 @@ public class KnightSkill : HeroSkill
 
     private void OnEnable()
     {
-        // OnEnable에서 allyLayer를 초기화합니다.
         allyLayer = LayerMask.GetMask("Ally");
         knightActive = true;
     }
@@ -20,10 +19,6 @@ public class KnightSkill : HeroSkill
         if (knightActive)
         {
             base.HeroSkillStart();
-            Debug.Log("Knight skill activated.");
-            AllyBuff();
-            knightActive = false;
-            CoroutineRunner.Instance.StartCoroutine(KnightCooldown(cooldown));
         }
         else
         {
@@ -31,11 +26,23 @@ public class KnightSkill : HeroSkill
         }
     }
 
+    protected override void OnSkillImageComplete()
+    {
+        base.OnSkillImageComplete();
+        if (knightActive)
+        {
+            Debug.Log("Knight skill activated.");
+            AllyBuff();
+            knightActive = false;
+            CoroutineRunner.Instance.StartCoroutine(KnightCooldown(cooldown));
+        }
+    }
+
     private IEnumerator KnightCooldown(float cool)
     {
         yield return new WaitForSeconds(cool);
         knightActive = true;
-        CustomLogger.Log("Knight SKill Ready", "white");
+        CustomLogger.Log("Knight Skill Ready", "white");
     }
 
     void AllyBuff()
@@ -44,7 +51,8 @@ public class KnightSkill : HeroSkill
 
         foreach (GameObject obj in allyObjects)
         {
-            if (obj.name != "Defualt(Clone)"){
+            if (obj.name != "Defualt(Clone)")
+            {
                 // 첫 번째 자식 오브젝트를 가져옵니다.
                 if (obj.transform.childCount > 0)
                 {

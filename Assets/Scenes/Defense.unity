@@ -11962,7 +11962,7 @@ MonoBehaviour:
   heroSkillArray:
   - {fileID: 185193165376185845, guid: 52c4fa00dbaf42540bc4558f8341406c, type: 3}
   - {fileID: 1037084968531759803, guid: c82e5533507f90e429acb61afed241a5, type: 3}
-  - {fileID: 7895326300263525786, guid: 352708f3eea0f3c4c9149cbe92e8162e, type: 3}
+  - {fileID: 185193165376185845, guid: 5cce680e356561f4ebca920a3581a921, type: 3}
 --- !u!114 &1155641494
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12248,10 +12248,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6989147199394318797, guid: ecbf48371fd6b7a43a609b4f84b7f769,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 1d582fc429fc13a4cbaad817432708c7, type: 2}
+    - target: {fileID: 8084430516261704339, guid: ecbf48371fd6b7a43a609b4f84b7f769,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 200
+      objectReference: {fileID: 0}
     - target: {fileID: 8801076648507892207, guid: ecbf48371fd6b7a43a609b4f84b7f769,
         type: 3}
       propertyPath: health
       value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 8801076648507892207, guid: ecbf48371fd6b7a43a609b4f84b7f769,
+        type: 3}
+      propertyPath: moveSpeed
+      value: 15
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
