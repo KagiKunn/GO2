@@ -1,17 +1,16 @@
 using System;
 using System.Collections.Generic;
+
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class HeroSelect : MonoBehaviour
-{
-    public NoticeUI _notice;
-    public HeroGameManager heroGameManager;
-    public Image CharacterImage;
-    public Button[] heroButtons;
-    public Button[] selectedHeroSlots;
-    public Button resetBtn, saveBtn, reinforceBtn;
+public class HeroSelect2 : MonoBehaviour {
+	public NoticeUI _notice;
+	public HeroGameManager heroGameManager;
+	public Image CharacterImage;
+	public Button[] heroButtons;
+	public Button[] selectedHeroSlots;
+	public Button resetBtn, saveBtn;
 
     private List<HeroData> heroes;
     
@@ -30,50 +29,40 @@ public class HeroSelect : MonoBehaviour
         InitializeHeroButtons();
         InitializeSelectedHeroSlots();
 
-        resetBtn.onClick.AddListener(ResetHeroSelection);
-        saveBtn.onClick.AddListener(SaveHeroSelection);
-        reinforceBtn.onClick.AddListener(ReinforceBtnClicked);
+		resetBtn.onClick.AddListener(ResetHeroSelection);
+		saveBtn.onClick.AddListener(SaveHeroSelection);
 
         LoadHeroFormation();
     }
     
 
-    private void InitializeHeroButtons()
-    {
-        int buttonCount = Mathf.Min(heroButtons.Length, heroes.Count);
-        for (int i = 0; i < buttonCount; i++)
-        {
-            int index = i;
-            heroButtons[i].GetComponent<Image>().sprite = heroes[index].ProfileImg;
-            heroButtons[i].onClick.AddListener(() => OnHeroButtonClicked(index));
-        }
-    }
+	private void InitializeHeroButtons() {
+		// Ensure we do not exceed the bounds of the heroButtons array or heroes list
+		int buttonCount = Mathf.Min(heroButtons.Length, heroes.Count);
 
-    private void InitializeSelectedHeroSlots()
-    {
-        for (int i = 0; i < selectedHeroSlots.Length; i++)
-        {
-            int index = i;
-            selectedHeroSlots[i].onClick.AddListener(() => OnSelectedHeroSlotClicked(index));
-        }
-    }
+		for (int i = 0; i < buttonCount; i++) {
+			int index = i;
+			heroButtons[i].GetComponent<Image>().sprite = heroes[index].ProfileImg;
+			heroButtons[i].onClick.AddListener(() => OnHeroButtonClicked(index));
+		}
+	}
 
-    private void OnHeroButtonClicked(int index)
-    {
-        if (heroGameManager.GetSelectedHeroes().Count >= 3) return;
+	private void InitializeSelectedHeroSlots() {
+		for (int i = 0; i < selectedHeroSlots.Length; i++) {
+			int index = i;
+			selectedHeroSlots[i].onClick.AddListener(() => OnSelectedHeroSlotClicked(index));
+		}
+	}
 
-        HeroData selectedHeroData = heroes[index];
+	private void OnHeroButtonClicked(int index) {
+		if (heroGameManager.GetSelectedHeroes().Count >= 3) return;
 
-        if (heroGameManager.GetSelectedHeroes().Exists(h => h.Name == selectedHeroData.Name)) return;
+		HeroData selectedHeroData = heroes[index];
 
-        AddHeroToSlot(selectedHeroData);
-        
-        // 강화 구현 위해 추가한 로직, 안되면 수정(편성 중인 영웅-> selectedHeroes, 클릭한 영웅-> clickedHero)
-        clickedHeroIndex = index;
-        clickedHeroProfileImg = heroes[index].ProfileImg;
-        heroButtons[index].Select();
-    }
+		if (heroGameManager.GetSelectedHeroes().Exists(h => h.Name == selectedHeroData.Name)) return;
 
+		AddHeroToSlot(selectedHeroData);
+	}    
     private void AddHeroToSlot(HeroData heroData)
     {
         for (int i = 0; i < selectedHeroSlots.Length; i++)

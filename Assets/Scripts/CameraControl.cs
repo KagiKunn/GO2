@@ -26,12 +26,14 @@ public class CameraControl : MonoBehaviour
     private Vector3 maxBounds;
     private float halfHeight;
     private float halfWidth;
-    private bool isFlipped = false; // 좌우 반전 상태를 추적하는 변수
 
     private Button cameraButton;
+    private GameObject rootObject;
+    private bool fliped;
 
     private void Awake()
     {
+        rootObject = GameObject.Find("Defense");
         cameraButton = uiDocument.rootVisualElement.Q<Button>("CameraButton");
         cameraButton.clicked += SwitchTilemap;
     }
@@ -197,11 +199,10 @@ public class CameraControl : MonoBehaviour
         UpdateBounds(tilemaps[currentCameraIndex]);
 
         camera.transform.position = initialCameraPositions[currentCameraIndex];
-        
-        Matrix4x4 matrix = camera.projectionMatrix;
-        matrix.m00 *= -1; // x축 반전
-        camera.projectionMatrix = matrix;
-        
+
+        fliped = !fliped;
+        rootObject.transform.localScale = new Vector3(fliped ? -1 : 1, 1, 1);
+
     }
     
     

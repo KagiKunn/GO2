@@ -1376,7 +1376,7 @@ GameObject:
   - component: {fileID: 2236760928933181255}
   m_Layer: 7
   m_Name: DarkElfBoss
-  m_TagString: Untagged
+  m_TagString: EnemyBoss
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1951,7 +1951,7 @@ GameObject:
   - component: {fileID: 5888721825801117481}
   m_Layer: 7
   m_Name: HorseRoot
-  m_TagString: Untagged
+  m_TagString: EnemyBoss
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2091,6 +2091,9 @@ MonoBehaviour:
   isKnockedBack: 0
   percent: 0
   isBoss: 0
+  stageEndNotice: {fileID: 0}
+  stageEndUI: {fileID: 4275209432624822242, guid: 82dda45b6185a414d9549c04f15aaab2,
+    type: 3}
 --- !u!58 &1633647741894230480
 CircleCollider2D:
   m_ObjectHideFlags: 0

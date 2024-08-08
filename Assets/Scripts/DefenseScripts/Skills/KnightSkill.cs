@@ -1,16 +1,18 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 
-[CreateAssetMenu(menuName = "HeroSkill/KnightSkill")]
 public class KnightSkill : HeroSkill
 {
-    public bool knightActive = true;
+    public bool knightActive;
     private LayerMask allyLayer;
+    public GameObject effect;
 
     private void OnEnable()
     {
         // OnEnable에서 allyLayer를 초기화합니다.
         allyLayer = LayerMask.GetMask("Ally");
+        knightActive = true;
     }
 
     public override void HeroSkillStart()

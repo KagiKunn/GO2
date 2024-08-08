@@ -14,7 +14,6 @@ public class CannonEffect : DamageEffect
         {
             CannonAttack(targets, damage);
         }
-        CustomLogger.Log("Fire Damage", "red");
     }
 
     private void CannonAttack(Collider2D[] hitColliders, int damage)
