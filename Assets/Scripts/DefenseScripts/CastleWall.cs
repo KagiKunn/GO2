@@ -17,28 +17,10 @@ public class CastleWall : MonoBehaviour
     [SerializeField] private Slider healthSlider; // 체력 슬라이더 참조변수
     [SerializeField] private Slider shieldSlider; // 실드 슬라이더 참조변수
 
-    [SerializeField] private bool _hasShield;
-    
-    //hasShield가 true가 되면 max실드 값 대비 설정한 실드 값으로 게이지를 설정
-    public bool hasShield
-    {
-        get { return _hasShield; }
-        set
-        {
-            _hasShield = value;
-            if (!_hasShield)
-            {
-                shield = 0;
-                UpdateShieldSlider();
-            }
-            else
-            {
-                shieldSlider.maxValue = maxShield;
-                shieldSlider.value = shield; // 실드 슬라이더 값 업데이트
-            }
-            Debug.Log("hasShield set to: " + _hasShield + ", shieldSlider value: " + shieldSlider.value);
-        }
-    }
+    public bool hasShield; // hasShield를 public으로 유지
+
+    [SerializeField] private bool activateShield;
+    [SerializeField] private float activateShieldValue = 80f; // ActivateShield 메서드에서 설정할 실드 값
 
     private Coroutine earnShieldCoroutine;
 
@@ -67,6 +49,7 @@ public class CastleWall : MonoBehaviour
         health = maxHealth;
         shield = 0; // 초기에는 실드가 없는 상태
         hasShield = false;
+        activateShield = false;
 
         if (gameOverCanvas != null)
         {
@@ -88,30 +71,61 @@ public class CastleWall : MonoBehaviour
         Debug.Log("Start: hasShield set to false, shieldSlider value: " + shieldSlider.value);
     }
 
+    private void Update()
+    {
+        // 매 프레임마다 hasShield의 상태를 확인하고 슬라이더 값을 업데이트
+        if (activateShield)
+        {
+            ActivateShield();
+            activateShield = false; // 한번 실행 후 비활성화
+        }
+
+        if (hasShield)
+        {
+            UpdateShieldSlider();
+        }
+        else
+        {
+            if (shield != 0)
+            {
+                shield = 0;
+                UpdateShieldSlider();
+            }
+        }
+
+        UpdateHealthSlider();
+    }
+
+    public void ActivateShield()
+    {
+        hasShield = true;
+        shield = activateShieldValue;
+        UpdateShieldSlider();
+        Debug.Log("Shield activated with value: " + shield);
+    }
+
     // 성벽이 공격당했을 때 체력을 감소시키는 함수
     public void TakeDamage(int damage)
     {
         if (hasShield)
         {
             shield -= damage;
-            UpdateShieldSlider();
-
             if (shield <= 0)
             {
-                hasShield = false;
                 shield = 0; // 실드가 음수가 되지 않도록 설정
+                hasShield = false;
                 CustomLogger.Log("보호막이 파괴되었습니다!");
             }
         }
         else
         {
             health -= damage;
-            UpdateHealthSlider();
-
             if (health <= 0)
             {
                 health = 0; // 체력이 음수가 되지 않도록 설정
                 CustomLogger.Log("성벽이 파괴되었습니다!");
+                Time.timeScale = 0f; // 게임 일시 정지
+                Debug.Log("게임 일시 정지");
                 ShowGameOverUI();
                 Destroy(gameObject);
             }
@@ -131,6 +145,10 @@ public class CastleWall : MonoBehaviour
         if (shieldSlider != null)
         {
             shieldSlider.value = shield;
+        }
+        else
+        {
+            Debug.LogWarning("Shield Slider is not assigned in the Inspector when trying to update it!");
         }
     }
 
@@ -160,7 +178,6 @@ public class CastleWall : MonoBehaviour
 
         hasShield = true;
         shield = Mathf.Min(maxShield, shield + shieldAmount); // 실드가 maxShield를 초과하지 않도록 설정
-        UpdateShieldSlider();
         earnShieldCoroutine = StartCoroutine(ResetEarnShieldAfterDelay(duration));
     }
 

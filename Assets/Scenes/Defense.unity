@@ -7805,8 +7805,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -20, y: 0}
+  m_AnchoredPosition: {x: 0.72198486, y: 0}
+  m_SizeDelta: {x: -1.4439, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &240073294
 GameObject:
@@ -9748,13 +9748,15 @@ MonoBehaviour:
   maxHealth: 100
   health: 100
   maxShield: 100
-  shield: 100
+  shield: 0
   gameOverCanvas: {fileID: 971673594}
   gameOverImage: {fileID: 491734050}
   gameOverButton: {fileID: 607689188}
   healthSlider: {fileID: 1016381815}
   shieldSlider: {fileID: 1462641434}
-  _hasShield: 0
+  hasShield: 0
+  activateShield: 0
+  activateShieldValue: 90
 --- !u!1 &491734048
 GameObject:
   m_ObjectHideFlags: 0
@@ -10148,7 +10150,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -2.399994, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &755410184
@@ -12964,8 +12966,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.25}
   m_AnchorMax: {x: 1, y: 0.75}
-  m_AnchoredPosition: {x: -1.4833069, y: 0}
-  m_SizeDelta: {x: -5.8544, y: 0}
+  m_AnchoredPosition: {x: -0.000030517578, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1353238826
 GameObject:
@@ -15213,7 +15215,9 @@ MonoBehaviour:
   gameOverButton: {fileID: 0}
   healthSlider: {fileID: 0}
   shieldSlider: {fileID: 0}
-  _hasShield: 0
+  hasShield: 0
+  activateShield: 0
+  activateShieldValue: 80
 --- !u!66 &1449427017
 CompositeCollider2D:
   m_ObjectHideFlags: 0
@@ -15985,8 +15989,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -20, y: 0}
+  m_AnchoredPosition: {x: 2.8356, y: 0}
+  m_SizeDelta: {x: 5.6712, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1462641432
 GameObject:
@@ -16000,7 +16004,7 @@ GameObject:
   - component: {fileID: 1462641434}
   m_Layer: 5
   m_Name: WallShieldSlider
-  m_TagString: Untagged
+  m_TagString: ShieldSlider
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -16203,7 +16207,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.61401826, g: 0.8773585, b: 0.26072446, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -25298,8 +25302,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.25}
   m_AnchorMax: {x: 1, y: 0.75}
-  m_AnchoredPosition: {x: -2.357895, y: 0}
-  m_SizeDelta: {x: -4.7158, y: 0}
+  m_AnchoredPosition: {x: 0.000015258789, y: 0}
+  m_SizeDelta: {x: 0.000030518, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1897327962
 MonoBehaviour:
@@ -26314,7 +26318,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -2.399994, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2047501408
