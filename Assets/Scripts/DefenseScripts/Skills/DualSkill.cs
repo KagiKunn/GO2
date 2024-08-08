@@ -10,7 +10,7 @@ public class DualSkill : HeroSkill
     public float duration;
     private List<GameObject> enemyObjects;
     public bool dualActive;
-    
+
     private void OnEnable()
     {
         dualActive = true;
@@ -20,52 +20,58 @@ public class DualSkill : HeroSkill
     {
         if (dualActive)
         {
+            dualActive = false;
             base.HeroSkillStart();
-            
+            StartCoroutine(DualCooldown(cooldown)); // 쿨다운 코루틴을 여기서 시작
         }
     }
 
     protected override void OnSkillImageComplete()
     {
         base.OnSkillImageComplete();
-        if (dualActive)
-        {
-            Debug.Log("Dual skill activated");
-            DualSKill();
-            dualActive = false;
-            CoroutineRunner.Instance.StartCoroutine(DualCooldown(cooldown));
-        }
+        DualSkillEffect();
     }
-    private void DualSKill()
+
+    private void DualSkillEffect()
     {
         int enemyLayer = LayerMask.NameToLayer("Enemy");
         GameObject[] enemyObj = Resources.FindObjectsOfTypeAll<GameObject>();
-        enemyObjects = new List<GameObject>();
-        foreach (var obj in enemyObj)
+        if (enemyObj != null)
         {
-            if (obj.layer == enemyLayer)
+            enemyObjects = new List<GameObject>();
+            foreach (var obj in enemyObj)
             {
-                enemyObjects.Add(obj);
+                if (obj.layer == enemyLayer)
+                {
+                    enemyObjects.Add(obj);
+                }
             }
-        }
 
-        // 모든 적에게 넉백 및 기절 효과를 적용
-        foreach (var enemy in enemyObjects)
-        {
-            EnemyMovement enemyMovement = enemy.GetComponent<EnemyMovement>();
-            if (enemyMovement != null)
+            // 모든 적에게 넉백 및 기절 효과를 적용
+            foreach (var enemy in enemyObjects)
             {
-                StartCoroutine(NockBack(enemyMovement, damage)); 
-                StartCoroutine(Slow(enemyMovement, duration)); 
+                EnemyMovement enemyMovement = enemy.GetComponent<EnemyMovement>();
+                if (enemyMovement != null)
+                {
+                    StartCoroutine(NockBack(enemyMovement, damage));
+                    StartCoroutine(Slow(enemyMovement, duration));
+                }
             }
         }
     }
 
     private IEnumerator DualCooldown(float cool)
     {
-        yield return new WaitForSeconds(cool);
+        float remainingTime = cool;
+        while (remainingTime > 0)
+        {
+            skillPanelManager.UpdateSkillButtonCooldown(skillButton, remainingTime);
+            yield return new WaitForSeconds(1f);
+            remainingTime -= 1f;
+        }
         dualActive = true;
         CustomLogger.Log("Dual Skill Ready", "white");
+        skillPanelManager.UpdateSkillButtonCooldown(skillButton, 0);
     }
 
     public IEnumerator Slow(EnemyMovement target, float duration)
@@ -73,9 +79,9 @@ public class DualSkill : HeroSkill
         float originalSpeed = target.moveSpeed;
         float debuffSpeed = originalSpeed * 0.5f;
         target.moveSpeed = debuffSpeed;
-        
+
         yield return new WaitForSeconds(duration);
-        
+
         target.moveSpeed = originalSpeed;
     }
 
@@ -83,7 +89,7 @@ public class DualSkill : HeroSkill
     {
         // 넉백 거리 계산
         Vector3 targetKnockback = target.transform.position;
-        targetKnockback.x = target.transform.position.x + nockBackRang; 
+        targetKnockback.x = target.transform.position.x + nockBackRang;
 
         if (targetKnockback.x > maxRange)
         {
@@ -95,13 +101,13 @@ public class DualSkill : HeroSkill
 
         // 데미지 적용
         target.TakeDamage(damage);
-    
+
         // 이동 상태를 멈추도록 플래그 설정 및 기절 상태 설정
         target.isKnockedBack = true;
         target.movementdirection = Vector3.zero;
         target.runState = 1f;
-    
-        yield return new WaitForSeconds(1f); 
+
+        yield return new WaitForSeconds(1f);
 
         // 이동 상태 재개
         target.isKnockedBack = false;

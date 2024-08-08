@@ -13,6 +13,8 @@ public class SkillPanelManager : MonoBehaviour
     private bool isPanelVisible = false;
     private float hiddenPosition = -100f; // 패널 숨김 위치 (패널 높이 만큼)
     private float visiblePosition = 0f;   // 패널 보임 위치 (화면 하단)
+
+    private string filePath;
     private void Awake()
     {
         // UIDocument의 루트 요소 가져오기
@@ -37,7 +39,6 @@ public class SkillPanelManager : MonoBehaviour
 
         // 기존 UI 요소를 설정
         SetupSkillButtons(bottomPanel);
-        
     }
 
     private void RegisterChildClickEvents(VisualElement parent)
@@ -86,6 +87,49 @@ public class SkillPanelManager : MonoBehaviour
             {
                 buttons[i].style.backgroundImage = new StyleBackground(skillIcon.skillIcon);
             }
+
+            // 버튼에 HeroSkill의 참조를 설정합니다.
+            heroSkill.skillButton = buttons[i];
+
+            // SkillPanelManager 참조 설정
+            heroSkill.skillPanelManager = this;
+
+            // 호버 및 클릭 이벤트 추가
+            AddHoverAndClickEvents(buttons[i]);
+        }
+    }
+
+    private void AddHoverAndClickEvents(Button button)
+    {
+        Color hoverColor = new Color(0.8f, 0.8f, 0.8f); // 회색
+        Color clickColor = new Color(0.5f, 0.5f, 0.5f); // 더 진한 회색
+        Color originalColor = new Color(1f, 1f, 1f);
+
+        // 호버 이벤트
+        button.RegisterCallback<MouseEnterEvent>(ev =>
+        {
+            button.style.backgroundColor = hoverColor;
+        });
+
+        // 호버 종료 이벤트
+        button.RegisterCallback<MouseLeaveEvent>(ev =>
+        {
+            button.style.backgroundColor = originalColor;
+        });
+
+        // 클릭 이벤트
+        button.RegisterCallback<ClickEvent>(ev =>
+        {
+            button.style.backgroundColor = clickColor;
+        });
+    }
+
+    public void UpdateSkillButtonCooldown(Button button, float cooldown)
+    {
+        button.text = cooldown.ToString("F0");
+        if (cooldown < 1)
+        {
+            button.text = "";
         }
     }
 
