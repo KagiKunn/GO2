@@ -246,7 +246,6 @@ public class EnemyMovement : MonoBehaviour {
 
 	private void OnDisable()
 	{
-		CustomLogger.Log("OnDisable 호출됨", "yellow");
 		if (isBoss)
 		{
 			CustomLogger.Log("OnDisable에서 보스 비활성화 이벤트 호출됨", "yellow");

@@ -1,9 +1,7 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
-using Update = Unity.VisualScripting.Update;
 
-public abstract class HeroSkill : ScriptableObject
+public abstract class HeroSkill : MonoBehaviour
 {
     public Sprite skillIcon;
     public GameObject skillImagePrefab; // 이미지 프리팹 추가
@@ -11,7 +9,6 @@ public abstract class HeroSkill : ScriptableObject
     public bool isActive = true;
     public float cooldown = 10f;
  
-    public GameObject effect;
     public virtual void HeroSkillAction()
     {
         Time.timeScale /= 2;
@@ -67,8 +64,6 @@ public abstract class HeroSkill : ScriptableObject
             }
         }
     }
-
-
 
     private IEnumerator MoveAndPauseImage(GameObject skillImage)
     {

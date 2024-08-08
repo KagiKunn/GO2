@@ -40,7 +40,7 @@ public class CastleWall : MonoBehaviour
          health -= damage;
       }
 
-      if (shield <= 0)
+      if (shield <= 0 && hasShield)
       {
          hasShield = false;
          CustomLogger.Log("보호막이 파괴되었습니다!");

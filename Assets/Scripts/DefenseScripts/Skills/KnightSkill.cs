@@ -1,11 +1,12 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 
-[CreateAssetMenu(menuName = "HeroSkill/KnightSkill")]
 public class KnightSkill : HeroSkill
 {
     public bool knightActive;
     private LayerMask allyLayer;
+    public GameObject effect;
 
     private void OnEnable()
     {
