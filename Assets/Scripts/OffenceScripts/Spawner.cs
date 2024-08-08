@@ -39,6 +39,9 @@ public class Spawner : MonoBehaviour {
 		GameObject enemy = poolManager.Get(0);
 
 		enemy.transform.position = spawnPointTransforms[Random.Range(1, spawnPointTransforms.Length)].position;
-		enemy.GetComponent<Enemy>().Initialized(spawnData[level]);
+
+		Transform child = enemy.transform.GetChild(0);
+
+		child.GetComponent<Enemy>().Initialized(spawnData[0]);
 	}
 }
