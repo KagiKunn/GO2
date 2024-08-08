@@ -1,11 +1,17 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "HeroSkill/NoviceSkill")]
 public class NoviceSkill : HeroSkill
 {
+    public bool noviceActive;
     public float shield;
-    public bool noviceActive = true;
+
+    private void OnEnable()
+    {
+        noviceActive = true;
+    }
+
     public override void HeroSkillStart()
     {
         if (noviceActive)

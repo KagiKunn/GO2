@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 using UnityEngine.UI;
 
 public class CastleWall : MonoBehaviour
@@ -13,8 +14,13 @@ public class CastleWall : MonoBehaviour
    public bool hasShield;
    public float shield = 0;
    private Coroutine earnShieldCoroutine;
+
+   private Tilemap castleTile;
+   private Color originColor;
    private void Start()
    {
+      castleTile = GetComponent<Tilemap>();
+      originColor = castleTile.color;
       if (gameOverImage != null)
       {
          gameOverImage.gameObject.SetActive(false);
@@ -34,7 +40,7 @@ public class CastleWall : MonoBehaviour
          health -= damage;
       }
 
-      if (shield <= 0)
+      if (shield <= 0 && hasShield)
       {
          hasShield = false;
          CustomLogger.Log("보호막이 파괴되었습니다!");
@@ -66,6 +72,7 @@ public class CastleWall : MonoBehaviour
          StopCoroutine(earnShieldCoroutine);
       }
 
+      ChangeWallColor(true);
       hasShield = true;
       shield += shieldAmount;
       earnShieldCoroutine = StartCoroutine(ResetEarnShieldAfterDelay(duration));
@@ -73,9 +80,22 @@ public class CastleWall : MonoBehaviour
    private IEnumerator ResetEarnShieldAfterDelay(float delay)
    {
       yield return new WaitForSeconds(delay);
+      ChangeWallColor(false);
       hasShield = false;
       shield = 0;
      
       Debug.Log("Shield reset to original values for: " + gameObject.name);
+   }
+
+   void ChangeWallColor(bool boo)
+   {
+      if (boo)
+      {
+         castleTile.color = Color.cyan;
+      }
+      else
+      {
+         castleTile.color = originColor;
+      }
    }
 }
