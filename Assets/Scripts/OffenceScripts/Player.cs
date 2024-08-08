@@ -19,6 +19,8 @@ public class Player : MonoBehaviour {
 
 	private GameManager gameManager;
 
+	private Vector3 scale;
+
 	private void Awake() {
 		rigidbody2D = GetComponent<Rigidbody2D>();
 		spriteRenderer = GetComponent<SpriteRenderer>();
@@ -27,6 +29,8 @@ public class Player : MonoBehaviour {
 		hands = GetComponentsInChildren<Hand>(true);
 
 		gameManager = GameManager.Instance;
+
+		scale = transform.localScale;
 	}
 
 	private void OnEnable() {
@@ -56,16 +60,20 @@ public class Player : MonoBehaviour {
 
 	private void LateUpdate() {
 		if (!gameManager.IsLive) return;
-		
-		if(inputVector2.x == 0 && inputVector2.y == 0){
+
+		if (inputVector2.x == 0 && inputVector2.y == 0) {
 			animator.SetFloat("RunState", 0);
 		} else {
 			animator.SetFloat("RunState", 0.25f);
 		}
 
-		if (inputVector2.x != 0) {
-			spriteRenderer.flipX = inputVector2.x < 0;
+		if (inputVector2.x > 0) {
+			scale.x = -1;
+		} else if (inputVector2.x < 0) {
+			scale.x = 1;
 		}
+
+		transform.localScale = scale;
 	}
 
 	private void OnCollisionStay2D(Collision2D other) {

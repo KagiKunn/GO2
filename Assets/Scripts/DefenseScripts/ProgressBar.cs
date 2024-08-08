@@ -14,4 +14,5 @@ public class ProgressBar : MonoBehaviour
     {
         slider.value = value;
     }
+    
 }
