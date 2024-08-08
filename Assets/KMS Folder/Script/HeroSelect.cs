@@ -15,7 +15,7 @@ public class HeroSelect : MonoBehaviour
 
     private List<HeroData> heroes;
     
-    // 추가된 부분
+    // UpgradeHero씬으로 히어로 정보 들고가기 위해
     private int clickedHeroIndex = -1;
     private Sprite clickedHeroProfileImg;
 
@@ -23,11 +23,10 @@ public class HeroSelect : MonoBehaviour
     {
         _notice = FindFirstObjectByType<NoticeUI>();
     }
-
+    
     private void Start()
     {
-        heroes = heroGameManager.GetHeroes();
-
+        heroes = HeroGameManager.Instance.GetHeroes(); 
         InitializeHeroButtons();
         InitializeSelectedHeroSlots();
 
@@ -37,6 +36,7 @@ public class HeroSelect : MonoBehaviour
 
         LoadHeroFormation();
     }
+    
 
     private void InitializeHeroButtons()
     {
@@ -117,6 +117,8 @@ public class HeroSelect : MonoBehaviour
         }
         heroGameManager.ClearHeroFormation();
         SetMainCharacterImage(null);
+        clickedHeroIndex = -1; // 리셋 시 클릭된 영웅 인덱스 초기화
+        clickedHeroProfileImg = null;
     }
     // 영웅 편성 정보 저장
     private void SaveHeroSelection()
@@ -140,6 +142,8 @@ public class HeroSelect : MonoBehaviour
             }
         }
         SetMainCharacterImage(selectedHeroes.Count > 0 ? selectedHeroes[0].CharacterImg : null);
+        clickedHeroIndex = -1;
+        clickedHeroProfileImg = null;
     }
     
     // 영웅 클릭한 상태로 강화 버튼 누를 시 선택한 영웅 정보가 HeroUpgrade Scene으로 전달
@@ -148,7 +152,8 @@ public class HeroSelect : MonoBehaviour
         if (clickedHeroIndex != -1)
         {
             HeroData clickedHero = heroes[clickedHeroIndex];
-            heroGameManager.SetUpgradeHero(clickedHero);
+            HeroGameManager.Instance.SetUpgradeHero(clickedHero); 
+            CustomLogger.Log("Upgrade Hero Set: " + clickedHero.Name);
             SceneManager.LoadScene("HeroUpgrade");
         }
         else
