@@ -20,17 +20,20 @@ public class CameraControl : MonoBehaviour
     [SerializeField] private Tilemap[] tilemaps; // 타일맵 배열
     [SerializeField] private bool allway; // xy이동 / false면 y축만이동
     [SerializeField] private UIDocument uiDocument; // 최상단에 위치한 UI 도큐먼트
+    [SerializeField] private Material flipMaterial; // 셰이더를 담을 Material
 
     private Vector3 minBounds;
     private Vector3 maxBounds;
     private float halfHeight;
     private float halfWidth;
-    private bool isFlipped = false; // 좌우 반전 상태를 추적하는 변수
 
     private Button cameraButton;
+    private GameObject rootObject;
+    private bool fliped;
 
     private void Awake()
     {
+        rootObject = GameObject.Find("Defense");
         cameraButton = uiDocument.rootVisualElement.Q<Button>("CameraButton");
         cameraButton.clicked += SwitchTilemap;
     }
@@ -150,6 +153,7 @@ public class CameraControl : MonoBehaviour
 
         camera.transform.position = new Vector3(clampedX, clampedY, targetPosition.z);
     }
+
     private void CameraZoom()
     {
         float scroll = Input.GetAxis("Mouse ScrollWheel") * speed;
@@ -190,17 +194,27 @@ public class CameraControl : MonoBehaviour
 
         // 다음 카메라 인덱스로 증가
         currentCameraIndex = (currentCameraIndex + 1) % tilemaps.Length;
-
+        
         // 새로운 타일맵의 경계를 가져옴
         UpdateBounds(tilemaps[currentCameraIndex]);
 
         camera.transform.position = initialCameraPositions[currentCameraIndex];
-        
-        // 카메라 부모 객체를 반전
-        Transform cameraParent = camera.transform.parent;
-        Vector3 scale = cameraParent.localScale;
-        scale.x *= -1;
-        cameraParent.localScale = scale;
-    }
 
+        fliped = !fliped;
+        rootObject.transform.localScale = new Vector3(fliped ? -1 : 1, 1, 1);
+
+    }
+    
+    
+    private void OnRenderImage(RenderTexture source, RenderTexture destination)
+    {
+        if (flipMaterial != null)
+        {
+            Graphics.Blit(source, destination, flipMaterial);
+        }
+        else
+        {
+            Graphics.Blit(source, destination);
+        }
+    }
 }
