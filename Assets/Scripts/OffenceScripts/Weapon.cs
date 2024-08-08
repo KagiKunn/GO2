@@ -86,6 +86,7 @@ public class Weapon : MonoBehaviour {
 				break;
 
 			default:
+				
 				speed = 0.5f * Character.WeaponRate;
 
 				break;
