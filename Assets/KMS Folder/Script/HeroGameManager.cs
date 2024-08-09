@@ -43,7 +43,10 @@ public class HeroGameManager : MonoBehaviour
         {
             instance = this;
             DontDestroyOnLoad(gameObject);
-            filePath = Path.Combine(Application.persistentDataPath, "selectedHeroes.json");
+
+            string savePath = Path.Combine(Application.dataPath, "save", "heroInfo");
+            Directory.CreateDirectory(savePath);
+            filePath = Path.Combine(savePath, "selectedHeroes.json");
         }
         else if (instance != this)
         {

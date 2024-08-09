@@ -27,4 +27,9 @@ public class BtnScene : MonoBehaviour
        SceneManager.LoadScene("Offence");
        CustomLogger.Log("Change Offence successfuly!");
    }
+   public void UnitManagementSceneChange()
+   {
+       SceneManager.LoadScene("UnitManagement");
+       CustomLogger.Log("Change UnitManagement successfuly!");
+   }
 }
