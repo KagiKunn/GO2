@@ -66,13 +66,13 @@ public class HeroGameManager : MonoBehaviour
                 string json = File.ReadAllText(filePath);
                 HeroDataWrapper wrapper = JsonUtility.FromJson<HeroDataWrapper>(json);
 
-                selectedHeroes.Clear();
+                Instance.selectedHeroes.Clear();
 
                 foreach (HeroData hero in wrapper.Heroes)
                 {
                     if (selectedHeroes.Count < 3 && !selectedHeroes.Exists(h => h.Name == hero.Name))
                     {
-                        selectedHeroes.Add(hero);
+                        Instance.selectedHeroes.Add(hero);
                     }
                 }
             }
@@ -80,13 +80,14 @@ public class HeroGameManager : MonoBehaviour
             {
                 CustomLogger.Log($"Error loading hero formation: {e.Message}", "red");
                 CustomLogger.Log($"StackTrace: {e.StackTrace}", "red");
+                selectedHeroes.Clear();
             }
         }
     }
 
     public void ClearHeroFormation()
     {
-        selectedHeroes.Clear();
+        Instance.selectedHeroes.Clear();
         SaveHeroFormation();
     }
     
@@ -94,39 +95,39 @@ public class HeroGameManager : MonoBehaviour
     {
         if (selectedHeroes.Count < 3 && !selectedHeroes.Exists(h => h.Name == hero.Name))
         {
-            selectedHeroes.Add(hero);
+            Instance.selectedHeroes.Add(hero);
         }
     }
 
     public void RemoveSelectedHero(HeroData hero)
     {
-        selectedHeroes.Remove(hero);
+        Instance.selectedHeroes.Remove(hero);
     }
 
     public List<HeroData> GetHeroes()
     {
-        return heroDataList;
+        return Instance.heroDataList;
     }
 
     public List<HeroData> GetSelectedHeroes()
     {
-        return selectedHeroes;
+        return Instance.selectedHeroes;
     }
 
     public void SetUpgradeHero(HeroData hero)
     {
-        upgradeHero = hero;
+        Instance.upgradeHero = hero; 
         Debug.Log("SetUpgradeHero called with: " + hero.Name);
     }
 
     public HeroData GetUpgradeHero()
     {
-        Debug.Log("GetUpgradeHero called: " + (upgradeHero != null ? upgradeHero.Name : "null"));
-        return upgradeHero;
+        Debug.Log("GetUpgradeHero called: " + (Instance.upgradeHero != null ? Instance.upgradeHero.Name : "null"));
+        return Instance.upgradeHero;
     }
     
     public void ClearUpgradeHero()
     {
-        upgradeHero = null;
+        Instance.upgradeHero = null;
     }
 }

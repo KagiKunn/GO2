@@ -1,18 +1,17 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
-
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class HeroSelect : MonoBehaviour {
+public class HeroSelect : MonoBehaviour 
+{
 	public NoticeUI _notice;
 	public HeroGameManager heroGameManager;
 	public Image CharacterImage;
 	public Button[] heroButtons;
 	public Button[] selectedHeroSlots;
-	public Button resetBtn, saveBtn;
+	public Button resetBtn, saveBtn, reinforceBtn;
 
     private List<HeroData> heroes;
     
@@ -33,37 +32,45 @@ public class HeroSelect : MonoBehaviour {
 
 		resetBtn.onClick.AddListener(ResetHeroSelection);
 		saveBtn.onClick.AddListener(SaveHeroSelection);
+        reinforceBtn.onClick.AddListener(ReinforceBtnClicked);
 
         LoadHeroFormation();
     }
     
 
-	private void InitializeHeroButtons() {
-		// Ensure we do not exceed the bounds of the heroButtons array or heroes list
+	private void InitializeHeroButtons()
+    {
 		int buttonCount = Mathf.Min(heroButtons.Length, heroes.Count);
-
-		for (int i = 0; i < buttonCount; i++) {
+		for (int i = 0; i < buttonCount; i++) 
+        {
 			int index = i;
 			heroButtons[i].GetComponent<Image>().sprite = heroes[index].ProfileImg;
 			heroButtons[i].onClick.AddListener(() => OnHeroButtonClicked(index));
 		}
 	}
 
-	private void InitializeSelectedHeroSlots() {
-		for (int i = 0; i < selectedHeroSlots.Length; i++) {
+	private void InitializeSelectedHeroSlots()
+    {
+		for (int i = 0; i < selectedHeroSlots.Length; i++)
+        {
 			int index = i;
 			selectedHeroSlots[i].onClick.AddListener(() => OnSelectedHeroSlotClicked(index));
 		}
 	}
 
-	private void OnHeroButtonClicked(int index) {
-		if (heroGameManager.GetSelectedHeroes().Count >= 3) return;
+	private void OnHeroButtonClicked(int index)
+    {
+		if (HeroGameManager.Instance.GetSelectedHeroes().Count >= 3) return;
 
 		HeroData selectedHeroData = heroes[index];
 
-		if (heroGameManager.GetSelectedHeroes().Exists(h => h.Name == selectedHeroData.Name)) return;
+		if (HeroGameManager.Instance.GetSelectedHeroes().Exists(h => h.Name == selectedHeroData.Name)) return;
 
 		AddHeroToSlot(selectedHeroData);
+        // 강화 구현 위해 추가한 로직, 안되면 수정(편성 중인 영웅-> selectedHeroes, 클릭한 영웅-> clickedHero)
+        clickedHeroIndex = index;
+        clickedHeroProfileImg = heroes[index].ProfileImg;
+        heroButtons[index].Select();
 	}    
     private void AddHeroToSlot(HeroData heroData)
     {
@@ -75,7 +82,7 @@ public class HeroSelect : MonoBehaviour {
                 slotImage.sprite = heroData.ProfileImg;
                 slotImage.enabled = true;
                 SetMainCharacterImage(heroData.CharacterImg);
-                heroGameManager.AddSelectedHero(heroData);
+                HeroGameManager.Instance.AddSelectedHero(heroData);
                 break;
             }
         }
@@ -86,7 +93,7 @@ public class HeroSelect : MonoBehaviour {
         Image slotImage = selectedHeroSlots[index].GetComponent<Image>();
         if (slotImage.sprite != null)
         {
-            heroGameManager.GetSelectedHeroes().RemoveAll(h => h.ProfileImg == slotImage.sprite);
+            HeroGameManager.Instance.GetSelectedHeroes().RemoveAll(h => h.ProfileImg == slotImage.sprite);
             slotImage.sprite = null;
             slotImage.enabled = false;
         }
@@ -106,7 +113,7 @@ public class HeroSelect : MonoBehaviour {
             slotImage.sprite = null;
             slotImage.enabled = false;
         }
-        heroGameManager.ClearHeroFormation();
+        HeroGameManager.Instance.ClearHeroFormation();
         SetMainCharacterImage(null);
         clickedHeroIndex = -1; // 리셋 시 클릭된 영웅 인덱스 초기화
         clickedHeroProfileImg = null;
@@ -114,7 +121,7 @@ public class HeroSelect : MonoBehaviour {
     // 영웅 편성 정보 저장
     private void SaveHeroSelection()
     {
-        heroGameManager.SaveHeroFormation();
+        HeroGameManager.Instance.SaveHeroFormation();
         _notice.SUB("Save Successefully!");
     }
     
