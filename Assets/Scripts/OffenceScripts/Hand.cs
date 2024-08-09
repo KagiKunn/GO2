@@ -17,12 +17,15 @@ public class Hand : MonoBehaviour {
 
 	private void Awake() {
 		playerSprite = GetComponentsInParent<SpriteRenderer>()[1];
-		player = GameManager.Instance.Player;
+		player = GameManager.Instance.Player[GameManager.Instance.PlayerId];
+		
+		CustomLogger.Log(player);
+		CustomLogger.Log(GameManager.Instance.PlayerId);
 	}
 
 	private void LateUpdate() {
 		bool isReverse = playerSprite.flipX;
-
+		
 		if (isLeft) { // 근접 무기
 			transform.localRotation = isReverse ? reverseLeftRotaion : leftRotaion;
 
