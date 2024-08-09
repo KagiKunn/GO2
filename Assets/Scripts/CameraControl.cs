@@ -199,8 +199,9 @@ public class CameraControl : MonoBehaviour
 
         camera.transform.position = initialCameraPositions[currentCameraIndex];
 
+        /*
         fliped = !fliped;
-        rootObject.transform.localScale = new Vector3(fliped ? -1 : 1, 1, 1);
+        rootObject.transform.localScale = new Vector3(fliped ? -1 : 1, 1, 1);*/
 
     }
     

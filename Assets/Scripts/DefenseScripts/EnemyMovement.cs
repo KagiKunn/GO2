@@ -34,7 +34,8 @@ public class EnemyMovement : MonoBehaviour {
     public bool isBoss; //보스 여부 확인
     private GameObject horseRoot;
     public NoticeUI stageEndNotice;
-    [FormerlySerializedAs("stageEndUI")] public StageClearUI stageClearUI;
+    [FormerlySerializedAs("stageEndUI")] 
+    public StageClearUI stageClearUI;
 
 	// 이벤트 선언
 	public static event Action OnBossDie;
