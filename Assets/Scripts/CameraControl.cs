@@ -1,220 +1,185 @@
 using System;
+
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.UIElements;
 
-public class CameraControl : MonoBehaviour
-{
-    private const float DirectionForceReduceRate = 0.935f; // 감속비율
-    private const float DirectionForceMin = 0.001f; // 설정치 이하일 경우 움직임을 멈춤
+#pragma warning disable CS0108, CS0114, CS0414
 
-    private bool _userMoveInput; // 현재 조작을 하고있는지 확인을 위한 변수
-    private Vector3 _startPosition; // 입력 시작 위치를 기억
-    private Vector3 _directionForce; // 조작을 멈췄을때 서서히 감속하면서 이동 시키기 위한 변수
+public class CameraControl : MonoBehaviour {
+	private const float DirectionForceReduceRate = 0.935f; // 감속비율
+	private const float DirectionForceMin = 0.001f; // 설정치 이하일 경우 움직임을 멈춤
 
-    [SerializeField] private Camera camera;
-    private int currentCameraIndex = 0;
-    [SerializeField] private Vector3[] initialCameraPositions;
-    private float temp_value;
-    [SerializeField] private float speed = 10.0f;
-    [SerializeField] private Tilemap[] tilemaps; // 타일맵 배열
-    [SerializeField] private bool allway; // xy이동 / false면 y축만이동
-    [SerializeField] private UIDocument uiDocument; // 최상단에 위치한 UI 도큐먼트
-    [SerializeField] private Material flipMaterial; // 셰이더를 담을 Material
+	private bool _userMoveInput; // 현재 조작을 하고있는지 확인을 위한 변수
+	private Vector3 _startPosition; // 입력 시작 위치를 기억
+	private Vector3 _directionForce; // 조작을 멈췄을때 서서히 감속하면서 이동 시키기 위한 변수
 
-    private Vector3 minBounds;
-    private Vector3 maxBounds;
-    private float halfHeight;
-    private float halfWidth;
+	[SerializeField] private Camera camera;
+	private int currentCameraIndex = 0;
+	[SerializeField] private Vector3[] initialCameraPositions;
+	private float temp_value;
+	[SerializeField] private float speed = 10.0f;
+	[SerializeField] private Tilemap[] tilemaps; // 타일맵 배열
+	[SerializeField] private bool allway; // xy이동 / false면 y축만이동
+	[SerializeField] private UIDocument uiDocument; // 최상단에 위치한 UI 도큐먼트
 
-    private Button cameraButton;
-    private GameObject rootObject;
-    private bool fliped;
+	private Vector3 minBounds;
+	private Vector3 maxBounds;
+	private float halfHeight;
+	private float halfWidth;
+	private bool isFlipped = false; // 좌우 반전 상태를 추적하는 변수
 
-    private void Awake()
-    {
-        rootObject = GameObject.Find("Defense");
-        cameraButton = uiDocument.rootVisualElement.Q<Button>("CameraButton");
-        cameraButton.clicked += SwitchTilemap;
-    }
+	private Button cameraButton;
 
-    private void Start()
-    {
-        InitializeCamera();
-    }
+	private void Awake() {
+		cameraButton = uiDocument.rootVisualElement.Q<Button>("CameraButton");
+		cameraButton.clicked += SwitchTilemap;
+	}
 
-    public void InitializeCamera()
-    {
-        // 카메라의 반높이와 반너비를 계산
-        halfHeight = camera.orthographicSize;
-        halfWidth = halfHeight * camera.aspect;
+	private void Start() {
+		InitializeCamera();
+	}
 
-        // 현재 타일맵의 경계를 가져옴
-        UpdateBounds(tilemaps[currentCameraIndex]);
-    }
+	public void InitializeCamera() {
+		// 카메라의 반높이와 반너비를 계산
+		halfHeight = camera.orthographicSize;
+		halfWidth = halfHeight * camera.aspect;
 
-    private void UpdateBounds(Tilemap tilemap)
-    {
-        Transform gridTransform = tilemap.layoutGrid.transform;
-        Bounds tilemapBounds = tilemap.localBounds;
+		// 현재 타일맵의 경계를 가져옴
+		UpdateBounds(tilemaps[currentCameraIndex]);
+	}
 
-        minBounds = gridTransform.TransformPoint(tilemapBounds.min);
-        maxBounds = gridTransform.TransformPoint(tilemapBounds.max);
-    }
+	private void UpdateBounds(Tilemap tilemap) {
+		Transform gridTransform = tilemap.layoutGrid.transform;
+		Bounds tilemapBounds = tilemap.localBounds;
 
-    private void Update()
-    {
-        ControlCameraPosition();
-        ReduceDirectionForce();
-        UpdateCameraPosition();
-        CameraZoom();
-    }
+		minBounds = gridTransform.TransformPoint(tilemapBounds.min);
+		maxBounds = gridTransform.TransformPoint(tilemapBounds.max);
+	}
 
-    private void ControlCameraPosition()
-    {
-        var mouseWorldPosition = camera.ScreenToWorldPoint(Input.mousePosition);
-        if (Input.GetMouseButtonDown(0))
-        {
-            CameraPositionMoveStart(mouseWorldPosition);
-        }
-        else if (Input.GetMouseButton(0))
-        {
-            CameraPositionMoveProgress(mouseWorldPosition);
-        }
-        else
-        {
-            CameraPositionMoveEnd();
-        }
-    }
+	private void Update() {
+		ControlCameraPosition();
+		ReduceDirectionForce();
+		UpdateCameraPosition();
+		CameraZoom();
+	}
 
-    private void CameraPositionMoveStart(Vector3 startPosition)
-    {
-        _userMoveInput = true;
-        _startPosition = startPosition;
-        _directionForce = Vector2.zero;
-    }
+	private void ControlCameraPosition() {
+		var mouseWorldPosition = camera.ScreenToWorldPoint(Input.mousePosition);
 
-    private void CameraPositionMoveProgress(Vector3 targetPosition)
-    {
-        if (!_userMoveInput)
-        {
-            CameraPositionMoveStart(targetPosition);
-            return;
-        }
+		if (Input.GetMouseButtonDown(0)) {
+			CameraPositionMoveStart(mouseWorldPosition);
+		} else if (Input.GetMouseButton(0)) {
+			CameraPositionMoveProgress(mouseWorldPosition);
+		} else {
+			CameraPositionMoveEnd();
+		}
+	}
 
-        Vector3 movement = _startPosition - targetPosition;
-        if (!allway)
-        {
-            movement.x = 0; // y축으로만 이동하도록 제한
-        }
-        _directionForce = movement;
-    }
+	private void CameraPositionMoveStart(Vector3 startPosition) {
+		_userMoveInput = true;
+		_startPosition = startPosition;
+		_directionForce = Vector2.zero;
+	}
 
-    private void CameraPositionMoveEnd()
-    {
-        _userMoveInput = false;
-    }
+	private void CameraPositionMoveProgress(Vector3 targetPosition) {
+		if (!_userMoveInput) {
+			CameraPositionMoveStart(targetPosition);
 
-    private void ReduceDirectionForce()
-    {
-        if (_userMoveInput)
-        {
-            return;
-        }
+			return;
+		}
 
-        _directionForce *= DirectionForceReduceRate;
+		Vector3 movement = _startPosition - targetPosition;
 
-        if (_directionForce.magnitude < DirectionForceMin)
-        {
-            _directionForce = Vector3.zero;
-        }
-    }
+		if (!allway) {
+			movement.x = 0; // y축으로만 이동하도록 제한
+		}
 
-    private void UpdateCameraPosition()
-    {
-        if (_directionForce == Vector3.zero)
-        {
-            return;
-        }
+		_directionForce = movement;
+	}
 
-        var currentPosition = camera.transform.position;
-        var targetPosition = currentPosition + _directionForce;
-        float clampedX = Mathf.Clamp(targetPosition.x, minBounds.x + halfWidth, maxBounds.x - halfWidth);
-        if (minBounds.x > maxBounds.x)
-        {
-            clampedX = Mathf.Clamp(targetPosition.x, maxBounds.x + halfWidth, minBounds.x - halfWidth);
-        }
-        float clampedY = Mathf.Clamp(targetPosition.y, minBounds.y + halfHeight, maxBounds.y - halfHeight);
+	private void CameraPositionMoveEnd() {
+		_userMoveInput = false;
+	}
 
-        if (!allway)
-        {
-            clampedX = currentPosition.x; // y축으로만 이동하도록 제한
-        }
+	private void ReduceDirectionForce() {
+		if (_userMoveInput) {
+			return;
+		}
 
-        camera.transform.position = new Vector3(clampedX, clampedY, targetPosition.z);
-    }
+		_directionForce *= DirectionForceReduceRate;
 
-    private void CameraZoom()
-    {
-        float scroll = Input.GetAxis("Mouse ScrollWheel") * speed;
+		if (_directionForce.magnitude < DirectionForceMin) {
+			_directionForce = Vector3.zero;
+		}
+	}
 
-        if (camera.orthographicSize <= 26.7f && scroll > 0)
-        {
-            temp_value = camera.orthographicSize;
-            camera.orthographicSize = temp_value;
-        }
-        else if (camera.orthographicSize >= 50.3f && scroll < 0)
-        {
-            temp_value = camera.orthographicSize;
-            camera.orthographicSize = temp_value;
-        }
-        else
-        {
-            camera.orthographicSize -= scroll * 5f;
-        }
+	private void UpdateCameraPosition() {
+		if (_directionForce == Vector3.zero) {
+			return;
+		}
 
-        halfHeight = camera.orthographicSize;
-        halfWidth = halfHeight * camera.aspect;
+		var currentPosition = camera.transform.position;
+		var targetPosition = currentPosition + _directionForce;
+		float clampedX = Mathf.Clamp(targetPosition.x, minBounds.x + halfWidth, maxBounds.x - halfWidth);
 
-        // 카메라의 위치를 경계 내로 조정
-        var currentPosition = camera.transform.position;
-        float clampedX = Mathf.Clamp(currentPosition.x, minBounds.x + halfWidth, maxBounds.x - halfWidth);
-        if (minBounds.x > maxBounds.x)
-        {
-            clampedX = Mathf.Clamp(currentPosition.x, maxBounds.x + halfWidth, minBounds.x - halfWidth);
-        }
-        float clampedY = Mathf.Clamp(currentPosition.y, minBounds.y + halfHeight, maxBounds.y - halfHeight);
-        camera.transform.position = new Vector3(clampedX, clampedY, currentPosition.z);
-    }
+		if (minBounds.x > maxBounds.x) {
+			clampedX = Mathf.Clamp(targetPosition.x, maxBounds.x + halfWidth, minBounds.x - halfWidth);
+		}
 
-    private void SwitchTilemap()
-    {
-        // 현재 카메라 위치를 저장
-        initialCameraPositions[currentCameraIndex] = camera.transform.position;
+		float clampedY = Mathf.Clamp(targetPosition.y, minBounds.y + halfHeight, maxBounds.y - halfHeight);
 
-        // 다음 카메라 인덱스로 증가
-        currentCameraIndex = (currentCameraIndex + 1) % tilemaps.Length;
-        
-        // 새로운 타일맵의 경계를 가져옴
-        UpdateBounds(tilemaps[currentCameraIndex]);
+		if (!allway) {
+			clampedX = currentPosition.x; // y축으로만 이동하도록 제한
+		}
 
-        camera.transform.position = initialCameraPositions[currentCameraIndex];
+		camera.transform.position = new Vector3(clampedX, clampedY, targetPosition.z);
+	}
 
-        fliped = !fliped;
-        rootObject.transform.localScale = new Vector3(fliped ? -1 : 1, 1, 1);
+	private void CameraZoom() {
+		float scroll = Input.GetAxis("Mouse ScrollWheel") * speed;
 
-    }
-    
-    
-    private void OnRenderImage(RenderTexture source, RenderTexture destination)
-    {
-        if (flipMaterial != null)
-        {
-            Graphics.Blit(source, destination, flipMaterial);
-        }
-        else
-        {
-            Graphics.Blit(source, destination);
-        }
-    }
+		if (camera.orthographicSize <= 26.7f && scroll > 0) {
+			temp_value = camera.orthographicSize;
+			camera.orthographicSize = temp_value;
+		} else if (camera.orthographicSize >= 50.3f && scroll < 0) {
+			temp_value = camera.orthographicSize;
+			camera.orthographicSize = temp_value;
+		} else {
+			camera.orthographicSize -= scroll * 5f;
+		}
+
+		halfHeight = camera.orthographicSize;
+		halfWidth = halfHeight * camera.aspect;
+
+		// 카메라의 위치를 경계 내로 조정
+		var currentPosition = camera.transform.position;
+		float clampedX = Mathf.Clamp(currentPosition.x, minBounds.x + halfWidth, maxBounds.x - halfWidth);
+
+		if (minBounds.x > maxBounds.x) {
+			clampedX = Mathf.Clamp(currentPosition.x, maxBounds.x + halfWidth, minBounds.x - halfWidth);
+		}
+
+		float clampedY = Mathf.Clamp(currentPosition.y, minBounds.y + halfHeight, maxBounds.y - halfHeight);
+		camera.transform.position = new Vector3(clampedX, clampedY, currentPosition.z);
+	}
+
+	private void SwitchTilemap() {
+		// 현재 카메라 위치를 저장
+		initialCameraPositions[currentCameraIndex] = camera.transform.position;
+
+		// 다음 카메라 인덱스로 증가
+		currentCameraIndex = (currentCameraIndex + 1) % tilemaps.Length;
+
+		// 새로운 타일맵의 경계를 가져옴
+		UpdateBounds(tilemaps[currentCameraIndex]);
+
+		camera.transform.position = initialCameraPositions[currentCameraIndex];
+
+		// 카메라 부모 객체를 반전
+		Transform cameraParent = camera.transform.parent;
+		Vector3 scale = cameraParent.localScale;
+		scale.x *= -1;
+		cameraParent.localScale = scale;
+	}
 }
