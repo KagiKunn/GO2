@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using UnityEngine;
 
@@ -15,28 +14,33 @@ public class ArcherSkill : HeroSkill
     {
         archerActive = true;
     }
+
     public override void HeroSkillStart()
     {
-        if(archerActive){
+        if (archerActive)
+        {
+            archerActive = false;
             base.HeroSkillStart();
-
+            StartCoroutine(ArcherCooldown(cooldown)); // 쿨다운 코루틴을 여기서 시작
+        }
+        else
+        {
+            CustomLogger.Log("Archer Skill Cooldown", "gray");
         }
     }
 
     protected override void OnSkillImageComplete()
     {
         base.OnSkillImageComplete();
-        if (archerActive)
+        Debug.Log("Archer skill activated.");
+        if (!isEllipseActive)
         {
-            Debug.Log("Archer skill activated.");
-            if (!isEllipseActive)
-            {
-                CustomLogger.Log("!isEllipseActive");
-                CreateEllipse();
-                isEllipseActive = true;
-            }
+            CustomLogger.Log("!isEllipseActive");
+            CreateEllipse();
+            isEllipseActive = true;
         }
     }
+
     private void Awake()
     {
         isEllipseActive = false;
@@ -44,8 +48,6 @@ public class ArcherSkill : HeroSkill
 
     private void Update()
     {
-        Debug.Log("Update called in ArcherSkill");
-
         // 마우스 클릭 이벤트 감지
         if (Input.GetMouseButtonDown(0))
         {
@@ -53,8 +55,6 @@ public class ArcherSkill : HeroSkill
             if (isEllipseActive)
             {
                 DetectEnemiesAndDestroyEllipse();
-                archerActive = false;
-                CoroutineRunner.Instance.StartCoroutine(ArcherCooldown(cooldown));
             }
             else
             {
@@ -70,10 +70,18 @@ public class ArcherSkill : HeroSkill
 
     private IEnumerator ArcherCooldown(float cool)
     {
-        yield return new WaitForSeconds(cool);
+        float remainingTime = cool;
+        while (remainingTime > 0)
+        {
+            skillPanelManager.UpdateSkillButtonCooldown(skillButton, remainingTime);
+            yield return new WaitForSeconds(1f);
+            remainingTime -= 1f;
+        }
         archerActive = true;
-        CustomLogger.Log("Archer SKill Ready", "white");
+        CustomLogger.Log("Archer Skill Ready", "white");
+        skillPanelManager.UpdateSkillButtonCooldown(skillButton, 0);
     }
+
     void CreateEllipse()
     {
         CustomLogger.Log("-CreateEllipse-");
@@ -110,12 +118,15 @@ public class ArcherSkill : HeroSkill
         {
             // 타원형 영역 내에 있는 모든 적 감지
             Collider2D[] enemies = Physics2D.OverlapAreaAll(ellipseCollider.bounds.min, ellipseCollider.bounds.max, enemyLayer);
-            foreach (Collider2D enemy in enemies)
+            if (enemies != null)
             {
-                Debug.Log("Enemy detected: " + enemy.gameObject.name);
-                EnemyMovement enemyMovement = enemy.GetComponent<EnemyMovement>();
-                enemyMovement.TakeDamage(damage);
-                // 여기에 적에게 피해를 주거나 다른 작업을 수행하는 코드를 추가
+                foreach (Collider2D enemy in enemies)
+                {
+                    Debug.Log("Enemy detected: " + enemy.gameObject.name);
+                    EnemyMovement enemyMovement = enemy.GetComponent<EnemyMovement>();
+                    enemyMovement.TakeDamage(damage);
+                    // 여기에 적에게 피해를 주거나 다른 작업을 수행하는 코드를 추가
+                }
             }
         }
 
