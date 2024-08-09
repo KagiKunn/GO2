@@ -1,10 +1,13 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public abstract class HeroSkill : MonoBehaviour
 {
     public Sprite skillIcon;
     public GameObject skillImagePrefab; // 이미지 프리팹 추가
+    public Button skillButton; // 버튼 참조 추가
+    public SkillPanelManager skillPanelManager; // SkillPanelManager 참조 추가
 
     public bool isActive = true;
     public float cooldown = 10f;
@@ -100,5 +103,12 @@ public abstract class HeroSkill : MonoBehaviour
     protected virtual void OnSkillImageComplete()
     {
         // 자식 클래스에서 오버라이드 가능
+    }
+    public void ResetCooldownText()
+    {
+        if (skillButton != null)
+        {
+            skillButton.text = ""; // 텍스트 초기화
+        }
     }
 }

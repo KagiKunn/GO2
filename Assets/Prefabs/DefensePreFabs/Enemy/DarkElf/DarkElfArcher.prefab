@@ -688,7 +688,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3538847429107066929
 Transform:
   m_ObjectHideFlags: 0
@@ -698,7 +698,7 @@ Transform:
   m_GameObject: {fileID: 1431050427258077071}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 199.96954, y: 0, z: 3.4904883}
   m_LocalScale: {x: 10, y: 10, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -815,8 +815,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f417b36df4681e48a4521d737d5c364, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 10
-  moveSpeed: 10
+  health: -150
+  moveSpeed: 5
   detectionLayerMask:
     serializedVersion: 2
     m_Bits: 64
@@ -829,10 +829,12 @@ MonoBehaviour:
   boxSize: {x: 60, y: 0.1}
   projectilePrefab: {fileID: 8172912759357463194, guid: 93893641fc90ec44bb1edc78365e60d4,
     type: 3}
-  movementdirection: {x: 0, y: 0, z: 0}
+  movementdirection: {x: -1, y: 0, z: 0}
   isKnockedBack: 0
   percent: 0
   isBoss: 0
+  stageEndNotice: {fileID: 0}
+  stageEndUI: {fileID: 0}
 --- !u!114 &1399133386900854651
 MonoBehaviour:
   m_ObjectHideFlags: 0

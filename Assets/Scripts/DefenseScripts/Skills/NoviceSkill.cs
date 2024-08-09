@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using UnityEngine;
 
@@ -16,8 +15,9 @@ public class NoviceSkill : HeroSkill
     {
         if (noviceActive)
         {
+            noviceActive = false;
             base.HeroSkillStart();
-            
+            StartCoroutine(NoviceCooldown(cooldown)); // 쿨다운 코루틴을 여기서 시작
         }
         else
         {
@@ -28,20 +28,24 @@ public class NoviceSkill : HeroSkill
     protected override void OnSkillImageComplete()
     {
         base.OnSkillImageComplete();
-        if (noviceActive)
-        {
-            WallShield();
-            Debug.Log("Novice skill activated.");
-            noviceActive = false;
-            CoroutineRunner.Instance.StartCoroutine(NoviceCooldown(cooldown));
-        }
+        WallShield();
+        Debug.Log("Novice skill activated.");
     }
+
     private IEnumerator NoviceCooldown(float cool)
     {
-        yield return new WaitForSeconds(cool);
+        float remainingTime = cool;
+        while (remainingTime > 0)
+        {
+            skillPanelManager.UpdateSkillButtonCooldown(skillButton, remainingTime);
+            yield return new WaitForSeconds(1f);
+            remainingTime -= 1f;
+        }
         noviceActive = true;
-        CustomLogger.Log("Novice SKill Ready", "white");
+        CustomLogger.Log("Novice Skill Ready", "white");
+        skillPanelManager.UpdateSkillButtonCooldown(skillButton, 0);
     }
+
     void WallShield()
     {
         GameObject[] wallObjects = GameObject.FindGameObjectsWithTag("Wall");

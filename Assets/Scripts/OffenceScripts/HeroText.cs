@@ -37,14 +37,9 @@ public class HeroText : MonoBehaviour {
 
 		if (File.Exists(filePath)) {
 			try {
-				CustomLogger.Log("File exists: " + filePath);
-
 				string json = File.ReadAllText(filePath);
-				CustomLogger.Log("JSON content: " + json);
 
 				HeroDataWrapper wrapper = JsonUtility.FromJson<HeroDataWrapper>(json);
-				CustomLogger.Log("Number of heroes in JSON: " + wrapper.Heroes.Count);
-				CustomLogger.Log("Number of Active Grand Children: " + activeGrandChildren.Count);
 
 				for (int i = 0; i < wrapper.Heroes.Count && i < activeGrandChildren.Count; i++) {
 					HeroData hero = wrapper.Heroes[i];
