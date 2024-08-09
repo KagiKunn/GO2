@@ -5,17 +5,12 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-<<<<<<< HEAD
 using UnityEngine.Serialization;
-=======
-
->>>>>>> 055e7753ae471693894463c5b0489e066c0a05bd
 using Debug = UnityEngine.Debug;
 
 #pragma warning disable CS0414
 
 public class EnemyMovement : MonoBehaviour {
-<<<<<<< HEAD
     [SerializeField] private float health = 10f;
     [SerializeField] public float moveSpeed = 1.0f;
     [SerializeField] private LayerMask detectionLayerMask;
@@ -40,32 +35,6 @@ public class EnemyMovement : MonoBehaviour {
     private GameObject horseRoot;
     public NoticeUI stageEndNotice;
     [FormerlySerializedAs("stageEndUI")] public StageClearUI stageClearUI;
-=======
-	[SerializeField] private float health = 10f;
-	[SerializeField] public float moveSpeed = 1.0f;
-	[SerializeField] private LayerMask detectionLayerMask;
-	[SerializeField] private int attackDamage = 1;
-	[SerializeField] private float attackSpeed = 1f;
-	[SerializeField] public float runState = 0.25f;
-	[SerializeField] private float attackState = 1f;
-	[SerializeField] private float normalState = 0f;
-	[SerializeField] private float skillState = 0f;
-	[SerializeField] private Vector2 boxSize = new Vector2(2, 0.1f);
-	public GameObject projectilePrefab;
-	private Rigidbody2D rigid2d;
-	private Animator animator;
-	public Vector3 movementdirection;
-	private CastleWall castleWall;
-	private Collider2D hit;
-	private bool isChangingBrightness = false;
-	public bool isKnockedBack = false;
-	public float percent = 0f;
-	private bool deadJudge = true;
-	public bool isBoss; //보스 여부 확인
-	private GameObject horseRoot;
-	public NoticeUI stageEndNotice;
-	public StageEndUI stageEndUI;
->>>>>>> 055e7753ae471693894463c5b0489e066c0a05bd
 
 	// 이벤트 선언
 	public static event Action OnBossDie;
@@ -246,17 +215,9 @@ public class EnemyMovement : MonoBehaviour {
 		return health <= 0;
 	}
 
-<<<<<<< HEAD
-            stageClearUI.ShowChangeSceneButton();
-        }
-        gameObject.SetActive(false);
-        deadJudge = false;
-    }
-=======
 	private void Die() {
 		// 적이 죽었을 때의 동작 (예: 오브젝트 비활성화)
 		Debug.Log("Die 호출");
->>>>>>> 055e7753ae471693894463c5b0489e066c0a05bd
 
 		// 적의 root 의 태그 출력
 		CustomLogger.Log("적 Root 태그 : " + gameObject.tag);
@@ -278,11 +239,11 @@ public class EnemyMovement : MonoBehaviour {
 			Time.timeScale = 0;
 			CustomLogger.Log("게임이 정지되었습니다.");
 
-			stageEndUI.ShowChangeSceneButton();
-		}
-
-		gameObject.SetActive(false);
-		deadJudge = false;
+            stageClearUI.ShowChangeSceneButton();
+        }
+        gameObject.SetActive(false);
+        deadJudge = false;
+		
 	}
 
 	private void OnDrawGizmos() {

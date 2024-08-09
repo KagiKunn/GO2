@@ -2,16 +2,8 @@
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-<<<<<<< HEAD:Assets/Scripts/DefenseScripts/StageClearUI.cs
-public class StageClearUI : MonoBehaviour
-{
-    public GameObject changeSceneButtonPrefab; // UI 버튼 프리팹
-    private GameObject changeSceneButtonInstance;
-=======
-#pragma warning disable CS0618 // 형식 또는 멤버는 사용되지 않습니다.
->>>>>>> 055e7753ae471693894463c5b0489e066c0a05bd:Assets/Scripts/DefenseScripts/StageEndUI.cs
 
-public class StageEndUI : MonoBehaviour {
+public class StageClearUI : MonoBehaviour {
 	public GameObject changeSceneButtonPrefab; // UI 버튼 프리팹
 	private GameObject changeSceneButtonInstance;
 
@@ -29,24 +21,15 @@ public class StageEndUI : MonoBehaviour {
 		EnemyMovement.OnBossDie += OnBossDie;
 	}
 
-<<<<<<< HEAD:Assets/Scripts/DefenseScripts/StageClearUI.cs
     // 보스 사망 시 호출되는 메서드
     private void OnBossDie()
     {
         SceneManager.LoadScene("InternalAffairs");
         ShowChangeSceneButton();
     }
-=======
 	private void OnDestroy() {
 		// 이벤트 구독 해제
 		EnemyMovement.OnBossDie -= OnBossDie;
-	}
->>>>>>> 055e7753ae471693894463c5b0489e066c0a05bd:Assets/Scripts/DefenseScripts/StageEndUI.cs
-
-	// 보스 사망 시 호출되는 메서드
-	private void OnBossDie() {
-		SceneManager.LoadScene("HeroManagement");
-		ShowChangeSceneButton();
 	}
 
 	// 버튼을 생성하고 설정하는 메서드
