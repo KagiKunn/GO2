@@ -17,11 +17,11 @@ public class DarkElfSpawner : MonoBehaviour
     public float rightMaxY = 120f;
 
     // 왼쪽 스폰 위치의 Y축 최소 및 최대 좌표
-    public float leftMinY = -200f;
-    public float leftMaxY = -300f;
+    private float leftMinY = -280f;
+    private float leftMaxY = -420f;
 
     // 고정된 X축 좌표
-    private const float rightX = 100f;
+    private const float rightX = 0f;
     private const float leftX = 100f;
 
     // 생성할 오브젝트의 개수
@@ -43,6 +43,8 @@ public class DarkElfSpawner : MonoBehaviour
     public ProgressBar progressBar;
     private int totalEnemiesToSpawn;
 
+    public bool rightSpawn;
+    
     void Start()
     {
         // 총 적 수 계산
@@ -111,7 +113,7 @@ public class DarkElfSpawner : MonoBehaviour
         for (int i = 0; i < numberOfObjects; i++)
         {
             // rightSpawn 값을 랜덤으로 결정
-            bool rightSpawn = Random.value > 0.5f;
+            rightSpawn = Random.value > 0.5f;
 
             // Y축의 랜덤 좌표 생성
             float randomY = rightSpawn ? Random.Range(rightMinY, rightMaxY) : Random.Range(leftMinY, leftMaxY);
@@ -120,7 +122,19 @@ public class DarkElfSpawner : MonoBehaviour
             GameObject randomPrefab = GetRandomPrefab();
 
             Vector3 spawnPosition = rightSpawn ? new Vector3(rightX, randomY, 0) : new Vector3(leftX, randomY, 0);
-            Instantiate(randomPrefab, spawnPosition, Quaternion.identity, transform);
+
+            // 적 생성 및 방향 설정
+            GameObject enemy;
+            if (rightSpawn)
+            {
+                enemy = Instantiate(randomPrefab, spawnPosition, Quaternion.identity, transform);
+                enemy.transform.GetChild(0).GetComponent<EnemyMovement>().isRight = true;  // 오른쪽에서 스폰되었으므로 isRight를 true로 설정
+            }
+            else
+            {
+                enemy = Instantiate(randomPrefab, spawnPosition, Quaternion.Euler(0, 180, 0), transform);
+                enemy.transform.GetChild(0).GetComponent<EnemyMovement>().isRight = false;  // 왼쪽에서 스폰되었으므로 isRight를 false로 설정
+            }
 
             float waitTime = Random.Range(0, maxSpawnInterval);
 
@@ -178,11 +192,20 @@ public class DarkElfSpawner : MonoBehaviour
     void SpawnBoss()
     {
         // rightSpawn 값을 랜덤으로 결정
-        bool rightSpawn = Random.value > 0.5f;
+        rightSpawn = Random.value > 0.5f;
 
         float randomY = rightSpawn ? Random.Range(rightMinY, rightMaxY) : Random.Range(leftMinY, leftMaxY);
         Vector3 spawnPosition = rightSpawn ? new Vector3(rightX, randomY, 0) : new Vector3(leftX, randomY, 0);
-        GameObject boss = Instantiate(bossPrefab, spawnPosition, Quaternion.identity, transform);
+        GameObject boss;
+        if (rightSpawn)
+        {
+            boss = Instantiate(bossPrefab, spawnPosition, Quaternion.identity, transform);
+        }
+        else
+        {
+            boss =Instantiate(bossPrefab, spawnPosition, Quaternion.Euler(0, 180, 0), transform);
+        }
+
         boss.transform.localScale *= 2;
     }
 }
