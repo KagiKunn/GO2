@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
 
 public class KnightSkill : HeroSkill
 {
@@ -18,7 +17,9 @@ public class KnightSkill : HeroSkill
     {
         if (knightActive)
         {
+            knightActive = false;
             base.HeroSkillStart();
+            StartCoroutine(KnightCooldown(cooldown)); // 쿨다운 코루틴을 여기서 시작
         }
         else
         {
@@ -29,20 +30,22 @@ public class KnightSkill : HeroSkill
     protected override void OnSkillImageComplete()
     {
         base.OnSkillImageComplete();
-        if (knightActive)
-        {
-            Debug.Log("Knight skill activated.");
-            AllyBuff();
-            knightActive = false;
-            CoroutineRunner.Instance.StartCoroutine(KnightCooldown(cooldown));
-        }
+        Debug.Log("Knight skill activated.");
+        AllyBuff();
     }
 
     private IEnumerator KnightCooldown(float cool)
     {
-        yield return new WaitForSeconds(cool);
+        float remainingTime = cool;
+        while (remainingTime > 0)
+        {
+            skillPanelManager.UpdateSkillButtonCooldown(skillButton, remainingTime);
+            yield return new WaitForSeconds(1f);
+            remainingTime -= 1f;
+        }
         knightActive = true;
         CustomLogger.Log("Knight Skill Ready", "white");
+        skillPanelManager.UpdateSkillButtonCooldown(skillButton, 0);
     }
 
     void AllyBuff()

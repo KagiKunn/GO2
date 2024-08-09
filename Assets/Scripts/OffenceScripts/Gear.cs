@@ -10,7 +10,7 @@ public class Gear : MonoBehaviour {
 		// Basic set
 		name = "Gear " + itemData.ItemId;
 
-		transform.parent = GameManager.Instance.Player.transform;
+		transform.parent = GameManager.Instance.Player[GameManager.Instance.PlayerId].transform;
 		transform.position = Vector3.zero;
 
 		// Property Set
@@ -65,6 +65,6 @@ public class Gear : MonoBehaviour {
 	private void SpeedUp() {
 		float speed = 3 * Character.Speed;
 
-		GameManager.Instance.Player.Speed = speed + speed * rate;
+		GameManager.Instance.Player[GameManager.Instance.PlayerId].Speed = speed + speed * rate;
 	}
 }

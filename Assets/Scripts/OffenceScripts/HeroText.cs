@@ -25,7 +25,6 @@ public class HeroText : MonoBehaviour {
 			if (child.childCount > 1) {
 				Transform grandChild = child.GetChild(1);
 				activeGrandChildren.Add(grandChild);
-				CustomLogger.Log("Grandchild Name: " + grandChild.name);
 			} else {
 				CustomLogger.Log("Child " + child.name + " does not have enough children.");
 			}
@@ -33,18 +32,11 @@ public class HeroText : MonoBehaviour {
 
 		filePath = Path.Combine(Application.persistentDataPath, "selectedHeroes.json");
 
-		CustomLogger.Log("File path: " + filePath);
-
 		if (File.Exists(filePath)) {
 			try {
-				CustomLogger.Log("File exists: " + filePath);
-
 				string json = File.ReadAllText(filePath);
-				CustomLogger.Log("JSON content: " + json);
 
 				HeroDataWrapper wrapper = JsonUtility.FromJson<HeroDataWrapper>(json);
-				CustomLogger.Log("Number of heroes in JSON: " + wrapper.Heroes.Count);
-				CustomLogger.Log("Number of Active Grand Children: " + activeGrandChildren.Count);
 
 				for (int i = 0; i < wrapper.Heroes.Count && i < activeGrandChildren.Count; i++) {
 					HeroData hero = wrapper.Heroes[i];
@@ -52,7 +44,6 @@ public class HeroText : MonoBehaviour {
 
 					if (heroName != null) {
 						heroName.text = hero.Name;
-						CustomLogger.Log("Setting text of grandchild: " + hero.Name);
 					} else {
 						CustomLogger.Log("No Text component found on grandchild: " + activeGrandChildren[i].name);
 					}

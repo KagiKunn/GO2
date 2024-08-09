@@ -7066,6 +7066,7 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+<<<<<<< HEAD
 --- !u!1001 &65661334
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7769,6 +7770,8 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 150708365}
   m_CullTransparentMesh: 1
+=======
+>>>>>>> 055e7753ae471693894463c5b0489e066c0a05bd
 --- !u!1 &172198568
 GameObject:
   m_ObjectHideFlags: 0
@@ -7852,6 +7855,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1613145768}
     m_Modifications:
+    - target: {fileID: 8965467376334499265, guid: aa9b857646f1a784db94a18e067f23ba,
+        type: 3}
+      propertyPath: slider
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 1267235880570218161, guid: e1b847cba496aba4eb22ef13cec631e2,
         type: 3}
       propertyPath: m_Name
@@ -7917,11 +7925,6 @@ PrefabInstance:
       propertyPath: slider
       value: 
       objectReference: {fileID: 246912707}
-    - target: {fileID: 8965467376334499265, guid: aa9b857646f1a784db94a18e067f23ba,
-        type: 3}
-      propertyPath: slider
-      value: 
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -9054,7 +9057,11 @@ GameObject:
   - component: {fileID: 432860106}
   m_Layer: 6
   m_Name: CastleWall
+<<<<<<< HEAD
   m_TagString: RightWall
+=======
+  m_TagString: Wall
+>>>>>>> 055e7753ae471693894463c5b0489e066c0a05bd
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10465,7 +10472,6 @@ Transform:
   - {fileID: 1660223212}
   - {fileID: 566591266}
   - {fileID: 1409661202}
-  - {fileID: 966949337}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &755410182
@@ -12239,6 +12245,7 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+<<<<<<< HEAD
 --- !u!224 &966949337 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4375985981601582958, guid: ecbf48371fd6b7a43a609b4f84b7f769,
@@ -12320,6 +12327,8 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 969950409}
   m_CullTransparentMesh: 1
+=======
+>>>>>>> 055e7753ae471693894463c5b0489e066c0a05bd
 --- !u!1 &971673591
 GameObject:
   m_ObjectHideFlags: 0
@@ -13653,7 +13662,6 @@ GameObject:
   - component: {fileID: 1155641494}
   - component: {fileID: 1155641496}
   - component: {fileID: 1155641495}
-  - component: {fileID: 1155641497}
   m_Layer: 0
   m_Name: UI
   m_TagString: Untagged
@@ -13752,7 +13760,6 @@ MonoBehaviour:
   - {fileID: 1353238832}
   allway: 1
   uiDocument: {fileID: 1155641491}
-  flipMaterial: {fileID: 0}
 --- !u!114 &1155641495
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13799,18 +13806,6 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
---- !u!114 &1155641497
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1155641488}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e2189e75a262a0c4ea8fbef4071caf0b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1168495159
 GameObject:
   m_ObjectHideFlags: 0
@@ -16404,7 +16399,11 @@ GameObject:
   - component: {fileID: 1449427016}
   m_Layer: 0
   m_Name: CastleWall
+<<<<<<< HEAD
   m_TagString: LeftWall
+=======
+  m_TagString: Wall
+>>>>>>> 055e7753ae471693894463c5b0489e066c0a05bd
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -27940,7 +27939,7 @@ Transform:
   m_GameObject: {fileID: 2043143689}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 196.69818, y: 101.50229, z: 1.9771585}
+  m_LocalPosition: {x: 200, y: 115, z: 1.9771585}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -27964,11 +27963,17 @@ MonoBehaviour:
   - {fileID: 7056000162727164853, guid: 78fc94d50a126914cbf73c6833f89d40, type: 3}
   - {fileID: 7798541044053392926, guid: e9a89a42116beae408d144f0408039af, type: 3}
   - {fileID: 1839222284020890419, guid: ecbf48371fd6b7a43a609b4f84b7f769, type: 3}
+<<<<<<< HEAD
   rightMinY: -20
   rightMaxY: 120
   leftMinY: -200
   leftMaxY: -300
   numberOfObjects: 50
+=======
+  minY: -9
+  maxY: 115
+  numberOfObjects: 10
+>>>>>>> 055e7753ae471693894463c5b0489e066c0a05bd
   maxSpawnInterval: 2
   totalWave: 3
   bossPrefab: {fileID: 1839222284020890419, guid: faba8c4131a548641a1957130c739343,

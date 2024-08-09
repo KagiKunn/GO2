@@ -20,7 +20,6 @@ public class CameraControl : MonoBehaviour
     [SerializeField] private Tilemap[] tilemaps; // 타일맵 배열
     [SerializeField] private bool allway; // xy이동 / false면 y축만이동
     [SerializeField] private UIDocument uiDocument; // 최상단에 위치한 UI 도큐먼트
-    [SerializeField] private Material flipMaterial; // 셰이더를 담을 Material
 
     private Vector3 minBounds;
     private Vector3 maxBounds;
@@ -205,16 +204,4 @@ public class CameraControl : MonoBehaviour
 
     }
     
-    
-    private void OnRenderImage(RenderTexture source, RenderTexture destination)
-    {
-        if (flipMaterial != null)
-        {
-            Graphics.Blit(source, destination, flipMaterial);
-        }
-        else
-        {
-            Graphics.Blit(source, destination);
-        }
-    }
 }

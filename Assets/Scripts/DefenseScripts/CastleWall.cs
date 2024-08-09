@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Tilemaps;
 using UnityEngine.UI;
 
 public class CastleWall : MonoBehaviour
@@ -24,8 +25,16 @@ public class CastleWall : MonoBehaviour
 
     private Coroutine earnShieldCoroutine;
 
+    private Tilemap castleTile;
+    private Color originColor;
     private void Awake()
     {
+        castleTile = GetComponent<Tilemap>();
+        originColor = castleTile.color;
+        if (gameOverImage != null)
+        {
+            gameOverImage.gameObject.SetActive(false);
+        }
         // 슬라이더 초기화
         if (healthSlider != null)
         {
@@ -175,18 +184,30 @@ public class CastleWall : MonoBehaviour
         {
             StopCoroutine(earnShieldCoroutine);
         }
-
+        ChangeWallColor(true);
         hasShield = true;
-        shield = Mathf.Min(maxShield, shield + shieldAmount); // 실드가 maxShield를 초과하지 않도록 설정
+        shield = shieldAmount; // 실드가 maxShield를 초과하지 않도록 설정
         earnShieldCoroutine = StartCoroutine(ResetEarnShieldAfterDelay(duration));
     }
 
     private IEnumerator ResetEarnShieldAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
+        ChangeWallColor(false);
         hasShield = false;
         shield = 0;
         UpdateShieldSlider();
         Debug.Log("Shield reset to original values for: " + gameObject.name);
+    }
+    void ChangeWallColor(bool boo)
+    {
+        if (boo)
+        {
+            castleTile.color = Color.cyan;
+        }
+        else
+        {
+            castleTile.color = originColor;
+        }
     }
 }

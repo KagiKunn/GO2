@@ -3,9 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 
+using Unity.Cinemachine;
+
 using UnityEngine;
 using UnityEngine.Animations;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+
+#pragma warning disable CS0108, CS0114
 
 #pragma warning disable CS0414, CS0618 // 필드가 대입되었으나 값이 사용되지 않습니다
 
@@ -29,15 +34,25 @@ public class GameManager : MonoBehaviour {
 	[SerializeField] private int[] nextExp = { 3, 5, 10, 100, 150, 210, 280, 360, 450, 600 };
 
 	[Header("# Game Object")]
-	[SerializeField] private Player player;
+	[SerializeField] private Player[] players;
 
 	[SerializeField] private PoolManager poolManager;
 	[SerializeField] private LevelUp uiLevelUp;
 	[SerializeField] private Result uiResult;
 	[SerializeField] private GameObject enemyCleaner;
+	[SerializeField] private CinemachineCamera camera;
 
-	private List<HeroData> selectedHeroes = new List<HeroData>();
+	private List<string> selectedHeroes = new List<string>();
 	private string filePath;
+
+	private Hand hand;
+	private Weapon weapon;
+
+	public enum HeroNames {
+		KKS01, KMS01, KKH01, KJS01, PJW01, LSH01, CHS01
+	}
+
+	public HeroNames heroNames;
 
 	private void Awake() {
 		if (instance == null) {
@@ -49,19 +64,48 @@ public class GameManager : MonoBehaviour {
 		}
 
 		filePath = Path.Combine(Application.persistentDataPath, "selectedHeroes.json");
+
+		if (File.Exists(filePath)) {
+			try {
+				string json = File.ReadAllText(filePath);
+
+				HeroDataWrapper wrapper = JsonUtility.FromJson<HeroDataWrapper>(json);
+
+				for (int i = 0; i < wrapper.Heroes.Count; i++) {
+					HeroData hero = wrapper.Heroes[i];
+
+					if (hero != null) {
+						selectedHeroes.Add(hero.Name);
+					}
+				}
+			} catch (Exception e) {
+				CustomLogger.Log("Error parsing JSON: " + e.Message);
+			}
+		}
 	}
 
-	public void GameStart(int id) {
-		playerId = id;
-
+	public void GameStart(Text text) {
 		health = maxHealth;
 
-		player.gameObject.SetActive(true);
+		for (int i = 0; i < selectedHeroes.Count; i++) {
+			if (text.text == selectedHeroes[i]) {
+				HeroNames heroEnum;
+
+				if (Enum.TryParse(selectedHeroes[i], out heroEnum)) {
+					players[(int)heroEnum].gameObject.SetActive(true);
+					playerId = (int)heroEnum;
+
+					camera.Target.TrackingTarget = players[(int)heroEnum].gameObject.transform;
+
+					CustomLogger.Log(playerId);
+				} else {
+					CustomLogger.Log("Invalid hero name: " + selectedHeroes[i]);
+				}
+			}
+		}
 
 		uiLevelUp.Select(playerId % 2);
-
 		Resume();
-
 		AudioManager.Instance.PlayBgm(true);
 		AudioManager.Instance.PlaySfx(AudioManager.Sfx.Select);
 	}
@@ -76,11 +120,8 @@ public class GameManager : MonoBehaviour {
 		yield return new WaitForSeconds(0.5f);
 
 		uiResult.gameObject.SetActive(true);
-
 		uiResult.Lose();
-
 		Stop();
-
 		AudioManager.Instance.PlayBgm(false);
 		AudioManager.Instance.PlaySfx(AudioManager.Sfx.Lose);
 	}
@@ -96,18 +137,14 @@ public class GameManager : MonoBehaviour {
 		yield return new WaitForSeconds(0.5f);
 
 		uiResult.gameObject.SetActive(true);
-
 		uiResult.Win();
-
 		Stop();
-
 		AudioManager.Instance.PlayBgm(false);
 		AudioManager.Instance.PlaySfx(AudioManager.Sfx.Win);
 	}
 
 	public void GameRetry() {
 		Destroy(this.gameObject);
-
 		SceneManager.LoadScene("Offence");
 	}
 
@@ -118,19 +155,18 @@ public class GameManager : MonoBehaviour {
 
 		if (gameTime > maxGameTime) {
 			gameTime = maxGameTime;
-
 			GameVictory();
 		}
 	}
 
 	private void Initialize() {
-		if (player == null) {
-			player = FindObjectOfType<Player>();
+		if (players == null || players.Length == 0) {
+			players = FindObjectsOfType<Player>();
 
-			if (player == null) {
-				CustomLogger.Log("Player instance not found", "red");
+			if (players == null || players.Length == 0) {
+				CustomLogger.Log("Player instances not found", "red");
 			} else {
-				CustomLogger.Log("Player instance found and assigned");
+				CustomLogger.Log("Player instances found and assigned");
 			}
 		}
 
@@ -153,9 +189,7 @@ public class GameManager : MonoBehaviour {
 		if (exp == nextExp[Mathf.Min(level, nextExp.Length - 1)]) {
 			level++;
 			exp = 0;
-
 			maxHealth += 10;
-
 			uiLevelUp.Show();
 		}
 	}
@@ -180,22 +214,18 @@ public class GameManager : MonoBehaviour {
 
 	public void Stop() {
 		isLive = false;
-
 		Time.timeScale = 0;
 	}
 
 	public void Resume() {
 		isLive = true;
-
 		Time.timeScale = 1;
 	}
 
-	public Player Player => player;
+	public Player[] Player => players;
 	public PoolManager PoolManager => poolManager;
-
 	public float GameTime => gameTime;
 	public float MaxGameTime => maxGameTime;
-
 	public bool IsLive => isLive;
 
 	public float Health {
@@ -229,16 +259,4 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public int PlayerId => playerId;
-
-	public List<HeroData> SelectedHeroes {
-		get => selectedHeroes;
-
-		set => selectedHeroes = value;
-	}
-
-	public string FilePath {
-		get => filePath;
-
-		set => filePath = value;
-	}
 }

@@ -17,7 +17,7 @@ public class Weapon : MonoBehaviour {
 	private PoolManager poolManager;
 
 	private void Awake() {
-		player = GameManager.Instance.Player;
+		player = GameManager.Instance.Player[GameManager.Instance.PlayerId];
 		poolManager = GameManager.Instance.PoolManager;
 	}
 
@@ -86,6 +86,7 @@ public class Weapon : MonoBehaviour {
 				break;
 
 			default:
+
 				speed = 0.5f * Character.WeaponRate;
 
 				break;

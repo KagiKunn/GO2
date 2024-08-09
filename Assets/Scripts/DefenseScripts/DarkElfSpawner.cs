@@ -12,6 +12,7 @@ public class DarkElfSpawner : MonoBehaviour
     // 웨이브에서 사용할 배열
     private List<GameObject> _enemyPrefabs;
 
+<<<<<<< HEAD
     // 오른쪽 스폰 위치의 Y축 최소 및 최대 좌표
     public float rightMinY = -20f;
     public float rightMaxY = 120f;
@@ -23,6 +24,14 @@ public class DarkElfSpawner : MonoBehaviour
     // 고정된 X축 좌표
     private const float rightX = 100f;
     private const float leftX = 100f;
+=======
+    // 오브젝트를 생성할 X축의 최소 및 최대 좌표
+    public float minY = -9f;
+    public float maxY = 200f;
+
+    // 고정된 Y축 좌표
+    private const float fixedX = 0f;
+>>>>>>> 055e7753ae471693894463c5b0489e066c0a05bd
 
     // 생성할 오브젝트의 개수
     [SerializeField] public int numberOfObjects = 10;

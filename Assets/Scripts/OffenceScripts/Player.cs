@@ -18,6 +18,7 @@ public class Player : MonoBehaviour {
 	[SerializeField] private RuntimeAnimatorController[] animatorControllers;
 
 	private GameManager gameManager;
+	public GameManager.HeroNames heroName;
 
 	private Vector3 scale;
 
