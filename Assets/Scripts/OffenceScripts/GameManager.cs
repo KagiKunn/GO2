@@ -6,6 +6,7 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.Animations;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 #pragma warning disable CS0414, CS0618 // 필드가 대입되었으나 값이 사용되지 않습니다
 
@@ -29,7 +30,7 @@ public class GameManager : MonoBehaviour {
 	[SerializeField] private int[] nextExp = { 3, 5, 10, 100, 150, 210, 280, 360, 450, 600 };
 
 	[Header("# Game Object")]
-	[SerializeField] private Player player;
+	[SerializeField] private Player[] players;
 
 	[SerializeField] private PoolManager poolManager;
 	[SerializeField] private LevelUp uiLevelUp;
@@ -38,6 +39,12 @@ public class GameManager : MonoBehaviour {
 
 	private List<HeroData> selectedHeroes = new List<HeroData>();
 	private string filePath;
+
+	public enum HeroNames {
+		KKS01, KMS01, KKH01, KJS01, PJW01, LSH01, CHS01
+	}
+
+	public HeroNames heroNames;
 
 	private void Awake() {
 		if (instance == null) {
@@ -51,17 +58,28 @@ public class GameManager : MonoBehaviour {
 		filePath = Path.Combine(Application.persistentDataPath, "selectedHeroes.json");
 	}
 
-	public void GameStart(int id) {
-		playerId = id;
-
+	public void GameStart(Text text) {
 		health = maxHealth;
 
-		player.gameObject.SetActive(true);
+		// 디버깅용 로그 추가
+		CustomLogger.Log($"GameStart called with playerId: {playerId}");
+
+		// HeroNames 열거형 인덱스를 playerId로 매핑
+		HeroNames selectedHeroName = (HeroNames)Enum.GetValues(typeof(HeroNames)).GetValue(playerId);
+		CustomLogger.Log($"Selected Hero: {selectedHeroName}");
+
+		foreach (Player player in players) {
+			if (player.heroName == selectedHeroName) {
+				player.gameObject.SetActive(true);
+				CustomLogger.Log($"{player.heroName} activated");
+			} else {
+				player.gameObject.SetActive(false);
+				CustomLogger.Log($"{player.heroName} deactivated");
+			}
+		}
 
 		uiLevelUp.Select(playerId % 2);
-
 		Resume();
-
 		AudioManager.Instance.PlayBgm(true);
 		AudioManager.Instance.PlaySfx(AudioManager.Sfx.Select);
 	}
@@ -76,11 +94,8 @@ public class GameManager : MonoBehaviour {
 		yield return new WaitForSeconds(0.5f);
 
 		uiResult.gameObject.SetActive(true);
-
 		uiResult.Lose();
-
 		Stop();
-
 		AudioManager.Instance.PlayBgm(false);
 		AudioManager.Instance.PlaySfx(AudioManager.Sfx.Lose);
 	}
@@ -96,18 +111,14 @@ public class GameManager : MonoBehaviour {
 		yield return new WaitForSeconds(0.5f);
 
 		uiResult.gameObject.SetActive(true);
-
 		uiResult.Win();
-
 		Stop();
-
 		AudioManager.Instance.PlayBgm(false);
 		AudioManager.Instance.PlaySfx(AudioManager.Sfx.Win);
 	}
 
 	public void GameRetry() {
 		Destroy(this.gameObject);
-
 		SceneManager.LoadScene("Offence");
 	}
 
@@ -118,19 +129,18 @@ public class GameManager : MonoBehaviour {
 
 		if (gameTime > maxGameTime) {
 			gameTime = maxGameTime;
-
 			GameVictory();
 		}
 	}
 
 	private void Initialize() {
-		if (player == null) {
-			player = FindObjectOfType<Player>();
+		if (players == null || players.Length == 0) {
+			players = FindObjectsOfType<Player>();
 
-			if (player == null) {
-				CustomLogger.Log("Player instance not found", "red");
+			if (players == null || players.Length == 0) {
+				CustomLogger.Log("Player instances not found", "red");
 			} else {
-				CustomLogger.Log("Player instance found and assigned");
+				CustomLogger.Log("Player instances found and assigned");
 			}
 		}
 
@@ -153,9 +163,7 @@ public class GameManager : MonoBehaviour {
 		if (exp == nextExp[Mathf.Min(level, nextExp.Length - 1)]) {
 			level++;
 			exp = 0;
-
 			maxHealth += 10;
-
 			uiLevelUp.Show();
 		}
 	}
@@ -180,22 +188,18 @@ public class GameManager : MonoBehaviour {
 
 	public void Stop() {
 		isLive = false;
-
 		Time.timeScale = 0;
 	}
 
 	public void Resume() {
 		isLive = true;
-
 		Time.timeScale = 1;
 	}
 
-	public Player Player => player;
+	public Player Player => players[playerId];
 	public PoolManager PoolManager => poolManager;
-
 	public float GameTime => gameTime;
 	public float MaxGameTime => maxGameTime;
-
 	public bool IsLive => isLive;
 
 	public float Health {
