@@ -7270,7 +7270,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 43, y: 444.83704}
+  m_AnchoredPosition: {x: 43, y: 449}
   m_SizeDelta: {x: 603.3519, y: 26.3259}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1016381815
@@ -8617,12 +8617,12 @@ GameObject:
   m_Component:
   - component: {fileID: 1264384396}
   m_Layer: 0
-  m_Name: 
+  m_Name: Fill Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1264384396
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8821,7 +8821,7 @@ GameObject:
   - component: {fileID: 1340186572}
   m_Layer: 6
   m_Name: CastleWall
-  m_TagString: RightWall
+  m_TagString: LeftWall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8860,8 +8860,8 @@ MonoBehaviour:
   gameOverCanvas: {fileID: 971673594}
   gameOverImage: {fileID: 491734050}
   gameOverButton: {fileID: 607689188}
-  healthSlider: {fileID: 1016381815}
-  shieldSlider: {fileID: 1462641434}
+  healthSlider: {fileID: 1756135169}
+  shieldSlider: {fileID: 1591784573}
   hasShield: 0
   activateShield: 0
   activateShieldValue: 80
@@ -9821,7 +9821,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 46.57236, y: 395.33746}
+  m_AnchoredPosition: {x: 43, y: 423.17}
   m_SizeDelta: {x: 610.4959, y: 25.3251}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1462641434
@@ -15582,7 +15582,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 46.57236, y: 395.33746}
+  m_AnchoredPosition: {x: 43, y: 351}
   m_SizeDelta: {x: 610.4959, y: 25.3251}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1591784573
@@ -25876,7 +25876,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 43, y: 444.83704}
+  m_AnchoredPosition: {x: 43, y: 376.83}
   m_SizeDelta: {x: 603.3519, y: 26.3259}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1756135169
@@ -26101,12 +26101,12 @@ GameObject:
   m_Component:
   - component: {fileID: 2009370497}
   m_Layer: 0
-  m_Name: 
+  m_Name: Fill Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2009370497
 RectTransform:
   m_ObjectHideFlags: 0
