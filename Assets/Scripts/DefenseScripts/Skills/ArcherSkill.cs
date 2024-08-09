@@ -48,6 +48,11 @@ public class ArcherSkill : HeroSkill
 
     private void Update()
     {
+<<<<<<< HEAD
+        // Debug.Log("Update called in ArcherSkill");
+
+=======
+>>>>>>> 055e7753ae471693894463c5b0489e066c0a05bd
         // 마우스 클릭 이벤트 감지
         if (Input.GetMouseButtonDown(0))
         {
