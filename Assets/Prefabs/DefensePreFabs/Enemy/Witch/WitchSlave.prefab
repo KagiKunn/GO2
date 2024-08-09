@@ -3564,7 +3564,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &5802279572427323740
 Transform:
   m_ObjectHideFlags: 0
@@ -3628,7 +3628,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f417b36df4681e48a4521d737d5c364, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: -110
+  health: 10
   moveSpeed: 10
   detectionLayerMask:
     serializedVersion: 2
@@ -3639,7 +3639,7 @@ MonoBehaviour:
   attackState: 1
   normalState: 0
   skillState: 0
-  boxSize: {x: 0.5, y: 0.1}
+  boxSize: {x: 10, y: 0.1}
   projectilePrefab: {fileID: 0}
   movementdirection: {x: -1, y: 0, z: 0}
   isKnockedBack: 0
