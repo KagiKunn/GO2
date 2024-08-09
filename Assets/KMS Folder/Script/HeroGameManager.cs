@@ -14,10 +14,41 @@ public class HeroGameManager : MonoBehaviour
     public List<HeroData> heroDataList; // ScriptableObject 목록
     public List<HeroData> selectedHeroes = new List<HeroData>(); // 영웅 편성 정보 저장(save)
     private string filePath;
+    
+    public HeroData upgradeHero;// 강화할 영웅 정보
+
+    private static HeroGameManager instance;
+    
+    public static HeroGameManager Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                instance = FindFirstObjectByType<HeroGameManager>();
+                if (instance == null)
+                {
+                    GameObject go = new GameObject("HeroGameManager");
+                    instance = go.AddComponent<HeroGameManager>();
+                    DontDestroyOnLoad(go);
+                }
+            }
+            return instance;
+        }
+    }
 
     void Awake()
     {
-        filePath = Path.Combine(Application.persistentDataPath, "selectedHeroes.json");
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+            filePath = Path.Combine(Application.persistentDataPath, "selectedHeroes.json");
+        }
+        else if (instance != this)
+        {
+            Destroy(gameObject);
+        }
     }
     public void SaveHeroFormation()
     {
@@ -57,6 +88,7 @@ public class HeroGameManager : MonoBehaviour
         selectedHeroes.Clear();
         SaveHeroFormation();
     }
+    
     public void AddSelectedHero(HeroData hero)
     {
         if (selectedHeroes.Count < 3 && !selectedHeroes.Exists(h => h.Name == hero.Name))
@@ -78,5 +110,22 @@ public class HeroGameManager : MonoBehaviour
     public List<HeroData> GetSelectedHeroes()
     {
         return selectedHeroes;
+    }
+
+    public void SetUpgradeHero(HeroData hero)
+    {
+        upgradeHero = hero;
+        Debug.Log("SetUpgradeHero called with: " + hero.Name);
+    }
+
+    public HeroData GetUpgradeHero()
+    {
+        Debug.Log("GetUpgradeHero called: " + (upgradeHero != null ? upgradeHero.Name : "null"));
+        return upgradeHero;
+    }
+    
+    public void ClearUpgradeHero()
+    {
+        upgradeHero = null;
     }
 }

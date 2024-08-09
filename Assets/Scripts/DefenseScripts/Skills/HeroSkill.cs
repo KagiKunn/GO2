@@ -1,15 +1,14 @@
 using System.Collections;
 using UnityEngine;
 
-public abstract class HeroSkill : ScriptableObject
+public abstract class HeroSkill : MonoBehaviour
 {
     public Sprite skillIcon;
     public GameObject skillImagePrefab; // 이미지 프리팹 추가
 
     public bool isActive = true;
     public float cooldown = 10f;
- 
-    public GameObject effect;
+
     public virtual void HeroSkillAction()
     {
         Time.timeScale /= 2;
@@ -25,10 +24,10 @@ public abstract class HeroSkill : ScriptableObject
     {
         CustomLogger.Log("스킬 발동!!!!!!");
         // 이미지 오브젝트 생성 및 위치 설정
-        CreateSkillImage();
+        StartCoroutine(CreateSkillImage());
     }
 
-    private void CreateSkillImage()
+    private IEnumerator CreateSkillImage()
     {
         // 특정 태그를 가진 Canvas 찾기
         GameObject skillCanvasObject = GameObject.FindWithTag("SkillCanvas");
@@ -36,7 +35,7 @@ public abstract class HeroSkill : ScriptableObject
         {
             Canvas skillCanvas = skillCanvasObject.GetComponent<Canvas>();
             RectTransform skillCanvasRect = skillCanvasObject.GetComponent<RectTransform>();
-        
+
             if (skillCanvas != null)
             {
                 // 이미지 오브젝트 생성
@@ -46,9 +45,9 @@ public abstract class HeroSkill : ScriptableObject
 
                 // 캔버스의 실제 크기를 구합니다.
                 Vector2 canvasSize = skillCanvasRect.rect.size; // Canvas의 실제 크기 가져오기
-    
+
                 // 오브젝트의 크기를 캔버스 크기에 비례하여 조정합니다.
-                float scaleFactor = canvasSize.y * 10f / rectTransform.rect.height; // 오브젝트 높이의 80%로 설정
+                float scaleFactor = canvasSize.y * 15f / rectTransform.rect.height;
                 rectTransform.localScale = new Vector3(scaleFactor, scaleFactor, 1);
 
                 // 앵커 포인트를 중앙으로 설정
@@ -60,13 +59,15 @@ public abstract class HeroSkill : ScriptableObject
                 float outsideRightPositionX = canvasSize.x / 2 + rectTransform.rect.width * scaleFactor / 2;
                 rectTransform.anchoredPosition = new Vector2(outsideRightPositionX, 0);
 
+                // 시간을 멈추기
+                Time.timeScale = 0f;
+
                 // 왼쪽으로 이동 시작
-                CoroutineRunner.Instance.StartCoroutine(MoveAndPauseImage(skillImage));
+                yield return StartCoroutine(MoveAndPauseImage(skillImage));
             }
         }
+        OnSkillImageComplete();
     }
-
-
 
     private IEnumerator MoveAndPauseImage(GameObject skillImage)
     {
@@ -80,16 +81,24 @@ public abstract class HeroSkill : ScriptableObject
         while (elapsedTime < duration)
         {
             rectTransform.anchoredPosition = Vector2.Lerp(startPosition, targetPosition, elapsedTime / duration);
-            elapsedTime += Time.deltaTime;
+            elapsedTime += Time.unscaledDeltaTime; // 시간 정지 시에도 애니메이션이 진행되도록 수정
             yield return null;
         }
 
         rectTransform.anchoredPosition = targetPosition;
 
-        // 1초간 멈추기
-        yield return new WaitForSeconds(1.0f);
+        // 1초간 멈추기 (시간 정지)
+        yield return new WaitForSecondsRealtime(1.0f);
 
         // 오브젝트 삭제
         Destroy(skillImage);
+
+        // 시간을 원래대로 돌리기
+        Time.timeScale = 1f;
+    }
+
+    protected virtual void OnSkillImageComplete()
+    {
+        // 자식 클래스에서 오버라이드 가능
     }
 }

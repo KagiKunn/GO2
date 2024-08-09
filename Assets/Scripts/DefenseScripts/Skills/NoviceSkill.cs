@@ -1,20 +1,23 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "HeroSkill/NoviceSkill")]
 public class NoviceSkill : HeroSkill
 {
+    public bool noviceActive;
     public float shield;
-    public bool noviceActive = true;
+
+    private void OnEnable()
+    {
+        noviceActive = true;
+    }
+
     public override void HeroSkillStart()
     {
         if (noviceActive)
         {
             base.HeroSkillStart();
-            WallShield();
-            Debug.Log("Novice skill activated.");
-            noviceActive = false;
-            CoroutineRunner.Instance.StartCoroutine(NoviceCooldown(cooldown));
+            
         }
         else
         {
@@ -22,6 +25,17 @@ public class NoviceSkill : HeroSkill
         }
     }
 
+    protected override void OnSkillImageComplete()
+    {
+        base.OnSkillImageComplete();
+        if (noviceActive)
+        {
+            WallShield();
+            Debug.Log("Novice skill activated.");
+            noviceActive = false;
+            CoroutineRunner.Instance.StartCoroutine(NoviceCooldown(cooldown));
+        }
+    }
     private IEnumerator NoviceCooldown(float cool)
     {
         yield return new WaitForSeconds(cool);

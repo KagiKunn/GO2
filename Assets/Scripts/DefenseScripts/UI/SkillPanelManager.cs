@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -6,13 +7,12 @@ public class SkillPanelManager : MonoBehaviour
 {
     [SerializeField]
     private UIDocument uiDocument;
-    public HeroSkill[] heroSkillArray;
+    public GameObject[] heroSkillArray;
 
     private VisualElement bottomPanel;
     private bool isPanelVisible = false;
     private float hiddenPosition = -100f; // 패널 숨김 위치 (패널 높이 만큼)
     private float visiblePosition = 0f;   // 패널 보임 위치 (화면 하단)
-
     private void Awake()
     {
         // UIDocument의 루트 요소 가져오기
@@ -37,6 +37,7 @@ public class SkillPanelManager : MonoBehaviour
 
         // 기존 UI 요소를 설정
         SetupSkillButtons(bottomPanel);
+        
     }
 
     private void RegisterChildClickEvents(VisualElement parent)
@@ -75,7 +76,8 @@ public class SkillPanelManager : MonoBehaviour
         for (int i = 0; i < buttons.Length && i < heroSkillArray.Length; i++)
         {
             int index = i; // 로컬 변수로 인덱스를 캡처합니다.
-            HeroSkill heroSkill = heroSkillArray[index];
+            GameObject hero = Instantiate(heroSkillArray[index]);
+            HeroSkill heroSkill = hero.GetComponent<HeroSkill>();
             buttons[i].clicked += () => OnButtonClicked(heroSkill);
 
             // 버튼 배경 이미지를 설정합니다.
