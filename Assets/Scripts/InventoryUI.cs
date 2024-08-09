@@ -9,17 +9,32 @@ using UnityEngine.EventSystems;
 
 public class InventoryUI : MonoBehaviour
 {
+    public static InventoryUI Instance { get; private set; }
     private Canvas canvas;
     private ScrollRect scrollRect;
     public Transform inventoryContent;
     public GameObject itemInfoPanel;
     public TextMeshProUGUI itemInfoText;
     public Button deleteButton;
+    public Button closeButton;
     private ItemSO selectedItem;
     private Transform selectedSlot;
     private const string inventoryFilePath = "inventory.json";
 
     public InventoryData inventoryData = new InventoryData();
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
     private void Start()
     {
@@ -28,6 +43,7 @@ public class InventoryUI : MonoBehaviour
         LoadInventory();
 
         deleteButton.onClick.AddListener(DeleteSelectedItem);
+        closeButton.onClick.AddListener(CloseInventory);
     }
 
     private void Update()
@@ -138,7 +154,16 @@ public class InventoryUI : MonoBehaviour
             if (sloButton != null)
             {
                 sloButton.onClick.RemoveAllListeners();
-                sloButton.onClick.AddListener(() => ItemInfo(item, slot));
+                sloButton.onClick.AddListener(() => {
+                    if (selectedSlot == slot && itemInfoPanel.activeSelf)
+                    {
+                        itemInfoPanel.SetActive(false);
+                    }
+                    else
+                    {
+                        ItemInfo(item, slot);
+                    }
+                });
             }
         }
         else
@@ -152,6 +177,16 @@ public class InventoryUI : MonoBehaviour
                 slotButton.onClick.AddListener(()=>{itemInfoPanel.SetActive(false);});
             }
         }
+    }
+
+    public void SwapItems(ItemSlot slot1, ItemSlot slot2)
+    {
+        ItemSO tempItem = slot1.item;
+        slot1.item = slot2.item;
+        slot2.item = tempItem;
+        
+        UpdateInventoryUI();
+        SaveInventory();
     }
 
     void SaveInventory()
@@ -273,5 +308,10 @@ public class InventoryUI : MonoBehaviour
             Transform slot = inventoryContent.GetChild(i);
             UpdateSlotUI(slot, null);
         }
+    }
+
+    private void CloseInventory()
+    {
+        CanvasEnabled();
     }
 }
