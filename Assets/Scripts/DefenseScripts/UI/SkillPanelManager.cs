@@ -1,6 +1,5 @@
 using System.Collections;
 using System.IO;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -21,6 +20,10 @@ public class SkillPanelManager : MonoBehaviour
     {
         filePath = Path.Combine(Application.persistentDataPath, "selectedHeroes.json");
         string jsonData = File.ReadAllText(filePath);
+        if (!File.Exists(filePath))
+        {
+            File.Create(filePath);
+        }
         CustomLogger.LogWarning(jsonData);
         // UIDocument의 루트 요소 가져오기
         VisualElement root = uiDocument.rootVisualElement;
