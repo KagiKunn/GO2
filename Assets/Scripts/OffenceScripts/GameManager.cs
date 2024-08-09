@@ -3,10 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 
+using Unity.Cinemachine;
+
 using UnityEngine;
 using UnityEngine.Animations;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+
+#pragma warning disable CS0108, CS0114
 
 #pragma warning disable CS0414, CS0618 // 필드가 대입되었으나 값이 사용되지 않습니다
 
@@ -36,9 +40,13 @@ public class GameManager : MonoBehaviour {
 	[SerializeField] private LevelUp uiLevelUp;
 	[SerializeField] private Result uiResult;
 	[SerializeField] private GameObject enemyCleaner;
+	[SerializeField] private CinemachineCamera camera;
 
-	private List<HeroData> selectedHeroes = new List<HeroData>();
+	private List<string> selectedHeroes = new List<string>();
 	private string filePath;
+
+	private Hand hand;
+	private Weapon weapon;
 
 	public enum HeroNames {
 		KKS01, KMS01, KKH01, KJS01, PJW01, LSH01, CHS01
@@ -56,25 +64,43 @@ public class GameManager : MonoBehaviour {
 		}
 
 		filePath = Path.Combine(Application.persistentDataPath, "selectedHeroes.json");
+
+		if (File.Exists(filePath)) {
+			try {
+				string json = File.ReadAllText(filePath);
+
+				HeroDataWrapper wrapper = JsonUtility.FromJson<HeroDataWrapper>(json);
+
+				for (int i = 0; i < wrapper.Heroes.Count; i++) {
+					HeroData hero = wrapper.Heroes[i];
+
+					if (hero != null) {
+						selectedHeroes.Add(hero.Name);
+					}
+				}
+			} catch (Exception e) {
+				CustomLogger.Log("Error parsing JSON: " + e.Message);
+			}
+		}
 	}
 
 	public void GameStart(Text text) {
 		health = maxHealth;
 
-		// 디버깅용 로그 추가
-		CustomLogger.Log($"GameStart called with playerId: {playerId}");
+		for (int i = 0; i < selectedHeroes.Count; i++) {
+			if (text.text == selectedHeroes[i]) {
+				HeroNames heroEnum;
 
-		// HeroNames 열거형 인덱스를 playerId로 매핑
-		HeroNames selectedHeroName = (HeroNames)Enum.GetValues(typeof(HeroNames)).GetValue(playerId);
-		CustomLogger.Log($"Selected Hero: {selectedHeroName}");
+				if (Enum.TryParse(selectedHeroes[i], out heroEnum)) {
+					players[(int)heroEnum].gameObject.SetActive(true);
+					playerId = (int)heroEnum;
 
-		foreach (Player player in players) {
-			if (player.heroName == selectedHeroName) {
-				player.gameObject.SetActive(true);
-				CustomLogger.Log($"{player.heroName} activated");
-			} else {
-				player.gameObject.SetActive(false);
-				CustomLogger.Log($"{player.heroName} deactivated");
+					camera.Target.TrackingTarget = players[(int)heroEnum].gameObject.transform;
+
+					CustomLogger.Log(playerId);
+				} else {
+					CustomLogger.Log("Invalid hero name: " + selectedHeroes[i]);
+				}
 			}
 		}
 
@@ -196,7 +222,7 @@ public class GameManager : MonoBehaviour {
 		Time.timeScale = 1;
 	}
 
-	public Player Player => players[playerId];
+	public Player[] Player => players;
 	public PoolManager PoolManager => poolManager;
 	public float GameTime => gameTime;
 	public float MaxGameTime => maxGameTime;
@@ -233,16 +259,4 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public int PlayerId => playerId;
-
-	public List<HeroData> SelectedHeroes {
-		get => selectedHeroes;
-
-		set => selectedHeroes = value;
-	}
-
-	public string FilePath {
-		get => filePath;
-
-		set => filePath = value;
-	}
 }

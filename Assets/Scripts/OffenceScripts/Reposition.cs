@@ -13,7 +13,7 @@ public class Reposition : MonoBehaviour {
 	private void Awake() {
 		collider2D = GetComponent<Collider2D>();
 
-		player = GameManager.Instance.Player;
+		player = GameManager.Instance.Player[GameManager.Instance.PlayerId];
 	}
 
 	private void OnTriggerExit2D(Collider2D other) {
