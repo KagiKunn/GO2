@@ -35,7 +35,7 @@ public class DualSkill : HeroSkill
     private void DualSkillEffect()
     {
         int enemyLayer = LayerMask.NameToLayer("Enemy");
-        GameObject[] enemyObj = Resources.FindObjectsOfTypeAll<GameObject>();
+        GameObject[] enemyObj = FindObjectsOfType<GameObject>();
         if (enemyObj != null)
         {
             enemyObjects = new List<GameObject>();
