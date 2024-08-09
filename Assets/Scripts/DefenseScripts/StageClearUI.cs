@@ -2,7 +2,7 @@
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class StageEndUI : MonoBehaviour
+public class StageClearUI : MonoBehaviour
 {
     public GameObject changeSceneButtonPrefab; // UI 버튼 프리팹
     private GameObject changeSceneButtonInstance;
@@ -32,7 +32,7 @@ public class StageEndUI : MonoBehaviour
     // 보스 사망 시 호출되는 메서드
     private void OnBossDie()
     {
-        SceneManager.LoadScene("HeroManagement");
+        SceneManager.LoadScene("InternalAffairs");
         ShowChangeSceneButton();
     }
 

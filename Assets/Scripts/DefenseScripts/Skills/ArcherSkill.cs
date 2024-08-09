@@ -44,7 +44,7 @@ public class ArcherSkill : HeroSkill
 
     private void Update()
     {
-        Debug.Log("Update called in ArcherSkill");
+        // Debug.Log("Update called in ArcherSkill");
 
         // 마우스 클릭 이벤트 감지
         if (Input.GetMouseButtonDown(0))

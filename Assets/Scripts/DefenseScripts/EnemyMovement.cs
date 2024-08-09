@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using UnityEngine.Serialization;
 using Debug = UnityEngine.Debug;
 
 #pragma warning disable CS0414
@@ -31,7 +32,7 @@ public class EnemyMovement : MonoBehaviour {
     public bool isBoss; //보스 여부 확인
     private GameObject horseRoot;
     public NoticeUI stageEndNotice;
-    public StageEndUI stageEndUI;
+    [FormerlySerializedAs("stageEndUI")] public StageClearUI stageClearUI;
 
     // 이벤트 선언
     public static event Action OnBossDie;
@@ -234,7 +235,7 @@ public class EnemyMovement : MonoBehaviour {
             Time.timeScale = 0;
             CustomLogger.Log("게임이 정지되었습니다.");
 
-            stageEndUI.ShowChangeSceneButton();
+            stageClearUI.ShowChangeSceneButton();
         }
         gameObject.SetActive(false);
         deadJudge = false;
