@@ -35,7 +35,7 @@ public class Enemy : MonoBehaviour {
 		waitForFixedUpdate = new WaitForFixedUpdate();
 
 		gameManager = GameManager.Instance;
-		player = GameManager.Instance.Player;
+		player = GameManager.Instance.Player[GameManager.Instance.PlayerId];
 
 		scale = transform.localScale;
 
