@@ -1,4 +1,5 @@
 using System.Collections;
+using System.IO;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -13,10 +14,14 @@ public class SkillPanelManager : MonoBehaviour
     private bool isPanelVisible = false;
     private float hiddenPosition = -100f; // 패널 숨김 위치 (패널 높이 만큼)
     private float visiblePosition = 0f;   // 패널 보임 위치 (화면 하단)
-
+    
     private string filePath;
+    
     private void Awake()
     {
+        filePath = Path.Combine(Application.persistentDataPath, "selectedHeroes.json");
+        string jsonData = File.ReadAllText(filePath);
+        CustomLogger.LogWarning(jsonData);
         // UIDocument의 루트 요소 가져오기
         VisualElement root = uiDocument.rootVisualElement;
 

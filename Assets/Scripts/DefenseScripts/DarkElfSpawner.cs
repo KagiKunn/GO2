@@ -13,11 +13,11 @@ public class DarkElfSpawner : MonoBehaviour
     private List<GameObject> _enemyPrefabs;
 
     // 오브젝트를 생성할 X축의 최소 및 최대 좌표
-    public float minY = -0f;
-    public float maxY = 10f;
+    public float minY = -9f;
+    public float maxY = 200f;
 
     // 고정된 Y축 좌표
-    private const float fixedX = 20f;
+    private const float fixedX = 0f;
 
     // 생성할 오브젝트의 개수
     [SerializeField] public int numberOfObjects = 10;
