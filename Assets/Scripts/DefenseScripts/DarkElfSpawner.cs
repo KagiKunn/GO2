@@ -21,8 +21,8 @@ public class DarkElfSpawner : MonoBehaviour
     public float leftMaxY = -300f;
 
     // 고정된 X축 좌표
-    private const float rightX = 100f;
-    private const float leftX = 100f;
+    private const float rightX = 0f;
+    private const float leftX = 0f;
 
     // 생성할 오브젝트의 개수
     [SerializeField] public int numberOfObjects = 10;
