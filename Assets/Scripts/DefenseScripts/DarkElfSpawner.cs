@@ -12,12 +12,17 @@ public class DarkElfSpawner : MonoBehaviour
     // 웨이브에서 사용할 배열
     private List<GameObject> _enemyPrefabs;
 
-    // 오브젝트를 생성할 X축의 최소 및 최대 좌표
-    public float minY = -9f;
-    public float maxY = 200f;
+    // 오른쪽 스폰 위치의 Y축 최소 및 최대 좌표
+    public float rightMinY = -20f;
+    public float rightMaxY = 120f;
 
-    // 고정된 Y축 좌표
-    private const float fixedX = 0f;
+    // 왼쪽 스폰 위치의 Y축 최소 및 최대 좌표
+    public float leftMinY = -200f;
+    public float leftMaxY = -300f;
+
+    // 고정된 X축 좌표
+    private const float rightX = 100f;
+    private const float leftX = 100f;
 
     // 생성할 오브젝트의 개수
     [SerializeField] public int numberOfObjects = 10;
@@ -46,8 +51,7 @@ public class DarkElfSpawner : MonoBehaviour
         // ProgressBar 초기화
         if (progressBar != null)
         {
-           
-            progressBar.SetMaxValue(numberOfObjects * totalWave);
+            progressBar.SetMaxValue(totalEnemiesToSpawn);
             progressBar.SetValue(0);
         }
 
@@ -106,13 +110,16 @@ public class DarkElfSpawner : MonoBehaviour
         // 오브젝트 최대수 제한까지 반복 생성
         for (int i = 0; i < numberOfObjects; i++)
         {
+            // rightSpawn 값을 랜덤으로 결정
+            bool rightSpawn = Random.value > 0.5f;
+
             // Y축의 랜덤 좌표 생성
-            float randomY = Random.Range(minY, maxY);
+            float randomY = rightSpawn ? Random.Range(rightMinY, rightMaxY) : Random.Range(leftMinY, leftMaxY);
 
             // 새로운 오브젝트 생성
             GameObject randomPrefab = GetRandomPrefab();
 
-            Vector3 spawnPosition = new Vector3(fixedX, randomY, 0);
+            Vector3 spawnPosition = rightSpawn ? new Vector3(rightX, randomY, 0) : new Vector3(leftX, randomY, 0);
             Instantiate(randomPrefab, spawnPosition, Quaternion.identity, transform);
 
             float waitTime = Random.Range(0, maxSpawnInterval);
@@ -120,14 +127,13 @@ public class DarkElfSpawner : MonoBehaviour
             yield return new WaitForSeconds(waitTime);
 
             spawnedEnemy++;
-            CustomLogger.Log("생성한 적의 수: "+spawnedEnemy, "yellow");
+            CustomLogger.Log("생성한 적의 수: " + spawnedEnemy, "yellow");
 
             // ProgressBar 값 업데이트
             if (progressBar != null)
             {
                 progressBar.SetValue(spawnedEnemy + (currentWave - 1) * numberOfObjects);
             }
-
 
             if (spawnedEnemy >= numberOfObjects)
             {
@@ -171,8 +177,12 @@ public class DarkElfSpawner : MonoBehaviour
 
     void SpawnBoss()
     {
-        float randomY = Random.Range(minY, maxY);
-        Vector3 spawnPosition = new Vector3(fixedX, randomY, 0);
-        Instantiate(bossPrefab, spawnPosition, Quaternion.identity, transform);
+        // rightSpawn 값을 랜덤으로 결정
+        bool rightSpawn = Random.value > 0.5f;
+
+        float randomY = rightSpawn ? Random.Range(rightMinY, rightMaxY) : Random.Range(leftMinY, leftMaxY);
+        Vector3 spawnPosition = rightSpawn ? new Vector3(rightX, randomY, 0) : new Vector3(leftX, randomY, 0);
+        GameObject boss = Instantiate(bossPrefab, spawnPosition, Quaternion.identity, transform);
+        boss.transform.localScale *= 2;
     }
 }
