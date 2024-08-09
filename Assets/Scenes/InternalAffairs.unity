@@ -4621,6 +4621,7 @@ GameObject:
   - component: {fileID: 569823770}
   - component: {fileID: 569823769}
   - component: {fileID: 569823772}
+  - component: {fileID: 569823773}
   m_Layer: 5
   m_Name: UnitBtn
   m_TagString: Untagged
@@ -4704,6 +4705,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 569823773}
+        m_TargetAssemblyTypeName: BtnScene, Assembly-CSharp
+        m_MethodName: UnitManagementSceneChange
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &569823770
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4759,6 +4772,18 @@ MonoBehaviour:
     type: 3}
   btn_txt: {fileID: 2051361721}
   originalTxtColor: {r: 0, g: 0, b: 0, a: 0}
+--- !u!114 &569823773
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 569823767}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73b8fadef84bb463c86a450c888490cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &573743266
 GameObject:
   m_ObjectHideFlags: 0
