@@ -79,6 +79,7 @@ public class HeroGameManager : MonoBehaviour
             catch (Exception e)
             {
                 CustomLogger.Log($"Error loading hero formation: {e.Message}", "red");
+                CustomLogger.Log($"StackTrace: {e.StackTrace}", "red");
             }
         }
     }
