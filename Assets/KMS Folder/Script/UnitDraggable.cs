@@ -9,6 +9,8 @@ public class UnitDraggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     private RectTransform rect; // UI 위치 제어를 위한 RectTransform
     private CanvasGroup canvasGroup;    // UI의 알파값과 상호작용 제어를 위한 CanvasGroup
 
+    public int unitIndex;
+    
     private bool isDragging = false; // 버튼 동작(강화하려고 유닛창에서 유닛 선택)과 드래그 기능을 분리하기 위해 사용
 
     private void Awake()
