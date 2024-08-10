@@ -4,6 +4,7 @@ using System.IO;
 using UnityEngine;
 
 [System.Serializable]
+// json 직렬화, 역직렬화 할때 중간 다리 역할을 하는 클래스
 public class HeroDataWrapper
 {
     public List<HeroData> Heroes = new List<HeroData>();
@@ -18,7 +19,8 @@ public class HeroGameManager : MonoBehaviour
     public HeroData upgradeHero;// 강화할 영웅 정보
 
     private static HeroGameManager instance;
-    
+    // 영웅 편성 정보를 영속적으로(씬 전환, 게임 종료 후에도 상관없이) 저장하기 위해 직렬화함
+    // Instance 안할 시 영웅 데이터가 일률적으로 관리가 되지 않아 오류 발생
     public static HeroGameManager Instance
     {
         get
@@ -26,6 +28,7 @@ public class HeroGameManager : MonoBehaviour
             if (instance == null)
             {
                 instance = FindFirstObjectByType<HeroGameManager>();
+                // 씬에 HeroGameManger가 없는 경우
                 if (instance == null)
                 {
                     GameObject go = new GameObject("HeroGameManager");
@@ -53,13 +56,17 @@ public class HeroGameManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
+    
+    // 영웅 편성 정보 저장(Save Btn)
     public void SaveHeroFormation()
     {
         HeroDataWrapper wrapper = new HeroDataWrapper { Heroes = selectedHeroes };
         string json = JsonUtility.ToJson(wrapper, true);
         File.WriteAllText(filePath, json);
     }
-
+    // 영웅 편성 정보 불러오기
+    // 영웅 데이터 불러와서 쓰고 싶을땐 HeroSelect.cs의 LoadHeroFormation()을
+    // 참고하시면 됩니다. 
     public void LoadHeroFormation()
     {
         if (File.Exists(filePath))
@@ -73,6 +80,7 @@ public class HeroGameManager : MonoBehaviour
 
                 foreach (HeroData hero in wrapper.Heroes)
                 {
+                    // 동일 영웅 중복 저장 방지 및 3명으로 제한
                     if (selectedHeroes.Count < 3 && !selectedHeroes.Exists(h => h.Name == hero.Name))
                     {
                         Instance.selectedHeroes.Add(hero);
@@ -82,18 +90,18 @@ public class HeroGameManager : MonoBehaviour
             catch (Exception e)
             {
                 CustomLogger.Log($"Error loading hero formation: {e.Message}", "red");
-                CustomLogger.Log($"StackTrace: {e.StackTrace}", "red");
                 selectedHeroes.Clear();
             }
         }
     }
-
+    // resetBtn눌렀을때 비우기
     public void ClearHeroFormation()
     {
         Instance.selectedHeroes.Clear();
         SaveHeroFormation();
     }
     
+    // 영웅 슬롯에 추가
     public void AddSelectedHero(HeroData hero)
     {
         if (selectedHeroes.Count < 3 && !selectedHeroes.Exists(h => h.Name == hero.Name))
@@ -101,12 +109,8 @@ public class HeroGameManager : MonoBehaviour
             Instance.selectedHeroes.Add(hero);
         }
     }
-
-    public void RemoveSelectedHero(HeroData hero)
-    {
-        Instance.selectedHeroes.Remove(hero);
-    }
-
+    
+    // GetSet
     public List<HeroData> GetHeroes()
     {
         return Instance.heroDataList;
