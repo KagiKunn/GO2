@@ -21,6 +21,7 @@ public class EnemyMovement : MonoBehaviour {
     [SerializeField] private float normalState = 0f;
     [SerializeField] private float skillState = 0f;
     [SerializeField] private Vector2 boxSize = new Vector2(2, 0.1f);
+    public bool isRight;
     public GameObject projectilePrefab;
     private Rigidbody2D rigid2d;
     private Animator animator;
@@ -42,6 +43,8 @@ public class EnemyMovement : MonoBehaviour {
 
 	private bool isBossDied = false;
 
+	private DarkElfSpawner darkElfSpawner;
+
 	private void Awake() {
 		// HorseRoot 오브젝트 찾기
 		Transform horseRootTransform = transform.Find("HorseRoot");
@@ -55,9 +58,6 @@ public class EnemyMovement : MonoBehaviour {
 		animator.speed = attackSpeed;
 		animator.SetFloat("SkillState", skillState);
 		animator.SetFloat("NormalState", normalState);
-		movementdirection = Vector3.left;
-
-		stageEndNotice = FindFirstObjectByType<NoticeUI>();
 	}
 
 	private void Update() {
@@ -89,7 +89,13 @@ public class EnemyMovement : MonoBehaviour {
 	}
 
 	private void EnemyMove() {
-		movementdirection = Vector3.left;
+		if(isRight){
+			movementdirection = Vector3.left;
+		}
+		else
+		{
+			movementdirection = Vector3.right;
+		}
 		animator.SetFloat("RunState", runState);
 		animator.ResetTrigger("Attack");
 	}
@@ -251,5 +257,11 @@ public class EnemyMovement : MonoBehaviour {
 		Vector2 boxCenter = (Vector2)transform.position + new Vector2(-boxSize.x / 2, 0);
 		Gizmos.color = Color.red;
 		Gizmos.DrawWireCube(boxCenter, boxSize);
+	}
+
+	public bool IsRight
+	{
+		get => isRight;
+		set => isRight = value;
 	}
 }
