@@ -1,16 +1,12 @@
 using UnityEngine;
 
-public class NewMonoBehaviourScript : MonoBehaviour
+[CreateAssetMenu(fileName = "NewUnit", menuName = "Unit Data", order = 60 )]
+public class UnitData : ScriptableObject
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public int unitNumber; // 유닛 고유 번호
+    public string CharacterClass; // 유닛 클래스(직업)
+    public int Attack; // 공격력
+    public float AttackSpeed; // 공속
+    public float AttackRange; // 공격 사거리
+    public GameObject UnitPrefab; // 유닛 프리팹
 }
