@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text.Json.Nodes;
 using UnityEngine;
 
 [System.Serializable]
@@ -62,7 +61,7 @@ public class UnitGameManager : MonoBehaviour
         File.WriteAllText(filePath, json);
     }
     // 유닛 편성 정보 불러오기
-    public void LodeUnitFormation()
+    public void LoadUnitFormation()
     {
         if (File.Exists(filePath))
         {
@@ -70,14 +69,13 @@ public class UnitGameManager : MonoBehaviour
             {
                 string json = File.ReadAllText(filePath);
                 UnitDataWrapper wrapper = JsonUtility.FromJson<UnitDataWrapper>(json);
-                
-                Instance.selectedUnits.Clear();
+                selectedUnits.Clear();
                 foreach (UnitData unit in wrapper.Units)
                 {
                     // 14명으로 편성 제한
                     if (selectedUnits.Count < 14 )
                     {
-                        Instance.selectedUnits.Add(unit);
+                        selectedUnits.Add(unit);
                     }
                 }
                 
@@ -93,7 +91,7 @@ public class UnitGameManager : MonoBehaviour
     // reset시 유닛 편성 정보 제거(데이터 삭제)
     public void ClearUnitFormation()
     {
-        Instance.selectedUnits.Clear();
+        selectedUnits.Clear();
         SaveUnitFormation();
     }
     
@@ -102,35 +100,35 @@ public class UnitGameManager : MonoBehaviour
     {
         if (selectedUnits.Count < 14)
         {
-            Instance.selectedUnits.Add(unit);
+            selectedUnits.Add(unit);
         }
     }
 
     // GetSet
     public List<UnitData> GetUnits()
     {
-        return Instance.unitDataList;
+        return unitDataList;
     }
 
     public List<UnitData> GetSelectedUnits()
     {
-        return Instance.selectedUnits;
+        return selectedUnits;
     }
     
     public void SetUpgradeUnit(UnitData unit)
     {
-        Instance.upgradeUnit = unit;
+        upgradeUnit = unit;
         CustomLogger.Log("UpgradeUnit is" + unit.unitNumber);
     }
 
     public UnitData GetUpgradeUnit()
     {
         CustomLogger.Log("GetUpgradeHero called: " + (Instance.upgradeUnit != null ? Instance.upgradeUnit.unitNumber : "null"));
-        return Instance.upgradeUnit;
+        return upgradeUnit;
     }
 
     public void ClearUpgradeUnit()
     {
-        Instance.upgradeUnit = null;
+        upgradeUnit = null;
     }
 }
