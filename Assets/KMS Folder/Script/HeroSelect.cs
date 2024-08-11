@@ -18,6 +18,8 @@ public class HeroSelect : MonoBehaviour
     // UpgradeHero씬으로 히어로 정보 들고가기 위해
     private int clickedHeroIndex = -1;
     private Sprite clickedHeroProfileImg;
+    // 편성된 영웅 -> selectedHero
+    // 클릭한 영웅(강화하려고) -> clickedHero
 
     void Awake()
     {
@@ -59,15 +61,17 @@ public class HeroSelect : MonoBehaviour
 	}
 
 	private void OnHeroButtonClicked(int index)
-    {
-		if (HeroGameManager.Instance.GetSelectedHeroes().Count >= 3) return;
+    {   
+        HeroData selectedHeroData = heroes[index];
 
-		HeroData selectedHeroData = heroes[index];
+        // 클릭한 영웅이 이미 편성된 영웅인지 확인
+        bool isHeroAlreadySelected = HeroGameManager.Instance.GetSelectedHeroes().Exists(h => h.Name == selectedHeroData.Name);
 
-		if (HeroGameManager.Instance.GetSelectedHeroes().Exists(h => h.Name == selectedHeroData.Name)) return;
-
-		AddHeroToSlot(selectedHeroData);
-        // 강화 구현 위해 추가한 로직, 안되면 수정(편성 중인 영웅-> selectedHeroes, 클릭한 영웅-> clickedHero)
+        // 영웅 슬롯이 가득 찼거나, 이미 편성된 영웅일 경우 추가하지 않음
+        if (!isHeroAlreadySelected && HeroGameManager.Instance.GetSelectedHeroes().Count < 3)
+        {
+            AddHeroToSlot(selectedHeroData);
+        }
         clickedHeroIndex = index;
         clickedHeroProfileImg = heroes[index].ProfileImg;
         heroButtons[index].Select();
