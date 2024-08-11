@@ -14,6 +14,7 @@ public class HeroGameManager : MonoBehaviour
 {
     public List<HeroData> heroDataList; // ScriptableObject 목록
     public List<HeroData> selectedHeroes = new List<HeroData>(); // 영웅 편성 정보 저장(save)
+    public List<HeroData> unselectedHeroes = new List<HeroData>(); // 편성되지 않은 영웅 정보 저장
     private string filePath;
     
     public HeroData upgradeHero;// 강화할 영웅 정보
@@ -21,6 +22,16 @@ public class HeroGameManager : MonoBehaviour
     private static HeroGameManager instance;
     // 영웅 편성 정보를 영속적으로(씬 전환, 게임 종료 후에도 상관없이) 저장하기 위해 직렬화함
     // Instance 안할 시 영웅 데이터가 일률적으로 관리가 되지 않아 오류 발생
+    
+    // 다른 스크립트에서 데이터를 활용할 시 먼저 Load메서드로 데이터를 로드 한 뒤(HeroGameManager.Instance.LoadUnselectedHeroes();)
+    // 로드 된 데이터를 List로 가져오셔서 (Get 메서드) 활용하시면 됩니다. (List<HeroData> unselectedHeroes = HeroGameManager.Instance.GetUnselectedHeroes();)
+    // 활용 예시
+    //  if (unselectedHeroes.Count > 0)
+    // {
+    //     HeroData firstHero = unselectedHeroes[0];
+    //     Debug.Log("First Unselected Hero Name: " + firstHero.Name);
+    //     Debug.Log("First Unselected Hero Attack: " + firstHero.Attack);
+    // }
     public static HeroGameManager Instance
     {
         get
@@ -63,6 +74,7 @@ public class HeroGameManager : MonoBehaviour
         HeroDataWrapper wrapper = new HeroDataWrapper { Heroes = selectedHeroes };
         string json = JsonUtility.ToJson(wrapper, true);
         File.WriteAllText(filePath, json);
+        SaveUnselectedHeroes();// 편성되지 않은 영웅도 따로 저
     }
     // 영웅 편성 정보 불러오기
     // 영웅 데이터 불러와서 쓰고 싶을땐 HeroSelect.cs의 LoadHeroFormation()을
@@ -94,6 +106,49 @@ public class HeroGameManager : MonoBehaviour
             }
         }
     }
+    // 편성되지 않은 나머지 영웅들 정보 저장
+    public void SaveUnselectedHeroes()
+    {
+        heroDataList = GetHeroes();
+        selectedHeroes = GetSelectedHeroes();
+        unselectedHeroes.Clear();
+        foreach (var hero in heroDataList)
+        {
+            if (!selectedHeroes.Exists(h => h.Name == hero.Name))
+            {
+                Instance.unselectedHeroes.Add(hero);
+            }
+        }
+        
+        HeroDataWrapper wrapper = new HeroDataWrapper { Heroes = unselectedHeroes };
+        string json = JsonUtility.ToJson(wrapper, true);
+        string unselectedFilePath = Path.Combine(Application.dataPath, "save", "heroInfo", "unselectedHeroes.json");
+        File.WriteAllText(unselectedFilePath, json);
+    }
+    // 편성되지 않은 나머지 영웅들 정보 불러오기(unselectedHeroes.json)
+
+    public void LoadUnselectedHeroes()
+    {
+        string unselectedFilePath = Path.Combine(Application.dataPath, "save", "heroInfo", "unselectedHeroes.json");
+    
+        if (File.Exists(unselectedFilePath))
+        {
+            try
+            {
+                string json = File.ReadAllText(unselectedFilePath);
+                HeroDataWrapper wrapper = JsonUtility.FromJson<HeroDataWrapper>(json);
+            
+                Instance.unselectedHeroes.Clear();
+                Instance.unselectedHeroes.AddRange(wrapper.Heroes);
+            }
+            catch (Exception e)
+            {
+                CustomLogger.Log($"Error loading unselected heroes: {e.Message}", "red");
+                unselectedHeroes.Clear();
+            }
+        }
+    }
+    
     // resetBtn눌렀을때 비우기
     public void ClearHeroFormation()
     {
@@ -121,6 +176,11 @@ public class HeroGameManager : MonoBehaviour
         return Instance.selectedHeroes;
     }
 
+    public List<HeroData> GetUnselectedHeroes()
+    {
+        return Instance.unselectedHeroes;
+    }
+    
     public void SetUpgradeHero(HeroData hero)
     {
         Instance.upgradeHero = hero; 
