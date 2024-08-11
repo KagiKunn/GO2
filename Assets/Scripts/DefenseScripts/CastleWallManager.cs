@@ -12,7 +12,7 @@ public class CastleWallManager : MonoBehaviour
 
     public float health;
     public float shield;
-    public bool activateShield; //activateShield가 true이면 실드 적용 + hasShield를 true로 변경
+    public bool activateShield; // activateShield가 true이면 실드 적용 + hasShield를 true로 변경
     private Coroutine resetShieldCoroutine;
 
     [SerializeField] private Slider healthSlider;
@@ -20,9 +20,7 @@ public class CastleWallManager : MonoBehaviour
 
     [SerializeField] private bool hasShield; // hasShield가 false가 되면 즉시 실드 무효화
 
-    [SerializeField] private Canvas gameOverCanvas; // 게임오버 UI 관련 참조
-    [SerializeField] private Image gameOverImage;
-    [SerializeField] private Button gameOverButton;
+    private StageC stageC; // StageC 스크립트 참조
 
     private void Awake()
     {
@@ -42,7 +40,9 @@ public class CastleWallManager : MonoBehaviour
         activateShield = false;
 
         InitializeSliders();
-        InitializeGameOverUI();
+
+        // StageC 스크립트 참조 초기화
+        stageC = FindObjectOfType<StageC>();
     }
 
     private void InitializeSliders()
@@ -57,25 +57,6 @@ public class CastleWallManager : MonoBehaviour
         {
             shieldSlider.maxValue = activateShieldValue; // 실드 슬라이더의 최대값을 activateShieldValue로 설정
             shieldSlider.value = shield;
-        }
-    }
-
-    private void InitializeGameOverUI()
-    {
-        if (gameOverCanvas != null)
-        {
-            gameOverCanvas.enabled = false;
-        }
-
-        if (gameOverImage != null)
-        {
-            gameOverImage.enabled = false;
-        }
-
-        if (gameOverButton != null)
-        {
-            gameOverButton.enabled = false;
-            gameOverButton.onClick.AddListener(OnGameOverButtonClick);
         }
     }
 
@@ -118,7 +99,7 @@ public class CastleWallManager : MonoBehaviour
         if (health <= 0)
         {
             health = 0;
-            HandleGameOver();
+            HandleGameOver(); // 게임 오버 처리 호출
         }
 
         UpdateSliders();
@@ -192,28 +173,14 @@ public class CastleWallManager : MonoBehaviour
     {
         Debug.Log("성벽이 파괴되었습니다! 게임 오버!");
 
-        if (gameOverCanvas != null)
+        if (stageC != null)
         {
-            gameOverCanvas.enabled = true;
+            stageC.ShowGameOverUI(); // StageC에서 게임 오버 UI를 표시하도록 호출
         }
-
-        if (gameOverImage != null)
+        else
         {
-            gameOverImage.enabled = true;
+            Debug.LogWarning("StageC instance not found.");
         }
-
-        if (gameOverButton != null)
-        {
-            gameOverButton.enabled = true;
-        }
-
-        Time.timeScale = 0f; // 게임 일시 정지
-    }
-
-    public void OnGameOverButtonClick()
-    {
-        Debug.Log("버튼 클릭됨");
-        SceneManager.LoadScene("Title");
     }
 
     public float GetHealth() => health;
