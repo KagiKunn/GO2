@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class CastleWallManager : MonoBehaviour
 {
@@ -17,7 +18,11 @@ public class CastleWallManager : MonoBehaviour
     [SerializeField] private Slider healthSlider;
     [SerializeField] private Slider shieldSlider;
 
-    [SerializeField] private bool hasShield;  // hasShield가 false가 되면 즉시 실드 무효화
+    [SerializeField] private bool hasShield; // hasShield가 false가 되면 즉시 실드 무효화
+
+    [SerializeField] private Canvas gameOverCanvas; // 게임오버 UI 관련 참조
+    [SerializeField] private Image gameOverImage;
+    [SerializeField] private Button gameOverButton;
 
     private void Awake()
     {
@@ -37,6 +42,7 @@ public class CastleWallManager : MonoBehaviour
         activateShield = false;
 
         InitializeSliders();
+        InitializeGameOverUI();
     }
 
     private void InitializeSliders()
@@ -54,6 +60,25 @@ public class CastleWallManager : MonoBehaviour
         }
     }
 
+    private void InitializeGameOverUI()
+    {
+        if (gameOverCanvas != null)
+        {
+            gameOverCanvas.enabled = false;
+        }
+
+        if (gameOverImage != null)
+        {
+            gameOverImage.enabled = false;
+        }
+
+        if (gameOverButton != null)
+        {
+            gameOverButton.enabled = false;
+            gameOverButton.onClick.AddListener(OnGameOverButtonClick);
+        }
+    }
+
     private void Update()
     {
         // activateShield가 true로 설정되었을 때 실드 활성화
@@ -66,7 +91,7 @@ public class CastleWallManager : MonoBehaviour
         // hasShield가 false가 되었을 때 실드 비활성화
         if (!hasShield && shield > 0)
         {
-            SetShield(0);  // 실드를 비활성화하고 초기화
+            SetShield(0); // 실드를 비활성화하고 초기화
             Debug.Log("Shield deactivated.");
         }
     }
@@ -78,7 +103,7 @@ public class CastleWallManager : MonoBehaviour
             shield -= damage;
             if (shield <= 0)
             {
-                damage = -shield;  // 남은 데미지를 체력에 적용
+                damage = -shield; // 남은 데미지를 체력에 적용
                 shield = 0;
                 hasShield = false;
                 Debug.Log("Shield destroyed!");
@@ -109,22 +134,22 @@ public class CastleWallManager : MonoBehaviour
             StopCoroutine(resetShieldCoroutine);
         }
 
-        AddShield(shieldAmount);  // 실드 추가
-        resetShieldCoroutine = StartCoroutine(ResetEarnShieldAfterDelay(duration));  // 일정 시간 후 실드 초기화
+        AddShield(shieldAmount); // 실드 추가
+        resetShieldCoroutine = StartCoroutine(ResetEarnShieldAfterDelay(duration)); // 일정 시간 후 실드 초기화
     }
 
     private IEnumerator ResetEarnShieldAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
-        SetShield(0);  // 실드 초기화
-        hasShield = false;  // 실드 비활성화
+        SetShield(0); // 실드 초기화
+        hasShield = false; // 실드 비활성화
         Debug.Log("Shield reset to original values.");
     }
 
     public void ActivateShield()
     {
         SetShield(activateShieldValue);
-        hasShield = true;  // 실드 활성화 시 hasShield를 true로 설정
+        hasShield = true; // 실드 활성화 시 hasShield를 true로 설정
         Debug.Log("Shield activated with value: " + activateShieldValue);
     }
 
@@ -166,8 +191,29 @@ public class CastleWallManager : MonoBehaviour
     private void HandleGameOver()
     {
         Debug.Log("성벽이 파괴되었습니다! 게임 오버!");
-        Time.timeScale = 0f;  // 게임 일시 정지
-        // 게임 오버 UI를 표시하는 로직을 추가할 수 있음
+
+        if (gameOverCanvas != null)
+        {
+            gameOverCanvas.enabled = true;
+        }
+
+        if (gameOverImage != null)
+        {
+            gameOverImage.enabled = true;
+        }
+
+        if (gameOverButton != null)
+        {
+            gameOverButton.enabled = true;
+        }
+
+        Time.timeScale = 0f; // 게임 일시 정지
+    }
+
+    public void OnGameOverButtonClick()
+    {
+        Debug.Log("버튼 클릭됨");
+        SceneManager.LoadScene("Title");
     }
 
     public float GetHealth() => health;

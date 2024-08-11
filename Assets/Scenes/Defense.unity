@@ -2431,10 +2431,10 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 10
+    m_FontSize: 20
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 1
+    m_MinSize: 0
     m_MaxSize: 40
     m_Alignment: 4
     m_AlignByGeometry: 0
@@ -3484,7 +3484,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d05be8185cf431ab9256b7c00297140, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 3000
+  maxHealth: 100
   activateShieldValue: 100
   health: 0
   shield: 0
@@ -3492,6 +3492,9 @@ MonoBehaviour:
   healthSlider: {fileID: 1016381815}
   shieldSlider: {fileID: 1462641434}
   hasShield: 0
+  gameOverCanvas: {fileID: 971673594}
+  gameOverImage: {fileID: 491734050}
+  gameOverButton: {fileID: 607689188}
 --- !u!1 &432860099
 GameObject:
   m_ObjectHideFlags: 0
@@ -4281,9 +4284,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb0ff1a607b6b464dbf533d521336d19, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameOverCanvas: {fileID: 971673594}
-  gameOverImage: {fileID: 491734050}
-  gameOverButton: {fileID: 607689188}
 --- !u!1 &491734048
 GameObject:
   m_ObjectHideFlags: 0
@@ -5284,8 +5284,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -34.427124}
-  m_SizeDelta: {x: 100, y: 31.1458}
+  m_AnchoredPosition: {x: 31.3, y: -19.8}
+  m_SizeDelta: {x: 248.4031, y: 55.4457}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &607689188
 MonoBehaviour:
@@ -8447,9 +8447,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb0ff1a607b6b464dbf533d521336d19, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameOverCanvas: {fileID: 971673594}
-  gameOverImage: {fileID: 491734050}
-  gameOverButton: {fileID: 607689188}
 --- !u!66 &1340186573
 CompositeCollider2D:
   m_ObjectHideFlags: 0
@@ -17399,13 +17396,23 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1132482028413179668, guid: f490398be12f54440ae29229b381ef74,
         type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 246.3844
+      objectReference: {fileID: 0}
+    - target: {fileID: 1132482028413179668, guid: f490398be12f54440ae29229b381ef74,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 52.1499
+      objectReference: {fileID: 0}
+    - target: {fileID: 1132482028413179668, guid: f490398be12f54440ae29229b381ef74,
+        type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 11
+      value: 32.429993
       objectReference: {fileID: 0}
     - target: {fileID: 1132482028413179668, guid: f490398be12f54440ae29229b381ef74,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -107
+      value: -113
       objectReference: {fileID: 0}
     - target: {fileID: 1549546617971528292, guid: f490398be12f54440ae29229b381ef74,
         type: 3}
@@ -17507,10 +17514,35 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3924667624631022523, guid: f490398be12f54440ae29229b381ef74,
+        type: 3}
+      propertyPath: m_FontData.m_MinSize
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3924667624631022523, guid: f490398be12f54440ae29229b381ef74,
+        type: 3}
+      propertyPath: m_FontData.m_FontSize
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 6378500672925298018, guid: f490398be12f54440ae29229b381ef74,
         type: 3}
       propertyPath: m_Name
       value: StageClearUI Canvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 6450280239625820882, guid: f490398be12f54440ae29229b381ef74,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6450280239625820882, guid: f490398be12f54440ae29229b381ef74,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6450280239625820882, guid: f490398be12f54440ae29229b381ef74,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

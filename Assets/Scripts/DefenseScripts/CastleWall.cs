@@ -1,15 +1,10 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.Tilemaps;
-using UnityEngine.UI;
 
 public class CastleWall : MonoBehaviour
 {
-    [SerializeField] private Canvas gameOverCanvas;
-    [SerializeField] private Image gameOverImage;
-    [SerializeField] private Button gameOverButton;
-
+    //CastleWall 클래스는 성벽이 데미지를 받을 때 CastleWallManager에 처리를 위임하고, 성벽 오브젝트를 삭제하는 역할만 담당
     private Tilemap castleTile;
     private Color originColor;
 
@@ -17,30 +12,6 @@ public class CastleWall : MonoBehaviour
     {
         castleTile = GetComponent<Tilemap>();
         originColor = castleTile.color;
-
-        if (gameOverImage != null)
-        {
-            gameOverImage.gameObject.SetActive(false);
-        }
-    }
-
-    private void Start()
-    {
-        if (gameOverCanvas != null)
-        {
-            gameOverCanvas.enabled = false;
-        }
-
-        if (gameOverImage != null)
-        {
-            gameOverImage.enabled = false;
-        }
-
-        if (gameOverButton != null)
-        {
-            gameOverButton.enabled = false;
-            gameOverButton.onClick.AddListener(OnGameOverButtonClick);
-        }
     }
 
     public void TakeDamage(float damage)
@@ -49,8 +20,7 @@ public class CastleWall : MonoBehaviour
 
         if (CastleWallManager.Instance.GetHealth() <= 0)
         {
-            ShowGameOverUI();
-            Destroy(gameObject);
+            Destroy(gameObject);  // 성벽 오브젝트 삭제
         }
     }
 
@@ -71,19 +41,5 @@ public class CastleWall : MonoBehaviour
         {
             castleTile.color = originColor;
         }
-    }
-
-    private void ShowGameOverUI()
-    {
-        Debug.Log("게임오버 UI 출현");
-        gameOverCanvas.enabled = true;
-        gameOverImage.enabled = true;
-        gameOverButton.enabled = true;
-    }
-
-    public void OnGameOverButtonClick()
-    {
-        Debug.Log("버튼 클릭됨");
-        SceneManager.LoadScene("Title");
     }
 }
