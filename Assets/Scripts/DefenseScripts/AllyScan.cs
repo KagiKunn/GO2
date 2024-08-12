@@ -64,6 +64,11 @@ public class AllyScan : MonoBehaviour
         }
     }
 
+    void RestTarget()
+    {
+        AllyIdle();
+        closestObject = null;
+    }
     void FindClosestObject()
     {
         Vector2 point = transform.position;

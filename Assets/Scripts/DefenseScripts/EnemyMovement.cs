@@ -136,7 +136,7 @@ public class EnemyMovement : MonoBehaviour {
 	public void CollisionAttack() {
 		if (castleWall != null) {
 			Vector3 spawnPosition = transform.position + new Vector3(0, GetComponent<Collider2D>().bounds.size.y, 0);
-			GameObject projectileInstance = Instantiate(projectilePrefab, spawnPosition, Quaternion.Euler(0, 180, 0));
+			GameObject projectileInstance = Instantiate(projectilePrefab, spawnPosition, Quaternion.Euler(0, 180, 0),transform);
 			EnemyProjectile projectile = projectileInstance.GetComponent<EnemyProjectile>();
 
 			if (projectile != null) {
