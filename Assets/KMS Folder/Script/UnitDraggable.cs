@@ -13,14 +13,20 @@ public class UnitDraggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     public UnitData unitData;
     
     private bool isDragging = false; // 버튼 동작(강화하려고 유닛창에서 유닛 선택)과 드래그 기능을 분리하기 위해 사용
-
+    private bool isDraggable = true; // 드래그 가능 여부 제어
+    public bool isDropped = false;
+    
     private void Awake()
     {
         Canvas = FindFirstObjectByType<Canvas>().transform;
         rect = GetComponent<RectTransform>();
         canvasGroup = GetComponent<CanvasGroup>();
     }
-    
+    public void SetDraggable(bool draggable)
+    {
+        isDraggable = draggable;
+        canvasGroup.blocksRaycasts = draggable;
+    }
     // 현재 오브젝트를 드래그 하기 시작할때 1회 호출
     public void OnBeginDrag(PointerEventData eventData)
     {
