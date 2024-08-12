@@ -1681,7 +1681,7 @@ PrefabInstance:
     - target: {fileID: 1839222284020890419, guid: ecbf48371fd6b7a43a609b4f84b7f769,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1882900805428109006, guid: ecbf48371fd6b7a43a609b4f84b7f769,
         type: 3}
@@ -7996,7 +7996,7 @@ MonoBehaviour:
   speed: 10
   tilemaps:
   - {fileID: 1738432078}
-  - {fileID: 0}
+  - {fileID: 1687641375}
   allway: 1
   uiDocument: {fileID: 1155641491}
 --- !u!114 &1155641495
@@ -8265,6 +8265,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: DarkElfQueen
+      objectReference: {fileID: 0}
+    - target: {fileID: 1839222284020890419, guid: ecbf48371fd6b7a43a609b4f84b7f769,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4375985981601582958, guid: ecbf48371fd6b7a43a609b4f84b7f769,
         type: 3}
@@ -26959,7 +26964,7 @@ MonoBehaviour:
   - {fileID: 1839222284020890419, guid: ecbf48371fd6b7a43a609b4f84b7f769, type: 3}
   rightMinY: -20
   rightMaxY: 120
-  numberOfObjects: 10
+  numberOfObjects: 50
   maxSpawnInterval: 2
   totalWave: 3
   bossPrefab: {fileID: 1839222284020890419, guid: faba8c4131a548641a1957130c739343,

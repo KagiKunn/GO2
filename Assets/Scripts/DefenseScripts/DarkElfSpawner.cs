@@ -21,8 +21,8 @@ public class DarkElfSpawner : MonoBehaviour
     private float leftMaxY = -420f;
 
     // 고정된 X축 좌표
-    private const float rightX = 0f;
-    private const float leftX = 100f;
+    private const float rightX = -30f;
+    private const float leftX = 150f;
 
     // 생성할 오브젝트의 개수
     [SerializeField] public int numberOfObjects = 10;
@@ -114,7 +114,7 @@ public class DarkElfSpawner : MonoBehaviour
         {
             // rightSpawn 값을 랜덤으로 결정
             rightSpawn = Random.value > 0.5f;
-
+            
             // Y축의 랜덤 좌표 생성
             float randomY = rightSpawn ? Random.Range(rightMinY, rightMaxY) : Random.Range(leftMinY, leftMaxY);
 
@@ -200,12 +200,14 @@ public class DarkElfSpawner : MonoBehaviour
         if (rightSpawn)
         {
             boss = Instantiate(bossPrefab, spawnPosition, Quaternion.identity, transform);
+            boss.transform.GetChild(0).GetComponent<EnemyMovement>().isRight = true; 
         }
         else
         {
             boss =Instantiate(bossPrefab, spawnPosition, Quaternion.Euler(0, 180, 0), transform);
+            boss.transform.GetChild(0).GetComponent<EnemyMovement>().isRight = false;
         }
 
-        boss.transform.localScale *= 3;
+        // boss.transform.localScale *= 3;
     }
 }

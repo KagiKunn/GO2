@@ -16,10 +16,13 @@ public class CastleWall : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
+        string wallTag = gameObject.tag;
         CastleWallManager.Instance.ApplyDamage(damage);
 
+        Debug.Log($"Damage applied to {wallTag}");
         if (CastleWallManager.Instance.GetHealth() <= 0)
         {
+            Debug.Log($"{wallTag} destroyed.");
             Destroy(gameObject);  // 성벽 오브젝트 삭제
         }
     }
