@@ -8,6 +8,8 @@ public class UnitSlotManager : MonoBehaviour
     private List<UnitData> userUnits;  // 유저가 보유한 모든 유닛 데이터 목록
     private List<Image> unitImages = new List<Image>();  // 각 슬롯의 하위에 있는 유닛 이미지 컴포넌트 목록
     private List<Graphic> unitSlots = new List<Graphic>(); // 유닛 슬롯(Dropable) 
+    private List<UnitDraggable> unitDraggables = new List<UnitDraggable>();  // 각 슬롯의 하위에 있는 UnitDraggable 컴포넌트 목록
+
     
     private void Awake()
     {
@@ -16,12 +18,14 @@ public class UnitSlotManager : MonoBehaviour
         {
             Transform slot = contentParent.GetChild(i);
             Image unitImage = slot.Find("Unit").GetComponent<Image>();
+            UnitDraggable unitDraggable = slot.Find("Unit").GetComponent<UnitDraggable>();
             Graphic slotGraphic = slot.GetComponent<Graphic>();
 
-            if (unitImage != null)
+            if (unitImage != null && unitDraggable != null && slotGraphic != null)
             {
                 unitImages.Add(unitImage);
-                unitSlots.Add(slotGraphic);;
+                unitDraggables.Add(unitDraggable);
+                unitSlots.Add(slotGraphic);
             }
         }
 
@@ -39,18 +43,18 @@ public class UnitSlotManager : MonoBehaviour
         // 각 슬롯의 하위 이미지에 유닛 데이터를 할당
         for (int i = 0; i < unitCount; i++)
         {
-            SetUnitData(unitImages[i], userUnits[i]);
+            SetUnitData(unitImages[i], unitDraggables[i],userUnits[i]);
         }
 
         // 유저가 가진 유닛보다 슬롯이 많을 경우, 나머지 이미지 비우고 이벤트 비활성화
         for (int i = unitCount; i < unitImages.Count; i++)
         {
-            SetUnitData(unitImages[i], null);
+            SetUnitData(unitImages[i], unitDraggables[i], null);
             unitSlots[i].raycastTarget = false; 
         }
     }
 
-    private void SetUnitData(Image unitImage, UnitData data)
+    private void SetUnitData(Image unitImage, UnitDraggable unitDraggable, UnitData data)
     {
         if (data != null && data.UnitImage != null)
         {
@@ -58,12 +62,15 @@ public class UnitSlotManager : MonoBehaviour
             unitImage.color = Color.white;  // 이미지를 기본 색상으로 설정
             unitImage.enabled = true;  // 이미지 표시
 
+            unitDraggable.unitData = data;  // UnitData를 UnitDraggable에 할당
+            unitDraggable.unitIndex = unitImages.IndexOf(unitImage);  // 인덱스 설정
             unitSlots[unitImages.IndexOf(unitImage)].raycastTarget = true;  // 슬롯의 이벤트 활성화
         }
         else
         {
             unitImage.sprite = null;
             unitImage.enabled = false;  // 이미지 숨기기
+            unitDraggable.unitData = null;  // UnitData 초기화
             unitSlots[unitImages.IndexOf(unitImage)].raycastTarget = false;  // 슬롯의 이벤트 비활성화
         }
     }
