@@ -53,7 +53,7 @@ public class NoviceSkill : HeroSkill
         foreach (GameObject obj in wallObjects)
         {
             CustomLogger.Log(obj);
-            CastleWall castleWall = obj.GetComponent<CastleWall>();
+            CastleWallManager castleWall = obj.GetComponent<CastleWallManager>();
             if (castleWall != null)
             {
                 // 필드 값을 변경합니다.

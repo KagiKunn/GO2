@@ -206,6 +206,6 @@ public class DarkElfSpawner : MonoBehaviour
             boss =Instantiate(bossPrefab, spawnPosition, Quaternion.Euler(0, 180, 0), transform);
         }
 
-        boss.transform.localScale *= 2;
+        boss.transform.localScale *= 3;
     }
 }
