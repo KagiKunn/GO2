@@ -100,7 +100,7 @@ public class EnemySpawner : MonoBehaviour
         CustomLogger.Log("SpawnWaves()입갤 ㅋ");
         while (currentWave < totalWave)
         {
-            CustomLogger.Log("While문 입장?");`
+            CustomLogger.Log("While문 입장?");
             currentWave++;
 
             // 현재 웨이브에 맞는 적 프리팹들을 가져옴
