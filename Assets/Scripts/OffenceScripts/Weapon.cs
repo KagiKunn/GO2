@@ -13,16 +13,21 @@ public class Weapon : MonoBehaviour {
 
 	private float timer;
 
+	private GameManager gameManager;
 	private Player player;
 	private PoolManager poolManager;
 
 	private void Awake() {
-		player = GameManager.Instance.Player[GameManager.Instance.PlayerId];
-		poolManager = GameManager.Instance.PoolManager;
+		gameManager = GameManager.Instance;
+		player = gameManager.Player[gameManager.PlayerId];
+		poolManager = gameManager.PoolManager;
 	}
 
 	private void Update() {
-		if (!GameManager.Instance.IsLive) return;
+		if (!gameManager.IsLive) return;
+
+		if (player.gameObject.name == "Dummy")
+			player = gameManager.Player[gameManager.PlayerId];
 
 		switch (id) {
 			case 0:
@@ -41,9 +46,6 @@ public class Weapon : MonoBehaviour {
 
 				break;
 		}
-
-		// Test Code
-		if (Input.GetButtonDown("Jump")) LevelUp(10, 1);
 	}
 
 	public void LevelUp(float damage, int count) {

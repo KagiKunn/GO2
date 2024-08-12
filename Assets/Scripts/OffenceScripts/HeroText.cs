@@ -30,7 +30,7 @@ public class HeroText : MonoBehaviour {
 			}
 		}
 
-		filePath = Path.Combine(Application.persistentDataPath, "selectedHeroes.json");
+		filePath = Path.Combine(Path.Combine(Application.dataPath, "save", "heroInfo"), "selectedHeroes.json");
 
 		if (File.Exists(filePath)) {
 			try {
