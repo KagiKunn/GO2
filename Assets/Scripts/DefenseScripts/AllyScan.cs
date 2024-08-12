@@ -136,7 +136,7 @@ public class AllyScan : MonoBehaviour
         if (closestObject != null)
         {
             Vector3 spawnPosition = transform.position + new Vector3(0, GetComponent<Collider2D>().bounds.size.y / 3, 0);
-            GameObject projectileInstance = Instantiate(projectilePrefab, spawnPosition, Quaternion.identity);
+            GameObject projectileInstance = Instantiate(projectilePrefab, spawnPosition, Quaternion.identity,transform);
             AllyProjectile projectile = projectileInstance.GetComponent<AllyProjectile>();
             if (projectile != null)
             {
