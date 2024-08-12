@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using System.Collections;
 
@@ -21,15 +22,20 @@ public class AllyScan : MonoBehaviour
     private Animator animator;
     private GameObject closestObject;
     private Coroutine attackSpeedCoroutine;
+    private bool isRight;
 
-    private void Awake()
+    public void Initialized(bool result)
+    {
+        this.isRight = result;
+    }
+
+    private void Start()
     {
         animator = GetComponent<Animator>();
         animator.SetFloat("RunState", runState);
         animator.SetFloat("SkillState", skillState);
         animator.SetFloat("NormalState", normalState);
     }
-
     private void Update()
     {
         if (closestObject == null)
@@ -125,7 +131,7 @@ public class AllyScan : MonoBehaviour
         }
     }
 
-    public void CollisionAttack()
+    private void CollisionAttack()
     {
         if (closestObject != null)
         {
@@ -134,7 +140,9 @@ public class AllyScan : MonoBehaviour
             AllyProjectile projectile = projectileInstance.GetComponent<AllyProjectile>();
             if (projectile != null)
             {
-                projectile.Initialize(closestObject.transform, attackDamage, damageEffect, aoe); // 데미지 효과 전달
+                projectile.Initialize(closestObject.transform, attackDamage, damageEffect, aoe, isRight); // 데미지 효과 전달
+                
+                
             }
             else
             {
