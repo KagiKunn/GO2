@@ -8,15 +8,26 @@ using Random = UnityEngine.Random;
 
 public class Reposition : MonoBehaviour {
 	private Collider2D collider2D;
+
+	private GameManager gameManager;
 	private Player player;
 
 	private void Awake() {
 		collider2D = GetComponent<Collider2D>();
 
-		player = GameManager.Instance.Player[GameManager.Instance.PlayerId];
+		gameManager = GameManager.Instance;
+		player = gameManager.Player[gameManager.PlayerId];
+	}
+
+	private void Update() {
+		if (player.gameObject.name != "Dummy") return;
+
+		player = gameManager.Player[gameManager.PlayerId];
 	}
 
 	private void OnTriggerExit2D(Collider2D other) {
+		if (!gameManager.IsLive) return;
+
 		if (!other.CompareTag("Area")) return;
 
 		Vector3 playerPosition = player.transform.position;
