@@ -42,6 +42,12 @@ public class Enemy : MonoBehaviour {
 		animator.SetFloat("RunState", 0.25f);
 	}
 
+	private void Update() {
+		if (player.gameObject.name != "Dummy") return;
+
+		player = GameManager.Instance.Player[GameManager.Instance.PlayerId];
+	}
+
 	private void FixedUpdate() {
 		if (!gameManager.IsLive) return;
 
