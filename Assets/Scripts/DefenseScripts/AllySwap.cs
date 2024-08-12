@@ -100,12 +100,19 @@ public class AllySwap : MonoBehaviour {
 		animator1.SetFloat("RunState", 0.5f);
 		animator2.SetFloat("RunState", 0.5f);
 
+
+		if (unit1.transform.position == targetPosition1)
+		{
+			if (allyScan1 != null) allyScan1.enabled = true;
+		}
+		if (unit2.transform.position == targetPosition2)
+		{
+			if (allyScan2 != null) allyScan2.enabled = true;
+		}
 		if (unit1.transform.position == targetPosition1 && unit2.transform.position == targetPosition2) {
 			// 이동 완료 애니메이션 트리거
 
 			// AllyScan 스크립트 활성화
-			if (allyScan1 != null) allyScan1.enabled = true;
-			if (allyScan2 != null) allyScan2.enabled = true;
 
 			isMoving = false; // 이동 완료
 			playerObjCircle1.SetActive(false);
