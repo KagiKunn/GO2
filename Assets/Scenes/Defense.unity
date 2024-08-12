@@ -6493,7 +6493,7 @@ Transform:
   - {fileID: 1059032586}
   - {fileID: 1660223212}
   - {fileID: 566591266}
-  - {fileID: 966949337}
+  - {fileID: 2072386256}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &755410182
@@ -6852,12 +6852,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 886725487}
   m_CullTransparentMesh: 1
---- !u!224 &966949337 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 4375985981601582958, guid: ecbf48371fd6b7a43a609b4f84b7f769,
-    type: 3}
-  m_PrefabInstance: {fileID: 65661334}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &971673591
 GameObject:
   m_ObjectHideFlags: 0
@@ -17703,9 +17697,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: [{targetCorrespondingSourceObject: {fileID: 1549546617971528292,
-          guid: f490398be12f54440ae29229b381ef74, type: 3}, insertIndex: -1, addedObject: {
-          fileID: 1026818338}}]
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 1549546617971528292, guid: f490398be12f54440ae29229b381ef74,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1026818338}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f490398be12f54440ae29229b381ef74, type: 3}
 --- !u!1 &1699714307
@@ -27074,7 +27070,7 @@ MonoBehaviour:
   - {fileID: 1839222284020890419, guid: ecbf48371fd6b7a43a609b4f84b7f769, type: 3}
   rightMinY: -20
   rightMaxY: 120
-  numberOfObjects: 1
+  numberOfObjects: 30
   maxSpawnInterval: 2
   totalWave: 3
   bossPrefab: {fileID: 1839222284020890419, guid: faba8c4131a548641a1957130c739343,
@@ -27183,6 +27179,12 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2047501406}
   m_CullTransparentMesh: 1
+--- !u!224 &2072386256 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 4375985981601582958, guid: ecbf48371fd6b7a43a609b4f84b7f769,
+    type: 3}
+  m_PrefabInstance: {fileID: 65661334}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2129292407
 GameObject:
   m_ObjectHideFlags: 0
@@ -27268,3 +27270,4 @@ SceneRoots:
   - {fileID: 1741310252}
   - {fileID: 734595523}
   - {fileID: 1613145768}
+  - {fileID: 1296175501}

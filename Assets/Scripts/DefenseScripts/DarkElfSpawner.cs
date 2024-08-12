@@ -14,15 +14,15 @@ public class DarkElfSpawner : MonoBehaviour
 
     // 오른쪽 스폰 위치의 Y축 최소 및 최대 좌표
     public float rightMinY = -20f;
-    public float rightMaxY = 120f;
+    public float rightMaxY = 115f;
 
     // 왼쪽 스폰 위치의 Y축 최소 및 최대 좌표
     private float leftMinY = -280f;
-    private float leftMaxY = -420f;
+    private float leftMaxY = -415f;
 
     // 고정된 X축 좌표
-    private const float rightX = -30f;
-    private const float leftX = 150f;
+    private const float rightX = 200f;
+    private const float leftX = -100f;
 
     // 생성할 오브젝트의 개수
     [SerializeField] public int numberOfObjects = 10;
