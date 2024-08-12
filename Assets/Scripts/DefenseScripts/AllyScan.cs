@@ -135,8 +135,6 @@ public class AllyScan : MonoBehaviour
     {
         if (closestObject != null)
         {
-            CustomLogger.Log(isRight,"red");
-
             Vector3 spawnPosition = transform.position + new Vector3(0, GetComponent<Collider2D>().bounds.size.y / 3, 0);
             GameObject projectileInstance = Instantiate(projectilePrefab, spawnPosition, Quaternion.identity);
             AllyProjectile projectile = projectileInstance.GetComponent<AllyProjectile>();

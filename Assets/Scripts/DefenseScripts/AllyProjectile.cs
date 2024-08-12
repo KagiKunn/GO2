@@ -25,7 +25,6 @@ public class AllyProjectile : MonoBehaviour
     private void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
-        CustomLogger.Log(isRight);
         spriteRenderer.flipX = isRight;
     }
 

@@ -1,4 +1,6 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -15,17 +17,34 @@ public class SkillPanelManager : MonoBehaviour
     private float visiblePosition = 0f;   // 패널 보임 위치 (화면 하단)
     
     private string filePath;
+    private string jsonData;
     
+    private List<string> selectedHeroes = new List<string>();
     private void Awake()
     {
-        filePath = Path.Combine(Application.persistentDataPath, "selectedHeroes.json");
-        string jsonData = File.ReadAllText(filePath);
-        if (!File.Exists(filePath))
-        {
-            File.Create(filePath);
+        filePath = Path.Combine(Path.Combine(Application.dataPath, "save", "heroInfo"), "selectedHeroes.json");
+
+        if (File.Exists(filePath)) {
+            try {
+                string json = File.ReadAllText(filePath);
+
+                HeroDataWrapper wrapper = JsonUtility.FromJson<HeroDataWrapper>(json);
+                CustomLogger.Log(wrapper.Heroes.Count,"red");
+                for (int i = 0; i < wrapper.Heroes.Count; i++) {
+                    HeroData hero = wrapper.Heroes[i];
+                    CustomLogger.Log(hero.Name,"red");
+
+                    if (hero != null) {
+                        selectedHeroes.Add(hero.Name);
+                        CustomLogger.Log(hero.Name);
+                    }
+                }
+            } catch (Exception e) {
+                CustomLogger.Log("Error parsing JSON: " + e.Message);
+            }
         }
-        CustomLogger.LogWarning(jsonData);
-        // UIDocument의 루트 요소 가져오기
+
+        // 나머지 초기화 코드...
         VisualElement root = uiDocument.rootVisualElement;
 
         // 스킬 패널 요소 가져오기

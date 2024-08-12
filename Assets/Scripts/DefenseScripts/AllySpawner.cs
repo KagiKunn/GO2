@@ -58,7 +58,6 @@ public class AllySpawner : MonoBehaviour {
 					if (allyScan != null)
 					{
 						allyScan.Initialized(facingRight);
-						CustomLogger.Log(ally.name + ":" + facingRight);
 					}
 					else
 					{
@@ -92,8 +91,6 @@ public class AllySpawner : MonoBehaviour {
 					if (allyScan != null)
 					{
 						allyScan.Initialized(facingRight);
-						CustomLogger.Log(ally.name + ":" + facingRight);
-
 					}
 					else
 					{
