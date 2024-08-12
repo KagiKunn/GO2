@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 #pragma warning disable CS0162 // 접근할 수 없는 코드가 있습니다.
 
-public class DarkElfSpawner : MonoBehaviour
+public class SkeletonSpawner: MonoBehaviour
 {
     // 스테이지 종족의 모든 적 병사를 넣는 배열
     [SerializeField] private List<GameObject> allEnemyPrefabs;
@@ -14,15 +14,15 @@ public class DarkElfSpawner : MonoBehaviour
 
     // 오른쪽 스폰 위치의 Y축 최소 및 최대 좌표
     public float rightMinY = -20f;
-    public float rightMaxY = 115f;
+    public float rightMaxY = 120f;
 
     // 왼쪽 스폰 위치의 Y축 최소 및 최대 좌표
     private float leftMinY = -280f;
-    private float leftMaxY = -415f;
+    private float leftMaxY = -420f;
 
     // 고정된 X축 좌표
-    private const float rightX = 200f;
-    private const float leftX = -100f;
+    private const float rightX = -30f;
+    private const float leftX = 150f;
 
     // 생성할 오브젝트의 개수
     [SerializeField] public int numberOfObjects = 10;
@@ -208,11 +208,6 @@ public class DarkElfSpawner : MonoBehaviour
             boss.transform.GetChild(0).GetComponent<EnemyMovement>().isRight = false;
         }
 
-        float scaleMultiplier = 3f;
-        boss.transform.localScale *= scaleMultiplier;
-
-        // 스케일이 변경되었으므로 위치를 보정
-        Vector3 scaleCorrection = Vector3.one * (scaleMultiplier - 1) * 0.5f;
-        boss.transform.position -= scaleCorrection;
+        // boss.transform.localScale *= 3;
     }
 }
