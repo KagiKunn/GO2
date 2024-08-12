@@ -1,146 +1,252 @@
-using UnityEngine;
-
+﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-#pragma warning disable CS0162 // 접근할 수 없는 코드가 있습니다.
+public class EnemySpawner : MonoBehaviour
+{
+    // EnemyPrefabList 스크립트 참조
+    private EnemyPrefabList enemyPrefabList;
 
-public class EnemySpawner : MonoBehaviour {
-	//스테이지 종족의 모든 적 병사를 넣는 배열
-	[SerializeField] private List<GameObject> allEnemyPrefabs;
+    // 웨이브에서 사용할 배열
+    private List<GameObject> _enemyPrefabs;
 
-	//웨이브에서 사용할 배열
-	private List<GameObject> _enemyPrefabs;
+    // 오른쪽 스폰 위치의 Y축 최소 및 최대 좌표
+    public float rightMinY = -20f;
+    public float rightMaxY = 115f;
 
-	// 오브젝트를 생성할 X축의 최소 및 최대 좌표
-	public float minY = -0f;
-	public float maxY = 10f;
+    // 왼쪽 스폰 위치의 Y축 최소 및 최대 좌표
+    private float leftMinY = -280f;
+    private float leftMaxY = -415f;
 
-	// 고정된 Y축 좌표
-	private const float fixedX = 20f;
+    // 고정된 X축 좌표
+    private const float rightX = 200f;
+    private const float leftX = -100f;
 
-	// 생성할 오브젝트의 개수
-	[SerializeField] public int numberOfObjects = 10;
+    // 생성할 오브젝트의 개수
+    [SerializeField] public int numberOfObjects = 10;
 
-	// 스포너가 생성한 적 오브젝트 개수
-	private int spawnedEnemy = 0;
+    // 스포너가 생성한 적 오브젝트 개수
+    private int spawnedEnemy = 0;
 
-	// 최대 시간 간격
-	public float maxSpawnInterval = 2f;
+    // 최대 시간 간격
+    public float maxSpawnInterval = 2f;
 
-	[SerializeField] private int totalWave = 3;
-	private int currentWave = 0;
+    [SerializeField] private int totalWave = 3;
+    private int currentWave = 0;
 
-	void Start() {
-		StartCoroutine(SpawnWaves());
+    // 보스 프리팹은 EnemyPrefabList의 마지막 인덱스로 설정
+    private GameObject bossPrefab;
 
-		// 웨이브 조정
-		IEnumerator SpawnWaves() {
-			while (currentWave < totalWave) {
-				currentWave++;
-				_enemyPrefabs = new List<GameObject>(); //waveごとにList初期化
+    // ProgressBar
+    public ProgressBar progressBar;
+    private int totalEnemiesToSpawn;
 
-				switch (currentWave) {
-					case 1:
-						_enemyPrefabs.Add(allEnemyPrefabs[0]);
-						_enemyPrefabs.Add(allEnemyPrefabs[1]);
+    public bool rightSpawn;
 
-						break;
-					case 2:
-						_enemyPrefabs.Add((allEnemyPrefabs[0]));
-						_enemyPrefabs.Add((allEnemyPrefabs[1]));
-						_enemyPrefabs.Add((allEnemyPrefabs[2]));
-						_enemyPrefabs.Add((allEnemyPrefabs[3]));
+    // StageC 에서 설정된 종족명
+    [SerializeField] private string selectedRace;
 
-						break;
-					case 3:
-						_enemyPrefabs.Add(allEnemyPrefabs[0]);
-						_enemyPrefabs.Add(allEnemyPrefabs[1]);
-						_enemyPrefabs.Add(allEnemyPrefabs[2]);
-						_enemyPrefabs.Add(allEnemyPrefabs[3]);
-						_enemyPrefabs.Add(allEnemyPrefabs[4]);
+    public void SetSelectedRace(string race)
+    {
+        selectedRace = race;
+    }
+    
+    private void Start()
+    {
+        // EnemyPrefabList 참조 가져오기
+        enemyPrefabList = FindObjectOfType<EnemyPrefabList>();
+        if (enemyPrefabList == null)
+        {
+            Debug.LogError("EnemyPrefabList를 찾을 수 없습니다!");
+            return;
+        }
 
-						break;
-				}
+        // 선택된 종족의 적 프리팹 배열 가져오기
+        var enemyPrefabsArray = enemyPrefabList.GetEnemyPrefabs(selectedRace);
+        if (enemyPrefabsArray.Length > 0)
+        {
+            bossPrefab = enemyPrefabsArray[enemyPrefabsArray.Length - 1];
+        }
+        else
+        {
+            Debug.LogError("EnemyPrefabList에서 프리팹을 찾을 수 없습니다!");
+            return;
+        }
 
-				CustomLogger.Log(currentWave + "웨이브 시작");
+        // 총 적 수 계산
+        totalEnemiesToSpawn = numberOfObjects * totalWave;
 
-				yield return StartCoroutine(SpawnObjects());
+        // ProgressBar 초기화
+        if (progressBar != null)
+        {
+            progressBar.SetMaxValue(totalEnemiesToSpawn);
+            progressBar.SetValue(0);
+        }
 
-				spawnedEnemy = 0; // 웨이브 종료 시 초기화
+        StartCoroutine(SpawnWaves());
+    }
 
-				if (currentWave <= totalWave) {
-					CustomLogger.Log("웨이브 " + currentWave + " 종료. 다음 웨이브까지 5초 대기.", "yellow");
+    IEnumerator SpawnWaves()
+    {
+        while (currentWave < totalWave)
+        {
+            currentWave++;
+            _enemyPrefabs = new List<GameObject>(); // 웨이브마다 List 초기화
 
-					yield return new WaitForSeconds(10f);
-				}
-			}
+            // 현재 웨이브에 맞는 적 프리팹들을 가져옴
+            _enemyPrefabs.AddRange(GetWaveEnemyPrefabs());
 
-			CustomLogger.Log("모든 웨이브가 완료되었습니다.", "red");
-		}
+            CustomLogger.Log(currentWave + " 웨이브 시작");
 
-		IEnumerator SpawnObjects() {
-			//오브젝트 최대수 제한까지 반복생성
-			for (int i = 0; i < numberOfObjects; i++) {
-				// Y축의 랜덤 좌표 생성
-				float randomY = Random.Range(minY, maxY);
+            yield return StartCoroutine(SpawnObjects());
 
-				// 새로운 오브젝트 생성
-				GameObject randomPrefab = GetRandomPrefab();
+            // 웨이브 종료 시 적 수 초기화
+            spawnedEnemy = 0;
 
-				Vector3 spawnPosition = new Vector3(fixedX, randomY, 0);
-				GameObject enemy = Instantiate(randomPrefab, spawnPosition, Quaternion.identity, transform);
+            if (currentWave < totalWave)
+            {
+                CustomLogger.Log("웨이브 " + currentWave + " 종료. 다음 웨이브까지 10초 대기.", "yellow");
+                yield return new WaitForSeconds(10f);
+            }
+        }
 
-				float waitTime = Random.Range(0, maxSpawnInterval);
+        // 모든 웨이브가 끝난 후 보스 생성
+        CustomLogger.Log("모든 웨이브가 완료되었습니다. 보스를 소환합니다.", "red");
+        SpawnBoss();
+    }
 
-				yield return new WaitForSeconds(waitTime);
+    IEnumerator SpawnObjects()
+    {
+        for (int i = 0; i < numberOfObjects; i++)
+        {
+            // rightSpawn 값을 랜덤으로 결정
+            rightSpawn = Random.value > 0.5f;
 
-				spawnedEnemy++;
+            // Y축의 랜덤 좌표 생성
+            float randomY = rightSpawn ? Random.Range(rightMinY, rightMaxY) : Random.Range(leftMinY, leftMaxY);
 
-				//최대 생성수에 도달하면 웨이브를 종료
-				if (spawnedEnemy == numberOfObjects) {
-					break;
-				}
-			}
-		}
+            // 새로운 오브젝트 생성
+            GameObject randomPrefab = GetRandomPrefab();
 
-		/*確率の区間を０～１までの範囲で分けるイメージ。
-		randomValueが任意の数を,0f～1fまでの間で引く
-		例えばfloat[] { 0.35f, 0.35f, 0.15f, 0.15f };の場合
-		この確率テーブルの配列を巡回しながらその数がどの区間に位置するかを判定する。*/
+            Vector3 spawnPosition = rightSpawn ? new Vector3(rightX, randomY, 0) : new Vector3(leftX, randomY, 0);
 
-		GameObject GetRandomPrefab() {
-			float randomValue = Random.Range(0f, 1f);
-			float[] percentages = GetPercentages();
+            // 적 생성 및 방향 설정
+            GameObject enemy;
+            if (rightSpawn)
+            {
+                enemy = Instantiate(randomPrefab, spawnPosition, Quaternion.identity, transform);
+                enemy.transform.GetChild(0).GetComponent<EnemyMovement>().isRight = true;
+            }
+            else
+            {
+                enemy = Instantiate(randomPrefab, spawnPosition, Quaternion.Euler(0, 180, 0), transform);
+                enemy.transform.GetChild(0).GetComponent<EnemyMovement>().isRight = false;
+            }
 
-			for (int i = 0; i < percentages.Length; i++) {
-				if (randomValue < percentages[i]) {
-					return _enemyPrefabs[i];
-				}
+            float waitTime = Random.Range(0, maxSpawnInterval);
 
-				randomValue -= percentages[i];
-			}
+            yield return new WaitForSeconds(waitTime);
 
-			return _enemyPrefabs[_enemyPrefabs.Count - 1];
-		}
+            spawnedEnemy++;
+            CustomLogger.Log("생성한 적의 수: " + spawnedEnemy, "yellow");
 
-		float[] GetPercentages() {
-			switch (currentWave) {
-				case 1:
-					return new float[] { 0.5f, 0.5f }; //各５０％
+            // ProgressBar 값 업데이트
+            if (progressBar != null)
+            {
+                progressBar.SetValue(spawnedEnemy + (currentWave - 1) * numberOfObjects);
+            }
 
-					break;
-				case 2:
-					return new float[] { 0.35f, 0.35f, 0.15f, 0.15f }; //35% 35% 15% 15%
+            if (spawnedEnemy >= numberOfObjects)
+            {
+                break;
+            }
+        }
+    }
 
-					break;
-				case 3:
-					return new float[] { 0.25f, 0.25f, 0.2f, 0.2f, 0.1f }; //25% 25% 20% 20% 10%
+    List<GameObject> GetWaveEnemyPrefabs()
+    {
+        List<GameObject> wavePrefabs = new List<GameObject>();
 
-					break;
-				default:
-					return new float[] { 1f };
-			}
-		}
-	}
+        switch (currentWave)
+        {
+            case 1:
+                wavePrefabs.Add(_enemyPrefabs[0]);
+                wavePrefabs.Add(_enemyPrefabs[1]);
+                break;
+            case 2:
+                wavePrefabs.Add(_enemyPrefabs[0]);
+                wavePrefabs.Add(_enemyPrefabs[1]);
+                wavePrefabs.Add(_enemyPrefabs[2]);
+                wavePrefabs.Add(_enemyPrefabs[3]);
+                break;
+            case 3:
+                wavePrefabs.Add(_enemyPrefabs[0]);
+                wavePrefabs.Add(_enemyPrefabs[1]);
+                wavePrefabs.Add(_enemyPrefabs[2]);
+                wavePrefabs.Add(_enemyPrefabs[3]);
+                wavePrefabs.Add(_enemyPrefabs[4]);
+                break;
+        }
+
+        return wavePrefabs;
+    }
+
+    GameObject GetRandomPrefab()
+    {
+        float randomValue = Random.Range(0f, 1f);
+        float[] percentages = GetPercentages();
+
+        for (int i = 0; i < percentages.Length; i++)
+        {
+            if (randomValue < percentages[i])
+            {
+                return _enemyPrefabs[i];
+            }
+
+            randomValue -= percentages[i];
+        }
+
+        return _enemyPrefabs[_enemyPrefabs.Count - 1];
+    }
+
+    float[] GetPercentages()
+    {
+        switch (currentWave)
+        {
+            case 1:
+                return new float[] { 0.5f, 0.5f }; // 각 50%
+            case 2:
+                return new float[] { 0.35f, 0.35f, 0.15f, 0.15f }; // 35% 35% 15% 15%
+            case 3:
+                return new float[] { 0.25f, 0.25f, 0.2f, 0.2f, 0.1f }; // 25% 25% 20% 20% 10%
+            default:
+                return new float[] { 1f };
+        }
+    }
+
+    void SpawnBoss()
+    {
+        rightSpawn = Random.value > 0.5f;
+
+        float randomY = rightSpawn ? Random.Range(rightMinY, rightMaxY) : Random.Range(leftMinY, leftMaxY);
+        Vector3 spawnPosition = rightSpawn ? new Vector3(rightX, randomY, 0) : new Vector3(leftX, randomY, 0);
+
+        GameObject boss;
+        if (rightSpawn)
+        {
+            boss = Instantiate(bossPrefab, spawnPosition, Quaternion.identity, transform);
+            boss.transform.GetChild(0).GetComponent<EnemyMovement>().isRight = true;
+        }
+        else
+        {
+            boss = Instantiate(bossPrefab, spawnPosition, Quaternion.Euler(0, 180, 0), transform);
+            boss.transform.GetChild(0).GetComponent<EnemyMovement>().isRight = false;
+        }
+
+        float scaleMultiplier = 3f;
+        boss.transform.localScale *= scaleMultiplier;
+
+        Vector3 scaleCorrection = Vector3.one * (scaleMultiplier - 1) * 0.5f;
+        boss.transform.position -= scaleCorrection;
+    }
 }

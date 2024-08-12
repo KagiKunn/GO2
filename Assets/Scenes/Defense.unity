@@ -2261,11 +2261,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1613145768}
     m_Modifications:
-    - target: {fileID: 8965467376334499265, guid: aa9b857646f1a784db94a18e067f23ba,
-        type: 3}
-      propertyPath: slider
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 1267235880570218161, guid: e1b847cba496aba4eb22ef13cec631e2,
         type: 3}
       propertyPath: m_Name
@@ -2331,6 +2326,11 @@ PrefabInstance:
       propertyPath: slider
       value: 
       objectReference: {fileID: 246912707}
+    - target: {fileID: 8965467376334499265, guid: aa9b857646f1a784db94a18e067f23ba,
+        type: 3}
+      propertyPath: slider
+      value: 
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -27057,7 +27057,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2043143689}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 505ff57a6c1d46fe93d6beed32f3462b, type: 3}
   m_Name: 
@@ -27084,7 +27084,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2043143689}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 26364b69ead145ea96886245628eb1b5, type: 3}
   m_Name: 
@@ -27097,6 +27097,8 @@ MonoBehaviour:
   - {fileID: 1712848231207533490, guid: 3dbb5e50bcfde0b4bb94f29fe11b7fae, type: 3}
   rightMinY: -20
   rightMaxY: 120
+  rightX: 170
+  leftX: -110
   numberOfObjects: 10
   maxSpawnInterval: 2
   totalWave: 3
@@ -27270,4 +27272,5 @@ SceneRoots:
   - {fileID: 1741310252}
   - {fileID: 734595523}
   - {fileID: 1613145768}
+  - {fileID: 1296175501}
   - {fileID: 1296175501}
