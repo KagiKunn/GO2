@@ -33,6 +33,7 @@ public class SkillPanelManager : MonoBehaviour
                 for (int i = 0; i < wrapper.Heroes.Count; i++) {
                     HeroData hero = wrapper.Heroes[i];
                     CustomLogger.Log(hero.Name,"red");
+                    heroSkillArray[i] = Resources.Load<GameObject>("Defense/Hero/"+hero.Name);
 
                     if (hero != null) {
                         selectedHeroes.Add(hero.Name);
