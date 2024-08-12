@@ -1,11 +1,13 @@
 using System;
-using System.Data;
 using System.IO;
+using System.Net.Sockets;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public class PlayerDataControl : MonoBehaviour
+public class PlayerDataControl : MonoBehaviour, IDisposable
 {
     private SceneControl sceneControl;
     private static string persistentDataPath;
@@ -14,6 +16,13 @@ public class PlayerDataControl : MonoBehaviour
     private string username;
     private int level;
     private int repeat;
+    private TcpClient client;
+    private NetworkStream stream;
+    private byte[] buffer = new byte[1024];
+    private string r_message = String.Empty;
+    private bool isReconnecting;
+    private const int maxReconnectAttempts = 5;
+    private const int reconnectDelay = 5000;
 
     public SceneControl SceneControl
     {
@@ -53,6 +62,7 @@ public class PlayerDataControl : MonoBehaviour
         persistentDataPath = Application.persistentDataPath;
         filePath = Path.Combine(persistentDataPath, "Player.dat");
 
+        InitializeConnect();
         if (File.Exists(filePath))
         {
             await LoadPlayerAsync();
@@ -67,10 +77,11 @@ public class PlayerDataControl : MonoBehaviour
         {
             Destroy(this);
         }
+
         GameStart();
     }
 
-    public async void GameStart()
+    public void GameStart()
     {
         if (string.IsNullOrEmpty(UUID))
         {
@@ -78,9 +89,40 @@ public class PlayerDataControl : MonoBehaviour
         }
         else
         {
-            await SyncWithServer();
+            CustomLogger.LogWarning(UUID);
+            SyncWithServer();
         }
     }
+
+
+    void InitializeConnect()
+    {
+        TryConnect();
+    }
+
+    void TryConnect()
+    {
+        int reconnectAttempts = 0;
+
+        while (reconnectAttempts < maxReconnectAttempts)
+        {
+                client = new TcpClient("192.168.0.32", 1651);
+
+                // 연결이 성공적으로 이루어졌다면 스트림을 가져옵니다.
+                if (client.Connected)
+                {
+                        stream = client.GetStream();
+                        Debug.Log("Connected to server.");
+                        isReconnecting = false; // 재접속 성공 시 플래그 해제
+                        //new Thread(ReceiveData).Start();
+                        return;
+                }
+        }
+
+        Debug.LogError("Max reconnect attempts reached. Could not connect to server.");
+        isReconnecting = false; // 재접속 시도 실패
+    }
+
 
     private async Task LoadPlayerAsync()
     {
@@ -118,46 +160,56 @@ public class PlayerDataControl : MonoBehaviour
         };
 
         SaveLocalData(playerData);
+        byte[] serializedData = SerializePlayerData(playerData);
+        sendStream(serializedData, 0);
+    }
+    private async void SyncWithServer()
+    {
+        try
+        {
+            // 서버에 보내기 위한 더미 데이터 생성
+            PlayerLocalData dummyUUID = new PlayerLocalData
+            {
+                uuid = UUID,
+                lv = 1,
+                repeat = 0,
+                username = "プレイヤー"
+            };
+            byte[] serializedData = SerializePlayerData(dummyUUID);
+            sendStream(serializedData, 2);
+            CustomLogger.LogWarning($"Send Stream {serializedData}");
+        
+            // 서버로부터 응답을 비동기적으로 기다림
+            byte[] responseBuffer = new byte[1024];
+            int bytesRead = await stream.ReadAsync(responseBuffer, 0, responseBuffer.Length);
+        
+            // 응답된 데이터를 역직렬화하여 PlayerLocalData 객체로 변환
+            PlayerLocalData playerData = DeserializePlayerData(responseBuffer, bytesRead);
+        
+            // 서버에서 받은 데이터를 로컬에 반영
+            UUID = playerData.uuid;
+            Level = playerData.lv;
+            Repeat = playerData.repeat;
+            Username = playerData.username;
 
-        DBControl.OnCUD($"Insert into account values (null, '{UUID}', {playerData.lv}, {playerData.repeat})");
+            // 로컬 데이터 저장
+            SaveLocalData(playerData);
+
+            Debug.Log("Player data synchronized with server.");
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"Failed to sync with server: {ex.Message}");
+        }
     }
 
-    private async Task SyncWithServer()
+    private PlayerLocalData DeserializePlayerData(byte[] data, int length)
     {
-        DataSet ds = DBControl.OnRead($"Select * from account where uuid = '{UUID}'", "account");
-
-        if (ds != null && ds.Tables.Contains("account"))
+        using (MemoryStream ms = new MemoryStream(data, 0, length))
         {
-            DataTable dt = ds.Tables["account"];
-            DataRow row = dt.Rows[0];
-
-            string serverUUID = row["uuid"].ToString();
-            int serverLevel = Convert.ToInt32(row["lv"]);
-            int serverRepeat = Convert.ToInt32(row["repeat"]);
-            string serverUsername = row["username"].ToString();
-
-            if (UUID != serverUUID || Level != serverLevel || Repeat != serverRepeat || Username != serverUsername)
-            {
-                UUID = serverUUID;
-                Level = serverLevel;
-                Repeat = serverRepeat;
-                Username = serverUsername;
-
-                SaveLocalData(new PlayerLocalData
-                {
-                    uuid = UUID,
-                    lv = Level,
-                    repeat = Repeat,
-                    username = Username
-                });
-            }
+            BinaryFormatter formatter = new BinaryFormatter();
+            return (PlayerLocalData)formatter.Deserialize(ms);
         }
-        else
-        {
-            Debug.LogWarning("No matching server data found.");
-        }
-
-        await Task.CompletedTask;
     }
 
     public void Save()
@@ -171,7 +223,8 @@ public class PlayerDataControl : MonoBehaviour
         };
 
         SaveLocalData(playerData);
-        DBControl.OnCUD($"Update account set lv = {playerData.lv}, username = '{playerData.username}', `repeat` = {playerData.repeat} where uuid = '{playerData.uuid}'");
+        byte[] serializedData = SerializePlayerData(playerData);
+        sendStream(serializedData, 1);
     }
 
     private void SaveLocalData(PlayerLocalData data)
@@ -188,5 +241,68 @@ public class PlayerDataControl : MonoBehaviour
         {
             Debug.LogError($"Failed to save data: {ex.Message}");
         }
+    }
+
+    public void sendStream(byte[] bytesData, int opcode)
+    {
+        if (client == null || !client.Connected)
+        {
+            if (!isReconnecting)
+            {
+                isReconnecting = true;
+                TryConnect();
+            }
+        }
+
+        byte[] dataWithOpcode = new byte[bytesData.Length + 1];
+        dataWithOpcode[0] = (byte)opcode; // 첫 번째 바이트에 opcode 설정
+        Buffer.BlockCopy(bytesData, 0, dataWithOpcode, 1, bytesData.Length);
+        
+        CustomLogger.LogWarning("sendStream"+ dataWithOpcode.Length);
+        stream.Write(dataWithOpcode, 0, dataWithOpcode.Length);
+        stream.Flush(); // 스트림 플러시
+    }
+
+    public void send()
+    {
+        byte[] data = Encoding.UTF8.GetBytes("TEST");
+        sendStream(data, 3);
+    }
+
+    private void ReceiveData() {
+        while (true) {
+            try {
+                int bytes = stream.Read(buffer, 0, buffer.Length);
+
+                if (bytes > 0) {
+                    r_message = Encoding.UTF8.GetString(buffer, 0, bytes);
+                }
+            } catch (Exception e) {
+                Debug.Log("Error: " + e.Message);
+
+                break;
+            }
+        }
+    }
+
+    private byte[] SerializePlayerData(PlayerLocalData playerData)
+    {
+        using (MemoryStream ms = new MemoryStream())
+        {
+            BinaryFormatter formatter = new BinaryFormatter();
+            formatter.Serialize(ms, playerData);
+            return ms.ToArray();
+        }
+    }
+
+    public void Dispose()
+    {
+        stream?.Close();
+        client?.Close();
+    }
+
+    void OnApplicationQuit()
+    {
+        Dispose();
     }
 }
