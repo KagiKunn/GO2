@@ -304,10 +304,12 @@ public class EnemyMovement : MonoBehaviour
             // 보스 사망 이벤트 호출
             OnBossDie?.Invoke();
 
+            StageC stageC = FindObjectOfType<StageC>();
+            stageC.ShowStageClearUI();
+            
             Time.timeScale = 0;
             CustomLogger.Log("게임이 정지되었습니다.");
 
-            stageClearUI.ShowChangeSceneButton();
         }
 
         gameObject.SetActive(false);
