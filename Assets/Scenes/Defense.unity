@@ -27003,9 +27003,10 @@ GameObject:
   - component: {fileID: 2043143692}
   - component: {fileID: 2043143691}
   - component: {fileID: 2043143693}
+  - component: {fileID: 2043143694}
   m_Layer: 0
   m_Name: Spawner
-  m_TagString: Untagged
+  m_TagString: EnemyBoss
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -27105,6 +27106,33 @@ MonoBehaviour:
   maxSpawnInterval: 2
   totalWave: 3
   bossPrefab: {fileID: 1839222284020890419, guid: faba8c4131a548641a1957130c739343,
+    type: 3}
+  progressBar: {fileID: 1286466346}
+  rightSpawn: 0
+--- !u!114 &2043143694
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2043143689}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26364b69ead145ea96886245628eb1b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  allEnemyPrefabs:
+  - {fileID: 6634290375242253128, guid: f67fa9e1419edc2458a373131f64c1b2, type: 3}
+  - {fileID: 141717027028280160, guid: 95ea6df50e6f24247b0fdae95467e010, type: 3}
+  - {fileID: 4531840113203881442, guid: a5b97426e2c2c1d40b435f12e59c223d, type: 3}
+  - {fileID: 1521261300023797124, guid: 4a35b89c2a5388449b6c29e3955b5ec0, type: 3}
+  - {fileID: 1712848231207533490, guid: 3dbb5e50bcfde0b4bb94f29fe11b7fae, type: 3}
+  rightMinY: -20
+  rightMaxY: 120
+  numberOfObjects: 10
+  maxSpawnInterval: 2
+  totalWave: 3
+  bossPrefab: {fileID: 1712848231207533490, guid: 3aaf59a7774449d4f9c9c4c3503d2b5a,
     type: 3}
   progressBar: {fileID: 1286466346}
   rightSpawn: 0
