@@ -141,21 +141,20 @@ public class EnemyMovement : MonoBehaviour
         this.percent = percent;
     }
 
-    public void isAttack()
-    {
-        if (castleWall != null)
-        {
-            if (normalState == 1f || skillState == 1f || normalState == 0.25f || skillState == 0.25f ||
-                skillState == 0.75f || normalState == 0.5f)
-            {
-                CollisionAttack();
-            }
-            else
-            {
-                castleWall.TakeDamage(attackDamage);
-            }
-        }
-    }
+	public void isAttack() {
+		if (castleWall != null) {
+			if (normalState == 1f || skillState == 1f || normalState == 0.25f || skillState == 0.25f || skillState == 0.75f || normalState == 0.5f) {
+				CollisionAttack();
+			} else
+			{
+				castleWall.TakeDamage(attackDamage);
+				if (attackState == 0f && normalState == 0f)
+				{
+					TakeDamage(health);
+				} 
+			}
+		}
+	}
 
     public void CollisionAttack()
     {
@@ -281,22 +280,20 @@ public class EnemyMovement : MonoBehaviour
         return health <= 0;
     }
 
-    private void Die()
-    {
-        // 적이 죽었을 때의 동작 (예: 오브젝트 비활성화)
-        Debug.Log("Die 호출");
+	private void Die() {
+		// 적이 죽었을 때의 동작 (예: 오브젝트 비활성화)
+		CustomLogger.Log("Die 호출");
 
         // 적의 root 의 태그 출력
         CustomLogger.Log("적 Root 태그 : " + gameObject.tag);
 
-        // 적의 태그가 EnemyBoss 일때 실행
-        if (gameObject.tag == "EnemyBoss")
-        {
-            //여기에 보스가 죽었을때의 이벤트
-            //ex) 다른 스크립트로 값 전송, 메서드 실행
-            // find name stageManager -> 그 안에있는 메서드 실행
-            // 아니면 true값을 보내서 다른 스크립트에서 받은 값이 true 일때 메서드 실행 등...
-            CustomLogger.Log("보스 사망..............", "red");
+		// 적의 태그가 EnemyBoss 일때 실행
+		if (gameObject.CompareTag("EnemyBoss")) {
+			//여기에 보스가 죽었을때의 이벤트
+			//ex) 다른 스크립트로 값 전송, 메서드 실행
+			// find name stageManager -> 그 안에있는 메서드 실행
+			// 아니면 true값을 보내서 다른 스크립트에서 받은 값이 true 일때 메서드 실행 등...
+			CustomLogger.Log("보스 사망..............", "red");
 
             // 보스 사망 플래그 설정
             isBossDied = true;

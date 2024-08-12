@@ -11,6 +11,9 @@ public class Gear : MonoBehaviour {
 		name = "Gear " + itemData.ItemId;
 
 		transform.parent = GameManager.Instance.Player[GameManager.Instance.PlayerId].transform;
+		
+		CustomLogger.Log(GameManager.Instance.PlayerId);
+		
 		transform.position = Vector3.zero;
 
 		// Property Set

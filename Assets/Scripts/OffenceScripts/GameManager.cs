@@ -49,7 +49,7 @@ public class GameManager : MonoBehaviour {
 	private Weapon weapon;
 
 	public enum HeroNames {
-		KKS01, KMS01, KKH01, KJS01, PJW01, LSH01, CHS01
+		Dummy, KKS01, Novice, knight, Dualweapon, Elf, LSH01, CHS01
 	}
 
 	public HeroNames heroNames;
@@ -63,7 +63,7 @@ public class GameManager : MonoBehaviour {
 			Destroy(this.gameObject);
 		}
 
-		filePath = Path.Combine(Application.persistentDataPath, "selectedHeroes.json");
+		filePath = Path.Combine(Path.Combine(Application.dataPath, "save", "heroInfo"), "selectedHeroes.json");
 
 		if (File.Exists(filePath)) {
 			try {
@@ -78,6 +78,10 @@ public class GameManager : MonoBehaviour {
 						selectedHeroes.Add(hero.Name);
 					}
 				}
+
+				// foreach (string selectedHero in selectedHeroes) {
+				// 	CustomLogger.Log(selectedHero);
+				// }
 			} catch (Exception e) {
 				CustomLogger.Log("Error parsing JSON: " + e.Message);
 			}
@@ -88,6 +92,8 @@ public class GameManager : MonoBehaviour {
 		health = maxHealth;
 
 		for (int i = 0; i < selectedHeroes.Count; i++) {
+			CustomLogger.Log(text.text);
+
 			if (text.text == selectedHeroes[i]) {
 				HeroNames heroEnum;
 
@@ -96,8 +102,6 @@ public class GameManager : MonoBehaviour {
 					playerId = (int)heroEnum;
 
 					camera.Target.TrackingTarget = players[(int)heroEnum].gameObject.transform;
-
-					CustomLogger.Log(playerId);
 				} else {
 					CustomLogger.Log("Invalid hero name: " + selectedHeroes[i]);
 				}
@@ -121,7 +125,9 @@ public class GameManager : MonoBehaviour {
 
 		uiResult.gameObject.SetActive(true);
 		uiResult.Lose();
+		
 		Stop();
+		
 		AudioManager.Instance.PlayBgm(false);
 		AudioManager.Instance.PlaySfx(AudioManager.Sfx.Lose);
 	}
@@ -138,13 +144,16 @@ public class GameManager : MonoBehaviour {
 
 		uiResult.gameObject.SetActive(true);
 		uiResult.Win();
+		
 		Stop();
+		
 		AudioManager.Instance.PlayBgm(false);
 		AudioManager.Instance.PlaySfx(AudioManager.Sfx.Win);
 	}
 
 	public void GameRetry() {
 		Destroy(this.gameObject);
+		
 		SceneManager.LoadScene("Offence");
 	}
 
@@ -155,6 +164,7 @@ public class GameManager : MonoBehaviour {
 
 		if (gameTime > maxGameTime) {
 			gameTime = maxGameTime;
+			
 			GameVictory();
 		}
 	}
@@ -190,6 +200,7 @@ public class GameManager : MonoBehaviour {
 			level++;
 			exp = 0;
 			maxHealth += 10;
+			
 			uiLevelUp.Show();
 		}
 	}
@@ -214,11 +225,13 @@ public class GameManager : MonoBehaviour {
 
 	public void Stop() {
 		isLive = false;
+		
 		Time.timeScale = 0;
 	}
 
 	public void Resume() {
 		isLive = true;
+		
 		Time.timeScale = 1;
 	}
 

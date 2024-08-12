@@ -34,7 +34,7 @@ public class CastleWall : MonoBehaviour
         CastleWallManager.Instance.EarnShield(duration, shieldAmount);
     }
 
-    private void ChangeWallColor(bool activateShield)
+    public void ChangeWallColor(bool activateShield)
     {
         if (activateShield)
         {

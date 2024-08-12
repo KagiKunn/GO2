@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+using UnityEngine.Tilemaps;
 
 public class CastleWallManager : MonoBehaviour
 {
@@ -22,8 +24,12 @@ public class CastleWallManager : MonoBehaviour
 
     private StageC stageC; // StageC 스크립트 참조
 
+    private List<GameObject> wallObjects;
     private void Awake()
     {
+        wallObjects = new List<GameObject>();
+        wallObjects.Add(GameObject.FindGameObjectsWithTag("RightWall")[0]);
+        wallObjects.Add(GameObject.FindGameObjectsWithTag("LeftWall")[0]);
         // Singleton 패턴을 사용하여 유일한 인스턴스 보장
         if (Instance == null)
         {
@@ -104,7 +110,7 @@ public class CastleWallManager : MonoBehaviour
 
         UpdateSliders();
     }
-
+    
     public void EarnShield(float duration, float shieldAmount)
     {
         Debug.Log("EarnShield called with duration: " + duration + " and shieldAmount: " + shieldAmount);
@@ -115,6 +121,11 @@ public class CastleWallManager : MonoBehaviour
             StopCoroutine(resetShieldCoroutine);
         }
 
+        foreach (var wall in wallObjects)
+        {
+            CastleWall cwall = wall.GetComponent<CastleWall>();
+            cwall.ChangeWallColor(true);  // 실드 활성화 시 색상 변경
+        }
         AddShield(shieldAmount); // 실드 추가
         resetShieldCoroutine = StartCoroutine(ResetEarnShieldAfterDelay(duration)); // 일정 시간 후 실드 초기화
     }
@@ -122,12 +133,17 @@ public class CastleWallManager : MonoBehaviour
     private IEnumerator ResetEarnShieldAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
+        foreach (var wall in wallObjects)
+        {
+            CastleWall cwall = wall.GetComponent<CastleWall>();
+            cwall.ChangeWallColor(false);  // 실드 활성화 시 색상 변경
+        }
         SetShield(0); // 실드 초기화
         hasShield = false; // 실드 비활성화
         Debug.Log("Shield reset to original values.");
     }
 
-    public void ActivateShield()
+    private void ActivateShield()
     {
         SetShield(activateShieldValue);
         hasShield = true; // 실드 활성화 시 hasShield를 true로 설정
