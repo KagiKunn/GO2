@@ -49,11 +49,14 @@ public class EnemySpawner : MonoBehaviour
     public void SetSelectedRace(string race)
     {
         selectedRace = race;
+        CustomLogger.Log("에너미 스포너의 SetSelectedRace : " + selectedRace,"pink");
     }
     
     private void Start()
     {
+        CustomLogger.Log("EnemySpawner Start()진입", "pink");
         // EnemyPrefabList 참조 가져오기
+        
         enemyPrefabList = FindObjectOfType<EnemyPrefabList>();
         if (enemyPrefabList == null)
         {
@@ -63,9 +66,15 @@ public class EnemySpawner : MonoBehaviour
 
         // 선택된 종족의 적 프리팹 배열 가져오기
         var enemyPrefabsArray = enemyPrefabList.GetEnemyPrefabs(selectedRace);
+        CustomLogger.Log("적 프리팹 배열 길이: " + enemyPrefabsArray.Length, "pink");
+
         if (enemyPrefabsArray.Length > 0)
         {
+            _enemyPrefabs = new List<GameObject>(enemyPrefabsArray);
+            CustomLogger.Log("_enemyPrefabs 초기화 완료: " + _enemyPrefabs.Count + "개의 프리팹이 추가됨", "pink");
+
             bossPrefab = enemyPrefabsArray[enemyPrefabsArray.Length - 1];
+            CustomLogger.Log("보스 프리팹 설정 완료: " + bossPrefab.name, "pink");
         }
         else
         {
@@ -82,23 +91,31 @@ public class EnemySpawner : MonoBehaviour
             progressBar.SetMaxValue(totalEnemiesToSpawn);
             progressBar.SetValue(0);
         }
-
+        CustomLogger.Log("SpawnWaves() 시작", "pink");
         StartCoroutine(SpawnWaves());
     }
 
     IEnumerator SpawnWaves()
     {
+        CustomLogger.Log("SpawnWaves()입갤 ㅋ");
         while (currentWave < totalWave)
         {
+            CustomLogger.Log("While문 입장?");
             currentWave++;
-            _enemyPrefabs = new List<GameObject>(); // 웨이브마다 List 초기화
 
             // 현재 웨이브에 맞는 적 프리팹들을 가져옴
             _enemyPrefabs.AddRange(GetWaveEnemyPrefabs());
 
-            CustomLogger.Log(currentWave + " 웨이브 시작");
+            CustomLogger.Log(currentWave + " 웨이브 시작. 적 프리팹 수: " + _enemyPrefabs.Count, "pink");
 
-            yield return StartCoroutine(SpawnObjects());
+            if (_enemyPrefabs.Count > 0)
+            {
+                yield return StartCoroutine(SpawnObjects());
+            }
+            else
+            {
+                CustomLogger.LogError("적 프리팹이 초기화되지 않았습니다!", "red");
+            }
 
             // 웨이브 종료 시 적 수 초기화
             spawnedEnemy = 0;
@@ -106,7 +123,7 @@ public class EnemySpawner : MonoBehaviour
             if (currentWave < totalWave)
             {
                 CustomLogger.Log("웨이브 " + currentWave + " 종료. 다음 웨이브까지 10초 대기.", "yellow");
-                yield return new WaitForSeconds(10f);
+                yield return new WaitForSeconds(5f);
             }
         }
 
@@ -117,6 +134,7 @@ public class EnemySpawner : MonoBehaviour
 
     IEnumerator SpawnObjects()
     {
+        CustomLogger.Log("SpawnObjects() 시작. 생성할 적 수: " + numberOfObjects, "pink");
         for (int i = 0; i < numberOfObjects; i++)
         {
             // rightSpawn 값을 랜덤으로 결정
@@ -165,6 +183,10 @@ public class EnemySpawner : MonoBehaviour
 
     List<GameObject> GetWaveEnemyPrefabs()
     {
+        CustomLogger.Log("GetWaveEnemyPrefabs() 진입");
+        CustomLogger.Log("_enemyPrefabs의 프리팹 수: " + _enemyPrefabs.Count, "pink");
+        CustomLogger.Log("현재 웨이브: " + currentWave, "pink");
+        
         List<GameObject> wavePrefabs = new List<GameObject>();
 
         switch (currentWave)
@@ -186,8 +208,11 @@ public class EnemySpawner : MonoBehaviour
                 wavePrefabs.Add(_enemyPrefabs[3]);
                 wavePrefabs.Add(_enemyPrefabs[4]);
                 break;
+            default:
+                CustomLogger.LogError("currentWave 값이 범위를 벗어났습니다: " + currentWave, "red");
+                break;
         }
-
+        CustomLogger.Log("GetWaveEnemyPrefabs() - Wave " + currentWave + "의 적 프리팹 수: " + wavePrefabs.Count, "pink");
         return wavePrefabs;
     }
 

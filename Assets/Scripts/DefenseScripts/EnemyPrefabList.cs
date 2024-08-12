@@ -24,14 +24,19 @@ public class EnemyPrefabList : MonoBehaviour
         switch (race)
         {
             case "DarkElf":
+                CustomLogger.Log("프리팹 리스트 DarkElf 반환");
                 return darkElfPrefabs.ToArray();
             case "Human":
+                CustomLogger.Log("프리팹 리스트 Human 반환");
                 return humanPrefabs.ToArray();
             case "Witch":
+                CustomLogger.Log("프리팹 리스트 Witch 반환");
                 return witchPrefabs.ToArray();
             case "Orc":
+                CustomLogger.Log("프리팹 리스트 Orc 반환");
                 return orcPrefabs.ToArray();
             case "Skeleton":
+                CustomLogger.Log("프리팹 리스트 Skeleton 반환");
                 return skeletonPrefabs.ToArray();
             default:
                 Debug.LogWarning("해당하는 종족의 프리팹 리스트가 없습니다: " + race);
