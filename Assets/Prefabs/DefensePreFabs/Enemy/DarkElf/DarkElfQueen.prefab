@@ -1965,7 +1965,7 @@ Transform:
   m_GameObject: {fileID: 2559675139453203779}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.0000012172386, z: -0, w: 1}
-  m_LocalPosition: {x: 199.96954, y: 0, z: 3.4904888}
+  m_LocalPosition: {x: 0, y: 0, z: 3.4904888}
   m_LocalScale: {x: 10, y: 10, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2073,18 +2073,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f417b36df4681e48a4521d737d5c364, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 10
-  moveSpeed: 10
+  health: 25
+  moveSpeed: 20
   detectionLayerMask:
     serializedVersion: 2
     m_Bits: 64
-  attackDamage: 2
-  attackSpeed: 1
+  attackDamage: 7
+  attackSpeed: 1.2
   runState: 0.25
   attackState: 0
   normalState: 0.5
   skillState: 0
-  boxSize: {x: 70, y: 0.1}
+  boxSize: {x: 80, y: 0.1}
+  isRight: 0
   projectilePrefab: {fileID: 8172912759357463194, guid: 93893641fc90ec44bb1edc78365e60d4,
     type: 3}
   movementdirection: {x: -1, y: 0, z: 0}
@@ -2092,7 +2093,7 @@ MonoBehaviour:
   percent: 0
   isBoss: 0
   stageEndNotice: {fileID: 0}
-  stageEndUI: {fileID: 0}
+  stageClearUI: {fileID: 0}
 --- !u!58 &1633647741894230480
 CircleCollider2D:
   m_ObjectHideFlags: 0

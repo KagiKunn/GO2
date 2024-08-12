@@ -3389,7 +3389,7 @@ Transform:
   m_GameObject: {fileID: 7876398243370056514}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 199.96954, y: 0, z: 3.4904888}
+  m_LocalPosition: {x: 0, y: 0, z: 3.4904888}
   m_LocalScale: {x: 10, y: 10, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3455,6 +3455,7 @@ MonoBehaviour:
   normalState: 0.25
   skillState: 0
   boxSize: {x: 60, y: 0.1}
+  isRight: 0
   projectilePrefab: {fileID: 8172912759357463194, guid: 93893641fc90ec44bb1edc78365e60d4,
     type: 3}
   movementdirection: {x: -1, y: 0, z: 0}
@@ -3462,7 +3463,7 @@ MonoBehaviour:
   percent: 0
   isBoss: 0
   stageEndNotice: {fileID: 0}
-  stageEndUI: {fileID: 0}
+  stageClearUI: {fileID: 0}
 --- !u!50 &5933452589616873904
 Rigidbody2D:
   serializedVersion: 4
