@@ -21,8 +21,8 @@ public class HumanSpawner: MonoBehaviour
     private float leftMaxY = -420f;
 
     // 고정된 X축 좌표
-    private const float rightX = -30f;
-    private const float leftX = 150f;
+    [SerializeField] private float rightX = 170f;
+    [SerializeField] private float leftX = -110f;
 
     // 생성할 오브젝트의 개수
     [SerializeField] public int numberOfObjects = 10;
@@ -208,6 +208,11 @@ public class HumanSpawner: MonoBehaviour
             boss.transform.GetChild(0).GetComponent<EnemyMovement>().isRight = false;
         }
 
-        // boss.transform.localScale *= 3;
+        float scaleMultiplier = 3f;
+        boss.transform.localScale *= scaleMultiplier;
+
+        // 스케일이 변경되었으므로 위치를 보정
+        Vector3 scaleCorrection = Vector3.one * (scaleMultiplier - 1) * 0.5f;
+        boss.transform.position -= scaleCorrection;
     }
 }
