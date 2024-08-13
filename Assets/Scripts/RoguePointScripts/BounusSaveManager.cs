@@ -72,7 +72,7 @@ public class BounusSaveManager : MonoBehaviour
         
         Debug.Log("Player Data Saved: " + JsonUtility.ToJson(playerDataScriptableObject.data));
         
-        SceneManager.LoadScene("Defense");
+        SceneManager.LoadScene("InternalAffairs");
     }
 
     private void CreateDirectoryIfNotExists(string path)

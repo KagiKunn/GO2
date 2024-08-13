@@ -4,8 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Serialization;
 
-#pragma warning disable CS0414
-
 public class EnemyMovement : MonoBehaviour
 {
     [SerializeField] private float health = 10f;
