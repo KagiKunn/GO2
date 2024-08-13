@@ -18,6 +18,7 @@ public static class JsonInventory
         }
 
         string json = File.ReadAllText(filePath);
+        CustomLogger.Log($"JSON content: {json}");
         return JsonUtility.FromJson<T>(json);
 
     }

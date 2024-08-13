@@ -17,7 +17,7 @@ public class InventoryUI : MonoBehaviour
     public TextMeshProUGUI itemInfoText;
     public Button deleteButton;
     public Button closeButton;
-    private ItemSO selectedItem;
+    private ItemInstance selectedItem;
     private Transform selectedSlot;
     private const string inventoryFilePath = "inventory.json";
 
@@ -63,10 +63,16 @@ public class InventoryUI : MonoBehaviour
         {
             position = new Vector2(Input.mousePosition.x, Input.mousePosition.y)
         };
+        
         List<RaycastResult> results = new List<RaycastResult>();
         EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
+        
         foreach (var result in results)
         {
+            if (result.gameObject == deleteButton.gameObject)
+            {
+                return true;
+            }
             if (result.gameObject.transform.IsChildOf(inventoryContent))
             {
                 return true;
@@ -97,10 +103,10 @@ public class InventoryUI : MonoBehaviour
         scrollRect.verticalNormalizedPosition = 1f;
     }
 
-    public void AddItemToInventory(ItemSO item)
+    public void AddItemToInventory(ItemInstance itemInstance)
     {
         CanAddItem();
-        inventoryData.items.Add(item);
+        inventoryData.items.Add(itemInstance);
         SaveInventory();
         UpdateInventoryUI();
     }
@@ -130,68 +136,80 @@ public class InventoryUI : MonoBehaviour
         }
     }
 
-    private void UpdateSlotUI(Transform slot, ItemSO item)
+    public void UpdateSlotUI(Transform slot, ItemInstance itemInstance)
     {
-        Image itemImage = slot.Find("ItemImage").GetComponent<Image>();
-        TextMeshProUGUI itemName = slot.Find("ItemName").GetComponent<TextMeshProUGUI>();
+        ItemSlot itemSlotComponent = slot.GetComponent<ItemSlot>();
 
-        if (itemImage == null)
+        if (itemSlotComponent != null)
         {
-            CustomLogger.LogError("ItemImage component is missing on ItemImage GameObject.");
-        }
+            itemSlotComponent.ItemInstance = itemInstance;
+            
+            Image itemImage = slot.Find("ItemImage").GetComponent<Image>();
+            TextMeshProUGUI itemName = slot.Find("ItemName").GetComponent<TextMeshProUGUI>();
 
-        if (itemName == null)
-        {
-            CustomLogger.LogError("Text component is missing on ItemName GameObject.");
-        }
-
-        if (item != null)
-        {
-            itemImage.sprite = item.icon;
-            itemName.text = item.itemName;
-            Button sloButton = slot.GetComponent<Button>();
-
-            if (sloButton != null)
+            if (itemImage == null)
             {
-                sloButton.onClick.RemoveAllListeners();
-                sloButton.onClick.AddListener(() => {
-                    if (selectedSlot == slot && itemInfoPanel.activeSelf)
-                    {
-                        itemInfoPanel.SetActive(false);
-                    }
-                    else
-                    {
-                        ItemInfo(item, slot);
-                    }
-                });
+                CustomLogger.LogError("ItemImage component is missing on ItemImage GameObject.");
+                return;
+            }
+
+            if (itemName == null)
+            {
+                CustomLogger.LogError("Text component is missing on ItemName GameObject.");
+                return;
+            }
+
+            if (itemInstance != null)
+            {
+                itemImage.sprite = itemInstance.itemData.icon;
+                itemName.text = itemInstance.itemData.itemName;
+                Button slotButton = slot.GetComponent<Button>();
+
+                if (slotButton != null)
+                {
+                    slotButton.onClick.RemoveAllListeners();
+                    slotButton.onClick.AddListener(() => {
+                        if (selectedSlot == slot && itemInfoPanel.activeSelf)
+                        {
+                            itemInfoPanel.SetActive(false);
+                        }
+                        else
+                        {
+                            ItemInfo(itemInstance, slot);
+                        }
+                    });
+                }
+            }
+            else
+            {
+                itemImage.sprite = null;
+                itemName.text = "";
+                Button slotButton = slot.GetComponent<Button>();
+                if (slotButton != null)
+                {
+                    slotButton.onClick.RemoveAllListeners();
+                    slotButton.onClick.AddListener(()=>{itemInfoPanel.SetActive(false);});
+                }
             }
         }
-        else
-        {
-            itemImage.sprite = null;
-            itemName.text = "";
-            Button slotButton = slot.GetComponent<Button>();
-            if (slotButton != null)
-            {
-                slotButton.onClick.RemoveAllListeners();
-                slotButton.onClick.AddListener(()=>{itemInfoPanel.SetActive(false);});
-            }
-        }
-    }
-
-    public void SwapItems(ItemSlot slot1, ItemSlot slot2)
-    {
-        ItemSO tempItem = slot1.item;
-        slot1.item = slot2.item;
-        slot2.item = tempItem;
         
-        UpdateInventoryUI();
-        SaveInventory();
+        
     }
+
+    // public void SwapItems(ItemSlot slot1, ItemSlot slot2)
+    // {
+    //     ItemSO tempItem = slot1.item;
+    //     slot1.item = slot2.item;
+    //     slot2.item = tempItem;
+    //     
+    //     UpdateInventoryUI();
+    //     SaveInventory();
+    // }
 
     void SaveInventory()
     {
         JsonInventory.SaveToJson(inventoryData, inventoryFilePath);
+        CustomLogger.Log("저장완료!");
     }
 
     void LoadInventory()
@@ -199,14 +217,23 @@ public class InventoryUI : MonoBehaviour
         inventoryData = JsonInventory.LoadFromJson<InventoryData>(inventoryFilePath) ?? new InventoryData();
 
         int currentSlotCount = inventoryContent.childCount;
+        CustomLogger.Log($"Number of items in inventoryData: {inventoryData.items.Count}");
+        foreach (var itemInstance in inventoryData.items)
+        {
+            CustomLogger.Log($"Item ID in inventory: {itemInstance.itemID}");
+        }
 
         for (int i = 0; i < inventoryData.additionalSlotCount; i++)
         {
-            GameObject newSlot =
-                (GameObject)AssetDatabase.LoadAssetAtPath("Assets/JSFolder/PreFab/Slot.prefab", typeof(GameObject));
+            GameObject newSlot = Resources.Load<GameObject>("PreFab/Slot");
             if (newSlot != null)
             {
                 Instantiate(newSlot, inventoryContent);
+            }
+
+            foreach (var itemInstance in inventoryData.items)
+            {
+                itemInstance.LoadItemData();
             }
         }
 
@@ -250,14 +277,14 @@ public class InventoryUI : MonoBehaviour
         ExpandInventory(4);
     }
 
-    public void ItemInfo(ItemSO item, Transform slot)
+    public void ItemInfo(ItemInstance itemInstance, Transform slot)
     {
-        selectedItem = item;
+        selectedItem = itemInstance;
         selectedSlot = slot;
 
-        itemInfoText.text = $"{item.itemName}";
+        itemInfoText.text = $"{itemInstance.itemData.itemName}";
 
-        switch (item.rarity)
+        switch (itemInstance.itemData.rarity)
         {
             case ItemRarity.Normal:
                 itemInfoText.color = Color.white;
@@ -285,13 +312,31 @@ public class InventoryUI : MonoBehaviour
 
     public void DeleteSelectedItem()
     {
+        CustomLogger.Log("DeleteSelectedItem() method called.");
+        
         if (selectedItem != null && selectedSlot != null)
         {
-            inventoryData.items.Remove(selectedItem);
+            CustomLogger.Log($"Attempting to delete item: {selectedItem.itemData.itemName} from slot: {selectedSlot.name}");
+            
+            if (inventoryData.items.Contains(selectedItem))
+            {
+                inventoryData.items.Remove(selectedItem);
+                CustomLogger.Log($"Item {selectedItem.itemData.itemName} removed from inventory.");
+            }
+            else
+            {
+                CustomLogger.LogWarning($"Item {selectedItem.itemData.itemName} not found in inventory.");
+                return;
+            }
+            
             SaveInventory();
             UpdateSlotUI(selectedSlot, null);
             itemInfoPanel.SetActive(false);
             RearrangeInventorySlots();
+        }
+        else
+        {
+            CustomLogger.LogWarning("No item selected for deletion or slot is null.");
         }
     }
 
