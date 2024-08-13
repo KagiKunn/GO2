@@ -129,7 +129,7 @@ public class CameraControl : MonoBehaviour {
 			clampedX = Mathf.Clamp(targetPosition.x, maxBounds.x + halfWidth, minBounds.x - halfWidth);
 		}
 
-		float clampedY = Mathf.Clamp(targetPosition.y, minBounds.y + halfHeight, maxBounds.y - halfHeight);
+		float clampedY = Mathf.Clamp(targetPosition.y, minBounds.y + halfHeight + 20, maxBounds.y - halfHeight);
 
 		if (!allway) {
 			clampedX = currentPosition.x; // y축으로만 이동하도록 제한
@@ -144,7 +144,7 @@ public class CameraControl : MonoBehaviour {
 		if (camera.orthographicSize <= 26.7f && scroll > 0) {
 			temp_value = camera.orthographicSize;
 			camera.orthographicSize = temp_value;
-		} else if (camera.orthographicSize >= 50.3f && scroll < 0) {
+		} else if (camera.orthographicSize >= 100f && scroll < 0) {
 			temp_value = camera.orthographicSize;
 			camera.orthographicSize = temp_value;
 		} else {
@@ -162,7 +162,7 @@ public class CameraControl : MonoBehaviour {
 			clampedX = Mathf.Clamp(currentPosition.x, maxBounds.x + halfWidth, minBounds.x - halfWidth);
 		}
 
-		float clampedY = Mathf.Clamp(currentPosition.y, minBounds.y + halfHeight, maxBounds.y - halfHeight);
+		float clampedY = Mathf.Clamp(currentPosition.y, minBounds.y +  + halfHeight + 20, maxBounds.y - halfHeight);
 		camera.transform.position = new Vector3(clampedX, clampedY, currentPosition.z);
 	}
 
