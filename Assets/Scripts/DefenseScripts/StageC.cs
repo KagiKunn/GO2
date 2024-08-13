@@ -12,9 +12,10 @@ public class StageC : MonoBehaviour
     [SerializeField] private Image stageClearImage;
     [SerializeField] private Button stageClearButton;
 
-    private string[] stageRace = { "Human", "DarkElf", "Orc", "Witch", "Skeleton" };
+    [SerializeField] private DefenseGameData defenseGameData; // ScriptableObject 참조
+    [SerializeField] private int currentStageCount; // 현재 stageCount 값을 인스펙터에서 확인
+
     private EnemySpawner enemySpawner;
-    private int stageCount;
 
     private void Awake()
     {
@@ -35,6 +36,17 @@ public class StageC : MonoBehaviour
         else
         {
             Debug.LogError("EnemySpawner를 찾을 수 없습니다!");
+        }
+
+        // 현재 stageCount 값 업데이트
+        UpdateStageCount();
+    }
+
+    private void UpdateStageCount()
+    {
+        if (defenseGameData != null)
+        {
+            currentStageCount = defenseGameData.StageCount; // DefenseGameData의 stageCount 값을 가져옴
         }
     }
 
@@ -78,15 +90,13 @@ public class StageC : MonoBehaviour
 
     private string SelectRandomRace()
     {
-        // stageCount 계산
-        stageCount = 6 - stageRace.Length;
+        // 랜덤으로 stageRace 배열에서 종족 선택
+        int randomIndex = Random.Range(0, defenseGameData.StageRace.Length);
+        string selectedRace = defenseGameData.StageRace[randomIndex];
 
-        int randomIndex = Random.Range(0, stageRace.Length);
-        string selectedRace = stageRace[randomIndex];
-
-        // 선택된 종족을 배열에서 제거
-        stageRace = RemoveRaceAt(stageRace, randomIndex);
-
+        // 선택된 종족을 배열에서 제거한 후 DefenseGameData의 stageRace에 재할당
+        defenseGameData.StageRace = RemoveRaceAt(defenseGameData.StageRace, randomIndex);
+        
         return selectedRace;
     }
 
