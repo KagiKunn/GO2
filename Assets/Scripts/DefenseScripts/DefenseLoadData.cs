@@ -14,12 +14,12 @@ public class DefenseLoadData : MonoBehaviour
     {
         filePath = Path.Combine(Application.dataPath, "save", "RogueLike", "Bounus.json");
         // 여기서 게임 세이브파일 로드
-        
+        Bounus loadedBounus = LoadBounus();
         // 여기부턴 로그라이크 포인트 로드
-        gameObject.GetComponent<DefenseInit>().startGold1 = LoadBounus().startGold;
-        gameObject.GetComponent<DefenseInit>().earnGold1 = LoadBounus().moreEarnGold;
-        gameObject.GetComponent<DefenseInit>().castleHealth1 = LoadBounus().moreCastleHealth;
-        gameObject.GetComponent<DefenseInit>().cooldown1 = LoadBounus().reduceCooldown;
+        gameObject.GetComponent<DefenseInit>().startGold1 = loadedBounus.startGold1;
+        gameObject.GetComponent<DefenseInit>().earnGold1 = loadedBounus.moreEarnGold1;
+        gameObject.GetComponent<DefenseInit>().castleHealth1 = loadedBounus.moreEarnGold1;
+        gameObject.GetComponent<DefenseInit>().cooldown1 = loadedBounus.reduceCooldown1;
     }
 
     void Update()
