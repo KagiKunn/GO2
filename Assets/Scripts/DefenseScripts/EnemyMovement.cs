@@ -277,10 +277,8 @@ public class EnemyMovement : MonoBehaviour
 
 	private void Die() {
 		// 적이 죽었을 때의 동작 (예: 오브젝트 비활성화)
-		CustomLogger.Log("Die 호출");
 
         // 적의 root 의 태그 출력
-        CustomLogger.Log("적 Root 태그 : " + gameObject.tag);
 
         DefenseInit defenseInit = GameObject.Find("InitSetting").GetComponent<DefenseInit>();
         int crntgold;
