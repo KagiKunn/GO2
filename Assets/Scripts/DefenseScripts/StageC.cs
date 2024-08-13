@@ -12,11 +12,30 @@ public class StageC : MonoBehaviour
     [SerializeField] private Image stageClearImage;
     [SerializeField] private Button stageClearButton;
 
+    private string[] stageRace = { "Human", "DarkElf", "Orc", "Witch", "Skeleton" };
+    private EnemySpawner enemySpawner;
+    private int stageCount;
+
     private void Awake()
     {
         // 초기화
         InitializeGameOverUI();
         InitializeStageClearUI();
+
+        // EnemySpawner 찾기
+        enemySpawner = FindObjectOfType<EnemySpawner>();
+
+        // EnemySpawner가 존재하는지 확인
+        if (enemySpawner != null)
+        {
+            // stageRace 배열에서 랜덤으로 종족 선택 및 제거
+            string selectedRace = SelectRandomRace();
+            enemySpawner.SetSelectedRace(selectedRace); // 선택된 종족 설정
+        }
+        else
+        {
+            Debug.LogError("EnemySpawner를 찾을 수 없습니다!");
+        }
     }
 
     private void InitializeGameOverUI()
@@ -55,6 +74,33 @@ public class StageC : MonoBehaviour
             stageClearButton.enabled = false;
             stageClearButton.onClick.AddListener(OnStageClearButtonClick);
         }
+    }
+
+    private string SelectRandomRace()
+    {
+        // stageCount 계산
+        stageCount = 6 - stageRace.Length;
+
+        int randomIndex = Random.Range(0, stageRace.Length);
+        string selectedRace = stageRace[randomIndex];
+
+        // 선택된 종족을 배열에서 제거
+        stageRace = RemoveRaceAt(stageRace, randomIndex);
+
+        return selectedRace;
+    }
+
+    private string[] RemoveRaceAt(string[] array, int index)
+    {
+        string[] newArray = new string[array.Length - 1];
+        for (int i = 0, j = 0; i < array.Length; i++)
+        {
+            if (i != index)
+            {
+                newArray[j++] = array[i];
+            }
+        }
+        return newArray;
     }
 
     public void ShowGameOverUI()

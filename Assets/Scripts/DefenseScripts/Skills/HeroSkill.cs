@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -11,6 +12,7 @@ public abstract class HeroSkill : MonoBehaviour
 
     public bool isActive = true;
     public float cooldown = 10f;
+    public float extraCool = 1;
 
     public virtual void HeroSkillAction()
     {
@@ -28,6 +30,22 @@ public abstract class HeroSkill : MonoBehaviour
         CustomLogger.Log("스킬 발동!!!!!!");
         // 이미지 오브젝트 생성 및 위치 설정
         StartCoroutine(CreateSkillImage());
+    }
+
+    private void Awake()
+    {
+        bool cool = GameObject.Find("InitSetting").GetComponent<DefenseInit>().cooldown1;
+        if (cool)
+        {
+            CustomLogger.Log(cool,"orange");
+            cooldown = cooldown - (cooldown * (extraCool/10));
+        }
+    }
+
+    public float extraCool1
+    {
+        get => extraCool;
+        set => extraCool = value;
     }
 
     private IEnumerator CreateSkillImage()
