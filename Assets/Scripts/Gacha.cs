@@ -28,9 +28,9 @@ public class Gacha : MonoBehaviour {
 	private void Awake() {
 		if (Instance == null) {
 			Instance = this;
-			DontDestroyOnLoad(gameObject);
+			DontDestroyOnLoad(this.gameObject);
 		} else {
-			Destroy(gameObject);
+			Destroy(this.gameObject);
 		}
 	}
 
@@ -42,18 +42,22 @@ public class Gacha : MonoBehaviour {
 
 		if (resultImage != null) {
 			resultImage.enabled = false;
+			CustomLogger.Log("resultImage Null 아님");
 		}
 
 		if (resultText != null) {
 			resultText.enabled = false;
+			CustomLogger.Log("resultText Null 아님");
 		}
 
 		if (inventoryUI == null) {
 			inventoryUI = FindObjectOfType<InventoryUI>();
+			CustomLogger.Log("inventoryUI Null");
 		}
 
 		if (warningText != null) {
 			warningText.enabled = false;
+			CustomLogger.Log("warningText Null 아님");
 		}
 	}
 

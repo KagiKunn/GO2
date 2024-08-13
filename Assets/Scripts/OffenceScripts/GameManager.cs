@@ -49,7 +49,7 @@ public class GameManager : MonoBehaviour {
 	private Weapon weapon;
 
 	public enum HeroNames {
-		Dummy, KKS01, Novice, knight, Dualweapon, Elf, LSH01, CHS01
+		Dummy, KKS01, Novice, Knight, DualWeapon, Elf, LSH01, CHS01
 	}
 
 	public HeroNames heroNames;
@@ -152,9 +152,11 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void GameRetry() {
-		Destroy(this.gameObject);
-		
-		SceneManager.LoadScene("Offence");
+		SceneManager.LoadScene("InternalAffairs");
+	}
+
+	public void GameWin() {
+		SceneManager.LoadScene("Gatcha");
 	}
 
 	private void Update() {
