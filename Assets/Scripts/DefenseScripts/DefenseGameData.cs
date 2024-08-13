@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.IO;
+using UnityEngine;
 
 [CreateAssetMenu(fileName = "DefenseGameData", menuName = "Game Data/Defense Game Data")]
 public class DefenseGameData : ScriptableObject
@@ -31,4 +32,30 @@ public class DefenseGameData : ScriptableObject
     }
     // stageCount를 외부에서 접근할 수 있도록 하는 프로퍼티
     public int StageCount => stageCount;
+    
+    // JSON 형식으로 데이터를 저장하는 메서드
+    public void SaveToJson(string filePath)
+    {
+        string json = JsonUtility.ToJson(this, true); // 객체를 JSON으로 직렬화
+        File.WriteAllText(filePath, json); // JSON을 파일에 저장
+    }
+
+    // JSON 형식으로 데이터를 불러오는 메서드
+    public void LoadFromJson(string filePath)
+    {
+        if (File.Exists(filePath))
+        {
+            string json = File.ReadAllText(filePath); // 파일에서 JSON 읽기
+            JsonUtility.FromJsonOverwrite(json, this); // JSON 데이터를 객체에 덮어쓰기
+            CustomLogger.Log("세이브데이터 로드 완료. 경로 : " + filePath, "pink");
+            UpdateStageCount(); // 불러온 후 stageCount를 업데이트
+        }
+        else
+        {
+            Debug.LogWarning("세이브 파일을 찾을 수 없습니다. 기본값으로 초기화합니다.");
+            ResetStageRace(); // 기본값으로 초기화
+            SaveToJson(filePath); //기본값 데이터를 세이브파일로 저장
+        }
+    }
+    
 }

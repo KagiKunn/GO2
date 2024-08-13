@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.IO;
+using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
@@ -14,11 +15,27 @@ public class StageC : MonoBehaviour
 
     [SerializeField] private DefenseGameData defenseGameData; // ScriptableObject 참조
     [SerializeField] private int currentStageCount; // 현재 stageCount 값을 인스펙터에서 확인
-
+    [SerializeField] private string[] currentStageRace; // 현재 stageRace 배열을 인스펙터에서 확인
+    [SerializeField] private string selectedRace;
+    
+    private string saveFilePath;
     private EnemySpawner enemySpawner;
 
     private void Awake()
     {
+        // Save file path 설정
+        string savePath = Path.Combine(Application.dataPath, "save", "DefenseData");
+        Directory.CreateDirectory(savePath); // 디렉터리가 없으면 생성
+
+        // 파일 경로 설정
+        saveFilePath = Path.Combine(savePath, "DefenseGameData.json");
+
+        // 경로를 출력하여 확인
+        Debug.Log("Save file path: " + saveFilePath);
+
+        // JSON에서 데이터를 불러옴
+        defenseGameData.LoadFromJson(saveFilePath);
+
         // 초기화
         InitializeGameOverUI();
         InitializeStageClearUI();
@@ -30,7 +47,7 @@ public class StageC : MonoBehaviour
         if (enemySpawner != null)
         {
             // stageRace 배열에서 랜덤으로 종족 선택 및 제거
-            string selectedRace = SelectRandomRace();
+            selectedRace = SelectRandomRace();
             enemySpawner.SetSelectedRace(selectedRace); // 선택된 종족 설정
         }
         else
@@ -38,18 +55,19 @@ public class StageC : MonoBehaviour
             Debug.LogError("EnemySpawner를 찾을 수 없습니다!");
         }
 
-        // 현재 stageCount 값 업데이트
-        UpdateStageCount();
+        // 현재 stageCount와 stageRace 배열 업데이트
+        UpdateStageData();
     }
 
-    private void UpdateStageCount()
+    private void UpdateStageData()
     {
         if (defenseGameData != null)
         {
             currentStageCount = defenseGameData.StageCount; // DefenseGameData의 stageCount 값을 가져옴
+            currentStageRace = defenseGameData.StageRace; // DefenseGameData의 stageRace 배열 값을 가져옴
         }
     }
-
+    
     private void InitializeGameOverUI()
     {
         if (gameOverCanvas != null)
@@ -96,7 +114,10 @@ public class StageC : MonoBehaviour
 
         // 선택된 종족을 배열에서 제거한 후 DefenseGameData의 stageRace에 재할당
         defenseGameData.StageRace = RemoveRaceAt(defenseGameData.StageRace, randomIndex);
-        
+
+        // stageRace 배열을 업데이트
+        UpdateStageData();
+
         return selectedRace;
     }
 
@@ -156,12 +177,32 @@ public class StageC : MonoBehaviour
     private void OnGameOverButtonClick()
     {
         Debug.Log("게임 오버 버튼 클릭됨");
+        
+        //게임오버시 세이브파일 json삭제 처리
+        if (File.Exists(saveFilePath))
+        {
+            File.Delete(saveFilePath);
+            Debug.Log("게임 오버로 인해 세이브 파일이 삭제되었습니다: " + saveFilePath);
+        }
+        else
+        {
+            Debug.LogWarning("삭제할 세이브 파일이 존재하지 않습니다.");
+        }
+        
         SceneManager.LoadScene("Title");
     }
 
     private void OnStageClearButtonClick()
     {
         Debug.Log("스테이지 클리어 버튼 클릭됨");
+        SaveGameData(); //버튼 클릭 시 세이브데이터 저장
         SceneManager.LoadScene("InternalAffairs");
     }
+    
+    private void SaveGameData()
+    {
+        defenseGameData.SaveToJson(saveFilePath);
+        Debug.Log("게임 데이터가 저장되었습니다: " + saveFilePath);
+    }
+    
 }
