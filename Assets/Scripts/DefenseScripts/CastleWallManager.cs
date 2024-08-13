@@ -7,11 +7,18 @@ using UnityEngine.Tilemaps;
 
 public class CastleWallManager : MonoBehaviour
 {
+    public float extraHealth1
+    {
+        get => extraHealth;
+        set => extraHealth = value;
+    }
+
     public static CastleWallManager Instance;
 
-    [SerializeField] private float maxHealth = 3000f;
+    [SerializeField] private float maxHealth = 1000f;
     [SerializeField] private float activateShieldValue = 80f; // 실드 활성화 시 설정할 값
-
+    private float extraHealth = 0;
+    
     public float health;
     public float shield;
     public bool activateShield; // activateShield가 true이면 실드 적용 + hasShield를 true로 변경
@@ -27,6 +34,7 @@ public class CastleWallManager : MonoBehaviour
     private List<GameObject> wallObjects;
     private void Awake()
     {
+        maxHealth += extraHealth;
         wallObjects = new List<GameObject>();
         wallObjects.Add(GameObject.FindGameObjectsWithTag("RightWall")[0]);
         wallObjects.Add(GameObject.FindGameObjectsWithTag("LeftWall")[0]);
@@ -201,4 +209,6 @@ public class CastleWallManager : MonoBehaviour
 
     public float GetHealth() => health;
     public float GetShield() => shield;
+    
+    
 }

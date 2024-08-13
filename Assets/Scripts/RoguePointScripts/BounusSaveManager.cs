@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class BounusSaveManager : MonoBehaviour
@@ -43,6 +44,7 @@ public class BounusSaveManager : MonoBehaviour
         File.WriteAllText(filePath, json);
 
         Debug.Log("Game Saved: " + json);
+        SceneManager.LoadScene("Defense");
     }
 
     private void CreateDirectoryIfNotExists(string path)

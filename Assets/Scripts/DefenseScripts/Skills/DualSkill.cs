@@ -7,7 +7,8 @@ using UnityEngine;
 
 public class DualSkill : HeroSkill {
 	public float nockBackRang;
-	public float maxRange;
+	private float rightMax = 200f;
+	private float leftMax = -100f;
 	public float damage;
 	public float duration;
 	private List<GameObject> enemyObjects;
@@ -84,12 +85,22 @@ public class DualSkill : HeroSkill {
 	public IEnumerator NockBack(EnemyMovement target, float damage) {
 		// 넉백 거리 계산
 		Vector3 targetKnockback = target.transform.position;
-		targetKnockback.x = target.transform.position.x + nockBackRang;
-
-		if (targetKnockback.x > maxRange) {
-			targetKnockback.x = maxRange;
+		Vector3 direction = target.movementdirection;
+		if (target.isRight)
+		{
+			targetKnockback.x = target.transform.position.x + nockBackRang;
+			if (targetKnockback.x > rightMax) {
+				targetKnockback.x = rightMax;
+			}
+			
 		}
-
+		else
+		{
+			targetKnockback.x = target.transform.position.x - nockBackRang;
+			if (targetKnockback.x < leftMax) {
+				targetKnockback.x = leftMax;
+			}
+		}
 		// 적의 위치를 넉백 거리만큼 이동
 		target.transform.position = targetKnockback;
 
@@ -105,7 +116,7 @@ public class DualSkill : HeroSkill {
 
 		// 이동 상태 재개
 		target.isKnockedBack = false;
-		target.movementdirection = Vector3.left;
+		target.movementdirection = direction;
 		target.runState = 0.25f;
 
 		yield return null;
