@@ -6,6 +6,24 @@ public class PlayerData
     public string playerId;
     public int money;
     public int soul;
+
+    public string playerId1
+    {
+        get => playerId;
+        set => playerId = value;
+    }
+
+    public int money1
+    {
+        get => money;
+        set => money = value;
+    }
+
+    public int soul1
+    {
+        get => soul;
+        set => soul = value;
+    }
 }
 
 [CreateAssetMenu(fileName = "PlayerDataScriptableObject", menuName = "ScriptableObjects/PlayerData")]

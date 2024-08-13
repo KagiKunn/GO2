@@ -2,9 +2,7 @@ using System;
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using UnityEngine.Serialization;
-using Debug = UnityEngine.Debug;
 
 #pragma warning disable CS0414
 
@@ -30,6 +28,7 @@ public class EnemyMovement : MonoBehaviour
     private bool isChangingBrightness = false;
     public bool isKnockedBack = false;
     public float percent = 0f;
+    public int gold = 10;
     private bool deadJudge = true;
     public bool isBoss; //보스 여부 확인
     private GameObject horseRoot;
@@ -285,12 +284,21 @@ public class EnemyMovement : MonoBehaviour
         // 적의 root 의 태그 출력
         CustomLogger.Log("적 Root 태그 : " + gameObject.tag);
 
+        DefenseInit defenseInit = GameObject.Find("InitSetting").GetComponent<DefenseInit>();
+        int crntgold;
+        if (defenseInit.extraGold1 == 0)
+        {
+            crntgold = gold;
+        }
+        else
+        {
+            crntgold = gold + defenseInit.extraGold1 / gold;
+        }
+        defenseInit.currentGold1 += crntgold;
+        CustomLogger.Log(defenseInit.currentGold1);
 		// 적의 태그가 EnemyBoss 일때 실행
 		if (gameObject.CompareTag("EnemyBoss")) {
 			//여기에 보스가 죽었을때의 이벤트
-			//ex) 다른 스크립트로 값 전송, 메서드 실행
-			// find name stageManager -> 그 안에있는 메서드 실행
-			// 아니면 true값을 보내서 다른 스크립트에서 받은 값이 true 일때 메서드 실행 등...
 			CustomLogger.Log("보스 사망..............", "red");
 
             // 보스 사망 플래그 설정

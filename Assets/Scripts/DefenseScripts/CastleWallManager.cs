@@ -9,12 +9,6 @@ using UnityEngine.Tilemaps;
 
 public class CastleWallManager : MonoBehaviour
 {
-    public float extraHealth1
-    {
-        get => extraHealth;
-        set => extraHealth = value;
-    }
-
     public static CastleWallManager Instance;
 
     [SerializeField] private float maxHealth = 1000f;
@@ -34,6 +28,11 @@ public class CastleWallManager : MonoBehaviour
 	private StageC stageC; // StageC 스크립트 참조
 
     private List<GameObject> wallObjects;
+    public float extraHealth1
+    {
+	    get => extraHealth;
+	    set => extraHealth = value;
+    }
     private void Awake()
     {
         maxHealth += extraHealth;

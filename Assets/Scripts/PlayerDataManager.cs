@@ -21,10 +21,27 @@ public class PlayerDataManager : MonoBehaviour
         Debug.Log("Soul: " + playerDataScriptableObject.data.soul);
     }
 
-    public void SaveData()
+    public void AddMoney(int money)
     {
-        // JSON 파일로 데이터 저장
-        playerDataScriptableObject.SaveToJson(saveFilePath);
-        Debug.Log("Data saved to " + saveFilePath);
+        playerDataScriptableObject.data.money += money;
+    }
+    public void AddSoul(int soul)
+    {
+        playerDataScriptableObject.data.soul += soul;
+    }
+
+    public int GetMoney()
+    {
+        return playerDataScriptableObject.data.money;
+    }
+    public int GetSoul()
+    {
+        return playerDataScriptableObject.data.money;
+    }
+
+    public PlayerDataScriptableObject o
+    {
+        get => playerDataScriptableObject;
+        set => playerDataScriptableObject = value;
     }
 }
