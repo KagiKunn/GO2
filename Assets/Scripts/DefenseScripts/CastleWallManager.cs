@@ -7,18 +7,24 @@ using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine.Tilemaps;
 
-#pragma warning disable CS0618 // 형식 또는 멤버는 사용되지 않습니다.
+public class CastleWallManager : MonoBehaviour
+{
+    public float extraHealth1
+    {
+        get => extraHealth;
+        set => extraHealth = value;
+    }
 
-public class CastleWallManager : MonoBehaviour {
-	public static CastleWallManager Instance;
+    public static CastleWallManager Instance;
 
-	[SerializeField] private float maxHealth = 3000f;
-	[SerializeField] private float activateShieldValue = 80f; // 실드 활성화 시 설정할 값
-
-	public float health;
-	public float shield;
-	public bool activateShield; // activateShield가 true이면 실드 적용 + hasShield를 true로 변경
-	private Coroutine resetShieldCoroutine;
+    [SerializeField] private float maxHealth = 1000f;
+    [SerializeField] private float activateShieldValue = 80f; // 실드 활성화 시 설정할 값
+    private float extraHealth = 0;
+    
+    public float health;
+    public float shield;
+    public bool activateShield; // activateShield가 true이면 실드 적용 + hasShield를 true로 변경
+    private Coroutine resetShieldCoroutine;
 
 	[SerializeField] private Slider healthSlider;
 	[SerializeField] private Slider shieldSlider;
@@ -27,19 +33,22 @@ public class CastleWallManager : MonoBehaviour {
 
 	private StageC stageC; // StageC 스크립트 참조
 
-	private List<GameObject> wallObjects;
-
-	private void Awake() {
-		wallObjects = new List<GameObject>();
-		wallObjects.Add(GameObject.FindGameObjectsWithTag("RightWall")[0]);
-		wallObjects.Add(GameObject.FindGameObjectsWithTag("LeftWall")[0]);
-
-		// Singleton 패턴을 사용하여 유일한 인스턴스 보장
-		if (Instance == null) {
-			Instance = this;
-		} else {
-			Destroy(gameObject);
-		}
+    private List<GameObject> wallObjects;
+    private void Awake()
+    {
+        maxHealth += extraHealth;
+        wallObjects = new List<GameObject>();
+        wallObjects.Add(GameObject.FindGameObjectsWithTag("RightWall")[0]);
+        wallObjects.Add(GameObject.FindGameObjectsWithTag("LeftWall")[0]);
+        // Singleton 패턴을 사용하여 유일한 인스턴스 보장
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
 
 		health = maxHealth;
 		shield = 0f;
