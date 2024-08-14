@@ -3752,10 +3752,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: New Text
+  m_text: Alert
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 62d1eed68ce234313af5748ca7cae01a, type: 2}
-  m_sharedMaterial: {fileID: 1292622530897127846, guid: 62d1eed68ce234313af5748ca7cae01a,
+  m_fontAsset: {fileID: 11400000, guid: 7f21707a91fb94244970dd0ef7f52b10, type: 2}
+  m_sharedMaterial: {fileID: 8236074413892793931, guid: 7f21707a91fb94244970dd0ef7f52b10,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -5336,7 +5336,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52bf779a6276466ab16f68ae367d0b01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _notice: {fileID: 0}
+  _notice: {fileID: 1553697713}
   heroGameManager: {fileID: 1285370531}
   CharacterImage: {fileID: 1729296000}
   heroButtons:
@@ -5359,6 +5359,18 @@ MonoBehaviour:
   resetBtn: {fileID: 846084189}
   saveBtn: {fileID: 1603139876}
   reinforceBtn: {fileID: 843590091}
+  saveString:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []
 --- !u!114 &1553697713
 MonoBehaviour:
   m_ObjectHideFlags: 0
