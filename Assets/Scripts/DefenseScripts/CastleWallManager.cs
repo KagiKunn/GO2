@@ -1,182 +1,219 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-
 using System.Collections;
 using System.Collections.Generic;
-
 using UnityEngine.SceneManagement;
 using UnityEngine.Tilemaps;
 
-#pragma warning disable CS0618 // 형식 또는 멤버는 사용되지 않습니다.
+public class CastleWallManager : MonoBehaviour
+{
+    public static CastleWallManager Instance;
 
-public class CastleWallManager : MonoBehaviour {
-	public static CastleWallManager Instance;
+    [SerializeField] private float maxHealth = 1000f;
+    [SerializeField] private float activateShieldValue = 80f; // 실드 활성화 시 설정할 값
+    private float extraHealth = 0;
 
-	[SerializeField] private float maxHealth = 3000f;
-	[SerializeField] private float activateShieldValue = 80f; // 실드 활성화 시 설정할 값
 
-	public float health;
-	public float shield;
-	public bool activateShield; // activateShield가 true이면 실드 적용 + hasShield를 true로 변경
-	private Coroutine resetShieldCoroutine;
+    private HeroGameManager heroGameManager;
+    public float health;
+    public float shield;
+    public bool activateShield; // activateShield가 true이면 실드 적용 + hasShield를 true로 변경
+    private Coroutine resetShieldCoroutine;
 
-	[SerializeField] private Slider healthSlider;
-	[SerializeField] private Slider shieldSlider;
+    [SerializeField] private Slider healthSlider;
+    [SerializeField] private Slider shieldSlider;
 
-	[SerializeField] private bool hasShield; // hasShield가 false가 되면 즉시 실드 무효화
+    [SerializeField] private bool hasShield; // hasShield가 false가 되면 즉시 실드 무효화
 
-	private StageC stageC; // StageC 스크립트 참조
+    private StageC stageC; // StageC 스크립트 참조
 
-	private List<GameObject> wallObjects;
+    private List<GameObject> wallObjects;
+    public float extraHealth1
+    {
+	    get => extraHealth;
+	    set => extraHealth = value;
+    }
+    private void Awake()
+    {
+        maxHealth += extraHealth;
+        wallObjects = new List<GameObject>();
+        wallObjects.Add(GameObject.FindGameObjectsWithTag("RightWall")[0]);
+        wallObjects.Add(GameObject.FindGameObjectsWithTag("LeftWall")[0]);
+        // Singleton 패턴을 사용하여 유일한 인스턴스 보장
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
 
-	private void Awake() {
-		wallObjects = new List<GameObject>();
-		wallObjects.Add(GameObject.FindGameObjectsWithTag("RightWall")[0]);
-		wallObjects.Add(GameObject.FindGameObjectsWithTag("LeftWall")[0]);
+        health = maxHealth;
+        shield = 0f;
+        hasShield = false;
+        activateShield = false;
 
-		// Singleton 패턴을 사용하여 유일한 인스턴스 보장
-		if (Instance == null) {
-			Instance = this;
-		} else {
-			Destroy(gameObject);
-		}
+        InitializeSliders();
 
-		health = maxHealth;
-		shield = 0f;
-		hasShield = false;
-		activateShield = false;
+        // StageC 스크립트 참조 초기화
+        stageC = FindObjectOfType<StageC>();
+    }
 
-		InitializeSliders();
+    private void InitializeSliders()
+    {
+        if (healthSlider != null)
+        {
+            healthSlider.maxValue = maxHealth;
+            healthSlider.value = health;
+        }
 
-		// StageC 스크립트 참조 초기화
-		stageC = FindObjectOfType<StageC>();
-	}
+        if (shieldSlider != null)
+        {
+            shieldSlider.maxValue = activateShieldValue; // 실드 슬라이더의 최대값을 activateShieldValue로 설정
+            shieldSlider.value = shield;
+        }
+    }
 
-	private void InitializeSliders() {
-		if (healthSlider != null) {
-			healthSlider.maxValue = maxHealth;
-			healthSlider.value = health;
-		}
+    private void Update()
+    {
+        // activateShield가 true로 설정되었을 때 실드 활성화
+        if (activateShield)
+        {
+            ActivateShield();
+            activateShield = false; // 실행 후 비활성화
+        }
 
-		if (shieldSlider != null) {
-			shieldSlider.maxValue = activateShieldValue; // 실드 슬라이더의 최대값을 activateShieldValue로 설정
-			shieldSlider.value = shield;
-		}
-	}
+        // hasShield가 false가 되었을 때 실드 비활성화
+        if (!hasShield && shield > 0)
+        {
+            SetShield(0); // 실드를 비활성화하고 초기화
+            Debug.Log("Shield deactivated.");
+        }
+    }
 
-	private void Update() {
-		// activateShield가 true로 설정되었을 때 실드 활성화
-		if (activateShield) {
-			ActivateShield();
-			activateShield = false; // 실행 후 비활성화
-		}
+    public void ApplyDamage(float damage)
+    {
+        if (hasShield)
+        {
+            shield -= damage;
 
-		// hasShield가 false가 되었을 때 실드 비활성화
-		if (!hasShield && shield > 0) {
-			SetShield(0); // 실드를 비활성화하고 초기화
-			Debug.Log("Shield deactivated.");
-		}
-	}
+            if (shield <= 0)
+            {
+                damage = -shield; // 남은 데미지를 체력에 적용
+                shield = 0;
+                hasShield = false;
+                Debug.Log("Shield destroyed!");
+            }
+            else
+            {
+                damage = 0;
+            }
+        }
 
-	public void ApplyDamage(float damage) {
-		if (hasShield) {
-			shield -= damage;
+        health -= damage;
 
-			if (shield <= 0) {
-				damage = -shield; // 남은 데미지를 체력에 적용
-				shield = 0;
-				hasShield = false;
-				Debug.Log("Shield destroyed!");
-			} else {
-				damage = 0;
-			}
-		}
+        if (health <= 0)
+        {
+            health = 0;
+            HandleGameOver(); // 게임 오버 처리 호출
+        }
 
-		health -= damage;
+        UpdateSliders();
+    }
 
-		if (health <= 0) {
-			health = 0;
-			HandleGameOver(); // 게임 오버 처리 호출
-		}
+    public void EarnShield(float duration, float shieldAmount)
+    {
+        Debug.Log("EarnShield called with duration: " + duration + " and shieldAmount: " + shieldAmount);
 
-		UpdateSliders();
-	}
+        // 기존의 실드 초기화 코루틴이 실행 중이면 중지
+        if (resetShieldCoroutine != null)
+        {
+            StopCoroutine(resetShieldCoroutine);
+        }
 
-	public void EarnShield(float duration, float shieldAmount) {
-		Debug.Log("EarnShield called with duration: " + duration + " and shieldAmount: " + shieldAmount);
+        foreach (var wall in wallObjects)
+        {
+            CastleWall cwall = wall.GetComponent<CastleWall>();
+            cwall.ChangeWallColor(true); // 실드 활성화 시 색상 변경
+        }
 
-		// 기존의 실드 초기화 코루틴이 실행 중이면 중지
-		if (resetShieldCoroutine != null) {
-			StopCoroutine(resetShieldCoroutine);
-		}
+        AddShield(shieldAmount); // 실드 추가
+        resetShieldCoroutine = StartCoroutine(ResetEarnShieldAfterDelay(duration)); // 일정 시간 후 실드 초기화
+    }
 
-		foreach (var wall in wallObjects) {
-			CastleWall cwall = wall.GetComponent<CastleWall>();
-			cwall.ChangeWallColor(true); // 실드 활성화 시 색상 변경
-		}
+    private IEnumerator ResetEarnShieldAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
 
-		AddShield(shieldAmount); // 실드 추가
-		resetShieldCoroutine = StartCoroutine(ResetEarnShieldAfterDelay(duration)); // 일정 시간 후 실드 초기화
-	}
+        foreach (var wall in wallObjects)
+        {
+            CastleWall cwall = wall.GetComponent<CastleWall>();
+            cwall.ChangeWallColor(false); // 실드 활성화 시 색상 변경
+        }
 
-	private IEnumerator ResetEarnShieldAfterDelay(float delay) {
-		yield return new WaitForSeconds(delay);
+        SetShield(0); // 실드 초기화
+        hasShield = false; // 실드 비활성화
+        Debug.Log("Shield reset to original values.");
+    }
 
-		foreach (var wall in wallObjects) {
-			CastleWall cwall = wall.GetComponent<CastleWall>();
-			cwall.ChangeWallColor(false); // 실드 활성화 시 색상 변경
-		}
+    private void ActivateShield()
+    {
+        SetShield(activateShieldValue);
+        hasShield = true; // 실드 활성화 시 hasShield를 true로 설정
+        Debug.Log("Shield activated with value: " + activateShieldValue);
+    }
 
-		SetShield(0); // 실드 초기화
-		hasShield = false; // 실드 비활성화
-		Debug.Log("Shield reset to original values.");
-	}
+    public void SetActivateShield(bool value)
+    {
+        activateShield = value;
+    }
 
-	private void ActivateShield() {
-		SetShield(activateShieldValue);
-		hasShield = true; // 실드 활성화 시 hasShield를 true로 설정
-		Debug.Log("Shield activated with value: " + activateShieldValue);
-	}
+    public void AddShield(float shieldAmount)
+    {
+        shield = Mathf.Min(activateShieldValue, shield + shieldAmount);
+        hasShield = shield > 0;
+        UpdateSliders();
+        Debug.Log("Shield added. Current shield: " + shield);
+    }
 
-	public void SetActivateShield(bool value) {
-		activateShield = value;
-	}
+    public void SetShield(float shieldValue)
+    {
+        shield = Mathf.Clamp(shieldValue, 0, activateShieldValue);
+        hasShield = shield > 0;
+        UpdateSliders();
+        Debug.Log("Shield set to value: " + shield);
+    }
 
-	public void AddShield(float shieldAmount) {
-		shield = Mathf.Min(activateShieldValue, shield + shieldAmount);
-		hasShield = shield > 0;
-		UpdateSliders();
-		Debug.Log("Shield added. Current shield: " + shield);
-	}
+    private void UpdateSliders()
+    {
+        if (healthSlider != null)
+        {
+            healthSlider.value = health;
+        }
 
-	public void SetShield(float shieldValue) {
-		shield = Mathf.Clamp(shieldValue, 0, activateShieldValue);
-		hasShield = shield > 0;
-		UpdateSliders();
-		Debug.Log("Shield set to value: " + shield);
-	}
+        if (shieldSlider != null)
+        {
+            shieldSlider.maxValue = activateShieldValue; // 실드 슬라이더의 최대값을 최신 activateShieldValue로 설정
+            shieldSlider.value = shield;
+        }
+    }
 
-	private void UpdateSliders() {
-		if (healthSlider != null) {
-			healthSlider.value = health;
-		}
+    private void HandleGameOver()
+    {
+        Debug.Log("성벽이 파괴되었습니다! 게임 오버!");
 
-		if (shieldSlider != null) {
-			shieldSlider.maxValue = activateShieldValue; // 실드 슬라이더의 최대값을 최신 activateShieldValue로 설정
-			shieldSlider.value = shield;
-		}
-	}
+        if (stageC != null)
+        {
+            stageC.ShowGameOverUI(); // StageC에서 게임 오버 UI를 표시하도록 호출
+        }
+        else
+        {
+            Debug.LogWarning("StageC instance not found.");
+        }
+        HeroGameManager.Instance.ClearHeroFormation(); //영웅선택 저장정보 clear
+    }
 
-	private void HandleGameOver() {
-		Debug.Log("성벽이 파괴되었습니다! 게임 오버!");
-
-		if (stageC != null) {
-			stageC.ShowGameOverUI(); // StageC에서 게임 오버 UI를 표시하도록 호출
-		} else {
-			Debug.LogWarning("StageC instance not found.");
-		}
-	}
-
-	public float GetHealth() => health;
-	public float GetShield() => shield;
+    public float GetHealth() => health;
+    public float GetShield() => shield;
 }

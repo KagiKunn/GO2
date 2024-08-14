@@ -1556,6 +1556,7 @@ GameObject:
   - component: {fileID: 7967798919809008480}
   - component: {fileID: 376659427892631273}
   - component: {fileID: 8955132306071349129}
+  - component: {fileID: 8613979523270249900}
   m_Layer: 5
   m_Name: Setting
   m_TagString: Untagged
@@ -1656,6 +1657,28 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &8613979523270249900
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5019831617528311949}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8864891a7535aa0408f76394ff2642ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  masterVolSlider: {fileID: 2760977464737888038}
+  masterVal: {fileID: 3180739902183849111}
+  bgmVolSlider: {fileID: 4663107246257208097}
+  bgmVal: {fileID: 1369083243244921605}
+  sfxVolSlider: {fileID: 2564692662284693909}
+  sfxVal: {fileID: 8517540169786068733}
+  audioMixer: {fileID: 24100000, guid: d065b8aa044ad154ab429c8647f579a2, type: 2}
+  vibrationToggle: {fileID: 3494390937791598600}
+  UUID: {fileID: 7888565067571278165}
+  Username: {fileID: 2842996225187606904}
 --- !u!1 &5201598480363554249
 GameObject:
   m_ObjectHideFlags: 0

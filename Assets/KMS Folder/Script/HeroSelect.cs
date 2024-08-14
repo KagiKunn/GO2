@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine;
+using UnityEngine.Localization;
 using UnityEngine.UI;
 
 public class HeroSelect : MonoBehaviour 
@@ -12,6 +13,7 @@ public class HeroSelect : MonoBehaviour
 	public Button[] heroButtons;
 	public Button[] selectedHeroSlots;
 	public Button resetBtn, saveBtn, reinforceBtn;
+    public LocalizedString saveString;
 
     private List<HeroData> heroes;
     
@@ -36,6 +38,8 @@ public class HeroSelect : MonoBehaviour
 		saveBtn.onClick.AddListener(SaveHeroSelection);
         reinforceBtn.onClick.AddListener(ReinforceBtnClicked);
 
+        saveString.TableReference = "UI";
+        saveString.TableEntryReference = "SaveSuccess";
         LoadHeroFormation();
     }
     
@@ -126,7 +130,8 @@ public class HeroSelect : MonoBehaviour
     private void SaveHeroSelection()
     {
         HeroGameManager.Instance.SaveHeroFormation();
-        _notice.SUB("Save Successefully!");
+        saveString.StringChanged += OnSaveSuccessMessageChanged;
+        //_notice.SUB("Save Successefully!");
     }
     
     //  시작할때 영웅 편성 정보 가져오는 메서드
@@ -163,6 +168,12 @@ public class HeroSelect : MonoBehaviour
             CustomLogger.Log("No Hero selected for upgrade");
         }
         
+    }
+
+    private void OnSaveSuccessMessageChanged(string localizedText)
+    {
+        _notice.SUB(localizedText);
+        saveString.StringChanged -= OnSaveSuccessMessageChanged;
     }
     
 }
