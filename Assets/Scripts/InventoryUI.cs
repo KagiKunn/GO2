@@ -1,272 +1,371 @@
 using System;
 using System.Collections.Generic;
-
+using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
-
 using TMPro;
-
 using UnityEditor;
-
 using UnityEngine.EventSystems;
 
-public class InventoryUI : MonoBehaviour {
-	public static InventoryUI Instance { get; private set; }
-	private Canvas canvas;
-	private ScrollRect scrollRect;
-	public Transform inventoryContent;
-	public GameObject itemInfoPanel;
-	public TextMeshProUGUI itemInfoText;
-	public Button deleteButton;
-	public Button closeButton;
-	private ItemSO selectedItem;
-	private Transform selectedSlot;
-	private const string inventoryFilePath = "inventory.json";
 
-	public InventoryData inventoryData = new InventoryData();
+public class InventoryUI : MonoBehaviour
+{
+    public static InventoryUI Instance { get; private set; }
+    private Canvas canvas;
+    private ScrollRect scrollRect;
+    public Transform inventoryContent;
+    public GameObject itemInfoPanel;
+    public TextMeshProUGUI itemInfoText;
+    public Button deleteButton;
+    public Button closeButton;
+    private ItemInstance selectedItem;
+    private Transform selectedSlot;
+    private const string inventoryFilePath = "inventory.json";
 
-	private void Awake() {
-	}
+    public InventoryData inventoryData = new InventoryData();
 
-	private void Start() {
-		canvas = GetComponent<Canvas>();
-		scrollRect = GetComponentInChildren<ScrollRect>();
-		LoadInventory();
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
-		deleteButton.onClick.AddListener(DeleteSelectedItem);
-		closeButton.onClick.AddListener(CloseInventory);
-	}
+    private void Start()
+    {
+        canvas = GetComponent<Canvas>();
+        scrollRect = GetComponentInChildren<ScrollRect>();
+        LoadInventory();
 
-	private void Update() {
-		if (Input.GetMouseButton(0)) {
-			if (!InventorySlotPointer()) {
-				itemInfoPanel.SetActive(false);
-			}
-		}
-	}
+        deleteButton.onClick.AddListener(DeleteSelectedItem);
+        closeButton.onClick.AddListener(CloseInventory);
+    }
 
-	private bool InventorySlotPointer() {
-		PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current) {
-			position = new Vector2(Input.mousePosition.x, Input.mousePosition.y)
-		};
+    private void Update()
+    {
+        if (Input.GetMouseButton(0))
+        {
+            if (!InventorySlotPointer())
+            {
+                itemInfoPanel.SetActive(false);
+            }
+        }
+    }
 
-		List<RaycastResult> results = new List<RaycastResult>();
-		EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
+    private bool InventorySlotPointer()
+    {
+        PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current)
+        {
+            position = new Vector2(Input.mousePosition.x, Input.mousePosition.y)
+        };
+        
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
+        
+        foreach (var result in results)
+        {
+            if (result.gameObject == deleteButton.gameObject)
+            {
+                return true;
+            }
+            if (result.gameObject.transform.IsChildOf(inventoryContent))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 
-		foreach (var result in results) {
-			if (result.gameObject.transform.IsChildOf(inventoryContent)) {
-				return true;
-			}
-		}
+    public void CanvasEnabled()
+    {
+        canvas.enabled = !canvas.enabled;
+        if (canvas.enabled)
+        {
+            ResetScrollRect();
+            UpdateInventoryUI();
+        }
+        else
+        {
+            if (itemInfoPanel != null)
+            {
+                itemInfoPanel.SetActive(false);
+            }
+        }
+    }
 
-		return false;
-	}
+    private void ResetScrollRect()
+    {
+        scrollRect.verticalNormalizedPosition = 1f;
+    }
 
-	public void CanvasEnabled() {
-		canvas.enabled = !canvas.enabled;
+    public void AddItemToInventory(ItemInstance itemInstance)
+    {
+        CanAddItem();
+        inventoryData.items.Add(itemInstance);
+        SaveInventory();
+        UpdateInventoryUI();
+    }
 
-		if (canvas.enabled) {
-			ResetScrollRect();
-			UpdateInventoryUI();
-		} else {
-			if (itemInfoPanel != null) {
-				itemInfoPanel.SetActive(false);
-			}
-		}
-	}
+    public bool CanAddItem()
+    {
+        return inventoryData.items.Count < inventoryContent.childCount;
+    }
 
-	private void ResetScrollRect() {
-		scrollRect.verticalNormalizedPosition = 1f;
-	}
+    public bool CanAdditems(int itemCount)
+    {
+        return inventoryData.items.Count + itemCount <= inventoryContent.childCount;
+    }
 
-	public void AddItemToInventory(ItemSO item) {
-		CanAddItem();
-		inventoryData.items.Add(item);
-		SaveInventory();
-		UpdateInventoryUI();
-	}
+    public void UpdateInventoryUI()
+    {
+        for (int i = 0; i < inventoryData.items.Count; i++)
+        {
+            Transform slot = inventoryContent.GetChild(i);
+            UpdateSlotUI(slot, inventoryData.items[i]);
+        }
 
-	public bool CanAddItem() {
-		return inventoryData.items.Count < inventoryContent.childCount;
-	}
+        for (int i = inventoryData.items.Count; i < inventoryContent.childCount; i++)
+        {
+            Transform slot = inventoryContent.GetChild(i);
+            UpdateSlotUI(slot, null);
+        }
+    }
 
-	public bool CanAdditems(int itemCount) {
-		return inventoryData.items.Count + itemCount <= inventoryContent.childCount;
-	}
+    public void UpdateSlotUI(Transform slot, ItemInstance itemInstance)
+    {
+        ItemSlot itemSlotComponent = slot.GetComponent<ItemSlot>();
 
-	public void UpdateInventoryUI() {
-		for (int i = 0; i < inventoryData.items.Count; i++) {
-			Transform slot = inventoryContent.GetChild(i);
-			UpdateSlotUI(slot, inventoryData.items[i]);
-		}
+        if (itemSlotComponent != null)
+        {
+            itemSlotComponent.ItemInstance = itemInstance;
+            
+            Image itemImage = slot.Find("ItemImage").GetComponent<Image>();
+            TextMeshProUGUI itemName = slot.Find("ItemName").GetComponent<TextMeshProUGUI>();
 
-		for (int i = inventoryData.items.Count; i < inventoryContent.childCount; i++) {
-			Transform slot = inventoryContent.GetChild(i);
-			UpdateSlotUI(slot, null);
-		}
-	}
+            if (itemImage == null)
+            {
+                CustomLogger.LogError("ItemImage component is missing on ItemImage GameObject.");
+                return;
+            }
 
-	private void UpdateSlotUI(Transform slot, ItemSO item) {
-		Image itemImage = slot.Find("ItemImage").GetComponent<Image>();
-		TextMeshProUGUI itemName = slot.Find("ItemName").GetComponent<TextMeshProUGUI>();
+            if (itemName == null)
+            {
+                CustomLogger.LogError("Text component is missing on ItemName GameObject.");
+                return;
+            }
 
-		if (itemImage == null) {
-			CustomLogger.LogError("ItemImage component is missing on ItemImage GameObject.");
-		}
+            if (itemInstance != null)
+            {
+                itemImage.sprite = itemInstance.itemData.icon;
+                itemName.text = itemInstance.itemData.itemName;
+                Button slotButton = slot.GetComponent<Button>();
 
-		if (itemName == null) {
-			CustomLogger.LogError("Text component is missing on ItemName GameObject.");
-		}
+                if (slotButton != null)
+                {
+                    slotButton.onClick.RemoveAllListeners();
+                    slotButton.onClick.AddListener(() => {
+                        if (selectedSlot == slot && itemInfoPanel.activeSelf)
+                        {
+                            itemInfoPanel.SetActive(false);
+                        }
+                        else
+                        {
+                            ItemInfo(itemInstance, slot);
+                        }
+                    });
+                }
+            }
+            else
+            {
+                itemImage.sprite = null;
+                itemName.text = "";
+                Button slotButton = slot.GetComponent<Button>();
+                if (slotButton != null)
+                {
+                    slotButton.onClick.RemoveAllListeners();
+                    slotButton.onClick.AddListener(()=>{itemInfoPanel.SetActive(false);});
+                }
+            }
+        }
+        
+        
+    }
 
-		if (item != null) {
-			itemImage.sprite = item.icon;
-			itemName.text = item.itemName;
-			Button sloButton = slot.GetComponent<Button>();
+    // public void SwapItems(ItemSlot slot1, ItemSlot slot2)
+    // {
+    //     ItemSO tempItem = slot1.item;
+    //     slot1.item = slot2.item;
+    //     slot2.item = tempItem;
+    //     
+    //     UpdateInventoryUI();
+    //     SaveInventory();
+    // }
 
-			if (sloButton != null) {
-				sloButton.onClick.RemoveAllListeners();
+    void SaveInventory()
+    {
+            string jsonContent = JsonUtility.ToJson(inventoryData, true);
+            CustomLogger.Log($"JSON Content Before Writing: {jsonContent}");
 
-				sloButton.onClick.AddListener(() => {
-					if (selectedSlot == slot && itemInfoPanel.activeSelf) {
-						itemInfoPanel.SetActive(false);
-					} else {
-						ItemInfo(item, slot);
-					}
-				});
-			}
-		} else {
-			itemImage.sprite = null;
-			itemName.text = "";
-			Button slotButton = slot.GetComponent<Button>();
+            JsonInventory.SaveToJson(inventoryData, inventoryFilePath);
+            
+            CustomLogger.Log($"Saving to path: {Path.GetFullPath(inventoryFilePath)}");
+            CustomLogger.Log($"JSON Content After Writing: {jsonContent}");
+            CustomLogger.Log("저장완료!");
+    }
 
-			if (slotButton != null) {
-				slotButton.onClick.RemoveAllListeners();
-				slotButton.onClick.AddListener(() => { itemInfoPanel.SetActive(false); });
-			}
-		}
-	}
+    void LoadInventory()
+    {
+        inventoryData = JsonInventory.LoadFromJson<InventoryData>(inventoryFilePath) ?? new InventoryData();
+        CustomLogger.Log($"Loaded inventoryData from JSON: {JsonUtility.ToJson(inventoryData, true)}");
+        
+        if (inventoryData.items.Count == 0)
+        {
+            CustomLogger.LogWarning("No items loaded into inventoryData.");
+        }
+        else
+        {
+            foreach (var itemInstance in inventoryData.items)
+            {
+                CustomLogger.Log($"Calling LoadItemData for item with ID: {itemInstance.itemID}");
+                itemInstance.LoadItemData();
+            }
+            
+            for (int i = 0; i < inventoryData.additionalSlotCount; i++)
+            {
+                GameObject newSlot = Resources.Load<GameObject>("PreFab/Slot");
+                if (newSlot != null)
+                {
+                    Instantiate(newSlot, inventoryContent);
+                }
+            }
+        }
 
-	public void SwapItems(ItemSlot slot1, ItemSlot slot2) {
-		ItemSO tempItem = slot1.item;
-		slot1.item = slot2.item;
-		slot2.item = tempItem;
+        UpdateInventoryUI();
+    }
 
-		UpdateInventoryUI();
-		SaveInventory();
-	}
+    public void ClearInventory()
+    {
+        inventoryData.items.Clear();
 
-	void SaveInventory() {
-		JsonInventory.SaveToJson(inventoryData, inventoryFilePath);
-	}
+        int baseSlotCount = inventoryContent.childCount - inventoryData.additionalSlotCount;
+        for (int i = inventoryContent.childCount - 1; i >= baseSlotCount; i--)
+        {
+            Destroy(inventoryContent.GetChild(i).gameObject);
+        }
 
-	void LoadInventory() {
-		inventoryData = JsonInventory.LoadFromJson<InventoryData>(inventoryFilePath) ?? new InventoryData();
+        inventoryData.additionalSlotCount = 0;
+        SaveInventory();
+        UpdateInventoryUI();
+    }
 
-		int currentSlotCount = inventoryContent.childCount;
+    public void ExpandInventory(int additionalSlots)
+    {
+        for (int i = 0; i < additionalSlots; i++)
+        {
+            GameObject newSlot =
+                (GameObject)AssetDatabase.LoadAssetAtPath("Assets/JSFolder/PreFab/Slot.prefab", typeof(GameObject));
+            if (newSlot != null)
+            {
+                Instantiate(newSlot, inventoryContent);
+            }
+        }
 
-		for (int i = 0; i < inventoryData.additionalSlotCount; i++) {
-			GameObject newSlot =
-				Resources.Load<GameObject>("Assets/JSFolder/PreFab/Slot.prefab");
+        inventoryData.additionalSlotCount += additionalSlots;
+        SaveInventory();
+        UpdateInventoryUI();
+    }
 
-			if (newSlot != null) {
-				Instantiate(newSlot, inventoryContent);
-			}
-		}
+    public void OnExpandButtonClicked()
+    {
+        ExpandInventory(4);
+    }
 
-		UpdateInventoryUI();
-	}
+    public void ItemInfo(ItemInstance itemInstance, Transform slot)
+    {
+        selectedItem = itemInstance;
+        selectedSlot = slot;
 
-	public void ClearInventory() {
-		inventoryData.items.Clear();
+        itemInfoText.text = $"{itemInstance.itemData.itemName}";
 
-		int baseSlotCount = inventoryContent.childCount - inventoryData.additionalSlotCount;
+        switch (itemInstance.itemData.rarity)
+        {
+            case ItemRarity.Normal:
+                itemInfoText.color = Color.white;
+                break;
+            case ItemRarity.Rare:
+                itemInfoText.color = Color.blue;
+                break;
+            case ItemRarity.Unique:
+                itemInfoText.color = Color.red;
+                break;
+            default:
+                itemInfoText.color = Color.white;
+                break;
+        }
 
-		for (int i = inventoryContent.childCount - 1; i >= baseSlotCount; i--) {
-			Destroy(inventoryContent.GetChild(i).gameObject);
-		}
+        RectTransform slotRectTransform = slot.GetComponent<RectTransform>();
+        RectTransform panelRectTransform = itemInfoPanel.GetComponent<RectTransform>();
 
-		inventoryData.additionalSlotCount = 0;
-		SaveInventory();
-		UpdateInventoryUI();
-	}
+        Vector3 worldPosition = slotRectTransform.TransformPoint(new Vector3(slotRectTransform.rect.width, 0, 0));
+        panelRectTransform.position = worldPosition;
+        panelRectTransform.localScale = new Vector3(0.25f, 0.5f, 1f);
+        
+        itemInfoPanel.SetActive(true);
+    }
 
-	public void ExpandInventory(int additionalSlots) {
-		for (int i = 0; i < additionalSlots; i++) {
-			GameObject newSlot =
-				Resources.Load<GameObject>("Assets/JSFolder/PreFab/Slot.prefab");
+    public void DeleteSelectedItem()
+    {
+        CustomLogger.Log("DeleteSelectedItem() method called.");
+        
+        if (selectedItem != null && selectedSlot != null)
+        {
+            CustomLogger.Log($"Attempting to delete item: {selectedItem.itemData.itemName} from slot: {selectedSlot.name}");
+            
+            if (inventoryData.items.Contains(selectedItem))
+            {
+                inventoryData.items.Remove(selectedItem);
+                CustomLogger.Log($"Item {selectedItem.itemData.itemName} removed from inventory.");
+            }
+            else
+            {
+                CustomLogger.LogWarning($"Item {selectedItem.itemData.itemName} not found in inventory.");
+                return;
+            }
+            
+            SaveInventory();
+            UpdateSlotUI(selectedSlot, null);
+            itemInfoPanel.SetActive(false);
+            RearrangeInventorySlots();
+        }
+        else
+        {
+            CustomLogger.LogWarning("No item selected for deletion or slot is null.");
+        }
+    }
 
-			if (newSlot != null) {
-				Instantiate(newSlot, inventoryContent);
-			}
-		}
+    private void RearrangeInventorySlots()
+    {
+        for (int i = 0; i < inventoryData.items.Count; i++)
+        {
+            Transform slot = inventoryContent.GetChild(i);
+            UpdateSlotUI(slot, inventoryData.items[i]);
+        }
 
-		inventoryData.additionalSlotCount += additionalSlots;
-		SaveInventory();
-		UpdateInventoryUI();
-	}
+        for (int i = inventoryData.items.Count; i < inventoryContent.childCount; i++)
+        {
+            Transform slot = inventoryContent.GetChild(i);
+            UpdateSlotUI(slot, null);
+        }
+    }
 
-	public void OnExpandButtonClicked() {
-		ExpandInventory(4);
-	}
-
-	public void ItemInfo(ItemSO item, Transform slot) {
-		selectedItem = item;
-		selectedSlot = slot;
-
-		itemInfoText.text = $"{item.itemName}";
-
-		switch (item.rarity) {
-			case ItemRarity.Normal:
-				itemInfoText.color = Color.white;
-
-				break;
-			case ItemRarity.Rare:
-				itemInfoText.color = Color.blue;
-
-				break;
-			case ItemRarity.Unique:
-				itemInfoText.color = Color.red;
-
-				break;
-			default:
-				itemInfoText.color = Color.white;
-
-				break;
-		}
-
-		RectTransform slotRectTransform = slot.GetComponent<RectTransform>();
-		RectTransform panelRectTransform = itemInfoPanel.GetComponent<RectTransform>();
-
-		Vector3 worldPosition = slotRectTransform.TransformPoint(new Vector3(slotRectTransform.rect.width, 0, 0));
-		panelRectTransform.position = worldPosition;
-		panelRectTransform.localScale = new Vector3(0.25f, 0.5f, 1f);
-
-		itemInfoPanel.SetActive(true);
-	}
-
-	public void DeleteSelectedItem() {
-		if (selectedItem != null && selectedSlot != null) {
-			inventoryData.items.Remove(selectedItem);
-			SaveInventory();
-			UpdateSlotUI(selectedSlot, null);
-			itemInfoPanel.SetActive(false);
-			RearrangeInventorySlots();
-		}
-	}
-
-	private void RearrangeInventorySlots() {
-		for (int i = 0; i < inventoryData.items.Count; i++) {
-			Transform slot = inventoryContent.GetChild(i);
-			UpdateSlotUI(slot, inventoryData.items[i]);
-		}
-
-		for (int i = inventoryData.items.Count; i < inventoryContent.childCount; i++) {
-			Transform slot = inventoryContent.GetChild(i);
-			UpdateSlotUI(slot, null);
-		}
-	}
-
-	private void CloseInventory() {
-		CanvasEnabled();
-	}
+    private void CloseInventory()
+    {
+        CanvasEnabled();
+    }
 }

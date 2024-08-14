@@ -63,14 +63,7 @@ public class BounusSaveManager : MonoBehaviour
         Debug.Log("Game Saved: " + JsonUtility.ToJson(bounusDataScriptableObject.data));
 
         playerDataScriptableObject.data.playerId1 = playerDataScriptableObject.data.playerId1;
-        if (bounusDataScriptableObject.data.startGold1>0)
-        {
-            playerDataScriptableObject.data.money1 = 500;
-        }
-        else
-        {
-            playerDataScriptableObject.data.money1 = 0;
-        }
+        StartGoldSetup();
 
         playerDataScriptableObject.data.soul1 = int.Parse(GameObject.Find("Soul").transform.GetChild(0).GetComponent<TextMeshProUGUI>().text);
         
@@ -88,6 +81,27 @@ public class BounusSaveManager : MonoBehaviour
         {
             Directory.CreateDirectory(directory);
             Debug.Log("Directory created at: " + directory);
+        }
+    }
+    void StartGoldSetup()
+    {
+        switch (bounusDataScriptableObject.data.startGold1)
+        {
+            case 1:
+                playerDataScriptableObject.data.money1 = 100;
+                break;
+            case 2:
+                playerDataScriptableObject.data.money1 = 200;
+                break;
+            case 3:
+                playerDataScriptableObject.data.money1 = 300;
+                break;
+            case 4:
+                playerDataScriptableObject.data.money1 = 400;
+                break;
+            default:
+                playerDataScriptableObject.data.money1 = 0;
+                break;
         }
     }
 }

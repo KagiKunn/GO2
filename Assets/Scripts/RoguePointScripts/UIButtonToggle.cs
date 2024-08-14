@@ -10,9 +10,11 @@ public class UIButtonToggle : MonoBehaviour
     
     private Image buttonImage;
     private SoulCalc soulCalc;
+    private Transform levelBar;
     void Start()
     {
         soulCalc = GameObject.Find("Soul").transform.GetChild(0).GetComponent<SoulCalc>();
+        levelBar = gameObject.transform.Find("LevelBar");
         if (toggleButton == null)
         {
             toggleButton = GetComponentInChildren<Button>();
@@ -30,6 +32,10 @@ public class UIButtonToggle : MonoBehaviour
                 if (level>0)
                 {
                     buttonImage.color=Color.black;
+                    for(int i = 0; i<level; i++)
+                    {
+                        levelBar.GetChild(i).GetComponent<SpriteRenderer>().color = Color.black;
+                    }
                 }
                 else
                 {
@@ -64,7 +70,11 @@ public class UIButtonToggle : MonoBehaviour
             if (soulCalc.SoulIncDec(true))
             {
                 buttonImage.color = Color.black;
-                level++;
+                level++; 
+                for(int i = 0; i<level; i++)
+                {
+                    levelBar.GetChild(i).GetComponent<SpriteRenderer>().color = Color.black;
+                }
                 CustomLogger.Log(level);
             }
         }
