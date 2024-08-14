@@ -805,7 +805,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 10, y: 10, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5208227103707252079}
@@ -822,7 +822,7 @@ SortingGroup:
   m_Enabled: 1
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 5
+  m_SortingOrder: 4
   m_SortAtRoot: 0
 --- !u!95 &2330320431726426052
 Animator:
@@ -858,20 +858,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f417b36df4681e48a4521d737d5c364, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 10
-  moveSpeed: 1
+  health: 30
+  moveSpeed: 10
   detectionLayerMask:
     serializedVersion: 2
     m_Bits: 64
-  attackDamage: 1
+  attackDamage: 5
   attackSpeed: 1
   runState: 0.25
   attackState: 1
   normalState: 0
   skillState: 0
-  boxSize: {x: 2, y: 0.1}
+  boxSize: {x: 30, y: 0.1}
+  isRight: 0
   projectilePrefab: {fileID: 0}
-  movementdirection: {x: 0, y: 0, z: 0}
+  movementdirection: {x: -1, y: 0, z: 0}
+  isKnockedBack: 0
+  percent: 0
+  gold: 10
+  isBoss: 0
+  stageEndNotice: {fileID: 0}
+  stageClearUI: {fileID: 0}
 --- !u!50 &6053191127090831160
 Rigidbody2D:
   serializedVersion: 4

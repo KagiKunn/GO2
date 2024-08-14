@@ -1,31 +1,43 @@
+using System;
 using UnityEngine;
+using System.Collections;
 
 public class AllyScan : MonoBehaviour
 {
     public float detectionRadius = 5.0f;
     [SerializeField] private LayerMask enemyLayer;
-    [SerializeField] private int attackDamage = 1;
-    [SerializeField] private float attackSpeed = 1f;
+    [SerializeField] public int attackDamage = 1;
+    [SerializeField] private float attackCool = 1f;
     [SerializeField] private float runState = 0f;
     [SerializeField] private float attackState;
     [SerializeField] private float normalState;
     [SerializeField] private float skillState;
     [SerializeField] private float aoe = 2f;
+    public float movementSpeed = 10f;
 
     [SerializeField] private DamageEffect damageEffect; // damageEffect를 SerializeField로 추가
     public GameObject projectilePrefab;
 
+    private GameObject currentEffect; // 현재 효과 오브젝트를 저장할 필드
     private Animator animator;
     private GameObject closestObject;
+    private Coroutine attackSpeedCoroutine;
+    private bool isRight;
+    private bool isCooldown = false;
 
-    private void Awake()
+    public void Initialized(bool result)
     {
+        this.isRight = result;
+    }
+
+    private void Start()
+    {
+        attackCool = 1f / attackCool;
         animator = GetComponent<Animator>();
         animator.SetFloat("RunState", runState);
         animator.SetFloat("SkillState", skillState);
         animator.SetFloat("NormalState", normalState);
     }
-
     private void Update()
     {
         if (closestObject == null)
@@ -33,23 +45,14 @@ public class AllyScan : MonoBehaviour
             AllyIdle();
             FindClosestObject();
         }
-        else
+        else if (!isCooldown) // 쿨타임 중이 아닐 때만 공격
         {
             AllyAttack();
-        }
-        SetAnimationSpeed("AttackState",attackSpeed);
-    }
-    public void SetAnimationSpeed(string name, float speed)
-    {
-        // AnimatorStateInfo를 사용하여 현재 상태가 공격 상태인지 확인하고, 속도를 변경합니다.
-        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-        if (stateInfo.IsName(name))
-        {
-            animator.speed = speed;
+            StartCoroutine(AttackCoolDown());
         }
         else
         {
-            animator.speed = 1f;
+            AllyIdle();
         }
     }
     void FindClosestObject()
@@ -78,10 +81,20 @@ public class AllyScan : MonoBehaviour
 
     private void AllyAttack()
     {
-        animator.ResetTrigger("Idle");
-        animator.SetFloat("AttackState", attackState);
-        animator.SetTrigger("Attack");
+        FindClosestObject(); // 매 공격 전에 가장 가까운 적을 재탐지
+
+        if (closestObject != null) // 탐지된 적이 있을 때만 공격 수행
+        {
+            animator.ResetTrigger("Idle");
+            animator.SetFloat("AttackState", attackState);
+            animator.SetTrigger("Attack");
+        }
+        else
+        {
+            AllyIdle(); // 적이 없으면 Idle 상태로 전환
+        }
     }
+
 
     private void AllyIdle()
     {
@@ -102,16 +115,24 @@ public class AllyScan : MonoBehaviour
             {
                 HitScanAttack();
             }
+
+            closestObject = null;
             AllyIdle();
         }
     }
 
+    private IEnumerator AttackCoolDown()
+    {
+        isCooldown = true; // 쿨타임 시작
+        yield return new WaitForSeconds(attackCool);
+        isCooldown = false; // 쿨타임 종료
+    }
     public void HitScanAttack()
     {
         EnemyMovement enemy = closestObject.GetComponent<EnemyMovement>();
         if (enemy != null)
         {
-            damageEffect.ApplyEffect(enemy,null, attackDamage, aoe); // 데미지 효과 적용
+            damageEffect.ApplyEffect(enemy, null, attackDamage, aoe); // 데미지 효과 적용
             if (enemy.IsDead())
             {
                 closestObject = null;
@@ -119,16 +140,18 @@ public class AllyScan : MonoBehaviour
         }
     }
 
-    public void CollisionAttack()
+    private void CollisionAttack()
     {
         if (closestObject != null)
         {
             Vector3 spawnPosition = transform.position + new Vector3(0, GetComponent<Collider2D>().bounds.size.y / 3, 0);
-            GameObject projectileInstance = Instantiate(projectilePrefab, spawnPosition, Quaternion.identity);
+            GameObject projectileInstance = Instantiate(projectilePrefab, spawnPosition, Quaternion.identity,transform);
             AllyProjectile projectile = projectileInstance.GetComponent<AllyProjectile>();
             if (projectile != null)
             {
-                projectile.Initialize(closestObject.transform, attackDamage, damageEffect, aoe); // 데미지 효과 전달
+                projectile.Initialize(closestObject.transform, attackDamage, damageEffect, aoe, isRight); // 데미지 효과 전달
+                
+                
             }
             else
             {
@@ -137,6 +160,59 @@ public class AllyScan : MonoBehaviour
 
             closestObject = null;
         }
+    }
+
+    public void EnhanceAttack(float duration, GameObject effectPrefab)
+    {
+        // 기존의 코루틴이 실행 중이면 중지합니다.
+        if (attackSpeedCoroutine != null)
+        {
+            StopCoroutine(attackSpeedCoroutine);
+        }
+
+        // 기존 효과 오브젝트가 있다면 삭제합니다.
+        if (currentEffect != null)
+        {
+            Destroy(currentEffect);
+        }
+
+        // 공격력을 두 배로 증가시킵니다.
+        attackDamage *= 2;
+        attackCool /= 2;
+
+        // 새로운 효과 오브젝트를 생성합니다.
+        Vector3 pos = new Vector3(transform.position.x, transform.position.y, 100);
+        currentEffect = Instantiate(effectPrefab, pos, Quaternion.identity, transform);
+
+        Canvas canvas = currentEffect.GetComponent<Canvas>();
+        if (canvas == null)
+        {
+            canvas = currentEffect.AddComponent<Canvas>();
+            canvas.overrideSorting = true;
+        }
+        canvas.sortingOrder = 100;
+
+        // 지정된 기간 동안 효과를 유지하는 코루틴을 시작합니다.
+        attackSpeedCoroutine = StartCoroutine(ResetAttackSpeedAfterDelay(duration));
+    }
+
+    private IEnumerator ResetAttackSpeedAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        attackCool *= 2; // 공격 속도를 원래대로 되돌립니다.
+        attackDamage /= 2; // 공격력을 원래대로 되돌립니다.
+
+        // 효과 오브젝트가 있다면 삭제합니다.
+        if (currentEffect != null)
+        {
+            Destroy(currentEffect);
+            currentEffect = null;
+        }
+        else
+        {
+            CustomLogger.LogError("no effect!");
+        }
+        Debug.Log("Attack speed and damage reset to original values for: " + gameObject.name);
     }
 
     void OnDrawGizmos()

@@ -17,7 +17,6 @@ public class EnemyProjectile : MonoBehaviour {
     }
 
     private void OnTriggerEnter2D(Collider2D collision) {
-        Debug.Log("Projectile hit: " + collision.name); // 충돌 로그 추가
         // 지정된 레이어에 닿으면 데미지 주기
         if (((1 << collision.gameObject.layer) & targetLayerMask) != 0) {
             CastleWall targetCastleWall = collision.GetComponent<CastleWall>();

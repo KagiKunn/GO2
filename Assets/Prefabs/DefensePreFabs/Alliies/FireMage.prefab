@@ -3608,7 +3608,7 @@ SortingGroup:
   m_Enabled: 1
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 5
+  m_SortingOrder: 4
   m_SortAtRoot: 0
 --- !u!95 &3522061262964474135
 Animator:
@@ -3644,17 +3644,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22d2f6f63e7a499eb8f868c773c2ff64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detectionRadius: 10
+  detectionRadius: 200
   enemyLayer:
     serializedVersion: 2
     m_Bits: 128
-  attackDamage: 1
-  attackSpeed: 1
+  attackDamage: 2
+  attackCool: 0.6
   runState: 0
   attackState: 1
   normalState: 0.5
   skillState: 0
-  aoe: 2
+  aoe: 10
+  movementSpeed: 10
   damageEffect: {fileID: 11400000, guid: b70796ffa5bf53d4e9afa165ba817333, type: 2}
   projectilePrefab: {fileID: 3517222318613418564, guid: 23f118fce268dd147a7c178931baf7db,
     type: 3}

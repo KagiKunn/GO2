@@ -1,139 +1,179 @@
+using System;
+using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 using UnityEngine;
+using UnityEngine.Localization;
 using UnityEngine.UI;
 
-public class HeroSelect : MonoBehaviour
+public class HeroSelect : MonoBehaviour 
 {
-    // 영웅창에 있는 영웅 요소들
-    public Button[] heroes;
-    private int selectedHeroIndex = -1;
-    // 캐릭터 전신 이미지, 현재 팀 편성 저장, 편성 리셋 버튼
-    public Image CharacterImage;
-    // 편성되어있는 영웅 요소들
-    public Button[] selectedHeroes;
-    // 아무 영웅도 선택되지 않은 상태
-    public Button resetBtn, saveBtn;
-    // MainHero객체
-    public GameObject MainHero;
+	public NoticeUI _notice;
+	public HeroGameManager heroGameManager;
+	public Image CharacterImage;
+	public Button[] heroButtons;
+	public Button[] selectedHeroSlots;
+	public Button resetBtn, saveBtn, reinforceBtn;
+    public LocalizedString saveString;
+
+    private List<HeroData> heroes;
+    
+    // UpgradeHero씬으로 히어로 정보 들고가기 위해
+    private int clickedHeroIndex = -1;
+    private Sprite clickedHeroProfileImg;
+    // 편성된 영웅 -> selectedHero
+    // 클릭한 영웅(강화하려고) -> clickedHero
+
+    void Awake()
+    {
+        _notice = FindFirstObjectByType<NoticeUI>();
+    }
     
     private void Start()
     {
-        // 영웅 버튼 클릭 리스너 할당
-        for (int i = 0; i < heroes.Length ; i++)
-        {
-            int index = i; // 클로저
-            heroes[i].onClick.AddListener(() => OnHeroesClicked(index));
-        }
-        // 배치된 영웅 이미지 슬롯 클릭 리스터 할당
-        for (int i = 0; i <selectedHeroes.Length ; i++)
-        {
-            int index = i;
-            selectedHeroes[i].onClick.AddListener(()=>OnSelectedHeroClicked(index));
-        }
-        // reset, save 버튼에 버튼 클릭 리스너 할당
-        resetBtn.onClick.AddListener(OnResetBtnClicked);
-        saveBtn.onClick.AddListener(OnSaveBtnClicked);
-        // save(영웅 편성) 정보 불러오기
-        LoadHeroFormation();
+        heroes = HeroGameManager.Instance.GetHeroes(); 
+        InitializeHeroButtons();
+        InitializeSelectedHeroSlots();
 
+		resetBtn.onClick.AddListener(ResetHeroSelection);
+		saveBtn.onClick.AddListener(SaveHeroSelection);
+        reinforceBtn.onClick.AddListener(ReinforceBtnClicked);
+
+        saveString.TableReference = "UI";
+        saveString.TableEntryReference = "SaveSuccess";
+        LoadHeroFormation();
     }
-    public void OnHeroesClicked(int index)
+    
+
+	private void InitializeHeroButtons()
     {
-        CustomLogger.Log("Heroes Button Clicked");
-        selectedHeroIndex = index;
-        Sprite heroSprite = GetHeroMainImage(index); // 영웅의 메인 이미지 추출을 위한 메서드(누끼 이미지)
-        
-        // 이미 편성되어 있는 영웅인지 확인
-        for (int i = 0; i < selectedHeroes.Length; i++)
-        {   //  편성되어있을 시 못넣게 설정
-            if (selectedHeroes[i].GetComponent<Image>().sprite == heroes[index].GetComponent<Image>().sprite)
-            {
-                return;
-            }
-        }
-        // 영웅 편성하기
-        for (int i = 0; i < selectedHeroes.Length; i++)
+		int buttonCount = Mathf.Min(heroButtons.Length, heroes.Count);
+		for (int i = 0; i < buttonCount; i++) 
         {
-            Image selectedHero = selectedHeroes[i].GetComponent<Image>(); // 선택된 영웅 이미지
-            if (selectedHero.sprite == null)
+			int index = i;
+			heroButtons[i].GetComponent<Image>().sprite = heroes[index].ProfileImg;
+			heroButtons[i].onClick.AddListener(() => OnHeroButtonClicked(index));
+		}
+	}
+
+	private void InitializeSelectedHeroSlots()
+    {
+		for (int i = 0; i < selectedHeroSlots.Length; i++)
+        {
+			int index = i;
+			selectedHeroSlots[i].onClick.AddListener(() => OnSelectedHeroSlotClicked(index));
+		}
+	}
+
+	private void OnHeroButtonClicked(int index)
+    {   
+        HeroData selectedHeroData = heroes[index];
+
+        // 클릭한 영웅이 이미 편성된 영웅인지 확인
+        bool isHeroAlreadySelected = HeroGameManager.Instance.GetSelectedHeroes().Exists(h => h.Name == selectedHeroData.Name);
+
+        // 영웅 슬롯이 가득 찼거나, 이미 편성된 영웅일 경우 추가하지 않음
+        if (!isHeroAlreadySelected && HeroGameManager.Instance.GetSelectedHeroes().Count < 3)
+        {
+            AddHeroToSlot(selectedHeroData);
+        }
+        clickedHeroIndex = index;
+        clickedHeroProfileImg = heroes[index].ProfileImg;
+        heroButtons[index].Select();
+	}    
+    private void AddHeroToSlot(HeroData heroData)
+    {
+        for (int i = 0; i < selectedHeroSlots.Length; i++)
+        {
+            Image slotImage = selectedHeroSlots[i].GetComponent<Image>();
+            if (slotImage.sprite == null)
             {
-                selectedHero.sprite = heroes[index].GetComponent<Image>().sprite;
-                selectedHero.enabled = true; 
-                SetMainCharacterImage(index); // 선택된 후 바로 CharacterImage 설정
+                slotImage.sprite = heroData.ProfileImg;
+                slotImage.enabled = true;
+                SetMainCharacterImage(heroData.CharacterImg);
+                HeroGameManager.Instance.AddSelectedHero(heroData);
                 break;
             }
         }
-        selectedHeroIndex = -1;
     }
-
-    public void OnSelectedHeroClicked(int index)
+    // 배치한 영웅 슬롯 클릭 시 슬롯에서 제거
+    private void OnSelectedHeroSlotClicked(int index)
     {
-        CustomLogger.Log("Selected Heroes Button Clicked");
-        // 하단 이미지 슬롯을 클릭했을 때 해당 슬롯의 이미지를 제거
-        Image selectedHero = selectedHeroes[index].GetComponent<Image>();
-        selectedHero.sprite = null;
-        selectedHero.enabled = false;
-    }
-
-    public void SetMainCharacterImage(int heroIndex = -1)
-    {
-        CustomLogger.Log("Main Image", "blue");
-
-        if (heroIndex >=0)
+        Image slotImage = selectedHeroSlots[index].GetComponent<Image>();
+        if (slotImage.sprite != null)
         {
-            CharacterImage.sprite = GetHeroMainImage(heroIndex);
-            MainHero.SetActive(true);
-        }
-        
-        else if (selectedHeroes[0].GetComponent<Image>().sprite != null)
-        {
-            // 선택된 영웅의 전신 이미지를 CharacterImage에 설정하고 MainHero 활성화
-            int firstHeroIndex = GetHeroIndex(selectedHeroes[0].GetComponent<Image>().sprite);
-            CharacterImage.sprite = GetHeroMainImage(firstHeroIndex);
-            MainHero.SetActive(true);
-        }else
-        {
-            CharacterImage.sprite = null;
-            MainHero.SetActive(false);
+            HeroGameManager.Instance.GetSelectedHeroes().RemoveAll(h => h.ProfileImg == slotImage.sprite);
+            slotImage.sprite = null;
+            slotImage.enabled = false;
         }
     }
-
-    private Sprite GetHeroMainImage(int index)
+    // 선택해서 배치 슬롯에 들어간 영웅 전신 이미지 표시
+    private void SetMainCharacterImage(Sprite mainSprite)
     {
-        return heroes[index].transform.Find("MainImage")?.GetComponent<SpriteRenderer>()?.sprite;
+        CharacterImage.sprite = mainSprite;
+        CharacterImage.gameObject.SetActive(mainSprite != null);
     }
-
-    private int GetHeroIndex(Sprite sprite)
+    // 리셋 버튼(리셋시 영웅 편성 정보도 날라감)
+    private void ResetHeroSelection()
     {
-        for (int i = 0; i < heroes.Length; i++)
+        foreach (var slot in selectedHeroSlots)
         {
-            if (heroes[i].GetComponent<Image>().sprite == sprite)
+            Image slotImage = slot.GetComponent<Image>();
+            slotImage.sprite = null;
+            slotImage.enabled = false;
+        }
+        HeroGameManager.Instance.ClearHeroFormation();
+        SetMainCharacterImage(null);
+        clickedHeroIndex = -1; // 리셋 시 클릭된 영웅 인덱스 초기화
+        clickedHeroProfileImg = null;
+    }
+    // 영웅 편성 정보 저장
+    private void SaveHeroSelection()
+    {
+        HeroGameManager.Instance.SaveHeroFormation();
+        saveString.StringChanged += OnSaveSuccessMessageChanged;
+        //_notice.SUB("Save Successefully!");
+    }
+    
+    //  시작할때 영웅 편성 정보 가져오는 메서드
+    private void LoadHeroFormation()
+    {
+        heroGameManager.LoadHeroFormation();
+        List<HeroData> selectedHeroes = heroGameManager.GetSelectedHeroes();
+        for (int i = 0; i < selectedHeroes.Count; i++)
+        {
+            if (i < selectedHeroSlots.Length)
             {
-                return i;
+                Image slotImage = selectedHeroSlots[i].GetComponent<Image>();
+                slotImage.sprite = selectedHeroes[i].ProfileImg;
+                slotImage.enabled = true;
             }
         }
-        return -1;
+        SetMainCharacterImage(selectedHeroes.Count > 0 ? selectedHeroes[0].CharacterImg : null);
+        clickedHeroIndex = -1;
+        clickedHeroProfileImg = null;
     }
     
-    public void OnResetBtnClicked()
+    // 영웅 클릭한 상태로 강화 버튼 누를 시 선택한 영웅 정보가 HeroUpgrade Scene으로 전달
+    private void ReinforceBtnClicked()
     {
-        for (int i = 0; i < selectedHeroes.Length; i++)
+        if (clickedHeroIndex != -1)
         {
-            Image selectedHero = selectedHeroes[i].GetComponent<Image>();
-            selectedHero.sprite = null;
-            selectedHero.enabled = false;
+            HeroData clickedHero = heroes[clickedHeroIndex];
+            HeroGameManager.Instance.SetUpgradeHero(clickedHero); 
+            CustomLogger.Log("Upgrade Hero Set: " + clickedHero.Name);
+            SceneManager.LoadScene("HeroUpgrade");
         }
-        SetMainCharacterImage();
-    }
-
-    public void OnSaveBtnClicked()
-    {
+        else
+        {
+            CustomLogger.Log("No Hero selected for upgrade");
+        }
         
     }
 
-    public void LoadHeroFormation()
+    private void OnSaveSuccessMessageChanged(string localizedText)
     {
-        
+        _notice.SUB(localizedText);
+        saveString.StringChanged -= OnSaveSuccessMessageChanged;
     }
-    
     
 }

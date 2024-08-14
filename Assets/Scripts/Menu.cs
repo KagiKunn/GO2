@@ -7,6 +7,7 @@ public class Menu : MonoBehaviour
     private UIDocument uiDocument;
     private Button menuButton;
     private Button speedButton;
+    public GameObject settingObject;
     private void Awake()
     {
         menuButton = uiDocument.rootVisualElement.Q<Button>("MenuButton");
@@ -24,10 +25,12 @@ public class Menu : MonoBehaviour
         if (Time.timeScale <= 0)
         {
             Time.timeScale = 1;
+            settingObject.SetActive(false);
         }
         else
         {
             Time.timeScale = 0;
+            settingObject.SetActive(true);
         }
     }
 
