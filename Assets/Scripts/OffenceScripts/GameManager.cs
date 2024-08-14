@@ -201,9 +201,10 @@ public class GameManager : MonoBehaviour {
 		if (exp == nextExp[Mathf.Min(level, nextExp.Length - 1)]) {
 			level++;
 			exp = 0;
+			health += 10;
 			maxHealth += 10;
 
-			uiLevelUp.Show();
+			uiLevelUp.Show(playerId + 5);
 		}
 	}
 

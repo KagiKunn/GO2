@@ -29,8 +29,6 @@ public class Weapon : MonoBehaviour {
 		if (player.gameObject.name == "Dummy")
 			player = gameManager.Player[gameManager.PlayerId];
 
-		CustomLogger.Log("id : " + id);
-
 		switch (id) {
 			case 0:
 			case 11:
@@ -61,7 +59,7 @@ public class Weapon : MonoBehaviour {
 		this.damage = damage * Character.Damage;
 		this.count += count;
 
-		if (id == 0) {
+		if (id == 0 || id == 11 || id == 12 || id == 13 || id == 14 || id == 15 || id == 16) {
 			Batch();
 		}
 
@@ -83,9 +81,6 @@ public class Weapon : MonoBehaviour {
 		count = itemData.BaseCount + Character.Count;
 
 		for (int i = 1; i < poolManager.WeaponPrefabs.Length; i++) {
-			CustomLogger.Log(itemData.Projectile.name);
-			CustomLogger.Log(poolManager.WeaponPrefabs[i].name);
-
 			if (itemData.Projectile == poolManager.WeaponPrefabs[i]) {
 				prefabId = i;
 
@@ -104,7 +99,6 @@ public class Weapon : MonoBehaviour {
 			case 15:
 			case 16:
 				speed = 150 * Character.WeaponRate;
-				CustomLogger.Log("batch 실행");
 
 				Batch();
 

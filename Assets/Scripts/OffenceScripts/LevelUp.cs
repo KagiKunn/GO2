@@ -1,6 +1,7 @@
 using System;
 
 using UnityEngine;
+using UnityEngine.Rendering;
 
 using Random = UnityEngine.Random;
 
@@ -8,13 +9,33 @@ public class LevelUp : MonoBehaviour {
 	private RectTransform rectTransform;
 	private Item[] items;
 
+	[SerializeField] private ItemData[] ItemDatas;
+
+	private GameManager gameManager;
+
 	private void Awake() {
 		rectTransform = GetComponent<RectTransform>();
 		items = GetComponentsInChildren<Item>(true);
+
+		gameManager = GameManager.Instance;
+
+		items[0].ItemData = ItemDatas[gameManager.PlayerId];
 	}
 
-	public void Show() {
-		Next();
+	private void Update() {
+		if (items[0].ItemData.name != "Item 10") return;
+
+		items[0].ItemData = ItemDatas[gameManager.PlayerId];
+		items[0].Level = items[gameManager.PlayerId + 5].Level;
+		items[0].Weapon = items[gameManager.PlayerId + 5].Weapon;
+		items[0].Gear = items[gameManager.PlayerId + 5].Gear;
+		items[0].TextName = items[gameManager.PlayerId + 5].TextName;
+		items[0].TextDesc = items[gameManager.PlayerId + 5].TextDesc;
+		items[0].TextLevel = items[gameManager.PlayerId + 5].TextLevel;
+	}
+
+	public void Show(int playerId) {
+		Next(playerId);
 
 		rectTransform.localScale = Vector3.one;
 
@@ -39,7 +60,9 @@ public class LevelUp : MonoBehaviour {
 		items[index].OnClick();
 	}
 
-	public void Next() {
+	public void Next(int playerId) {
+		CustomLogger.Log(playerId + 4);
+
 		// 1. 모든 아이템 비활성화
 		foreach (Item item in items) {
 			item.gameObject.SetActive(false);
@@ -49,11 +72,11 @@ public class LevelUp : MonoBehaviour {
 		int[] random = new int[3];
 
 		while (true) {
-			random[0] = Random.Range(0, items.Length);
-			random[1] = Random.Range(0, items.Length);
-			random[2] = Random.Range(0, items.Length);
+			random[0] = Random.Range(0, 5);
+			random[1] = Random.Range(0, 5);
+			random[2] = Random.Range(0, 5);
 
-			if (random[0] != random[1] && random[0] != random[2] & random[1] != random[2])
+			if (random[0] != random[1] && random[0] != random[2] && random[1] != random[2])
 				break;
 		}
 
