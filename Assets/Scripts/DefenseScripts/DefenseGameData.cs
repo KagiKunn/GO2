@@ -7,6 +7,11 @@ public class DefenseGameData : ScriptableObject
     [SerializeField] private string[] stageRace = { "Human", "DarkElf", "Orc", "Witch", "Skeleton" };
     [SerializeField] private int stageCount;
 
+    // 성벽 체력 데이터
+    [SerializeField] private float maxHealth = 1000f;  // 기본값으로 100 설정
+    [SerializeField] private float health;     // 기본값으로 100 설정
+    [SerializeField] private float extraHealth = 0f;  // 기본값으로 0 설정
+
     // stageRace 배열의 값을 리셋하고 stageCount와 동기화
     public void ResetStageRace()
     {
@@ -30,9 +35,38 @@ public class DefenseGameData : ScriptableObject
             UpdateStageCount(); // 배열이 변경되면 stageCount를 업데이트
         }
     }
+    
     // stageCount를 외부에서 접근할 수 있도록 하는 프로퍼티
     public int StageCount => stageCount;
-    
+
+    // 성벽 데이터 변수 관리
+    public float MaxHealth
+    {
+        get => maxHealth;
+        set => maxHealth = value;
+    }
+
+    public float Health
+    {
+        get => health;
+        set => health = value;
+    }
+
+    public float ExtraHealth
+    {
+        get => extraHealth;
+        set => extraHealth = value;
+    }
+
+    // 성벽 체력 데이터를 기본값으로 재설정하는 메서드
+    public void ResetHealthData()
+    {
+        maxHealth = 1000f;  // 기본값으로 재설정
+        health = maxHealth;     // 기본값으로 재설정
+        extraHealth = 0f;  // 기본값으로 재설정
+        Debug.Log("성벽 체력 데이터가 기본값으로 재설정되었습니다.");
+    }
+
     // JSON 형식으로 데이터를 저장하는 메서드
     public void SaveToJson(string filePath)
     {
@@ -47,15 +81,15 @@ public class DefenseGameData : ScriptableObject
         {
             string json = File.ReadAllText(filePath); // 파일에서 JSON 읽기
             JsonUtility.FromJsonOverwrite(json, this); // JSON 데이터를 객체에 덮어쓰기
-            CustomLogger.Log("세이브데이터 로드 완료. 경로 : " + filePath, "pink");
+            Debug.Log("세이브데이터 로드 완료. 경로 : " + filePath);
             UpdateStageCount(); // 불러온 후 stageCount를 업데이트
         }
         else
         {
             Debug.LogWarning("세이브 파일을 찾을 수 없습니다. 기본값으로 초기화합니다.");
             ResetStageRace(); // 기본값으로 초기화
-            SaveToJson(filePath); //기본값 데이터를 세이브파일로 저장
+            ResetHealthData(); // 체력 데이터도 기본값으로 초기화
+            SaveToJson(filePath); // 기본값 데이터를 세이브파일로 저장
         }
     }
-    
 }
