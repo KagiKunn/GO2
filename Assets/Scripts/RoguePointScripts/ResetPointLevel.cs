@@ -30,6 +30,11 @@ public class ResetPointLevel : MonoBehaviour
     void ResetObject()
     {
         level = gameObject.transform.parent.GetComponent<UIButtonToggle>().level;
+        Transform levelBar = gameObject.transform.parent.Find("LevelBar");
+        for (int i = 0; i < 4; i++)
+        {
+            levelBar.GetChild(i).GetComponent<SpriteRenderer>().color=Color.white;
+        }
         buttonImage = gameObject.transform.parent.GetComponent<Image>();
         soulCalc = GameObject.Find("Soul").transform.GetChild(0).GetComponent<SoulCalc>();
         if (level > 0)
