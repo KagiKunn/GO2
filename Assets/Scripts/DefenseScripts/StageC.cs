@@ -20,7 +20,8 @@ public class StageC : MonoBehaviour
     
     private string saveFilePath;
     private EnemySpawner enemySpawner;
-
+    private CastleWallManager castleWallManager;
+    
     private void Awake()
     {
         // Save file path 설정
@@ -70,6 +71,9 @@ public class StageC : MonoBehaviour
     
     private void InitializeGameOverUI()
     {
+        // 체력 데이터를 DefenseGameData에 업로드
+        UploadCastleWallDataToDefenseGameData();
+        
         if (gameOverCanvas != null)
         {
             gameOverCanvas.enabled = false;
@@ -87,6 +91,17 @@ public class StageC : MonoBehaviour
         }
     }
 
+    private void UploadCastleWallDataToDefenseGameData()
+    {
+        if (castleWallManager != null && defenseGameData != null)
+        {
+            defenseGameData.MaxHealth = castleWallManager.maxHealth;
+            defenseGameData.Health = castleWallManager.health;
+            defenseGameData.ExtraHealth = castleWallManager.extraHealth1;
+            Debug.Log("현재 시점의 CastleWall 데이터가 DefenseGameData에 업로드되었습니다.");
+        }
+    }
+    
     private void InitializeStageClearUI()
     {
         if (stageClearCanvas != null)

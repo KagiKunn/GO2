@@ -9,13 +9,12 @@ public class CastleWallManager : MonoBehaviour
 {
     public static CastleWallManager Instance;
 
-    [SerializeField] private float maxHealth = 1000f;
+    [SerializeField] private DefenseGameData gameData;
     [SerializeField] private float activateShieldValue = 80f; // 실드 활성화 시 설정할 값
-    private float extraHealth = 0;
+    private float extraHealth;
 
 
     private HeroGameManager heroGameManager;
-    public float health;
     public float shield;
     public bool activateShield; // activateShield가 true이면 실드 적용 + hasShield를 true로 변경
     private Coroutine resetShieldCoroutine;
@@ -28,14 +27,33 @@ public class CastleWallManager : MonoBehaviour
     private StageC stageC; // StageC 스크립트 참조
 
     private List<GameObject> wallObjects;
+
+    public float maxHealth;
+    public float health;
+
     public float extraHealth1
     {
-	    get => extraHealth;
-	    set => extraHealth = value;
+        get => extraHealth;
+        set => extraHealth = value;
     }
+
     private void Awake()
     {
-        maxHealth += extraHealth;
+        // Load game data
+        if (gameData != null)
+        {
+            maxHealth = gameData.MaxHealth;
+            extraHealth = gameData.ExtraHealth;
+            health = gameData.Health;
+        }
+
+        //1스테이지일 경우에만 health를 풀피로 설정
+        if (gameData.StageCount == 0)
+        {
+            health = maxHealth;
+            maxHealth += extraHealth; //2회차 1스테이질 경우에는 로그라이크 특전 추가체력을 더해줌
+        }
+
         wallObjects = new List<GameObject>();
         wallObjects.Add(GameObject.FindGameObjectsWithTag("RightWall")[0]);
         wallObjects.Add(GameObject.FindGameObjectsWithTag("LeftWall")[0]);
@@ -49,7 +67,7 @@ public class CastleWallManager : MonoBehaviour
             Destroy(gameObject);
         }
 
-        health = maxHealth;
+
         shield = 0f;
         hasShield = false;
         activateShield = false;
@@ -211,6 +229,7 @@ public class CastleWallManager : MonoBehaviour
         {
             Debug.LogWarning("StageC instance not found.");
         }
+
         HeroGameManager.Instance.ClearHeroFormation(); //영웅선택 저장정보 clear
     }
 

@@ -3543,14 +3543,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d05be8185cf431ab9256b7c00297140, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 1
+  gameData: {fileID: 11400000, guid: f564f2859d2f23743aa22184b4955940, type: 2}
   activateShieldValue: 100
-  health: 1
   shield: 0
   activateShield: 0
   healthSlider: {fileID: 1016381815}
   shieldSlider: {fileID: 1462641434}
   hasShield: 0
+  maxHealth: 1
+  health: 1
 --- !u!1 &403491070 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 79352404760514819, guid: f490398be12f54440ae29229b381ef74,
@@ -27205,8 +27206,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rightMinY: -20
   rightMaxY: 115
-  numberOfObjects: 50
-  maxSpawnInterval: 2
+  numberOfObjects: 30
+  maxSpawnInterval: 0.2
   totalWave: 3
   progressBar: {fileID: 1286466346}
   rightSpawn: 0
