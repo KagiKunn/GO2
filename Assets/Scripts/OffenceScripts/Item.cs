@@ -20,8 +20,22 @@ public class Item : MonoBehaviour {
 		icon.sprite = itemData.ItemIcon;
 
 		Text[] texts = GetComponentsInChildren<Text>();
+
 		textLevel = texts[0];
 		textName = texts[1];
+		textDesc = texts[2];
+
+		textName.text = itemData.ItemName;
+	}
+
+	private void Update() {
+		icon = GetComponentsInChildren<Image>()[1];
+		icon.sprite = itemData.ItemIcon;
+
+		Text[] texts = GetComponentsInChildren<Text>();
+
+		textName = texts[1];
+		textLevel = texts[0];
 		textDesc = texts[2];
 
 		textName.text = itemData.ItemName;
@@ -103,7 +117,51 @@ public class Item : MonoBehaviour {
 		}
 	}
 
-	public ItemData ItemData => itemData;
+	public ItemData ItemData {
+		get => itemData;
 
-	public int Level => level;
+		set => itemData = value;
+	}
+
+	public int Level {
+		get => level;
+
+		set => level = value;
+	}
+
+	public Weapon Weapon {
+		get => weapon;
+
+		set => weapon = value;
+	}
+
+	public Gear Gear {
+		get => gear;
+
+		set => gear = value;
+	}
+
+	public Image Icon {
+		get => icon;
+
+		set => icon = value;
+	}
+
+	public Text TextLevel {
+		get => textLevel;
+
+		set => textLevel = value;
+	}
+
+	public Text TextName {
+		get => textName;
+
+		set => textName = value;
+	}
+
+	public Text TextDesc {
+		get => textDesc;
+
+		set => textDesc = value;
+	}
 }

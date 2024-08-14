@@ -1,4 +1,4 @@
-using System.IO;
+﻿using System.IO;
 
 using UnityEngine;
 using UnityEngine.UI;
@@ -33,7 +33,7 @@ public class StageC : MonoBehaviour {
 
 		// 경로를 출력하여 확인
 		CustomLogger.Log("Save file path: " + saveFilePath);
-CustomLogger
+
 		// JSON에서 데이터를 불러옴
 		defenseGameData.LoadFromJson(saveFilePath);
 
