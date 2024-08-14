@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -208,32 +209,40 @@ public class InventoryUI : MonoBehaviour
 
     void SaveInventory()
     {
-        JsonInventory.SaveToJson(inventoryData, inventoryFilePath);
-        CustomLogger.Log("저장완료!");
+            string jsonContent = JsonUtility.ToJson(inventoryData, true);
+            CustomLogger.Log($"JSON Content Before Writing: {jsonContent}");
+
+            JsonInventory.SaveToJson(inventoryData, inventoryFilePath);
+            
+            CustomLogger.Log($"Saving to path: {Path.GetFullPath(inventoryFilePath)}");
+            CustomLogger.Log($"JSON Content After Writing: {jsonContent}");
+            CustomLogger.Log("저장완료!");
     }
 
     void LoadInventory()
     {
         inventoryData = JsonInventory.LoadFromJson<InventoryData>(inventoryFilePath) ?? new InventoryData();
-
-        int currentSlotCount = inventoryContent.childCount;
-        CustomLogger.Log($"Number of items in inventoryData: {inventoryData.items.Count}");
-        foreach (var itemInstance in inventoryData.items)
+        CustomLogger.Log($"Loaded inventoryData from JSON: {JsonUtility.ToJson(inventoryData, true)}");
+        
+        if (inventoryData.items.Count == 0)
         {
-            CustomLogger.Log($"Item ID in inventory: {itemInstance.itemID}");
+            CustomLogger.LogWarning("No items loaded into inventoryData.");
         }
-
-        for (int i = 0; i < inventoryData.additionalSlotCount; i++)
+        else
         {
-            GameObject newSlot = Resources.Load<GameObject>("PreFab/Slot");
-            if (newSlot != null)
-            {
-                Instantiate(newSlot, inventoryContent);
-            }
-
             foreach (var itemInstance in inventoryData.items)
             {
+                CustomLogger.Log($"Calling LoadItemData for item with ID: {itemInstance.itemID}");
                 itemInstance.LoadItemData();
+            }
+            
+            for (int i = 0; i < inventoryData.additionalSlotCount; i++)
+            {
+                GameObject newSlot = Resources.Load<GameObject>("PreFab/Slot");
+                if (newSlot != null)
+                {
+                    Instantiate(newSlot, inventoryContent);
+                }
             }
         }
 

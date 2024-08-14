@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-[SerializeField]
+[System.Serializable]
 public class ItemInstance
 {
     public string uniqueID;
@@ -30,6 +30,7 @@ public class ItemInstance
                 if (item.ItemID == this.itemID)
                 {
                     this.itemData = item;
+                    CustomLogger.Log($"Loaded item: {item.itemName} with ID {itemID}");
                     return;
                 }
             }

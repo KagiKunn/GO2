@@ -155,7 +155,9 @@ public class Gacha : MonoBehaviour
     {
         if (inventoryUI != null)
         {
+            CustomLogger.Log($"Before Add: Inventory has {inventoryUI.inventoryData.items.Count} items.");
             inventoryUI.AddItemToInventory(itemInstance);
+            CustomLogger.Log($"After Add: Inventory has {inventoryUI.inventoryData.items.Count} items.");
             inventoryUI.UpdateInventoryUI();
         }
         else
