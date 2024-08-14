@@ -84,8 +84,6 @@ public class Enemy : MonoBehaviour {
 	}
 
 	public void Initialized(SpawnData spawnData) {
-		animator.runtimeAnimatorController = runtimeAnimatorControllers[spawnData.SpriteType];
-
 		speed = spawnData.Speed;
 		maxHealth = spawnData.Health;
 		health = spawnData.Health;

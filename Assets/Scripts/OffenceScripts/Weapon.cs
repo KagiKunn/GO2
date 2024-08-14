@@ -29,8 +29,16 @@ public class Weapon : MonoBehaviour {
 		if (player.gameObject.name == "Dummy")
 			player = gameManager.Player[gameManager.PlayerId];
 
+		CustomLogger.Log("id : " + id);
+
 		switch (id) {
 			case 0:
+			case 11:
+			case 12:
+			case 13:
+			case 14:
+			case 15:
+			case 16:
 				transform.Rotate(Vector3.back * speed * Time.deltaTime);
 
 				break;
@@ -40,6 +48,7 @@ public class Weapon : MonoBehaviour {
 
 				if (timer > speed) {
 					timer = 0f;
+					CustomLogger.Log("fire 실행");
 
 					Fire();
 				}
@@ -61,34 +70,47 @@ public class Weapon : MonoBehaviour {
 
 	public void Initialized(ItemData itemData) {
 		// Basic Set
-		name = "Weapon" + itemData.ItemId;
+		int num = itemData.ItemId;
+
+		name = "Weapon" + num;
 
 		transform.parent = player.transform;
 		transform.localPosition = Vector3.zero;
 
 		// Property Set
-		id = itemData.ItemId;
+		id = num;
 		damage = itemData.BaseDamge * Character.Damage;
 		count = itemData.BaseCount + Character.Count;
 
-		for (int i = 0; i < poolManager.Prefabs.Length; i++) {
-			if (itemData.Projectile == poolManager.Prefabs[i]) {
+		for (int i = 1; i < poolManager.WeaponPrefabs.Length; i++) {
+			CustomLogger.Log(itemData.Projectile.name);
+			CustomLogger.Log(poolManager.WeaponPrefabs[i].name);
+
+			if (itemData.Projectile == poolManager.WeaponPrefabs[i]) {
 				prefabId = i;
 
 				break;
 			}
 		}
 
+		// prefabId = num;
+
 		switch (id) {
 			case 0:
-				speed = 150 * Character.WeaponSpeed;
+			case 11:
+			case 12:
+			case 13:
+			case 14:
+			case 15:
+			case 16:
+				speed = 150 * Character.WeaponRate;
+				CustomLogger.Log("batch 실행");
 
 				Batch();
 
 				break;
 
 			default:
-
 				speed = 0.5f * Character.WeaponRate;
 
 				break;
@@ -116,7 +138,7 @@ public class Weapon : MonoBehaviour {
 			if (i < transform.childCount) {
 				bullet = transform.GetChild(i);
 			} else {
-				bullet = poolManager.Get(prefabId).transform;
+				bullet = poolManager.GetWeapon(prefabId).transform;
 				bullet.parent = transform;
 			}
 
@@ -142,7 +164,7 @@ public class Weapon : MonoBehaviour {
 
 		direction = direction.normalized;
 
-		Transform bullet = poolManager.Get(prefabId).transform;
+		Transform bullet = poolManager.GetFire(prefabId).transform;
 
 		bullet.position = transform.position;
 		bullet.rotation = Quaternion.FromToRotation(Vector3.up, direction);
