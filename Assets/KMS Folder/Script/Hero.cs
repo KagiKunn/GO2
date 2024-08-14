@@ -12,9 +12,14 @@ public class HeroData : ScriptableObject {
 	public Sprite ProfileImg; // 영웅 편성 시 클릭 할 이미지
 	public Sprite CharacterImg; // 영웅 편성 시 화면에 나올 전신 이미지
 	
-	[Header(" Offence Control")]
+	[Header("# Offence Control")]
 	public string OffenceHeroAdvantage;
 	public int OffenceHP; // 체력
 	public int OffenceAttack; // 공격력
 	public float OffenceAttackSpeed; // 공속
+
+	[Header("# Color")]
+	public float r;
+	public float g;
+	public float b;
 }

@@ -47,7 +47,7 @@ public class Gear : MonoBehaviour {
 		foreach (Weapon weapon in weapons) {
 			switch (weapon.ID) {
 				case 0:
-					float speed = 150 * Character.WeaponSpeed;
+					float speed = 150 * Character.WeaponRate;
 
 					weapon.Speed = speed + (speed * rate);
 

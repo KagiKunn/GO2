@@ -858,8 +858,8 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_Size: {x: 0.7, y: 0.9}
+  m_Offset: {x: 0, y: 0.3}
+  m_Size: {x: 0.5, y: 0.9}
   m_Direction: 0
 --- !u!114 &4066368803382517214
 MonoBehaviour:
@@ -888,8 +888,7 @@ MonoBehaviour:
   speed: 0
   health: 0
   maxHealth: 0
-  runtimeAnimatorControllers:
-  - {fileID: 9100000, guid: c2fc0aafc4ba14749a6cc196ffeb52b8, type: 2}
+  runtimeAnimatorControllers: []
   target: {fileID: 0}
 --- !u!114 &3213573814342859767
 MonoBehaviour:
@@ -915,11 +914,14 @@ MonoBehaviour:
   normalState: 0
   skillState: 0
   boxSize: {x: 2, y: 0.1}
+  isRight: 0
   projectilePrefab: {fileID: 0}
   movementdirection: {x: 0, y: 0, z: 0}
   isKnockedBack: 0
   percent: 0
   isBoss: 0
+  stageEndNotice: {fileID: 0}
+  stageClearUI: {fileID: 0}
 --- !u!1 &1491858262209264445
 GameObject:
   m_ObjectHideFlags: 0
