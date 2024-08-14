@@ -34,7 +34,7 @@ public abstract class HeroSkill : MonoBehaviour
 
     private void Awake()
     {
-        bool cool = GameObject.Find("InitSetting").GetComponent<DefenseInit>().cooldown1;
+        bool cool = GameObject.Find("InitSetting").GetComponent<DefenseInit>().cooldown1>0?true:false;
         if (cool)
         {
             CustomLogger.Log(cool,"orange");

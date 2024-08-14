@@ -3,32 +3,32 @@ using UnityEngine;
 
 public class DefenseInit : MonoBehaviour
 {
-    private bool startGold;
-    private bool earnGold;
-    private bool castleHealth;
-    private bool cooldown;
+    private int startGold;
+    private int earnGold;
+    private int castleHealth;
+    private int cooldown;
 
     public int currentGold;
     public int extraGold;
-    public bool startGold1
+    public int startGold1
     {
         get => startGold;
         set => startGold = value;
     }
 
-    public bool earnGold1
+    public int earnGold1
     {
         get => earnGold;
         set => earnGold = value;
     }
 
-    public bool castleHealth1
+    public int castleHealth1
     {
         get => castleHealth;
         set => castleHealth = value;
     }
 
-    public bool cooldown1
+    public int cooldown1
     {
         get => cooldown;
         set => cooldown = value;
@@ -48,7 +48,7 @@ public class DefenseInit : MonoBehaviour
     
     private void Awake()
     {
-        if (earnGold)
+        if (earnGold>0)
         {
             extraGold1 = 10;
         }
@@ -57,7 +57,7 @@ public class DefenseInit : MonoBehaviour
             extraGold1 = 0;
         }
 
-        if (castleHealth)
+        if (castleHealth>0)
         {
             GameObject Wall = GameObject.Find("Wall HP Controller");
             CustomLogger.Log("여기"+Wall,"blue");
