@@ -3,30 +3,30 @@
 [System.Serializable]
 public class Bounus
 {
-    public bool startGold;
-    public bool moreEarnGold;
-    public bool moreCastleHealth;
-    public bool reduceCooldown;
-
-    public bool startGold1
+    public int startGold;
+    public int moreEarnGold;
+    public int moreCastleHealth;
+    public int reduceCooldown;
+    
+    public int startGold1
     {
         get => startGold;
         set => startGold = value;
     }
 
-    public bool moreEarnGold1
+    public int moreEarnGold1
     {
         get => moreEarnGold;
         set => moreEarnGold = value;
     }
 
-    public bool moreCastleHealth1
+    public int moreCastleHealth1
     {
         get => moreCastleHealth;
         set => moreCastleHealth = value;
     }
 
-    public bool reduceCooldown1
+    public int reduceCooldown1
     {
         get => reduceCooldown;
         set => reduceCooldown = value;

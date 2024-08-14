@@ -12,7 +12,7 @@ public abstract class HeroSkill : MonoBehaviour
 
     public bool isActive = true;
     public float cooldown = 10f;
-    public float extraCool = 1;
+    public float extraCool = 0;
 
     public virtual void HeroSkillAction()
     {
@@ -34,20 +34,9 @@ public abstract class HeroSkill : MonoBehaviour
 
     private void Awake()
     {
-        bool cool = GameObject.Find("InitSetting").GetComponent<DefenseInit>().cooldown1;
-        if (cool)
-        {
-            CustomLogger.Log(cool,"orange");
-            cooldown = cooldown - (cooldown * (extraCool/10));
-        }
+        extraCool = GameObject.Find("InitSetting").GetComponent<DefenseInit>().extraCool1;
+        cooldown = cooldown - (cooldown * (extraCool/10));
     }
-
-    public float extraCool1
-    {
-        get => extraCool;
-        set => extraCool = value;
-    }
-
     private IEnumerator CreateSkillImage()
     {
         // 특정 태그를 가진 Canvas 찾기
