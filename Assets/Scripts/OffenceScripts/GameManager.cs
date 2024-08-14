@@ -108,7 +108,7 @@ public class GameManager : MonoBehaviour {
 			}
 		}
 
-		uiLevelUp.Select(playerId % 2);
+		uiLevelUp.Select(playerId + 5);
 		Resume();
 		AudioManager.Instance.PlayBgm(true);
 		AudioManager.Instance.PlaySfx(AudioManager.Sfx.Select);
@@ -125,9 +125,9 @@ public class GameManager : MonoBehaviour {
 
 		uiResult.gameObject.SetActive(true);
 		uiResult.Lose();
-		
+
 		Stop();
-		
+
 		AudioManager.Instance.PlayBgm(false);
 		AudioManager.Instance.PlaySfx(AudioManager.Sfx.Lose);
 	}
@@ -144,9 +144,9 @@ public class GameManager : MonoBehaviour {
 
 		uiResult.gameObject.SetActive(true);
 		uiResult.Win();
-		
+
 		Stop();
-		
+
 		AudioManager.Instance.PlayBgm(false);
 		AudioManager.Instance.PlaySfx(AudioManager.Sfx.Win);
 	}
@@ -166,7 +166,7 @@ public class GameManager : MonoBehaviour {
 
 		if (gameTime > maxGameTime) {
 			gameTime = maxGameTime;
-			
+
 			GameVictory();
 		}
 	}
@@ -202,7 +202,7 @@ public class GameManager : MonoBehaviour {
 			level++;
 			exp = 0;
 			maxHealth += 10;
-			
+
 			uiLevelUp.Show();
 		}
 	}
@@ -227,13 +227,13 @@ public class GameManager : MonoBehaviour {
 
 	public void Stop() {
 		isLive = false;
-		
+
 		Time.timeScale = 0;
 	}
 
 	public void Resume() {
 		isLive = true;
-		
+
 		Time.timeScale = 1;
 	}
 

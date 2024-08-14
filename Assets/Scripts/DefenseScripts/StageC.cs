@@ -2,156 +2,133 @@
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class StageC : MonoBehaviour
-{
-    [SerializeField] private Canvas gameOverCanvas; // 게임오버 UI 관련 참조
-    [SerializeField] private Image gameOverImage;
-    [SerializeField] private Button gameOverButton;
+#pragma warning disable CS0618 // 형식 또는 멤버는 사용되지 않습니다.
 
-    [SerializeField] private Canvas stageClearCanvas; // 스테이지 클리어 UI 관련 참조
-    [SerializeField] private Image stageClearImage;
-    [SerializeField] private Button stageClearButton;
+public class StageC : MonoBehaviour {
+	[SerializeField] private Canvas gameOverCanvas; // 게임오버 UI 관련 참조
+	[SerializeField] private Image gameOverImage;
+	[SerializeField] private Button gameOverButton;
 
-    private string[] stageRace = { "Human", "DarkElf", "Orc", "Witch", "Skeleton" };
-    private EnemySpawner enemySpawner;
-    private int stageCount;
+	[SerializeField] private Canvas stageClearCanvas; // 스테이지 클리어 UI 관련 참조
+	[SerializeField] private Image stageClearImage;
+	[SerializeField] private Button stageClearButton;
 
-    private void Awake()
-    {
-        // 초기화
-        InitializeGameOverUI();
-        InitializeStageClearUI();
+	private string[] stageRace = { "Human", "DarkElf", "Orc", "Witch", "Skeleton" };
+	private EnemySpawner enemySpawner;
+	private int stageCount;
 
-        // EnemySpawner 찾기
-        enemySpawner = FindObjectOfType<EnemySpawner>();
+	private void Awake() {
+		// 초기화
+		InitializeGameOverUI();
+		InitializeStageClearUI();
 
-        // EnemySpawner가 존재하는지 확인
-        if (enemySpawner != null)
-        {
-            // stageRace 배열에서 랜덤으로 종족 선택 및 제거
-            string selectedRace = SelectRandomRace();
-            enemySpawner.SetSelectedRace(selectedRace); // 선택된 종족 설정
-        }
-        else
-        {
-            Debug.LogError("EnemySpawner를 찾을 수 없습니다!");
-        }
-    }
+		// EnemySpawner 찾기
+		enemySpawner = FindObjectOfType<EnemySpawner>();
 
-    private void InitializeGameOverUI()
-    {
-        if (gameOverCanvas != null)
-        {
-            gameOverCanvas.enabled = false;
-        }
+		// EnemySpawner가 존재하는지 확인
+		if (enemySpawner != null) {
+			// stageRace 배열에서 랜덤으로 종족 선택 및 제거
+			string selectedRace = SelectRandomRace();
+			enemySpawner.SetSelectedRace(selectedRace); // 선택된 종족 설정
+		} else {
+			Debug.LogError("EnemySpawner를 찾을 수 없습니다!");
+		}
+	}
 
-        if (gameOverImage != null)
-        {
-            gameOverImage.enabled = false;
-        }
+	private void InitializeGameOverUI() {
+		if (gameOverCanvas != null) {
+			gameOverCanvas.enabled = false;
+		}
 
-        if (gameOverButton != null)
-        {
-            gameOverButton.enabled = false;
-            gameOverButton.onClick.AddListener(OnGameOverButtonClick);
-        }
-    }
+		if (gameOverImage != null) {
+			gameOverImage.enabled = false;
+		}
 
-    private void InitializeStageClearUI()
-    {
-        if (stageClearCanvas != null)
-        {
-            stageClearCanvas.enabled = false;
-        }
+		if (gameOverButton != null) {
+			gameOverButton.enabled = false;
+			gameOverButton.onClick.AddListener(OnGameOverButtonClick);
+		}
+	}
 
-        if (stageClearImage != null)
-        {
-            stageClearImage.enabled = false;
-        }
+	private void InitializeStageClearUI() {
+		if (stageClearCanvas != null) {
+			stageClearCanvas.enabled = false;
+		}
 
-        if (stageClearButton != null)
-        {
-            stageClearButton.enabled = false;
-            stageClearButton.onClick.AddListener(OnStageClearButtonClick);
-        }
-    }
+		if (stageClearImage != null) {
+			stageClearImage.enabled = false;
+		}
 
-    private string SelectRandomRace()
-    {
-        // stageCount 계산
-        stageCount = 6 - stageRace.Length;
+		if (stageClearButton != null) {
+			stageClearButton.enabled = false;
+			stageClearButton.onClick.AddListener(OnStageClearButtonClick);
+		}
+	}
 
-        int randomIndex = Random.Range(0, stageRace.Length);
-        string selectedRace = stageRace[randomIndex];
+	private string SelectRandomRace() {
+		// stageCount 계산
+		stageCount = 6 - stageRace.Length;
 
-        // 선택된 종족을 배열에서 제거
-        stageRace = RemoveRaceAt(stageRace, randomIndex);
+		int randomIndex = Random.Range(0, stageRace.Length);
+		string selectedRace = stageRace[randomIndex];
 
-        return selectedRace;
-    }
+		// 선택된 종족을 배열에서 제거
+		stageRace = RemoveRaceAt(stageRace, randomIndex);
 
-    private string[] RemoveRaceAt(string[] array, int index)
-    {
-        string[] newArray = new string[array.Length - 1];
-        for (int i = 0, j = 0; i < array.Length; i++)
-        {
-            if (i != index)
-            {
-                newArray[j++] = array[i];
-            }
-        }
-        return newArray;
-    }
+		return selectedRace;
+	}
 
-    public void ShowGameOverUI()
-    {
-        if (gameOverCanvas != null)
-        {
-            gameOverCanvas.enabled = true;
-        }
+	private string[] RemoveRaceAt(string[] array, int index) {
+		string[] newArray = new string[array.Length - 1];
 
-        if (gameOverImage != null)
-        {
-            gameOverImage.enabled = true;
-        }
+		for (int i = 0, j = 0; i < array.Length; i++) {
+			if (i != index) {
+				newArray[j++] = array[i];
+			}
+		}
 
-        if (gameOverButton != null)
-        {
-            gameOverButton.enabled = true;
-        }
+		return newArray;
+	}
 
-        Time.timeScale = 0f; // 게임 일시 정지
-    }
+	public void ShowGameOverUI() {
+		if (gameOverCanvas != null) {
+			gameOverCanvas.enabled = true;
+		}
 
-    public void ShowStageClearUI()
-    {
-        if (stageClearCanvas != null)
-        {
-            stageClearCanvas.enabled = true;
-        }
+		if (gameOverImage != null) {
+			gameOverImage.enabled = true;
+		}
 
-        if (stageClearImage != null)
-        {
-            stageClearImage.enabled = true;
-        }
+		if (gameOverButton != null) {
+			gameOverButton.enabled = true;
+		}
 
-        if (stageClearButton != null)
-        {
-            stageClearButton.enabled = true;
-        }
+		Time.timeScale = 0f; // 게임 일시 정지
+	}
 
-        Time.timeScale = 0f; // 게임 일시 정지
-    }
+	public void ShowStageClearUI() {
+		if (stageClearCanvas != null) {
+			stageClearCanvas.enabled = true;
+		}
 
-    private void OnGameOverButtonClick()
-    {
-        Debug.Log("게임 오버 버튼 클릭됨");
-        SceneManager.LoadScene("Title");
-    }
+		if (stageClearImage != null) {
+			stageClearImage.enabled = true;
+		}
 
-    private void OnStageClearButtonClick()
-    {
-        Debug.Log("스테이지 클리어 버튼 클릭됨");
-        SceneManager.LoadScene("InternalAffairs");
-    }
+		if (stageClearButton != null) {
+			stageClearButton.enabled = true;
+		}
+
+		Time.timeScale = 0f; // 게임 일시 정지
+	}
+
+	private void OnGameOverButtonClick() {
+		Debug.Log("게임 오버 버튼 클릭됨");
+		SceneManager.LoadScene("Title");
+	}
+
+	private void OnStageClearButtonClick() {
+		Debug.Log("스테이지 클리어 버튼 클릭됨");
+		SceneManager.LoadScene("InternalAffairs");
+	}
 }
