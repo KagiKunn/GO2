@@ -44,7 +44,7 @@ public class ArcherSkill : HeroSkill
     private void Awake()
     {
         isEllipseActive = false;
-        bool cool = GameObject.Find("InitSetting").GetComponent<DefenseInit>().cooldown1;
+        bool cool = GameObject.Find("InitSetting").GetComponent<DefenseInit>().cooldown1>0?true:false;
         if (cool)
         {
             CustomLogger.Log(cool,"orange");
