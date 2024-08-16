@@ -16856,6 +16856,18 @@ MonoBehaviour:
     type: 3}
   btn_txt: {fileID: 724130831}
   originalTxtColor: {r: 0, g: 0, b: 0, a: 0}
+--- !u!114 &1232794172
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 867161945}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18a9edb7b56e5a948b137bf064c671b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1338926460
 GameObject:
   m_ObjectHideFlags: 0
@@ -19686,11 +19698,16 @@ PrefabInstance:
     - target: {fileID: 8773481362288647931, guid: aa91541eb556049edac97017f0ba219d,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8773481362288647931, guid: aa91541eb556049edac97017f0ba219d,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8773481362288647931, guid: aa91541eb556049edac97017f0ba219d,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8773481362288647931, guid: aa91541eb556049edac97017f0ba219d,
@@ -19700,7 +19717,17 @@ PrefabInstance:
       objectReference: {fileID: 1232794169}
     - target: {fileID: 8773481362288647931, guid: aa91541eb556049edac97017f0ba219d,
         type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 1232794172}
+    - target: {fileID: 8773481362288647931, guid: aa91541eb556049edac97017f0ba219d,
+        type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8773481362288647931, guid: aa91541eb556049edac97017f0ba219d,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8773481362288647931, guid: aa91541eb556049edac97017f0ba219d,
@@ -19710,12 +19737,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8773481362288647931, guid: aa91541eb556049edac97017f0ba219d,
         type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: OnRecovery
+      objectReference: {fileID: 0}
+    - target: {fileID: 8773481362288647931, guid: aa91541eb556049edac97017f0ba219d,
+        type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: MSBtn, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 8773481362288647931, guid: aa91541eb556049edac97017f0ba219d,
         type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: RecoveryCastleHealth, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 8773481362288647931, guid: aa91541eb556049edac97017f0ba219d,
+        type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 8773481362288647931, guid: aa91541eb556049edac97017f0ba219d,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 8856464776456968997, guid: aa91541eb556049edac97017f0ba219d,
@@ -19731,6 +19773,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1232794169}
+    - targetCorrespondingSourceObject: {fileID: 8856464776456968997, guid: aa91541eb556049edac97017f0ba219d,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1232794172}
     - targetCorrespondingSourceObject: {fileID: 1375317513288803199, guid: aa91541eb556049edac97017f0ba219d,
         type: 3}
       insertIndex: -1
