@@ -33,7 +33,7 @@ public class Bounus
     }
 }
 
-[CreateAssetMenu(fileName = "BounusData", menuName = "ScriptableObjects/BounusData")]
+[CreateAssetMenu(fileName = "Bounus", menuName = "ScriptableObjects/BounusData")]
 public class BounusScriptableObject : ScriptableObject
 {
     public Bounus data;
