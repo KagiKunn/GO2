@@ -2,14 +2,14 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 
+// 유닛 목록에 유저가 보유중인 유닛을 표시하기 위한 스크립트
 public class UnitSlotManager : MonoBehaviour
-{
+{   
     public Transform contentParent;  // UnitSlot들을 포함하는 부모 오브젝트
     private List<UnitData> userUnits;  // 유저가 보유한 모든 유닛 데이터 목록
     private List<Image> unitImages = new List<Image>();  // 각 슬롯의 하위에 있는 유닛 이미지 컴포넌트 목록
     private List<Graphic> unitSlots = new List<Graphic>(); // 유닛 슬롯(Dropable) 
     private List<UnitDraggable> unitDraggables = new List<UnitDraggable>();  // 각 슬롯의 하위에 있는 UnitDraggable 컴포넌트 목록
-
     
     private void Awake()
     {

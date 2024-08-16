@@ -8,6 +8,4 @@ public class UnitData : ScriptableObject {
 	public float AttackRange; // 공격 사거리
 	public GameObject UnitPrefab; // 유닛 프리팹
 	public Sprite UnitImage; // 유닛의 이미지 (유닛 목록 및 드롭 시 사용)
-	// [HideInInspector]
-	// public int SlotNumber; // 유닛이 배치된 슬롯 번호
 }
