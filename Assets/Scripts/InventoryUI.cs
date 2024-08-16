@@ -268,8 +268,7 @@ public class InventoryUI : MonoBehaviour
     {
         for (int i = 0; i < additionalSlots; i++)
         {
-            GameObject newSlot =
-                (GameObject)AssetDatabase.LoadAssetAtPath("Assets/JSFolder/PreFab/Slot.prefab", typeof(GameObject));
+            GameObject newSlot = Resources.Load<GameObject>("PreFab/Slot");
             if (newSlot != null)
             {
                 Instantiate(newSlot, inventoryContent);

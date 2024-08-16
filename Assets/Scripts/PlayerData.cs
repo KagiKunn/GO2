@@ -26,7 +26,7 @@ public class PlayerData
     }
 }
 
-[CreateAssetMenu(fileName = "PlayerDataScriptableObject", menuName = "ScriptableObjects/PlayerData")]
+[CreateAssetMenu(fileName = "PlayerData", menuName = "ScriptableObjects/PlayerData")]
 public class PlayerDataScriptableObject : ScriptableObject
 {
     public PlayerData data;
