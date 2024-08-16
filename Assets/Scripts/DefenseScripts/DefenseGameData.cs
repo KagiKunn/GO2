@@ -4,14 +4,17 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "DefenseGameData", menuName = "Game Data/Defense Game Data")]
 public class DefenseGameData : ScriptableObject
 {
-    [SerializeField] private string[] stageRace = { "Human", "DarkElf", "Orc", "Witch", "Skeleton" };
-    [SerializeField] private int stageCount;
-
+    
+    
+    //스테이지 적 데이터
+    [SerializeField] public string[] stageRace = { "Human", "DarkElf", "Orc", "Witch", "Skeleton" };
+    [SerializeField] public int stageCount;
+    
     // 성벽 체력 데이터
-    [SerializeField] private float maxHealth = 1000f;  // 기본값으로 100 설정
-    [SerializeField] private float health;     // 기본값으로 100 설정
-    [SerializeField] private float extraHealth = 0f;  // 기본값으로 0 설정
-
+    [SerializeField] public float maxHealth = 2000f;  // 기본값으로 100 설정
+    [SerializeField] public float health;     // 기본값으로 100 설정
+    [SerializeField] public float extraHealth = 0f;  // 기본값으로 0 설정
+    
     // stageRace 배열의 값을 리셋하고 stageCount와 동기화
     public void ResetStageRace()
     {
@@ -22,7 +25,7 @@ public class DefenseGameData : ScriptableObject
     // stageRace 배열의 길이에 따라 stageCount를 동기화
     public void UpdateStageCount()
     {
-        stageCount = 5 - stageRace.Length; // 남은 종족 수에 따라 stageCount를 계산
+        stageCount = 6 - stageRace.Length; // 남은 종족 수에 따라 stageCount를 계산
     }
 
     // stageRace 배열을 외부에서 접근 + 수정할 수 있도록 하는 프로퍼티(getter + setter)
