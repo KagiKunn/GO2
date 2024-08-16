@@ -3,10 +3,10 @@ using UnityEngine;
 [System.Serializable]
 public class SlotUnitData
 {
-    public string SlotIndex; // 슬롯의 인덱스 번호
+    public int SlotIndex; // 슬롯의 인덱스 번호
     public UnitData UnitData; // 유닛 데이터
 
-    public SlotUnitData(string slotIndex, UnitData unitData)
+    public SlotUnitData(int slotIndex, UnitData unitData)
     {
         SlotIndex = slotIndex;
         UnitData = unitData;
