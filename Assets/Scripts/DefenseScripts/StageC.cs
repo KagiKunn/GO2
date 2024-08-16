@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using DefenseScripts;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
@@ -23,11 +24,12 @@ public class StageC : MonoBehaviour
     [SerializeField] private string[] currentStageRace; // 현재 stageRace 배열을 인스펙터에서 확인
     [SerializeField] private string selectedRace;
     [SerializeField] private int currentWeekCount;
-
+    
     private string saveFilePath;
     private EnemySpawner enemySpawner;
     [SerializeField] private CastleWallManager castleWallManager;
-
+    [SerializeField] private TextMeshProUGUI stageInfoText;
+    
     private void Awake()
     {
         currentWeekCount = defenseGameData.WeekCount;
@@ -64,6 +66,7 @@ public class StageC : MonoBehaviour
             // stageRace 배열에서 랜덤으로 종족 선택 및 제거
             selectedRace = SelectRandomRace();
             enemySpawner.SetSelectedRace(selectedRace); // 선택된 종족 설정
+            UpdateStageInfoText();
         }
         else
         {
@@ -78,6 +81,12 @@ public class StageC : MonoBehaviour
             currentStageCount = defenseGameData.StageCount; // DefenseGameData의 stageCount 값을 가져옴
             currentStageRace = defenseGameData.StageRace; // DefenseGameData의 stageRace 배열 값을 가져옴
         }
+    }
+
+    //스테이지 정보 표시
+    private void UpdateStageInfoText()
+    {
+        stageInfoText.text = $"Week:{currentWeekCount}\nStage: {currentStageCount}\nEnemy: {selectedRace}";
     }
 
     private void InitializeGameOverUI()
