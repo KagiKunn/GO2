@@ -24,6 +24,29 @@ public class AllySpawner : MonoBehaviour {
 	private int column = 2;
 
 	void Awake() {
+		/* 유닛 편성 완료되면 활성화
+		   filePath = Path.Combine(Path.Combine(Application.dataPath, "save", "unitInfo"), "selectedUnits.json");
+		   if (File.Exists(filePath)) {
+            try {
+                string json = File.ReadAllText(filePath);
+
+                UnitDataWrapper wrapper = JsonUtility.FromJson<UnitDataWrapper>(json);
+                CustomLogger.Log(wrapper.Unit.Count,"red");
+                for (int i = 0; i < wrapper.Unit.Count; i++) {
+                    UnitData unit = wrapper.Unit[i];
+                    CustomLogger.Log(unit.Name,"red");
+                    allies[i] = Resources.Load<GameObject>("Defense/Unit/"+unit.Name);
+
+                    if (hero != null) {
+                        selectedHeroes.Add(hero.Name);
+                        CustomLogger.Log(hero.Name);
+                    }
+                }
+            } catch (Exception e) {
+                CustomLogger.Log("Error parsing JSON: " + e.Message);
+            }
+        }
+		 */
 		maxUnitCount = allies.Length;
 		currentNumber = 0;
 		BoundsInt bounds = tilemap.cellBounds;
