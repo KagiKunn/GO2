@@ -46,6 +46,11 @@ public class EnemyMovement : MonoBehaviour {
 	private DarkElfSpawner darkElfSpawner;
 
 	private void Awake() {
+		// 여기에 스테이지당 증가될 값 세팅
+		// stageCount 가져오기
+		// ex) health = health + health/(stage*10) stage(1,2,3,4,5)
+		// 다른 속성 공격속도, 이동속도, 사거리등 해도되고 안해도 되고
+		
 		// HorseRoot 오브젝트 찾기
 		Transform horseRootTransform = transform.Find("HorseRoot");
 
