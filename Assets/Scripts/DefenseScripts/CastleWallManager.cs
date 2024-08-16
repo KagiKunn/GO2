@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 using System.Collections;
 using System.Collections.Generic;
-
+using DefenseScripts;
 using UnityEngine.SceneManagement;
 using UnityEngine.Tilemaps;
 
@@ -12,9 +12,9 @@ using UnityEngine.Tilemaps;
 public class CastleWallManager : MonoBehaviour {
 	public static CastleWallManager Instance;
 
-	[SerializeField] private DefenseGameData gameData;
-	[SerializeField] private float activateShieldValue = 80f; // 실드 활성화 시 설정할 값
-	private float extraHealth;
+    [SerializeField] private DefenseGameDataMB gameData;
+    [SerializeField] private float activateShieldValue = 80f; // 실드 활성화 시 설정할 값
+    private float extraHealth;
 
 	private HeroGameManager heroGameManager;
 	public float shield;
@@ -47,11 +47,14 @@ public class CastleWallManager : MonoBehaviour {
 			health = gameData.Health;
 		}
 
-		//1스테이지일 경우에만 health를 풀피로 설정
-		if (gameData.StageCount == 0) {
-			health = maxHealth;
-			maxHealth += extraHealth; //2회차 1스테이질 경우에는 로그라이크 특전 추가체력을 더해줌
-		}
+        Debug.Log("캐슬월에서 가져온 스테이지카운트 : " + gameData.StageCount);
+        //1스테이지일 경우에만 health를 풀피로 설정
+        if (gameData.StageCount == 1)
+        {
+            
+            maxHealth += extraHealth; //2회차 1스테이지 경우에는 로그라이크 특전 추가체력을 더해줌
+            health = maxHealth;
+        }
 
 		wallObjects = new List<GameObject>();
 		wallObjects.Add(GameObject.FindGameObjectsWithTag("RightWall")[0]);
@@ -190,8 +193,12 @@ public class CastleWallManager : MonoBehaviour {
 	}
 
 	private void HandleGameOver() {
+		
+		DestroyWallsWithTag("RightWall");
+		DestroyWallsWithTag("LeftWall");
+		
 		Debug.Log("성벽이 파괴되었습니다! 게임 오버!");
-
+		
 		if (stageC != null) {
 			stageC.ShowGameOverUI(); // StageC에서 게임 오버 UI를 표시하도록 호출
 		} else {
@@ -200,7 +207,22 @@ public class CastleWallManager : MonoBehaviour {
 
 		HeroGameManager.Instance.ClearHeroFormation(); //영웅선택 저장정보 clear
 	}
+	
+	private void DestroyWallsWithTag(string tag) {
+		GameObject[] walls = GameObject.FindGameObjectsWithTag(tag);
+		foreach (GameObject wall in walls) {
+			Destroy(wall);
+		}
+	}
 
-	public float GetHealth() => health;
-	public float GetShield() => shield;
+    public void SaveWallHP()
+    {
+        CustomLogger.Log("성벽 HP 정보 저장됨 health, mH, eH"+health+","+maxHealth+","+extraHealth);
+        gameData.Health = health;
+        gameData.MaxHealth = maxHealth;
+        gameData.ExtraHealth = extraHealth;
+    }
+
+    public float GetHealth() => health;
+    public float GetShield() => shield;
 }

@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using DefenseScripts;
 using UnityEngine;
 
 public class RecoveryCastleHealth : MonoBehaviour
@@ -8,15 +9,17 @@ public class RecoveryCastleHealth : MonoBehaviour
     private float maxHealth;
     private float crntHealth;
     private string json;
-    private DefenseGameData info;
+    private CastlGameData info;
 
     private void Awake()
     {
-        path = Path.Combine(Application.dataPath, "save", "DefenseData", "DefenseGameData.json");
+        string savePath = Path.Combine(Application.dataPath, "save", "DefenseData");
+        path = Path.Combine(savePath, "DefenseGameData.json");
+        Debug.Log("성벽 리커버리 json경로 : "+ path);
         if (File.Exists(path))
         {
             json = File.ReadAllText(path);
-            info = JsonUtility.FromJson<DefenseGameData>(json);
+            info = JsonUtility.FromJson<CastlGameData>(json);
             maxHealth = info.MaxHealth;
             crntHealth = info.Health;
         }
