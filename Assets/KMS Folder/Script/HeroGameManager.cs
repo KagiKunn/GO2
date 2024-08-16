@@ -66,7 +66,7 @@ public class HeroGameManager : MonoBehaviour {
 		HeroDataWrapper wrapper = new HeroDataWrapper { Heroes = selectedHeroes };
 		string json = JsonUtility.ToJson(wrapper, true);
 		File.WriteAllText(filePath, json);
-		SaveUnselectedHeroes(); // 편성되지 않은 영웅도 따로 저
+		SaveUnselectedHeroes(); // 편성되지 않은 영웅도 따로 저장
 	}
 
 	// 영웅 편성 정보 불러오기

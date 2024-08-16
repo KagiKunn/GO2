@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -6,6 +7,7 @@ public class UnitDropable : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 {
     private Image image;
     private RectTransform rect;
+    public UnitData assignedUnitData; // 슬롯에 배정된 유닛 데이터
 
     private void Awake()
     {
@@ -45,6 +47,9 @@ public class UnitDropable : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
         if (draggedUnit != null)
         {
+            // 드래그된 유닛의 데이터를 현재 드롭존에 저장
+            assignedUnitData = draggedUnit.unitData;
+            
             // 드래그된 유닛을 현재 드롭존으로 이동
             draggedUnit.transform.SetParent(transform);
             draggedUnit.GetComponent<RectTransform>().position = GetComponent<RectTransform>().position;
@@ -56,6 +61,19 @@ public class UnitDropable : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                 dropZoneImage.sprite = draggedUnit.unitData.UnitImage; // 유닛 데이터에 연결된 이미지 설정
                 dropZoneImage.color = Color.white; // 색상을 기본으로 설정
             }
+            // selectedUnits 배열 업데이트
+            UnitSelect unitSelect = FindAnyObjectByType<UnitSelect>();
+            if (unitSelect != null)
+            {
+                int dropZoneIndex = Array.IndexOf(unitSelect.unitslots, dropZoneImage);
+                if (dropZoneIndex >= 0 && dropZoneIndex < unitSelect.selectedUnits.Length)
+                {
+                    unitSelect.selectedUnits[dropZoneIndex] = dropZoneImage;
+                }
+            }
+            // 유닛 데이터를 selectedUnits 리스트에 추가
+            UnitGameManager.Instance.AddSelectedUnit(draggedUnit.unitData);
+            
             // 유닛 목록의 원본 이미지를 어둡게 표시하여 배치 완료를 시각적으로 표시
             Image originalImage = draggedUnit.previousParent.GetComponent<Image>();
             if (originalImage != null)
@@ -74,5 +92,10 @@ public class UnitDropable : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             }
             draggedUnit.isDropped = true;
         }
+    }
+
+    public UnitData GetAssignedUnitData()
+    {
+        return assignedUnitData;
     }
 }
