@@ -10,6 +10,6 @@ public class Follow : MonoBehaviour {
 	}
 
 	private void FixedUpdate() {
-		rectTransform.position = Camera.main.WorldToScreenPoint(GameManager.Instance.Player.transform.position);
+		rectTransform.position = Camera.main.WorldToScreenPoint(GameManager.Instance.Player[GameManager.Instance.PlayerId].transform.position);
 	}
 }

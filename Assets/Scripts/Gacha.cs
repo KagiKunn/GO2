@@ -47,6 +47,7 @@ public class Gacha : MonoBehaviour
         {
             resultImage.enabled = false;
         }
+
         if (resultText != null)
         {
             resultText.enabled = false;
@@ -61,12 +62,11 @@ public class Gacha : MonoBehaviour
         {
             warningText.enabled = false;
         }
-        
     }
 
     private void InitializeItems()
     {
-        itemList = new ItemRarity[normalProbability+rareProbability+uniqueProbability];
+        itemList = new ItemRarity[normalProbability + rareProbability + uniqueProbability];
         var index = 0;
 
         // 확률에 맞는 배열 생성
@@ -91,7 +91,7 @@ public class Gacha : MonoBehaviour
 
     public void Shuffle(ItemRarity[] array)
     {
-        for (var i = array.Length - 1 ; i > 0; i--)
+        for (var i = array.Length - 1; i > 0; i--)
         {
             var j = rand.Next(0, i + 1);
             (array[i], array[j]) = (array[j], array[i]);
@@ -114,15 +114,15 @@ public class Gacha : MonoBehaviour
             byte[] bytes = uuid.ToByteArray();
             ulong seed1 = BitConverter.ToUInt64(bytes, 0);
             ulong seed2 = BitConverter.ToUInt64(bytes, 8);
-            rand = new Random((int)(seed1 ^ seed2 ^(ulong)DateTime.Now.Millisecond));
+            rand = new Random((int)(seed1 ^ seed2 ^ (ulong)DateTime.Now.Millisecond));
         }
     }
 
     public void OnGachaButtonClicked()
     {
-        ItemSO GachaItem = GachaRandomItem();
-        DisplayResult(GachaItem);
-        AddItemToInventory(GachaItem);
+        ItemInstance gachaItem = new ItemInstance(GachaRandomItem());
+        DisplayResult(gachaItem);
+        AddItemToInventory(gachaItem);
     }
 
     public void OnMultiGachaButtonClicked(int GachaCount)
@@ -134,13 +134,13 @@ public class Gacha : MonoBehaviour
             { ItemRarity.Unique, 0 }
         };
 
-        List<ItemSO> gachaItems = new List<ItemSO>();
+        List<ItemInstance> gachaItems = new List<ItemInstance>();
 
         for (int i = 0; i < GachaCount; i++)
         {
-            ItemSO gachaItem = GachaRandomItem();
+            ItemInstance gachaItem = new ItemInstance(GachaRandomItem());
             gachaItems.Add(gachaItem);
-            gachaResults[gachaItem.rarity]++;
+            gachaResults[gachaItem.itemData.rarity]++;
         }
 
         DisplayMultiGachaResult(gachaResults, GachaCount, gachaItems);
@@ -151,11 +151,13 @@ public class Gacha : MonoBehaviour
         }
     }
 
-    private void AddItemToInventory(ItemSO item)
+    private void AddItemToInventory(ItemInstance itemInstance)
     {
         if (inventoryUI != null)
         {
-            inventoryUI.AddItemToInventory(item);
+            CustomLogger.Log($"Before Add: Inventory has {inventoryUI.inventoryData.items.Count} items.");
+            inventoryUI.AddItemToInventory(itemInstance);
+            CustomLogger.Log($"After Add: Inventory has {inventoryUI.inventoryData.items.Count} items.");
             inventoryUI.UpdateInventoryUI();
         }
         else
@@ -166,7 +168,6 @@ public class Gacha : MonoBehaviour
 
     private ItemSO GachaRandomItem()
     {
-
         int randomValue = rand.Next(0, itemList.Length);
         ItemRarity selectedRarity = itemList[randomValue];
 
@@ -176,23 +177,23 @@ public class Gacha : MonoBehaviour
         return filteredItems[randomIndex];
     }
 
-    private void DisplayResult(ItemSO item)
+    private void DisplayResult(ItemInstance itemInstance)
     {
         if (resultImage != null)
         {
-            resultImage.sprite = item.icon;
+            resultImage.sprite = itemInstance.itemData.icon;
             resultImage.enabled = true;
         }
 
         if (resultText != null)
         {
-            resultText.text = $"Item: {item.itemName}\nRarity: {item.rarity}";
+            resultText.text = $"Item: {itemInstance.itemData.itemName}\nRarity: {itemInstance.itemData.rarity}";
             resultText.enabled = true;
         }
-        
     }
 
-    private void DisplayMultiGachaResult(Dictionary<ItemRarity, int> gachaResults, int gachaCount, List<ItemSO> gachaItems)
+    private void DisplayMultiGachaResult(Dictionary<ItemRarity, int> gachaResults, int gachaCount,
+        List<ItemInstance> gachaItems)
     {
         foreach (Transform child in multiGachaResultText.transform.parent)
         {
@@ -201,31 +202,28 @@ public class Gacha : MonoBehaviour
                 Destroy(child.gameObject);
             }
         }
-        
+
         if (multiGachaResultText != null)
         {
             float normalPercent = (float)gachaResults[ItemRarity.Normal] / gachaCount * 100;
             float rarePercent = (float)gachaResults[ItemRarity.Rare] / gachaCount * 100;
             float uniquePercent = (float)gachaResults[ItemRarity.Unique] / gachaCount * 100;
-            
+
             String resultText = $"Result of {gachaCount} Gachas:\n" +
                                 $"Normal: {gachaResults[ItemRarity.Normal]} ({normalPercent:F2}%)\n" +
                                 $"Rare: {gachaResults[ItemRarity.Rare]} ({rarePercent:F2}%)\n" +
                                 $"Unique: {gachaResults[ItemRarity.Unique]} ({uniquePercent:F2}%)\n\n" +
                                 "Items:\n";
-            
+
             foreach (var item in gachaItems)
             {
-                resultText += $"Item: {item.itemName}, Rarity: {item.rarity}\n";
+                resultText += $"Item: {item.itemData.itemName}, Rarity: {item.itemData.rarity}\n";
             }
 
             multiGachaResultText.text = resultText;
             CustomLogger.Log(this.resultText);
-            
-           
         }
 
-        
 
         foreach (var item in gachaItems)
         {
@@ -236,24 +234,22 @@ public class Gacha : MonoBehaviour
             vlg.childControlHeight = true;
             vlg.childControlWidth = true;
             vlg.childAlignment = TextAnchor.MiddleCenter;
-            
+
 
             GameObject newImage = new GameObject("GachaItem.Image");
             newImage.transform.SetParent(parentobject.transform);
             Image imageComponent = newImage.AddComponent<Image>();
-            imageComponent.sprite = item.icon;
-            
+            imageComponent.sprite = item.itemData.icon;
+
             GameObject newText = new GameObject("GachaItemTest");
             newText.transform.SetParent(parentobject.transform);
             Text textComponent = newText.AddComponent<Text>();
-            textComponent.text = $"Item: {item.itemName}\nRarity: {item.rarity}";
+            textComponent.text = $"Item: {item.itemData.itemName}\nRarity: {item.itemData.rarity}";
             textComponent.font = multiGachaResultText.font;
             textComponent.fontSize = multiGachaResultText.fontSize;
             textComponent.color = multiGachaResultText.color;
             textComponent.horizontalOverflow = HorizontalWrapMode.Overflow;
             textComponent.verticalOverflow = VerticalWrapMode.Overflow;
-
-            
         }
     }
 }

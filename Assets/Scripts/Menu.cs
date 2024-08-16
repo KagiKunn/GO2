@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
 public class Menu : MonoBehaviour
@@ -7,14 +8,25 @@ public class Menu : MonoBehaviour
     private UIDocument uiDocument;
     private Button menuButton;
     private Button speedButton;
+    private Button giveupButton;
+    public GameObject settingObject;
     private void Awake()
     {
         menuButton = uiDocument.rootVisualElement.Q<Button>("MenuButton");
         speedButton = uiDocument.rootVisualElement.Q<Button>("SpeedButton");
-        if (menuButton != null && speedButton != null)
+        giveupButton = uiDocument.rootVisualElement.Q<Button>("GiveupButton");
+        if (menuButton != null && speedButton != null && giveupButton !=null)
         {
             menuButton.clicked += OnMenuButtonClicked;
             speedButton.clicked += OnSpeedButtonClicked;
+            giveupButton.clicked += OnGiveupButtonClicked;
+        }
+        else
+        {
+            CustomLogger.Log("something is null");
+            CustomLogger.Log(menuButton);
+            CustomLogger.Log(speedButton);
+            CustomLogger.Log(giveupButton);
         }
     }
     private void OnMenuButtonClicked()
@@ -24,10 +36,12 @@ public class Menu : MonoBehaviour
         if (Time.timeScale <= 0)
         {
             Time.timeScale = 1;
+            settingObject.SetActive(false);
         }
         else
         {
             Time.timeScale = 0;
+            settingObject.SetActive(true);
         }
     }
 
@@ -42,5 +56,11 @@ public class Menu : MonoBehaviour
         {
             Time.timeScale = 1;
         }
+    }
+
+    private void OnGiveupButtonClicked()
+    {
+        CustomLogger.Log("Giveup!");
+        SceneManager.LoadScene("Title");
     }
 }

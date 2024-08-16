@@ -1,39 +1,27 @@
 using System;
+
 using UnityEngine;
+
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-#pragma warning disable CS0414
+using UnityEngine.Serialization;
+
+#pragma warning disable CS0618, CS0414 // 형식 또는 멤버는 사용되지 않습니다.
 
 public class EnemyMovement : MonoBehaviour {
 	[SerializeField] private float health = 10f;
-
-	[SerializeField]
-	public float moveSpeed = 1.0f;
-
-	[SerializeField]
-	private LayerMask detectionLayerMask;
-
+	[SerializeField] public float moveSpeed = 1.0f;
+	[SerializeField] private LayerMask detectionLayerMask;
 	[SerializeField] private int attackDamage = 1;
-
 	[SerializeField] private float attackSpeed = 1f;
-
-	//idle 0 , run 0.25, stun 1
 	[SerializeField] public float runState = 0.25f;
-
-	//skill 0, normal 1
 	[SerializeField] private float attackState = 1f;
-
-	//normal 0, bow 0.25 magic, 0.5 gun 0.75, crossbow 1
 	[SerializeField] private float normalState = 0f;
-
-	//normal 0, bow 0.5, magic 1
 	[SerializeField] private float skillState = 0f;
-
-	[SerializeField]
-	private Vector2 boxSize = new Vector2(2, 0.1f);
-
+	[SerializeField] private Vector2 boxSize = new Vector2(2, 0.1f);
+	public bool isRight;
 	public GameObject projectilePrefab;
 	private Rigidbody2D rigid2d;
 	private Animator animator;
@@ -43,35 +31,43 @@ public class EnemyMovement : MonoBehaviour {
 	private bool isChangingBrightness = false;
 	public bool isKnockedBack = false;
 	public float percent = 0f;
-
+	public int gold = 10;
+	private bool deadJudge = true;
 	public bool isBoss; //보스 여부 확인
-	public event Action OnBossDisabledEvent; //보스 비활성화 이벤트
-	
+	private GameObject horseRoot;
+	public NoticeUI stageEndNotice;
+	[FormerlySerializedAs("stageEndUI")] public StageClearUI stageClearUI;
+
+	// 이벤트 선언
+	public static event Action OnBossDie;
+
+	private bool isBossDied = false;
+
+	private DarkElfSpawner darkElfSpawner;
+
 	private void Awake() {
-		// pos.position = new Vector2(0, 0);
+		// HorseRoot 오브젝트 찾기
+		Transform horseRootTransform = transform.Find("HorseRoot");
+
+		if (horseRootTransform != null) {
+			horseRoot = horseRootTransform.gameObject;
+		}
+
 		rigid2d = GetComponent<Rigidbody2D>();
 		animator = GetComponent<Animator>();
 		animator.speed = attackSpeed;
 		animator.SetFloat("SkillState", skillState);
 		animator.SetFloat("NormalState", normalState);
-		movementdirection = Vector3.left;
 	}
 
-	private void Update()
-	{
-		if (!isKnockedBack)
-		{
-			if (CollisionCheck())
-			{
+	private void Update() {
+		if (!isKnockedBack) {
+			if (CollisionCheck()) {
 				EnemyAttack();
-			}
-			else
-			{
+			} else {
 				EnemyMove();
 			}
-		}
-		else
-		{
+		} else {
 			EnemyNockout();
 		}
 
@@ -80,10 +76,17 @@ public class EnemyMovement : MonoBehaviour {
 	}
 
 	private bool CollisionCheck() {
-		Vector2 boxCenter = (Vector2)transform.position + new Vector2(-boxSize.x / 2, 0);
+		Vector2 boxCenter;
+
+		if (isRight) {
+			boxCenter = (Vector2)transform.position + new Vector2(-boxSize.x / 2, 0);
+		} else {
+			boxCenter = (Vector2)transform.position + new Vector2(boxSize.x / 2, 0);
+		}
+
 		hit = Physics2D.OverlapBox(boxCenter, boxSize, 0, detectionLayerMask);
 
-		if (hit != null && hit.name == "CastleWall") {
+		if (hit != null && (hit.CompareTag("RightWall") || hit.CompareTag("LeftWall"))) {
 			castleWall = hit.GetComponent<CastleWall>();
 
 			return true;
@@ -93,7 +96,12 @@ public class EnemyMovement : MonoBehaviour {
 	}
 
 	private void EnemyMove() {
-		movementdirection = Vector3.left;
+		if (isRight) {
+			movementdirection = Vector3.left;
+		} else {
+			movementdirection = Vector3.right;
+		}
+
 		animator.SetFloat("RunState", runState);
 		animator.ResetTrigger("Attack");
 	}
@@ -104,24 +112,26 @@ public class EnemyMovement : MonoBehaviour {
 		animator.SetTrigger("Attack");
 	}
 
-	private void EnemyNockout()
-	{
+	private void EnemyNockout() {
 		animator.ResetTrigger("Attack");
 		movementdirection = Vector3.zero;
-		animator.SetFloat("RunState",1f);
+		animator.SetFloat("RunState", 1f);
 	}
 
-	void AdditionalDamage(float percent)
-	{
+	void AdditionalDamage(float percent) {
 		this.percent = percent;
 	}
 
 	public void isAttack() {
 		if (castleWall != null) {
-			if (normalState == 1f || skillState == 1f || normalState == 0.25f || skillState == 0.25f || skillState == 0.75f || normalState == 0.5f){
+			if (normalState == 1f || skillState == 1f || normalState == 0.25f || skillState == 0.25f || skillState == 0.75f || normalState == 0.5f) {
 				CollisionAttack();
 			} else {
 				castleWall.TakeDamage(attackDamage);
+
+				if (attackState == 0f && normalState == 0f) {
+					TakeDamage(health);
+				}
 			}
 		}
 	}
@@ -129,11 +139,15 @@ public class EnemyMovement : MonoBehaviour {
 	public void CollisionAttack() {
 		if (castleWall != null) {
 			Vector3 spawnPosition = transform.position + new Vector3(0, GetComponent<Collider2D>().bounds.size.y, 0);
-			GameObject projectileInstance = Instantiate(projectilePrefab, spawnPosition, Quaternion.Euler(0, 180, 0));
+			GameObject projectileInstance = Instantiate(projectilePrefab, spawnPosition, Quaternion.Euler(0, 180, 0), transform);
 			EnemyProjectile projectile = projectileInstance.GetComponent<EnemyProjectile>();
 
 			if (projectile != null) {
-				projectile.Initialize(Vector3.left, attackDamage);
+				if (isRight) {
+					projectile.Initialize(Vector3.left, attackDamage);
+				} else {
+					projectile.Initialize(Vector3.right, attackDamage);
+				}
 			} else {
 				castleWall.TakeDamage(attackDamage);
 			}
@@ -141,119 +155,140 @@ public class EnemyMovement : MonoBehaviour {
 	}
 
 	public void TakeDamage(float damage) {
-		health -= damage * (1+(percent/100));
+		health -= damage * (1 + (percent / 100));
 
-        // 코루틴이 실행 중이지 않을 때만 호출
-        if (!isChangingBrightness)
-        {
-            StartCoroutine(ChangeBrightnessTemporarily(0.1f, 0.6f)); // 예: 명도를 50%로 줄임
-        }
+		// 코루틴이 실행 중이지 않을 때만 호출
+		if (!isChangingBrightness) {
+			StartCoroutine(ChangeBrightnessTemporarily(0.1f, 0.6f)); // 예: 명도를 50%로 줄임
+		}
 
-        if (health <= 0) {
-            Die();
-        }
-    }
+		if (health <= 0 && deadJudge) {
+			Die();
+		}
+	}
 
-    private IEnumerator ChangeBrightnessTemporarily(float duration, float brightnessMultiplier)
-    {
-        isChangingBrightness = true;  // 코루틴이 실행 중임을 표시
+	private IEnumerator ChangeBrightnessTemporarily(float duration, float brightnessMultiplier) {
+		isChangingBrightness = true; // 코루틴이 실행 중임을 표시
 
-        Transform parent = transform;
-        Dictionary<Transform, Color> originalColors = new Dictionary<Transform, Color>();
+		Transform parent = transform;
+		Dictionary<Transform, Color> originalColors = new Dictionary<Transform, Color>();
 
-        // 부모 오브젝트와 자식 오브젝트의 원래 색상을 저장하고 명도를 변경
-        yield return StoreAndChangeBrightnessRecursively(parent, brightnessMultiplier, originalColors);
+		// 부모 오브젝트와 자식 오브젝트의 원래 색상을 저장하고 명도를 변경
+		yield return StoreAndChangeBrightnessRecursively(parent, brightnessMultiplier, originalColors);
 
-        // 지정된 시간 동안 대기
-        yield return new WaitForSeconds(duration);
+		// 지정된 시간 동안 대기
+		yield return new WaitForSeconds(duration);
 
-        // 원래 색상으로 복원
-        yield return RestoreOriginalColors(originalColors);
+		// 원래 색상으로 복원
+		yield return RestoreOriginalColors(originalColors);
 
-        isChangingBrightness = false;  // 코루틴 실행 종료 표시
-    }
+		isChangingBrightness = false; // 코루틴 실행 종료 표시
+	}
 
-    private IEnumerator StoreAndChangeBrightnessRecursively(Transform parent, float brightnessMultiplier, Dictionary<Transform, Color> originalColors)
-    {
-        Queue<Transform> queue = new Queue<Transform>();
-        queue.Enqueue(parent);
+	private IEnumerator StoreAndChangeBrightnessRecursively(Transform parent, float brightnessMultiplier,
+	                                                        Dictionary<Transform, Color> originalColors) {
+		Queue<Transform> queue = new Queue<Transform>();
+		queue.Enqueue(parent);
 
-        while (queue.Count > 0)
-        {
-            Transform current = queue.Dequeue();
-            SpriteRenderer spriteRenderer = current.GetComponent<SpriteRenderer>();
-            if (spriteRenderer != null)
-            {
-                originalColors[current] = spriteRenderer.color;
-                spriteRenderer.color = ChangeBrightness(spriteRenderer.color, brightnessMultiplier);
-            }
+		while (queue.Count > 0) {
+			Transform current = queue.Dequeue();
+			SpriteRenderer spriteRenderer = current.GetComponent<SpriteRenderer>();
 
-            foreach (Transform child in current)
-            {
-                queue.Enqueue(child);
-            }
+			if (spriteRenderer != null) {
+				originalColors[current] = spriteRenderer.color;
+				spriteRenderer.color = ChangeBrightness(spriteRenderer.color, brightnessMultiplier);
+			}
 
-            // 작업을 한 프레임에 모두 처리하지 않도록 대기
-            if (queue.Count % 15 == 0)
-            {
-                yield return null;
-            }
-        }
-    }
+			foreach (Transform child in current) {
+				queue.Enqueue(child);
+			}
 
-    private Color ChangeBrightness(Color color, float multiplier)
-    {
-        float h, s, v;
-        Color.RGBToHSV(color, out h, out s, out v);
-        v *= multiplier;
-        return Color.HSVToRGB(h, s, v);
-    }
+			// 작업을 한 프레임에 모두 처리하지 않도록 대기
+			if (queue.Count % 15 == 0) {
+				yield return null;
+			}
+		}
+	}
 
-    private IEnumerator RestoreOriginalColors(Dictionary<Transform, Color> originalColors)
-    {
-        foreach (KeyValuePair<Transform, Color> entry in originalColors)
-        {
-            SpriteRenderer spriteRenderer = entry.Key.GetComponent<SpriteRenderer>();
-            if (spriteRenderer != null)
-            {
-                spriteRenderer.color = entry.Value;
-            }
+	private Color ChangeBrightness(Color color, float multiplier) {
+		float h, s, v;
+		Color.RGBToHSV(color, out h, out s, out v);
+		v *= multiplier;
 
-            // 작업을 한 프레임에 모두 처리하지 않도록 대기
-            if (entry.Key.GetSiblingIndex() % 15 == 0)
-            {
-                yield return null;
-            }
-        }
-    }
+		return Color.HSVToRGB(h, s, v);
+	}
+
+	private IEnumerator RestoreOriginalColors(Dictionary<Transform, Color> originalColors) {
+		foreach (KeyValuePair<Transform, Color> entry in originalColors) {
+			SpriteRenderer spriteRenderer = entry.Key.GetComponent<SpriteRenderer>();
+
+			if (spriteRenderer != null) {
+				spriteRenderer.color = entry.Value;
+			}
+
+			// 작업을 한 프레임에 모두 처리하지 않도록 대기
+			if (entry.Key.GetSiblingIndex() % 15 == 0) {
+				yield return null;
+			}
+		}
+	}
+
 	public bool IsDead() {
 		return health <= 0;
 	}
 
 	private void Die() {
-		CustomLogger.Log("Die()호출됨", "red");
 		// 적이 죽었을 때의 동작 (예: 오브젝트 비활성화)
-		if (isBoss) {
-			CustomLogger.Log("보스 비활성화 이벤트 호출됨", "red");
-			OnBossDisabledEvent?.Invoke();
-		}
-		CustomLogger.Log("gameObject.SetActive(false) 호출됨", "red");
-		gameObject.SetActive(false);
-	}
+		DefenseInit defenseInit = GameObject.Find("InitSetting").GetComponent<DefenseInit>();
+		int crntgold;
 
-	private void OnDisable()
-	{
-		CustomLogger.Log("OnDisable 호출됨", "yellow");
-		if (isBoss)
-		{
-			CustomLogger.Log("OnDisable에서 보스 비활성화 이벤트 호출됨", "yellow");
-			OnBossDisabledEvent?.Invoke();
+		if (defenseInit.extraGold1 == 0) {
+			crntgold = gold;
+		} else {
+			crntgold = gold + defenseInit.extraGold1 / gold;
 		}
+
+		defenseInit.currentGold1 += crntgold;
+		CustomLogger.Log(defenseInit.currentGold1);
+
+		// 적의 태그가 EnemyBoss 일때 실행
+		if (gameObject.CompareTag("EnemyBoss")) {
+			//여기에 보스가 죽었을때의 이벤트
+			CustomLogger.Log("보스 사망..............", "red");
+
+			// 보스 사망 플래그 설정
+			isBossDied = true;
+
+			// 보스 사망 이벤트 호출
+			OnBossDie?.Invoke();
+
+			StageC stageC = FindObjectOfType<StageC>();
+			stageC.ShowStageClearUI();
+
+			Time.timeScale = 0;
+			CustomLogger.Log("게임이 정지되었습니다.");
+		}
+
+		gameObject.SetActive(false);
+		deadJudge = false;
 	}
 
 	private void OnDrawGizmos() {
-		Vector2 boxCenter = (Vector2)transform.position + new Vector2(-boxSize.x / 2, 0);
+		Vector2 boxCenter;
+
+		if (isRight) {
+			boxCenter = (Vector2)transform.position + new Vector2(-boxSize.x / 2, 0);
+		} else {
+			boxCenter = (Vector2)transform.position + new Vector2(boxSize.x / 2, 0);
+		}
+
 		Gizmos.color = Color.red;
 		Gizmos.DrawWireCube(boxCenter, boxSize);
+	}
+
+	public bool IsRight {
+		get => isRight;
+
+		set => isRight = value;
 	}
 }

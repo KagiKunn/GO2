@@ -1008,17 +1008,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22d2f6f63e7a499eb8f868c773c2ff64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detectionRadius: 100
+  detectionRadius: 120
   enemyLayer:
     serializedVersion: 2
     m_Bits: 128
-  attackDamage: 1
-  attackSpeed: 1
+  attackDamage: 2
+  attackCool: 0.6
   runState: 0
   attackState: 1
   normalState: 0.5
   skillState: 0
-  aoe: 2
+  aoe: 6
+  movementSpeed: 10
   damageEffect: {fileID: 11400000, guid: e75aeb6c76b413f43a14de623eb79a79, type: 2}
   projectilePrefab: {fileID: 2192211679723560529, guid: faac0022c11cfd248b0f2615f788ce9e,
     type: 3}

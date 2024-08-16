@@ -870,7 +870,7 @@ GameObject:
   - component: {fileID: 6570937638427181640}
   m_Layer: 7
   m_Name: HumanBoss
-  m_TagString: Untagged
+  m_TagString: EnemyBoss
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1141,7 +1141,7 @@ GameObject:
   - component: {fileID: 5219798863703805705}
   m_Layer: 7
   m_Name: UnitRoot
-  m_TagString: Untagged
+  m_TagString: EnemyBoss
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1173,7 +1173,7 @@ SortingGroup:
   m_Enabled: 1
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 5
+  m_SortingOrder: 4
   m_SortAtRoot: 0
 --- !u!95 &7143666412679526080
 Animator:
@@ -1221,11 +1221,15 @@ MonoBehaviour:
   normalState: 0
   skillState: 0
   boxSize: {x: 10, y: 0.1}
+  isRight: 0
   projectilePrefab: {fileID: 0}
   movementdirection: {x: 0, y: 0, z: 0}
   isKnockedBack: 0
   percent: 0
+  gold: 10
   isBoss: 0
+  stageEndNotice: {fileID: 0}
+  stageClearUI: {fileID: 0}
 --- !u!50 &766510097292102552
 Rigidbody2D:
   serializedVersion: 4

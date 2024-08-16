@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class AllyProjectile : MonoBehaviour
@@ -9,13 +10,22 @@ public class AllyProjectile : MonoBehaviour
     private int damage;
     private Transform target;
     private DamageEffect damageEffect;
-
-    public void Initialize(Transform target, int damage, DamageEffect effect, float aoe)
+    private bool isRight;
+    private SpriteRenderer spriteRenderer;
+    
+    public void Initialize(Transform target, int damage, DamageEffect effect, float aoe, bool isRight)
     {
         this.target = target;
         this.damage = damage;
         this.damageEffect = effect;
         this.aoe = aoe;
+        this.isRight = isRight;
+    }
+
+    private void Start()
+    {
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer.flipX = isRight;
     }
 
     private void Update()
@@ -25,7 +35,6 @@ public class AllyProjectile : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-
         Vector2 direction = (Vector2)target.position - (Vector2)transform.position;
         float distanceThisFrame = speed * Time.deltaTime;
 

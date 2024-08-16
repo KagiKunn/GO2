@@ -1230,7 +1230,7 @@ SortingGroup:
   m_Enabled: 1
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 5
+  m_SortingOrder: 4
   m_SortAtRoot: 0
 --- !u!95 &511719610440376098
 Animator:
@@ -1294,22 +1294,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 10
-  moveSpeed: 10
+  moveSpeed: 12
   detectionLayerMask:
     serializedVersion: 2
     m_Bits: 64
-  attackDamage: 1
+  attackDamage: 2
   attackSpeed: 0.5
   runState: 0.25
   attackState: 1
   normalState: 0
   skillState: 0
   boxSize: {x: 10, y: 0.1}
+  isRight: 0
   projectilePrefab: {fileID: 0}
-  movementdirection: {x: 0, y: 0, z: 0}
+  movementdirection: {x: -1, y: 0, z: 0}
   isKnockedBack: 0
   percent: 0
+  gold: 10
   isBoss: 0
+  stageEndNotice: {fileID: 0}
+  stageClearUI: {fileID: 0}
 --- !u!58 &7807129213302239710
 CircleCollider2D:
   m_ObjectHideFlags: 0

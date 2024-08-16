@@ -872,7 +872,7 @@ SortingGroup:
   m_Enabled: 1
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 5
+  m_SortingOrder: 4
   m_SortAtRoot: 0
 --- !u!95 &2732730987372700858
 Animator:
@@ -950,12 +950,13 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   attackDamage: 0
-  attackSpeed: 0
+  attackCool: 1
   runState: 0
   attackState: 0
   normalState: 0
   skillState: 0
   aoe: 2
+  movementSpeed: 10
   damageEffect: {fileID: 0}
   projectilePrefab: {fileID: 0}
 --- !u!1 &779481323314682059
@@ -1070,7 +1071,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6530831701735933550
 Transform:
   m_ObjectHideFlags: 0

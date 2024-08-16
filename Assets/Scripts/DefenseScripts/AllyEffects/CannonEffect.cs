@@ -14,7 +14,6 @@ public class CannonEffect : DamageEffect
         {
             CannonAttack(targets, damage);
         }
-        CustomLogger.Log("Fire Damage", "red");
     }
 
     private void CannonAttack(Collider2D[] hitColliders, int damage)
@@ -32,17 +31,12 @@ public class CannonEffect : DamageEffect
 
                 Coroutine damageCoroutine = ApplyContinuousDamage(target, activeDamageCoroutines, Color.gray, CannonDamage(target, damage));
                 activeDamageCoroutines[target] = damageCoroutine;
-            }
+            } 
         }
     }
 
     public IEnumerator CannonDamage(EnemyMovement target, int damage)
     {
-        // 적의 위치를 x 좌표로 +1만큼 이동
-        Vector3 targetKnockback = target.transform.position;
-        targetKnockback.x = target.transform.position.x + 5f;
-        target.transform.position = targetKnockback;
-
         // 데미지 적용
         target.TakeDamage(damage);
     

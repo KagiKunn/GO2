@@ -10,7 +10,7 @@ public class Enemy : MonoBehaviour {
 	[SerializeField] private float health;
 	[SerializeField] private float maxHealth;
 
-	[SerializeField] private RuntimeAnimatorController[] runtimeAnimatorController;
+	[SerializeField] private RuntimeAnimatorController[] runtimeAnimatorControllers;
 
 	[SerializeField] private Rigidbody2D target;
 
@@ -25,6 +25,8 @@ public class Enemy : MonoBehaviour {
 	private GameManager gameManager;
 	private Player player;
 
+	private Vector3 scale;
+
 	private void Awake() {
 		rigidbody2D = GetComponent<Rigidbody2D>();
 		collider2D = GetComponent<Collider2D>();
@@ -33,7 +35,17 @@ public class Enemy : MonoBehaviour {
 		waitForFixedUpdate = new WaitForFixedUpdate();
 
 		gameManager = GameManager.Instance;
-		player = GameManager.Instance.Player;
+		player = GameManager.Instance.Player[GameManager.Instance.PlayerId];
+
+		scale = transform.localScale;
+
+		animator.SetFloat("RunState", 0.25f);
+	}
+
+	private void Update() {
+		if (player.gameObject.name != "Dummy") return;
+
+		player = GameManager.Instance.Player[GameManager.Instance.PlayerId];
 	}
 
 	private void FixedUpdate() {
@@ -53,7 +65,10 @@ public class Enemy : MonoBehaviour {
 
 		if (!isLive) return;
 
-		spriteRenderer.flipX = target.position.x < rigidbody2D.position.x;
+		if (target.position.x < rigidbody2D.position.x) scale.x = 1;
+		else if (target.position.x > rigidbody2D.position.x) scale.x = -1;
+
+		transform.localScale = scale;
 	}
 
 	private void OnEnable() {
@@ -63,14 +78,12 @@ public class Enemy : MonoBehaviour {
 		collider2D.enabled = true;
 		rigidbody2D.simulated = true;
 		spriteRenderer.sortingOrder = 2;
-		animator.SetBool("Dead", false);
+		animator.SetBool("Die", false);
 
 		health = maxHealth;
 	}
 
 	public void Initialized(SpawnData spawnData) {
-		animator.runtimeAnimatorController = runtimeAnimatorController[spawnData.SpriteType];
-
 		speed = spawnData.Speed;
 		maxHealth = spawnData.Health;
 		health = spawnData.Health;
@@ -85,7 +98,7 @@ public class Enemy : MonoBehaviour {
 		// StartCoroutine("KnockBack");
 
 		if (health > 0) {
-			animator.SetTrigger("Hit");
+			animator.SetFloat("RunState", 1);
 
 			AudioManager.Instance.PlaySfx(AudioManager.Sfx.Hit);
 		} else {
@@ -93,7 +106,7 @@ public class Enemy : MonoBehaviour {
 			collider2D.enabled = false;
 			rigidbody2D.simulated = false;
 			spriteRenderer.sortingOrder = 1;
-			animator.SetBool("Dead", true);
+			animator.SetBool("Die", true);
 
 			if (gameManager.IsLive) {
 				gameManager.Kill++;
@@ -118,6 +131,6 @@ public class Enemy : MonoBehaviour {
 	}
 
 	private void Dead() {
-		gameObject.SetActive(false);
+		transform.parent.gameObject.SetActive(false);
 	}
 }
