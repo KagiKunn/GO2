@@ -2010,7 +2010,7 @@ GameObject:
   - component: {fileID: 687277206395128934}
   m_Layer: 7
   m_Name: WitchBoss
-  m_TagString: Untagged
+  m_TagString: EnemyBoss
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3626,7 +3626,7 @@ GameObject:
   - component: {fileID: 419383251144105382}
   m_Layer: 7
   m_Name: UnitRoot
-  m_TagString: Untagged
+  m_TagString: EnemyBoss
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3658,7 +3658,7 @@ SortingGroup:
   m_Enabled: 1
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 5
+  m_SortingOrder: 4
   m_SortAtRoot: 0
 --- !u!95 &2984043107868469722
 Animator:
@@ -3706,12 +3706,16 @@ MonoBehaviour:
   normalState: 0.5
   skillState: 0
   boxSize: {x: 5, y: 0.1}
+  isRight: 0
   projectilePrefab: {fileID: 8172912759357463194, guid: 38c3d5abd431f1b48a9b27f0b52bdea4,
     type: 3}
   movementdirection: {x: 0, y: 0, z: 0}
   isKnockedBack: 0
   percent: 0
+  gold: 10
   isBoss: 0
+  stageEndNotice: {fileID: 0}
+  stageClearUI: {fileID: 0}
 --- !u!50 &1170939455269804218
 Rigidbody2D:
   serializedVersion: 4

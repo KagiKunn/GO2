@@ -49,7 +49,7 @@ public class GameManager : MonoBehaviour {
 	private Weapon weapon;
 
 	public enum HeroNames {
-		Dummy, KKS01, Novice, knight, Dualweapon, Elf, LSH01, CHS01
+		Dummy, KKS01, Novice, Knight, DualWeapon, Elf, LSH01, CHS01
 	}
 
 	public HeroNames heroNames;
@@ -108,7 +108,7 @@ public class GameManager : MonoBehaviour {
 			}
 		}
 
-		uiLevelUp.Select(playerId % 2);
+		uiLevelUp.Select(playerId + 5);
 		Resume();
 		AudioManager.Instance.PlayBgm(true);
 		AudioManager.Instance.PlaySfx(AudioManager.Sfx.Select);
@@ -125,9 +125,9 @@ public class GameManager : MonoBehaviour {
 
 		uiResult.gameObject.SetActive(true);
 		uiResult.Lose();
-		
+
 		Stop();
-		
+
 		AudioManager.Instance.PlayBgm(false);
 		AudioManager.Instance.PlaySfx(AudioManager.Sfx.Lose);
 	}
@@ -144,17 +144,19 @@ public class GameManager : MonoBehaviour {
 
 		uiResult.gameObject.SetActive(true);
 		uiResult.Win();
-		
+
 		Stop();
-		
+
 		AudioManager.Instance.PlayBgm(false);
 		AudioManager.Instance.PlaySfx(AudioManager.Sfx.Win);
 	}
 
 	public void GameRetry() {
-		Destroy(this.gameObject);
-		
-		SceneManager.LoadScene("Offence");
+		SceneManager.LoadScene("InternalAffairs");
+	}
+
+	public void GameWin() {
+		SceneManager.LoadScene("Gatcha");
 	}
 
 	private void Update() {
@@ -164,7 +166,7 @@ public class GameManager : MonoBehaviour {
 
 		if (gameTime > maxGameTime) {
 			gameTime = maxGameTime;
-			
+
 			GameVictory();
 		}
 	}
@@ -199,9 +201,10 @@ public class GameManager : MonoBehaviour {
 		if (exp == nextExp[Mathf.Min(level, nextExp.Length - 1)]) {
 			level++;
 			exp = 0;
+			health += 10;
 			maxHealth += 10;
-			
-			uiLevelUp.Show();
+
+			uiLevelUp.Show(playerId + 5);
 		}
 	}
 
@@ -225,13 +228,13 @@ public class GameManager : MonoBehaviour {
 
 	public void Stop() {
 		isLive = false;
-		
+
 		Time.timeScale = 0;
 	}
 
 	public void Resume() {
 		isLive = true;
-		
+
 		Time.timeScale = 1;
 	}
 

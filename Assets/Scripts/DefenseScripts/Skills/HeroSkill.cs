@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -11,6 +12,7 @@ public abstract class HeroSkill : MonoBehaviour
 
     public bool isActive = true;
     public float cooldown = 10f;
+    public float extraCool = 0;
 
     public virtual void HeroSkillAction()
     {
@@ -30,6 +32,11 @@ public abstract class HeroSkill : MonoBehaviour
         StartCoroutine(CreateSkillImage());
     }
 
+    private void Awake()
+    {
+        extraCool = GameObject.Find("InitSetting").GetComponent<DefenseInit>().extraCool1;
+        cooldown = cooldown - (cooldown * (extraCool/10));
+    }
     private IEnumerator CreateSkillImage()
     {
         // 특정 태그를 가진 Canvas 찾기

@@ -5,7 +5,8 @@ using UnityEngine.UI;
 
 public class ItemSlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
-    public ItemSO item;
+    public ItemInstance ItemInstance;
+    public ItemSO item => ItemInstance?.itemData;
     public Image itemImage;
 
     private Transform originalParent;
@@ -14,24 +15,28 @@ public class ItemSlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
     private LayoutGroup layoutGroup;
     private int originalSiblingIndex;
 
+    private InventoryUI inventoryUI;
+
 
     private void Start()
     {
         rectTransform = GetComponent<RectTransform>();
         itemImage = GetComponentInChildren<Image>();
-        
-        if (item != null && itemImage != null)
-        {
-            itemImage.sprite = item.icon;
-            CustomLogger.Log($"ItemSlot initialized with item: {item.itemName}");
-        }
-        else
-        {
-            CustomLogger.Log("ItemSlot initialized without item or image.");
-        }
 
-        canvas = GetComponentInParent<Canvas>();
-        if (canvas == null)
+        inventoryUI = FindObjectOfType<InventoryUI>();
+        
+            if (inventoryUI != null)
+            {
+               inventoryUI.UpdateSlotUI(this.transform, ItemInstance);
+               CustomLogger.Log($"Slot {gameObject.name} initialized with item: {item.itemName}");
+            }
+            else
+            {
+                CustomLogger.Log($"Slot {gameObject.name} has no item assigned.");
+            }
+        
+
+        if (GetComponentInParent<Canvas>() == null)
         {
             CustomLogger.Log("Canvas not found in parent hierarchy.");
         }
@@ -42,6 +47,7 @@ public class ItemSlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
         originalParent = transform.parent;
         layoutGroup = originalParent.GetComponent<LayoutGroup>();
         originalSiblingIndex = transform.GetSiblingIndex();
+        
         if (layoutGroup != null)
         {
             layoutGroup.enabled = false;
@@ -75,15 +81,9 @@ public class ItemSlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
                 itemSwapped = true;
                 break;
             }
-            else
-            {
-                CustomLogger.Log($"RayCast hit a non-slot object: {result.gameObject.name}");
-            }
         }
         
-        transform.SetParent(originalParent, false);
-        transform.SetSiblingIndex(originalSiblingIndex);
-        rectTransform.localPosition = Vector3.zero;
+        ResetSlotPosition();
         
         if (layoutGroup != null)
         {
@@ -96,41 +96,46 @@ public class ItemSlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
             CustomLogger.Log("아이템교환 실패");
         }
         
+        
         CustomLogger.Log($"OnEndDrag: Parent = {transform.parent.name}, Position = {rectTransform.localPosition}");
     }
 
     private void SwapItems(ItemSlot targetSlot)
     {
-        if (this.item == null || targetSlot.item == null)
+        if (this.ItemInstance == null || targetSlot.ItemInstance == null)
         {
-            CustomLogger.Log("Attempted to swap with a null item.");
+            CustomLogger.Log($"Attempted to swap with a null item. This item: {this.ItemInstance?.itemData.itemName}, Target item: {targetSlot.ItemInstance?.itemData.itemName}");
             return;
         }
         
-        CustomLogger.Log($"Before Swap: This item: {this.item?.itemName}, Target item: {targetSlot.item?.itemName}");
+        CustomLogger.Log($"Before Swap: This item: {this.ItemInstance?.itemData.itemName}, Target item: {targetSlot.ItemInstance?.itemData.itemName}");
         
-        ItemSO tempItem = targetSlot.item;
-        targetSlot.item = this.item;
-        this.item = tempItem;
-
-        targetSlot.UpdateSlotUI();
-        this.UpdateSlotUI();
-
-        // targetSlot.rectTransform.anchoredPosition = Vector2.zero;
-        // rectTransform.anchoredPosition = Vector2.zero;
+        ItemInstance tempInstance = targetSlot.ItemInstance;
+        targetSlot.ItemInstance = this.ItemInstance;
+        this.ItemInstance = tempInstance;
         
-        CustomLogger.Log($"Swapped items: {this.item?.itemName} with {targetSlot.item?.itemName}");
-    }
+        CustomLogger.Log($"After Swap: This item: {this.ItemInstance?.itemData.itemName}, Target item: {targetSlot.ItemInstance?.itemData.itemName}");
 
-    public void UpdateSlotUI()
-    {
-        if (item != null && itemImage != null)
+        if (inventoryUI != null)
         {
-            itemImage.sprite = item.icon;
+            inventoryUI.UpdateSlotUI(this.transform, this.ItemInstance);
+            inventoryUI.UpdateSlotUI(targetSlot.transform, targetSlot.ItemInstance);
         }
         else
         {
-            itemImage.sprite = null;
+            CustomLogger.Log("InventoryUI instance not found.");
         }
+
+        targetSlot.rectTransform.anchoredPosition = Vector3.zero;
+        rectTransform.anchoredPosition = Vector3.zero;
+        
+        CustomLogger.Log($"Swapped items: {this.item?.itemName} with {targetSlot.item?.itemName}");
+    }
+    
+    private void ResetSlotPosition()
+    {
+        transform.SetParent(originalParent, false);
+        transform.SetSiblingIndex(originalSiblingIndex);
+        rectTransform.anchoredPosition = Vector2.zero;
     }
 }

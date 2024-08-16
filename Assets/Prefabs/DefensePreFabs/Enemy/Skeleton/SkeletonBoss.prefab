@@ -1568,7 +1568,7 @@ GameObject:
   - component: {fileID: 5235464609149081821}
   m_Layer: 7
   m_Name: HorseRoot
-  m_TagString: Untagged
+  m_TagString: EnemyBoss
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1600,7 +1600,7 @@ SortingGroup:
   m_Enabled: 1
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 5
+  m_SortingOrder: 4
   m_SortAtRoot: 0
 --- !u!114 &863010275469712399
 MonoBehaviour:
@@ -1675,13 +1675,15 @@ MonoBehaviour:
   normalState: 0
   skillState: 0
   boxSize: {x: 30, y: 0.1}
+  isRight: 0
   projectilePrefab: {fileID: 0}
   movementdirection: {x: 0, y: 0, z: 0}
   isKnockedBack: 0
   percent: 0
+  gold: 10
   isBoss: 1
   stageEndNotice: {fileID: 0}
-  stageEndUI: {fileID: 0}
+  stageClearUI: {fileID: 0}
 --- !u!50 &182812178885286203
 Rigidbody2D:
   serializedVersion: 4
@@ -2312,7 +2314,7 @@ GameObject:
   - component: {fileID: 6466301251105443888}
   m_Layer: 7
   m_Name: SkeletonBoss
-  m_TagString: Untagged
+  m_TagString: EnemyBoss
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

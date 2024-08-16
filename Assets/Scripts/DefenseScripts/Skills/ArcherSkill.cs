@@ -44,6 +44,8 @@ public class ArcherSkill : HeroSkill
     private void Awake()
     {
         isEllipseActive = false;
+        extraCool = GameObject.Find("InitSetting").GetComponent<DefenseInit>().extraCool1;
+        cooldown = cooldown - (cooldown * (extraCool/10));
     }
 
     private void Update()
