@@ -24,7 +24,6 @@ public class UnitGameManager : MonoBehaviour {
 					GameObject go = new GameObject("UnitGameManager");
 					instance = go.AddComponent<UnitGameManager>();
 					DontDestroyOnLoad(go);
-					Debug.Log("Initializing file path...");
 					instance.InitializeFilePath(); 
 				} else {
 					instance.InitializeFilePath();
@@ -61,7 +60,6 @@ public class UnitGameManager : MonoBehaviour {
 		SlotUnitDataWrapper wrapper = new SlotUnitDataWrapper(slotUnitDataList);
 		string json = JsonUtility.ToJson(wrapper, true);
 		File.WriteAllText(filePath, json);
-		
 		CustomLogger.Log("Unit formation saved successfully.");
 	}
 
@@ -72,12 +70,20 @@ public class UnitGameManager : MonoBehaviour {
 				string json = File.ReadAllText(filePath);
 				SlotUnitDataWrapper wrapper = JsonUtility.FromJson<SlotUnitDataWrapper>(json); // SlotUnitDataWrapper로 변경
 				selectedUnits.Clear();
+				// 기존의 슬롯 배치를 초기화한 후, 저장된 데이터로 재배치
+				if (wrapper != null && wrapper.SlotUnitDataList != null) {
+					// 기존의 슬롯 배치를 초기화한 후, 저장된 데이터로 재배치
+					placementUnit.SetSlotUnitDataList(wrapper.SlotUnitDataList);  // slotUnitDataList 업데이트
 
-				foreach (SlotUnitData slotUnit in wrapper.SlotUnitDataList) { // SlotUnitData를 순회하도록 변경
-					// 14명으로 편성 제한
-					if (selectedUnits.Count < 14) {
-						selectedUnits.Add(slotUnit.UnitData); // SlotUnitData에서 UnitData를 가져와 추가
+					// 필요한 경우 selectedUnits 리스트에 데이터 추가
+					foreach (SlotUnitData slotUnit in wrapper.SlotUnitDataList) {
+						if (selectedUnits.Count < 14) {
+							selectedUnits.Add(slotUnit.UnitData);
+						}
 					}
+					Debug.Log($"Loaded {wrapper.SlotUnitDataList.Count} slot unit data entries.");
+				} else {
+					Debug.LogWarning("SlotUnitDataWrapper or SlotUnitDataList is null.");
 				}
 			} catch (Exception e) {
 				CustomLogger.Log($"Error loading hero formation: {e.Message}", "red");
@@ -90,10 +96,10 @@ public class UnitGameManager : MonoBehaviour {
 	public void ClearUnitFormation() {
 		selectedUnits.Clear();
 		SaveUnitFormation();
-		CustomLogger.Log("리셋 메서드 들어옴");
+		CustomLogger.Log("리셋 성공");
 		
 	}
-
+	
 	// 유닛 드래그 해서 드롭 슬롯에 추가
 	public void AddSelectedUnit(UnitData unit) {
 		if (selectedUnits.Count < 14) {

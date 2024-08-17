@@ -3248,6 +3248,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitGameManager: {fileID: 1693242110}
+  unitPlacementManager: {fileID: 1574783483}
+  unitSlotManager: {fileID: 1092586645}
   resetBtn: {fileID: 1379062682}
   saveBtn: {fileID: 1090192119}
   upgradeBtn: {fileID: 878797163}
@@ -3306,7 +3308,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -6653,6 +6655,7 @@ GameObject:
   - component: {fileID: 1574783480}
   - component: {fileID: 1574783479}
   - component: {fileID: 1574783482}
+  - component: {fileID: 1574783483}
   m_Layer: 5
   m_Name: UnitDrop
   m_TagString: Untagged
@@ -6782,6 +6785,20 @@ MonoBehaviour:
   - {fileID: 658755040}
   - {fileID: 1589168234}
   - {fileID: 724015343}
+--- !u!114 &1574783483
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1574783477}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 963500fb64ad042fc8d6fcf3de842340, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  contentParent: {fileID: 1574783478}
+  placementUnit: {fileID: 1574783482}
 --- !u!1 &1576635044
 GameObject:
   m_ObjectHideFlags: 0

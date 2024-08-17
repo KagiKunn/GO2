@@ -6,15 +6,13 @@ using UnityEngine.UI;
 public class UnitSelect : MonoBehaviour
 {
     public UnitGameManager unitGameManager;
+    public UnitPlacementManager unitPlacementManager;
+    public UnitSlotManager unitSlotManager;
     public Button resetBtn, saveBtn, upgradeBtn;
     public Image[] unitslots;
     public Image[] selectedUnits;
     
     private List<UnitData> units;
-
-    private void Awake()
-    {
-    }
 
     private void Start()
     {
@@ -25,17 +23,13 @@ public class UnitSelect : MonoBehaviour
 
     private void ResetUnitSelection()
     {
-        foreach (var dropZone in selectedUnits)
-        {
-            Image droppedImage = dropZone.GetComponent<Image>();
-            droppedImage = null;
-        }
         UnitGameManager.Instance.ClearUnitFormation();
+        unitPlacementManager.ResetPlacementSlots(); 
+        unitSlotManager.ResetUnitDrag();
     }
 
     private void SaveUnitSelection()
     {
-        CustomLogger.Log("버튼 눌림");
         UnitGameManager.Instance.SaveUnitFormation();
     }
 

@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class UnitDraggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {   
@@ -21,6 +22,12 @@ public class UnitDraggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         Canvas = FindFirstObjectByType<Canvas>().transform;
         rect = GetComponent<RectTransform>();
         canvasGroup = GetComponent<CanvasGroup>();
+        
+        // canvasGroup이 null일 경우, 자동으로 추가
+        if (canvasGroup == null)
+        {
+            canvasGroup = gameObject.AddComponent<CanvasGroup>();
+        }
     }
     public void SetDraggable(bool draggable)
     {
@@ -41,9 +48,8 @@ public class UnitDraggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
             transform.SetAsLastSibling();   // 가장 앞에 보이도록 마지막 자식으로 설정
             
             // 드래그 가능한 오브젝트 하나가 아닌 자식들을 가지고 있을 수도 있기 때문에 CanvasGroup으로 통제
-            // 알파 값을 0.6으로 설정하고, 광선 충돌 처리가 되지 않도록 한다
-            canvasGroup.alpha = 0.6f;
             canvasGroup.blocksRaycasts = false;
+            canvasGroup.GetComponent<Image>().color = new Color(0.5f, 0.5f, 0.5f, 1.0f);
         }
         
     }
@@ -73,9 +79,8 @@ public class UnitDraggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
                 transform.SetParent(previousParent);
                 rect.position = previousParent.GetComponent<RectTransform>().position;
             }
-            // 알파 값을 1로 설정하고, 광선 충돌처리가 되도록
-            canvasGroup.alpha = 1.0f;
             canvasGroup.blocksRaycasts = true;
+            canvasGroup.GetComponent<Image>().color = new Color(0.5f, 0.5f, 0.5f, 1.0f);
         }
     }
 }
