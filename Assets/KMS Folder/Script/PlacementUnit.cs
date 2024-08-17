@@ -5,31 +5,21 @@ using UnityEngine;
 public class PlacementUnit : MonoBehaviour
 {
     [SerializeField] private Transform[] slots;
-    private List<UnitData> uds;
     private List<SlotUnitData> slotUnitDataList;
     UnitData ud;
-
+    private List<UnitData> uds;
+    // 배치 유닛 인덱스, 유닛 데이터 저장을 위한 스크립트 
     private void Awake()
     {
-        if (slots == null || slots.Length == 0) {
-            Debug.LogError("Slots are not assigned in the Inspector or they are empty.");
-            return;
-        }
-        
         slotUnitDataList = new List<SlotUnitData>();
         uds = new List<UnitData>();
         
         for (int i = 0; i < slots.Length; i++)
         {
-            if (slots[i] == null) {
-                Debug.LogError($"Slot at index {i} is not assigned.");
-                continue;
-            }
             UnitData assignedUnitData = slots[i].GetComponent<UnitDropable>().assignedUnitData;
             if (assignedUnitData != null)
             {
                 slotUnitDataList.Add(new SlotUnitData(i, assignedUnitData)); // 인덱스를 사용하여 저장
-                CustomLogger.Log($"Slot Index {i}: {assignedUnitData}");
             }
         }
     }
@@ -45,14 +35,15 @@ public class PlacementUnit : MonoBehaviour
             if (assignedUnitData != null)
             {
                 slotUnitDataList.Add(new SlotUnitData(i, assignedUnitData)); // 인덱스를 사용하여 저장
-                CustomLogger.Log($"Slot Index {i}: {assignedUnitData}");
             }
         }
     }
+
     public List<SlotUnitData> GetSlotUnitDataList()
-{   
+    {   
     return slotUnitDataList;
-}
+    }
+
     public void SetSlotUnitDataList(List<SlotUnitData> dataList)
     {
         slotUnitDataList = dataList ?? new List<SlotUnitData>();  // null일 경우 빈 리스트로 초기화

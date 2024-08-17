@@ -60,7 +60,6 @@ public class UnitGameManager : MonoBehaviour {
 		SlotUnitDataWrapper wrapper = new SlotUnitDataWrapper(slotUnitDataList);
 		string json = JsonUtility.ToJson(wrapper, true);
 		File.WriteAllText(filePath, json);
-		
 		CustomLogger.Log("Unit formation saved successfully.");
 	}
 
@@ -82,7 +81,6 @@ public class UnitGameManager : MonoBehaviour {
 							selectedUnits.Add(slotUnit.UnitData);
 						}
 					}
-                
 					Debug.Log($"Loaded {wrapper.SlotUnitDataList.Count} slot unit data entries.");
 				} else {
 					Debug.LogWarning("SlotUnitDataWrapper or SlotUnitDataList is null.");
@@ -98,10 +96,10 @@ public class UnitGameManager : MonoBehaviour {
 	public void ClearUnitFormation() {
 		selectedUnits.Clear();
 		SaveUnitFormation();
-		CustomLogger.Log("리셋 메서드 들어옴");
+		CustomLogger.Log("리셋 성공");
 		
 	}
-
+	
 	// 유닛 드래그 해서 드롭 슬롯에 추가
 	public void AddSelectedUnit(UnitData unit) {
 		if (selectedUnits.Count < 14) {
