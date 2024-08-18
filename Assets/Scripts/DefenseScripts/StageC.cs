@@ -9,6 +9,8 @@ using UnityEngine.SceneManagement;
 
 public class StageC : MonoBehaviour
 {
+    public static StageC Instance { get; private set; }
+    
     [SerializeField] private Canvas gameOverCanvas; // 게임오버 UI 관련 참조
     [SerializeField] private Image gameOverImage;
     [SerializeField] private Button gameOverButton;
@@ -20,10 +22,10 @@ public class StageC : MonoBehaviour
     [SerializeField] private Button stageAllClearButton;
 
     [SerializeField] private DefenseGameDataMB defenseGameData; // 세이브데이터 관리 스크립트 참조
-    [SerializeField] private int currentStageCount; // 현재 stageCount 값을 인스펙터에서 확인
+    [SerializeField] public int currentStageCount; // 현재 stageCount 값을 인스펙터에서 확인
     [SerializeField] private string[] currentStageRace; // 현재 stageRace 배열을 인스펙터에서 확인
-    [SerializeField] private string selectedRace;
-    [SerializeField] private int currentWeekCount;
+    [SerializeField] public string selectedRace;
+    [SerializeField] public int currentWeekCount;
     
     private string saveFilePath;
     private EnemySpawner enemySpawner;
@@ -32,6 +34,16 @@ public class StageC : MonoBehaviour
     
     private void Awake()
     {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+        
         currentWeekCount = defenseGameData.WeekCount;
         
         Time.timeScale = 1f;

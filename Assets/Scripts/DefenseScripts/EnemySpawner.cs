@@ -48,6 +48,10 @@ public class EnemySpawner : MonoBehaviour {
 	// StageC 에서 설정된 종족명
 	[SerializeField] private string selectedRace;
 
+	//스테이지 정보 참조
+	[SerializeField] public int stageCount;
+	[SerializeField] public int weekCount;
+	
 	public void SetSelectedRace(string race) {
 		selectedRace = race;
 		CustomLogger.Log("에너미 스포너의 SetSelectedRace : " + selectedRace, "pink");
@@ -55,8 +59,16 @@ public class EnemySpawner : MonoBehaviour {
 
 	private void Start() {
 		CustomLogger.Log("EnemySpawner Start()진입", "pink");
-		// EnemyPrefabList 참조 가져오기
+		
+		//StageC로부터 스테이지 정보 받아오기
+		stageCount = StageC.Instance.currentStageCount;
+		weekCount = StageC.Instance.currentWeekCount;
 
+		//스테이지 수에 따른 웨이브당 스폰 숫자 증가
+		numberOfObjects *= stageCount;
+		CustomLogger.Log("StageCount를 받아와서 스폰할 숫자 재설정 결과 : " + numberOfObjects, "pink");
+		
+		// EnemyPrefabList 참조 가져오기
 		enemyPrefabList = FindObjectOfType<EnemyPrefabList>();
 
 		if (enemyPrefabList == null) {
