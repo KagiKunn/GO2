@@ -28,8 +28,15 @@ public class BtnScene : MonoBehaviour {
 	}
 
 	public void UnitManagementSceneChange() {
-		SceneManager.LoadScene("UnitManagement");
+		SceneManager.LoadScene("UnitManagementRight");
 		
 		CustomLogger.Log("Change UnitManagement successfuly!");
+	}
+
+	public void UnitManagementLeftSceneChange()
+	{
+		SceneManager.LoadScene("UnitManagementLeft");
+		
+		CustomLogger.Log("Change UnitManagementLeft successfuly!");
 	}
 }
