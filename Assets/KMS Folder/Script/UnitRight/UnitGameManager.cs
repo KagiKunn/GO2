@@ -94,7 +94,7 @@ public class UnitGameManager : MonoBehaviour {
 
 	// reset시 유닛 편성 정보 제거(데이터 삭제)
 	public void ClearUnitFormation() {
-		selectedUnits.Clear();
+		instance.selectedUnits.Clear();
 		SaveUnitFormation();
 		CustomLogger.Log("리셋 성공");
 		
@@ -102,18 +102,18 @@ public class UnitGameManager : MonoBehaviour {
 	
 	// 유닛 드래그 해서 드롭 슬롯에 추가
 	public void AddSelectedUnit(UnitData unit) {
-		if (selectedUnits.Count < 14) {
-			selectedUnits.Add(unit);
+		if (instance.selectedUnits.Count < 14) {
+			instance.selectedUnits.Add(unit);
 		}
 	}
 
 	// GetSet
 	public List<UnitData> GetUnits() {
-		return unitDataList;
+		return instance.unitDataList;
 	}
 
 	public List<UnitData> GetSelectedUnits() {
-		return selectedUnits;
+		return instance.selectedUnits;
 	}
 
 	// public void SetUpgradeUnit(UnitData unit) {

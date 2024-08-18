@@ -9,7 +9,7 @@ public class UnitSlotManager : MonoBehaviour
     private List<UnitData> userUnits; // 유저가 보유한 모든 유닛 데이터 목록
     private List<Image> unitImages = new List<Image>(); // 각 슬롯의 하위에 있는 유닛 이미지 컴포넌트 목록
     private List<Graphic> unitSlots = new List<Graphic>(); // 유닛 슬롯(Dropable) 
-    private List<UnitDraggable> unitDraggables = new List<UnitDraggable>(); // 각 슬롯의 하위에 있는 UnitDraggable 컴포넌트 목록
+    public List<UnitDraggable> unitDraggables = new List<UnitDraggable>(); // 각 슬롯의 하위에 있는 UnitDraggable 컴포넌트 목록
 
     private void Awake()
     {
@@ -35,7 +35,7 @@ public class UnitSlotManager : MonoBehaviour
         // 유저가 보유한 모든 유닛 데이터를 가져와 슬롯에 배치
         userUnits = UnitGameManager.Instance.GetUnits();
         AssignUnitsToSlots();
-        UpdateDraggableStates(); // UpdateDraggableStates를 Start 메서드에서 호출하도록 변경
+        UpdateDraggableStates();
     }
 
     private void AssignUnitsToSlots()
