@@ -38,7 +38,7 @@ public class UnitSlotManagerLeft : MonoBehaviour
             Debug.LogError("userUnits is null in UnitSlotManagerLeft! Ensure UnitGameManagerLeft is properly initialized.");
             return;
         }
-
+        
         AssignUnitsToSlots();
         UpdateDraggableStates();
     }

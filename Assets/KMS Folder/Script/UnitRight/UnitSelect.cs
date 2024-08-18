@@ -16,6 +16,11 @@ public class UnitSelect : MonoBehaviour
 
     private void Start()
     {
+        if (unitGameManager == null)
+        {
+            unitGameManager = FindFirstObjectByType<UnitGameManager>();
+        }
+        
         units = UnitGameManager.Instance.GetUnits();
         resetBtn.onClick.AddListener(ResetUnitSelection);
         saveBtn.onClick.AddListener(SaveUnitSelection);

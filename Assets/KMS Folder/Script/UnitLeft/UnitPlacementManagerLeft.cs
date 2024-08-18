@@ -12,14 +12,6 @@ public class UnitPlacementManagerLeft : MonoBehaviour
 
     private void Awake()
     {
-        if (contentParent == null)
-        {
-            Debug.LogError("contentParent is null in UnitPlacementManagerLeft");
-        }
-        else
-        {
-            Debug.Log("contentParent is correctly assigned");
-        }
         for (int i = 0; i < contentParent.childCount; i++)
         {
             Transform slot = contentParent.GetChild(i);
@@ -41,7 +33,6 @@ public class UnitPlacementManagerLeft : MonoBehaviour
             Debug.LogError("placementUnit is null in AssignSavedUnitsToSlots");
             return;
         }
-
         List<SlotUnitData> savedUnits = placementUnit.GetSlotUnitDataList();
         
         if (savedUnits == null || savedUnits.Count == 0)
@@ -49,7 +40,7 @@ public class UnitPlacementManagerLeft : MonoBehaviour
             Debug.LogWarning("No saved units to assign in AssignSavedUnitsToSlots");
             return;
         }
-
+        
         foreach (var slotUnitData in savedUnits)
         {
             int slotIndex = slotUnitData.SlotIndex;

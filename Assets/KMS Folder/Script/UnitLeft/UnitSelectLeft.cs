@@ -15,10 +15,17 @@ public class UnitSelectLeft : MonoBehaviour
 
     private void Start()
     {
+        if (unitGameManager == null)
+        {
+            unitGameManager = FindFirstObjectByType<UnitGameManagerLeft>();
+        }
+
+        unitSlotManager.UpdateDraggableStates();
+        
         units = UnitGameManagerLeft.Instance.GetUnits();
         resetBtn.onClick.AddListener(ResetUnitSelection);
         saveBtn.onClick.AddListener(SaveUnitSelection);
-        // UpdateDraggableStates(); 
+        
     }
 
     private void ResetUnitSelection()
@@ -33,25 +40,6 @@ public class UnitSelectLeft : MonoBehaviour
         UnitGameManagerLeft.Instance.SaveUnitFormation();  // 왼쪽 성벽 유닛 배치 정보 저장
     }
     
-    private void UpdateDraggableStates()
-    {
-        List<UnitData> rightSelectedUnits = UnitGameManager.Instance.GetSelectedUnits();  // 오른쪽 성벽의 배치 유닛
-        List<UnitData> leftSelectedUnits = UnitGameManagerLeft.Instance.GetSelectedUnits();  // 왼쪽 성벽의 배치 유닛
-
-        foreach (var draggable in unitSlotManager.unitDraggables)
-        {
-            if (rightSelectedUnits.Contains(draggable.unitData) || leftSelectedUnits.Contains(draggable.unitData))
-            {
-                draggable.SetDraggable(false); // 이미 배치된 유닛은 드래그 불가
-                draggable.GetComponent<Image>().color = new Color(0.5f, 0.5f, 0.5f, 1.0f); // 어둡게 표시
-            }
-            else
-            {
-                draggable.SetDraggable(true); // 배치되지 않은 유닛만 드래그 가능
-                draggable.GetComponent<Image>().color = Color.white; // 기본 색상으로 표시
-            }
-        }
-    }
     private void upgradeBtnClicked()
     {
         // 업그레이드 버튼에 대한 로직
