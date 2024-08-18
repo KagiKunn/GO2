@@ -5,7 +5,6 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-
 using UnityEngine.Serialization;
 
 #pragma warning disable CS0618, CS0414 // 형식 또는 멤버는 사용되지 않습니다.
@@ -21,6 +20,8 @@ public class EnemyMovement : MonoBehaviour {
 	[SerializeField] private float normalState = 0f;
 	[SerializeField] private float skillState = 0f;
 	[SerializeField] private Vector2 boxSize = new Vector2(2, 0.1f);
+	[SerializeField] public int stageCount;
+	[SerializeField] public int weekCount;
 	public bool isRight;
 	public GameObject projectilePrefab;
 	private Rigidbody2D rigid2d;
@@ -37,7 +38,8 @@ public class EnemyMovement : MonoBehaviour {
 	private GameObject horseRoot;
 	public NoticeUI stageEndNotice;
 	[FormerlySerializedAs("stageEndUI")] public StageClearUI stageClearUI;
-
+	
+	
 	// 이벤트 선언
 	public static event Action OnBossDie;
 
@@ -50,6 +52,17 @@ public class EnemyMovement : MonoBehaviour {
 		// stageCount 가져오기
 		// ex) health = health + health/(stage*10) stage(1,2,3,4,5)
 		// 다른 속성 공격속도, 이동속도, 사거리등 해도되고 안해도 되고
+
+		stageCount = StageC.Instance.currentStageCount;
+		weekCount = StageC.Instance.currentWeekCount;
+		
+		// 기본 체력 값
+		float baseHealth = health;
+		// 10%씩 체력 증가 
+		// health = baseHealth + (baseHealth * 0.1f * (stageCount - 1));
+		// 스테이지마다 5씩 체력 증가
+		health = baseHealth + (5 * (stageCount - 1));
+		
 		
 		// HorseRoot 오브젝트 찾기
 		Transform horseRootTransform = transform.Find("HorseRoot");
@@ -64,7 +77,7 @@ public class EnemyMovement : MonoBehaviour {
 		animator.SetFloat("SkillState", skillState);
 		animator.SetFloat("NormalState", normalState);
 	}
-
+	
 	private void Update() {
 		if (!isKnockedBack) {
 			if (CollisionCheck()) {
