@@ -3,6 +3,11 @@ using UnityEngine;
 
 public class DefenseInit : MonoBehaviour
 {
+    public AudioClip soundClip;
+    private AudioSource audioSource;
+    
+    
+    
     private int startGold;
     private int earnGold;
     private int castleHealth;
@@ -60,6 +65,21 @@ public class DefenseInit : MonoBehaviour
         CastleHealthSetup();
     }
 
+    private void Start()
+    {
+        audioSource = gameObject.AddComponent<AudioSource>();
+        audioSource.clip = soundClip;
+        audioSource.loop = true;
+        PlaySound();
+    }
+
+    public void PlaySound()
+    {
+        if (audioSource != null && soundClip != null)
+        {
+            audioSource.Play();
+        }
+    }
     void EarnGoldSetup()
     {
         switch (earnGold)
