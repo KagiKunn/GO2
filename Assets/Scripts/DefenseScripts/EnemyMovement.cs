@@ -56,10 +56,8 @@ public class EnemyMovement : MonoBehaviour {
 		
 		// 기본 체력 값
 		float baseHealth = health;
-		// 10%씩 체력 증가 
-		// health = baseHealth + (baseHealth * 0.1f * (stageCount - 1));
-		// 스테이지마다 5씩 체력 증가
-		health = baseHealth + (5 * (stageCount - 1));
+		// 20%씩 체력 증가 
+		health = baseHealth + (baseHealth * 0.2f * (stageCount - 1));
 		
 		
 		// HorseRoot 오브젝트 찾기
