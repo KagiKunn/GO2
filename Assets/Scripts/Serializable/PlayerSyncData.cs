@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 
 public class PlayerSyncData
@@ -31,32 +32,44 @@ public class PlayerSyncData
                 writer.Write(username);
                 writer.Write(roguePoint);
             }
+
             return stream.ToArray();
         }
     }
-
     public static PlayerSyncData Deserialize(byte[] data)
     {
         using (MemoryStream stream = new MemoryStream(data))
         {
             using (BinaryReader reader = new BinaryReader(stream))
             {
-                reader.ReadInt32();
-                int uuidLength = reader.ReadByte();
-                char[] uuidChars = reader.ReadChars(uuidLength);
-                string uuid = new string(uuidChars);
+                try
+                {
+                    int initialInt = reader.ReadInt32();
 
-                int lv = reader.ReadInt32();
-                int repeat = reader.ReadInt32();
-                
-                reader.ReadInt32();
-                int usernameLength = reader.ReadByte();
-                char[] usernameChars = reader.ReadChars(usernameLength);
-                string username = new string(usernameChars);
+                    int uuidLength = reader.ReadByte();
 
-                int roguePoint = reader.ReadInt32();
+                    char[] uuidChars = reader.ReadChars(uuidLength);
+                    string uuid = new string(uuidChars);
 
-                return new PlayerSyncData(uuid, lv, repeat, username, roguePoint);
+                    int lv = reader.ReadInt32();
+
+                    int repeat = reader.ReadInt32();
+
+                    int ignoreInt = reader.ReadInt32();
+
+                    int usernameLength = reader.ReadByte();
+
+                    byte[] usernameBytes = reader.ReadBytes(usernameLength);
+                    string username = System.Text.Encoding.UTF8.GetString(usernameBytes);
+
+                    int roguePoint = reader.ReadInt32();
+
+                    return new PlayerSyncData(uuid, lv, repeat, username, roguePoint);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"Failed to deserialize data: {ex.Message}", ex);
+                }
             }
         }
     }

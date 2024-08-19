@@ -100,9 +100,9 @@ public class Gacha : MonoBehaviour
 
     private void InitializeRandomizer()
     {
-        if (PlayerDataControl.Instance != null)
+        if (PlayerSyncManager.Instance != null)
         {
-            Guid uuid = Guid.Parse(PlayerDataControl.Instance.UUID);
+            Guid uuid = Guid.Parse(PlayerSyncManager.Instance.UUID);
             byte[] bytes = uuid.ToByteArray();
             ulong seed1 = BitConverter.ToUInt64(bytes, 0);
             ulong seed2 = BitConverter.ToUInt64(bytes, 8);
