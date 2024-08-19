@@ -1,178 +1,342 @@
-using System.IO;
-
+﻿using System.IO;
+using DefenseScripts;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 #pragma warning disable CS0618 // 형식 또는 멤버는 사용되지 않습니다.
 
-public class StageC : MonoBehaviour {
-	[SerializeField] private Canvas gameOverCanvas; // 게임오버 UI 관련 참조
-	[SerializeField] private Image gameOverImage;
-	[SerializeField] private Button gameOverButton;
+public class StageC : MonoBehaviour
+{
+    public static StageC Instance { get; private set; }
+    [SerializeField] private Canvas gameOverCanvas; // 게임오버 UI 관련 참조
+    [SerializeField] private Image gameOverImage;
+    [SerializeField] private Button gameOverButton;
+    [SerializeField] private Canvas stageClearCanvas; // 스테이지 클리어 UI 관련 참조
+    [SerializeField] private Image stageClearImage;
+    [SerializeField] private Button stageClearButton;
+    [SerializeField] private Canvas stageAllClearCanvas; // 스테이지 5까지 전부 클리어 UI 관련 참조
+    [SerializeField] private Image stageAllClearImage;
+    [SerializeField] private Button stageAllClearButton;
 
-	[SerializeField] private Canvas stageClearCanvas; // 스테이지 클리어 UI 관련 참조
-	[SerializeField] private Image stageClearImage;
-	[SerializeField] private Button stageClearButton;
+    [SerializeField] private DefenseGameDataMB defenseGameData; // 세이브데이터 관리 스크립트 참조
+    [SerializeField] public int currentStageCount; // 현재 stageCount 값을 인스펙터에서 확인
+    [SerializeField] private string[] currentStageRace; // 현재 stageRace 배열을 인스펙터에서 확인
+    [SerializeField] public string selectedRace;
+    [SerializeField] public int currentWeekCount;
 
-	[SerializeField] private DefenseGameData defenseGameData; // ScriptableObject 참조
-	[SerializeField] private int currentStageCount; // 현재 stageCount 값을 인스펙터에서 확인
-	[SerializeField] private string[] currentStageRace; // 현재 stageRace 배열을 인스펙터에서 확인
-	[SerializeField] private string selectedRace;
+    private string saveFilePath;
+    private EnemySpawner enemySpawner;
+    [SerializeField] private CastleWallManager castleWallManager;
+    [SerializeField] private TextMeshProUGUI stageInfoText;
+    public bool isGamePaused;
+    [SerializeField] private GameObject uiGameObject;
 
-	private string saveFilePath;
-	private EnemySpawner enemySpawner;
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
 
-	private void Awake() {
-		// Save file path 설정
-		string savePath = Path.Combine(Application.dataPath, "save", "DefenseData");
-		Directory.CreateDirectory(savePath); // 디렉터리가 없으면 생성
+        currentWeekCount = defenseGameData.WeekCount;
 
-		// 파일 경로 설정
-		saveFilePath = Path.Combine(savePath, "DefenseGameData.json");
+        Time.timeScale = 1f;
+        // Save file path 설정
+        string savePath = Path.Combine(Application.dataPath, "save", "DefenseData");
+        Directory.CreateDirectory(savePath); // 디렉터리가 없으면 생성
 
-		// 경로를 출력하여 확인
-		CustomLogger.Log("Save file path: " + saveFilePath);
-		// JSON에서 데이터를 불러옴
-		defenseGameData.LoadFromJson(saveFilePath);
+        // 파일 경로 설정
+        saveFilePath = Path.Combine(savePath, "DefenseGameData.json");
 
-		// 초기화
-		InitializeGameOverUI();
-		InitializeStageClearUI();
+        // 경로를 출력하여 확인
+        CustomLogger.Log("Save file path: " + saveFilePath);
 
-		// EnemySpawner 찾기
-		enemySpawner = FindObjectOfType<EnemySpawner>();
+        // JSON에서 데이터를 불러옴
+        // defenseGameData.LoadFromJson(saveFilePath);
 
-		// EnemySpawner가 존재하는지 확인
-		if (enemySpawner != null) {
-			// stageRace 배열에서 랜덤으로 종족 선택 및 제거
-			selectedRace = SelectRandomRace();
-			enemySpawner.SetSelectedRace(selectedRace); // 선택된 종족 설정
-		} else {
-			CustomLogger.LogError("EnemySpawner를 찾을 수 없습니다!");
-		}
+        // 초기화
+        InitializeGameOverUI();
+        InitializeStageClearUI();
+        InitializeAllClearUI();
 
-		// 현재 stageCount와 stageRace 배열 업데이트
-		UpdateStageData();
-	}
 
-	private void UpdateStageData() {
-		if (defenseGameData != null) {
-			currentStageCount = defenseGameData.StageCount; // DefenseGameData의 stageCount 값을 가져옴
-			currentStageRace = defenseGameData.StageRace; // DefenseGameData의 stageRace 배열 값을 가져옴
-		}
-	}
+        // 체력 데이터를 DefenseGameData에 업로드
+        // UploadCastleWallDataToDefenseGameData();
 
-	private void InitializeGameOverUI() {
-		if (gameOverCanvas != null) {
-			gameOverCanvas.enabled = false;
-		}
+        // EnemySpawner 찾기
+        enemySpawner = FindObjectOfType<EnemySpawner>();
 
-		if (gameOverImage != null) {
-			gameOverImage.enabled = false;
-		}
+        // EnemySpawner가 존재하는지 확인
+        if (enemySpawner != null)
+        {
+            // stageRace 배열에서 랜덤으로 종족 선택 및 제거
+            selectedRace = SelectRandomRace();
+            enemySpawner.SetSelectedRace(selectedRace); // 선택된 종족 설정
+            UpdateStageInfoText();
+        }
+        else
+        {
+            CustomLogger.LogError("EnemySpawner를 찾을 수 없습니다!");
+        }
+    }
 
-		if (gameOverButton != null) {
-			gameOverButton.enabled = false;
-			gameOverButton.onClick.AddListener(OnGameOverButtonClick);
-		}
-	}
+    private void UpdateStageData()
+    {
+        if (defenseGameData != null)
+        {
+            currentStageCount = defenseGameData.StageCount; // DefenseGameData의 stageCount 값을 가져옴
+            currentStageRace = defenseGameData.StageRace; // DefenseGameData의 stageRace 배열 값을 가져옴
+        }
+    }
 
-	private void InitializeStageClearUI() {
-		if (stageClearCanvas != null) {
-			stageClearCanvas.enabled = false;
-		}
+    //스테이지 정보 표시
+    private void UpdateStageInfoText()
+    {
+        stageInfoText.text = $"Week:{currentWeekCount}\nStage: {currentStageCount}\nEnemy: {selectedRace}";
+    }
 
-		if (stageClearImage != null) {
-			stageClearImage.enabled = false;
-		}
+    private void InitializeGameOverUI()
+    {
+        if (gameOverCanvas != null)
+        {
+            gameOverCanvas.enabled = false;
+        }
 
-		if (stageClearButton != null) {
-			stageClearButton.enabled = false;
-			stageClearButton.onClick.AddListener(OnStageClearButtonClick);
-		}
-	}
+        if (gameOverImage != null)
+        {
+            gameOverImage.enabled = false;
+        }
 
-	private string SelectRandomRace() {
-		// 랜덤으로 stageRace 배열에서 종족 선택
-		int randomIndex = Random.Range(0, defenseGameData.StageRace.Length);
-		string selectedRace = defenseGameData.StageRace[randomIndex];
+        if (gameOverButton != null)
+        {
+            gameOverButton.enabled = false;
+            gameOverButton.onClick.AddListener(OnGameOverButtonClick);
+        }
+    }
 
-		// 선택된 종족을 배열에서 제거한 후 DefenseGameData의 stageRace에 재할당
-		defenseGameData.StageRace = RemoveRaceAt(defenseGameData.StageRace, randomIndex);
+    private void UploadCastleWallDataToDefenseGameData()
+    {
+        if (castleWallManager != null && defenseGameData != null)
+        {
+            defenseGameData.MaxHealth = castleWallManager.maxHealth;
+            defenseGameData.Health = castleWallManager.health;
+            defenseGameData.ExtraHealth = castleWallManager.extraHealth1;
+            Debug.Log("현재 시점의 CastleWall 데이터가 DefenseGameData에 업로드되었습니다.");
+        }
+    }
 
-		// stageRace 배열을 업데이트
-		UpdateStageData();
+    private void InitializeStageClearUI()
+    {
+        if (stageClearCanvas != null)
+        {
+            stageClearCanvas.enabled = false;
+        }
 
-		return selectedRace;
-	}
+        if (stageClearImage != null)
+        {
+            stageClearImage.enabled = false;
+        }
 
-	private string[] RemoveRaceAt(string[] array, int index) {
-		string[] newArray = new string[array.Length - 1];
+        if (stageClearButton != null)
+        {
+            stageClearButton.enabled = false;
+            stageClearButton.onClick.AddListener(OnStageClearButtonClick);
+        }
+    }
 
-		for (int i = 0, j = 0; i < array.Length; i++) {
-			if (i != index) {
-				newArray[j++] = array[i];
-			}
-		}
+    private void InitializeAllClearUI()
+    {
+        if (stageAllClearCanvas != null)
+        {
+            stageAllClearCanvas.enabled = false;
+        }
 
-		return newArray;
-	}
+        if (stageAllClearImage != null)
+        {
+            stageAllClearImage.enabled = false;
+        }
 
-	public void ShowGameOverUI() {
-		if (gameOverCanvas != null) {
-			gameOverCanvas.enabled = true;
-		}
+        if (stageAllClearButton != null)
+        {
+            stageAllClearButton.enabled = false;
+            stageAllClearButton.onClick.AddListener(OnStageAllClearButtonClick);
+        }
+    }
 
-		if (gameOverImage != null) {
-			gameOverImage.enabled = true;
-		}
+    private string SelectRandomRace()
+    {
+        // 랜덤으로 stageRace 배열에서 종족 선택
+        int randomIndex = Random.Range(0, defenseGameData.StageRace.Length);
+        string selectedRace = defenseGameData.StageRace[randomIndex];
 
-		if (gameOverButton != null) {
-			gameOverButton.enabled = true;
-		}
+        // 선택된 종족을 배열에서 제거한 후 DefenseGameData의 stageRace에 재할당
+        defenseGameData.StageRace = RemoveRaceAt(defenseGameData.StageRace, randomIndex);
 
-		Time.timeScale = 0f; // 게임 일시 정지
-	}
+        // stageRace 배열을 업데이트
+        UpdateStageData();
 
-	public void ShowStageClearUI() {
-		if (stageClearCanvas != null) {
-			stageClearCanvas.enabled = true;
-		}
+        return selectedRace;
+    }
 
-		if (stageClearImage != null) {
-			stageClearImage.enabled = true;
-		}
+    private string[] RemoveRaceAt(string[] array, int index)
+    {
+        string[] newArray = new string[array.Length - 1];
 
-		if (stageClearButton != null) {
-			stageClearButton.enabled = true;
-		}
+        for (int i = 0, j = 0; i < array.Length; i++)
+        {
+            if (i != index)
+            {
+                newArray[j++] = array[i];
+            }
+        }
 
-		Time.timeScale = 0f; // 게임 일시 정지
-	}
+        return newArray;
+    }
 
-	private void OnGameOverButtonClick() {
-		CustomLogger.Log("게임 오버 버튼 클릭됨");
+    public void ShowGameOverUI()
+    {
+        isGamePaused = true;
+        //게임 종료시 메뉴UI들 버튼도 비활성화
+        Menu menuScript = uiGameObject.GetComponent<Menu>();
+        if (menuScript != null)
+        {
+            menuScript.DisableButtonInteractions();
+        }
 
-		//게임오버시 세이브파일 json삭제 처리
-		if (File.Exists(saveFilePath)) {
-			File.Delete(saveFilePath);
-			CustomLogger.Log("게임 오버로 인해 세이브 파일이 삭제되었습니다: " + saveFilePath);
-		} else {
-			CustomLogger.LogWarning("삭제할 세이브 파일이 존재하지 않습니다.");
-		}
+        Time.timeScale = 0f; // 게임 일시 정지
+        if (gameOverCanvas != null)
+        {
+            gameOverCanvas.enabled = true;
+        }
 
-		SceneManager.LoadScene("Title");
-	}
+        if (gameOverImage != null)
+        {
+            gameOverImage.enabled = true;
+        }
 
-	private void OnStageClearButtonClick() {
-		CustomLogger.Log("스테이지 클리어 버튼 클릭됨");
-		SaveGameData(); //버튼 클릭 시 세이브데이터 저장
-		SceneManager.LoadScene("InternalAffairs");
-	}
+        if (gameOverButton != null)
+        {
+            gameOverButton.enabled = true;
+        }
 
-	private void SaveGameData() {
-		defenseGameData.SaveToJson(saveFilePath);
-		CustomLogger.Log("게임 데이터가 저장되었습니다: " + saveFilePath);
-	}
+        //게임오버시 세이브파일 json삭제 처리
+        if (File.Exists(saveFilePath))
+        {
+            File.Delete(saveFilePath);
+            CustomLogger.Log("게임 오버로 인해 세이브 파일이 삭제되었습니다: " + saveFilePath);
+        }
+        else
+        {
+            CustomLogger.LogWarning("삭제할 세이브 파일이 존재하지 않습니다.");
+        }
+    }
+
+    public void ShowStageClearUI()
+    {
+        isGamePaused = true;
+        //게임 종료시 메뉴UI들 버튼도 비활성화
+        Menu menuScript = uiGameObject.GetComponent<Menu>();
+        if (menuScript != null)
+        {
+            menuScript.DisableButtonInteractions();
+        }
+
+        Time.timeScale = 0f; // 게임 일시 정지
+
+        // 최종 스테이지가 아닐 경우 현재 stageCount와 stageRace 배열 업데이트
+        // 최종 스테이지일 경우 버튼 호출
+        if (currentStageCount == 5)
+        {
+            allStageClear();
+            SaveGameData();
+        }
+        else
+        {
+            if (stageClearCanvas != null)
+            {
+                stageClearCanvas.enabled = true;
+            }
+
+            if (stageClearImage != null)
+            {
+                stageClearImage.enabled = true;
+            }
+
+            if (stageClearButton != null)
+            {
+                stageClearButton.enabled = true;
+            }
+
+            UpdateStageData();
+        }
+
+
+        castleWallManager.SaveWallHP(); // 성벽 체력상태 저장
+        SaveGameData(); //DTO스크립트를 세이브파일로 저장명령
+    }
+
+    private void OnGameOverButtonClick()
+    {
+        CustomLogger.Log("게임 오버 버튼 클릭됨");
+
+
+        SceneManager.LoadScene("Title");
+    }
+
+    private void OnStageClearButtonClick()
+    {
+        CustomLogger.Log("스테이지 클리어 버튼 클릭됨");
+        SceneManager.LoadScene("InternalAffairs");
+    }
+
+    private void OnStageAllClearButtonClick()
+    {
+        CustomLogger.Log("스테이지 올클리어 버튼 클릭됨");
+        SceneManager.LoadScene("Title");
+    }
+
+    private void SaveGameData()
+    {
+        defenseGameData.SaveToJson(saveFilePath);
+        CustomLogger.Log("게임 데이터가 저장되었습니다: " + saveFilePath);
+    }
+
+    private void allStageClear()
+    {
+        isGamePaused = true;
+        //게임 종료시 메뉴UI들 버튼도 비활성화
+        Menu menuScript = uiGameObject.GetComponent<Menu>();
+        if (menuScript != null)
+        {
+            menuScript.DisableButtonInteractions();
+        }
+
+        CustomLogger.Log("축하합니다, 최종스테이지 클리어");
+        if (stageAllClearCanvas != null)
+        {
+            stageAllClearCanvas.enabled = true;
+        }
+
+        if (stageAllClearImage != null)
+        {
+            stageAllClearImage.enabled = true;
+        }
+
+        if (stageAllClearButton != null)
+        {
+            stageAllClearButton.enabled = true;
+        }
+
+        //주차 횟수 증가, DTO에 전송
+        currentWeekCount++;
+        defenseGameData.WeekCount = currentWeekCount;
+        defenseGameData.GoNextWeek(); //스테이지와 체력정보 초기화
+    }
 }

@@ -18,6 +18,9 @@ public class AllyScan : MonoBehaviour
     [SerializeField] private DamageEffect damageEffect; // damageEffect를 SerializeField로 추가
     public GameObject projectilePrefab;
 
+    public AudioClip soundClip;
+    private AudioSource attackAudioSource;
+    
     private GameObject currentEffect; // 현재 효과 오브젝트를 저장할 필드
     private Animator animator;
     private GameObject closestObject;
@@ -32,6 +35,8 @@ public class AllyScan : MonoBehaviour
 
     private void Start()
     {
+        attackAudioSource = gameObject.AddComponent<AudioSource>();
+        attackAudioSource.clip = soundClip;
         attackCool = 1f / attackCool;
         animator = GetComponent<Animator>();
         animator.SetFloat("RunState", runState);
@@ -53,6 +58,14 @@ public class AllyScan : MonoBehaviour
         else
         {
             AllyIdle();
+        }
+    }
+    
+    public void PlaySound()
+    {
+        if (attackAudioSource != null && soundClip != null)
+        {
+            attackAudioSource.Play();
         }
     }
     void FindClosestObject()
@@ -132,6 +145,7 @@ public class AllyScan : MonoBehaviour
         EnemyMovement enemy = closestObject.GetComponent<EnemyMovement>();
         if (enemy != null)
         {
+            PlaySound();
             damageEffect.ApplyEffect(enemy, null, attackDamage, aoe); // 데미지 효과 적용
             if (enemy.IsDead())
             {
@@ -149,6 +163,7 @@ public class AllyScan : MonoBehaviour
             AllyProjectile projectile = projectileInstance.GetComponent<AllyProjectile>();
             if (projectile != null)
             {
+                PlaySound();
                 projectile.Initialize(closestObject.transform, attackDamage, damageEffect, aoe, isRight); // 데미지 효과 전달
                 
                 

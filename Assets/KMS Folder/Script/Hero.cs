@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "NewHero", menuName = "Hero Data", order = 51)]
