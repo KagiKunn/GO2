@@ -5,11 +5,11 @@ using System.Collections;
 
 public class UnitSlotManagerA : MonoBehaviour
 {
-    public Transform contentParent; 
-    private List<UnitData> userUnits; 
-    private List<Image> unitImages = new List<Image>(); 
-    private List<Graphic> unitSlots = new List<Graphic>(); 
-    public List<UnitDraggable> unitDraggables = new List<UnitDraggable>(); 
+    public Transform contentParent;
+    private List<UnitData> userUnits;
+    private List<Image> unitImages = new List<Image>();
+    private List<Graphic> unitSlots = new List<Graphic>();
+    public List<UnitDraggable> unitDraggables = new List<UnitDraggable>();
 
     private void Awake()
     {
@@ -31,7 +31,8 @@ public class UnitSlotManagerA : MonoBehaviour
 
     private IEnumerator Start()
     {
-        yield return new WaitUntil(() => UnitGameManagerA.Instance != null && UnitGameManagerA.Instance.GetUnits() != null);
+        yield return new WaitUntil(() =>
+            UnitGameManagerA.Instance != null && UnitGameManagerA.Instance.GetUnits() != null);
         userUnits = UnitGameManagerA.Instance.GetUnits();
         if (userUnits == null || userUnits.Count == 0)
         {
@@ -87,18 +88,23 @@ public class UnitSlotManagerA : MonoBehaviour
         {
             if (draggable == null || draggable.unitData == null)
             {
-                continue; 
+                continue;
             }
+
             bool isUnitSelected = UnitGameManagerA.Instance.IsUnitSelected(draggable.unitData);
 
             if (isUnitSelected)
             {
-                draggable.SetDraggable(false);
+                draggable.isDropped = true;
+                draggable.enabled = false;
+                draggable.GetComponent<CanvasGroup>().blocksRaycasts = false;
                 draggable.GetComponent<Image>().color = new Color(0.5f, 0.5f, 0.5f, 1.0f);
             }
             else
             {
-                draggable.SetDraggable(true);
+                draggable.isDropped = false;
+                draggable.enabled = true;
+                draggable.GetComponent<CanvasGroup>().blocksRaycasts = true;
                 draggable.GetComponent<Image>().color = Color.white;
             }
         }
@@ -108,18 +114,22 @@ public class UnitSlotManagerA : MonoBehaviour
     {
         foreach (var unitDraggable in unitDraggables)
         {
-            if (unitDraggable != null)
-            {
                 unitDraggable.isDropped = false;
                 unitDraggable.enabled = true;
-                unitDraggable.GetComponent<CanvasGroup>().blocksRaycasts = true;
+                CanvasGroup canvasGroup = unitDraggable.GetComponent<CanvasGroup>();
+                if (canvasGroup != null)
+                {
+                    canvasGroup.blocksRaycasts = true;
+                    Debug.Log($"Resetting blocksRaycasts for {unitDraggable.name} to true");
+                }
 
+                // 유닛의 시각적 상태 초기화
                 Image originalImage = unitDraggable.GetComponent<Image>();
                 if (originalImage != null)
                 {
                     originalImage.color = Color.white;
+                    Debug.Log($"Resetting color for {unitDraggable.name} to white");
                 }
-            }
         }
         UpdateDraggableStates();
     }

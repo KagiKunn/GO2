@@ -95,8 +95,9 @@ public class UnitGameManagerA : MonoBehaviour
         }
     }
     
-    private void UpdatePlacementStatus(List<SlotUnitData> slotUnitDataList) {
-        if (slotUnitDataList == null) {
+     private void UpdatePlacementStatus(List<SlotUnitData> slotUnitDataList, bool isLeftWall) {
+        if (slotUnitDataList == null)
+        {
             Debug.LogError("slotUnitDataList is null in UpdatePlacementStatus!");
             return;
         }
@@ -105,6 +106,54 @@ public class UnitGameManagerA : MonoBehaviour
                 unitPlacementStatus[slotUnit.UnitData] = true;
             } else {
                 Debug.LogWarning("slotUnit or slotUnit.UnitData is null.");
+            }
+        }
+
+        // 반대쪽 성벽의 배치 상태도 고려해야 한다면 추가 로직 필요
+        if (isLeftWall)
+        {
+            LoadAndTrackRightWallStatus();
+        }
+        else
+        {
+            LoadAndTrackLeftWallStatus();
+        }
+    }
+
+    private void LoadAndTrackRightWallStatus()
+    {
+        if (File.Exists(rightWallFilePath))
+        {
+            string json = File.ReadAllText(rightWallFilePath);
+            SlotUnitDataWrapper wrapper = JsonUtility.FromJson<SlotUnitDataWrapper>(json);
+            if (wrapper != null && wrapper.SlotUnitDataList != null)
+            {
+                foreach (var slotUnit in wrapper.SlotUnitDataList)
+                {
+                    if (slotUnit.UnitData != null)
+                    {
+                        unitPlacementStatus[slotUnit.UnitData] = true;
+                    }
+                }
+            }
+        }
+    }
+
+    private void LoadAndTrackLeftWallStatus()
+    {
+        if (File.Exists(leftWallFilePath))
+        {
+            string json = File.ReadAllText(leftWallFilePath);
+            SlotUnitDataWrapper wrapper = JsonUtility.FromJson<SlotUnitDataWrapper>(json);
+            if (wrapper != null && wrapper.SlotUnitDataList != null)
+            {
+                foreach (var slotUnit in wrapper.SlotUnitDataList)
+                {
+                    if (slotUnit.UnitData != null)
+                    {
+                        unitPlacementStatus[slotUnit.UnitData] = true;
+                    }
+                }
             }
         }
     }
@@ -135,23 +184,27 @@ public class UnitGameManagerA : MonoBehaviour
 
     public void LoadUnitFormation(PlacementUnitA placementUnit, string filePath) {
         if (File.Exists(filePath)) {
+            
             try {
-                string json = File.ReadAllText(filePath);
                 
+                string json = File.ReadAllText(filePath);
                 SlotUnitDataWrapper wrapper = JsonUtility.FromJson<SlotUnitDataWrapper>(json);
 
-                if (wrapper != null && wrapper.SlotUnitDataList != null) {
-                    foreach (var slotUnit in wrapper.SlotUnitDataList) {
-                        if (slotUnit.UnitData != null) {
+                if (wrapper != null && wrapper.SlotUnitDataList != null)
+                {
+                    foreach (var slotUnit in wrapper.SlotUnitDataList)
+                    {
+                        if (slotUnit.UnitData != null) 
+                        {
                             slotUnit.UnitData = LoadUnitDataById(slotUnit.UnitData.GetInstanceID());
                         }
                     }
-                    
-                    if (placementUnit != null) {
+                
+                    if (placementUnit != null)
+                    {
                         placementUnit.SetSlotUnitDataList(wrapper.SlotUnitDataList);
                     }
-
-                    UpdatePlacementStatus(wrapper.SlotUnitDataList);
+                    UpdatePlacementStatus(wrapper.SlotUnitDataList, placementUnit == leftPlacementUnit);
                 } else {
                     Debug.LogWarning("SlotUnitDataWrapper or SlotUnitDataList is null.");
                 }
@@ -171,6 +224,8 @@ public class UnitGameManagerA : MonoBehaviour
     public bool IsUnitSelected(UnitData unit) {
         return unitPlacementStatus.ContainsKey(unit) && unitPlacementStatus[unit];
     }
+    
+    
 
     public List<UnitData> GetUnits() {
         return unitDataList;
