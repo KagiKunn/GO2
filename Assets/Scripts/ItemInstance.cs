@@ -19,14 +19,16 @@ public class ItemInstance
     {
         CustomLogger.Log("로드 메서드 실행완료");
         string[] categories  =
-            { "Armor", "Arrow", "Boots", "Bow", "Gloves", "Helmet", "Shield", "Sprites", "Two-handed", "Wand,Staff" };
+            { "Armor", "Arrow", "Boots", "Bow", "Gloves", "Helmet", "Shield", "Two-handed sword", "Wand,Staff" };
 
         foreach (string category  in categories)
         {
             ItemSO[] itemsInCategory = Resources.LoadAll<ItemSO>($"Items/{category}");
             CustomLogger.Log($"Loading items from category: {category}");
+            
             foreach (ItemSO item in itemsInCategory)
             {
+                CustomLogger.Log($"Checking item: {item.itemName}, ID: {item.ItemID} against {this.itemID}");
                 if (item.ItemID == this.itemID)
                 {
                     this.itemData = item;

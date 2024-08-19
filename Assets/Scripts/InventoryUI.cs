@@ -1,10 +1,8 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using UnityEditor;
 using UnityEngine.EventSystems;
 
 
@@ -23,6 +21,8 @@ public class InventoryUI : MonoBehaviour
     private const string inventoryFilePath = "inventory.json";
 
     public InventoryData inventoryData = new InventoryData();
+    private Vector2 touchStartPosition;
+    private bool isDragging = false;
 
     private void Awake()
     {
@@ -214,6 +214,7 @@ public class InventoryUI : MonoBehaviour
 
             JsonInventory.SaveToJson(inventoryData, inventoryFilePath);
             
+            CustomLogger.Log($"Saving Inventory: additionalSlotCount = {inventoryData.additionalSlotCount}");
             CustomLogger.Log($"Saving to path: {Path.GetFullPath(inventoryFilePath)}");
             CustomLogger.Log($"JSON Content After Writing: {jsonContent}");
             CustomLogger.Log("저장완료!");
@@ -223,6 +224,12 @@ public class InventoryUI : MonoBehaviour
     {
         inventoryData = JsonInventory.LoadFromJson<InventoryData>(inventoryFilePath) ?? new InventoryData();
         CustomLogger.Log($"Loaded inventoryData from JSON: {JsonUtility.ToJson(inventoryData, true)}");
+
+        if (inventoryData == null)
+        {
+            CustomLogger.LogError("로드를 실패했습니다.");
+            return;
+        }
         
         if (inventoryData.items.Count == 0)
         {
@@ -232,8 +239,13 @@ public class InventoryUI : MonoBehaviour
         {
             foreach (var itemInstance in inventoryData.items)
             {
-                CustomLogger.Log($"Calling LoadItemData for item with ID: {itemInstance.itemID}");
+                CustomLogger.Log($"Loading item with ID: {itemInstance.itemID}");
                 itemInstance.LoadItemData();
+                
+                if (itemInstance.itemData == null) 
+                {
+                    CustomLogger.LogError($"Failed to load item data for item with ID: {itemInstance.itemID}. Possible data corruption.");
+                }
             }
             
             for (int i = 0; i < inventoryData.additionalSlotCount; i++)
@@ -266,10 +278,10 @@ public class InventoryUI : MonoBehaviour
 
     public void ExpandInventory(int additionalSlots)
     {
+        CustomLogger.Log($"Expanding Inventory by {additionalSlots} slots");
         for (int i = 0; i < additionalSlots; i++)
         {
-            GameObject newSlot =
-                (GameObject)AssetDatabase.LoadAssetAtPath("Assets/JSFolder/PreFab/Slot.prefab", typeof(GameObject));
+            GameObject newSlot = Resources.Load<GameObject>("Assets/JSFolder/PreFab/Slot.prefab");
             if (newSlot != null)
             {
                 Instantiate(newSlot, inventoryContent);
@@ -368,4 +380,6 @@ public class InventoryUI : MonoBehaviour
     {
         CanvasEnabled();
     }
+
+    
 }
