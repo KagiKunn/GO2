@@ -43,6 +43,6 @@ public class PlacementUnitLeft : MonoBehaviour
 
     public void SetSlotUnitDataList(List<SlotUnitData> dataList)
     {
-        slotUnitDataList = dataList ?? new List<SlotUnitData>();  // null일 경우 빈 리스트로 초기화
+        slotUnitDataList = dataList ?? new List<SlotUnitData>();
     }
 }

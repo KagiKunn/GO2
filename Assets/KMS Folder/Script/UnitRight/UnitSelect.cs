@@ -1,7 +1,7 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 public class UnitSelect : MonoBehaviour
 {
@@ -14,13 +14,13 @@ public class UnitSelect : MonoBehaviour
     
     private List<UnitData> units;
 
-    private void Start()
+    private IEnumerator Start()
     {
+        yield return new WaitUntil(() => UnitGameManager.Instance != null && UnitGameManager.Instance.GetUnits() != null);
         if (unitGameManager == null)
         {
             unitGameManager = FindFirstObjectByType<UnitGameManager>();
         }
-        
         units = UnitGameManager.Instance.GetUnits();
         resetBtn.onClick.AddListener(ResetUnitSelection);
         saveBtn.onClick.AddListener(SaveUnitSelection);

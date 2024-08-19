@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using System.Collections;
 
 public class UnitSlotManagerLeft : MonoBehaviour
 {
@@ -12,7 +13,6 @@ public class UnitSlotManagerLeft : MonoBehaviour
 
     private void Awake()
     {
-        // 슬롯의 하위 이미지 컴포넌트를 미리 찾아서 저장
         for (int i = 0; i < contentParent.childCount; i++)
         {
             Transform slot = contentParent.GetChild(i);
@@ -29,16 +29,10 @@ public class UnitSlotManagerLeft : MonoBehaviour
         }
     }
     
-    private void Start()
+    private IEnumerator Start()
     {
-        // 유저가 보유한 모든 유닛 데이터를 가져와 슬롯에 배치
-        userUnits = UnitGameManagerLeft.Instance.GetUnits(); // 왼쪽 성벽의 유닛 데이터 참조
-        if (userUnits == null)
-        {
-            Debug.LogError("userUnits is null in UnitSlotManagerLeft! Ensure UnitGameManagerLeft is properly initialized.");
-            return;
-        }
-        
+        yield return new WaitUntil(() => UnitGameManagerLeft.Instance != null && UnitGameManagerLeft.Instance.GetUnits() != null);
+        userUnits = UnitGameManagerLeft.Instance.GetUnits();
         AssignUnitsToSlots();
         UpdateDraggableStates();
     }
@@ -82,11 +76,16 @@ public class UnitSlotManagerLeft : MonoBehaviour
 
     public void UpdateDraggableStates()
     {
-        List<UnitData> selectedUnits = UnitGameManagerLeft.Instance.GetSelectedUnits(); // 왼쪽 성벽의 선택된 유닛 데이터 참조
-
         foreach (var draggable in unitDraggables)
         {
-            if (selectedUnits.Contains(draggable.unitData))
+            
+            if (draggable == null || draggable.unitData == null)
+            {
+                continue; 
+            }
+            bool isUnitSelected = UnitGameManagerLeft.Instance.IsUnitSelected(draggable.unitData);
+            
+            if (isUnitSelected)
             {
                 draggable.SetDraggable(false);
                 draggable.GetComponent<Image>().color = new Color(0.5f, 0.5f, 0.5f, 1.0f);

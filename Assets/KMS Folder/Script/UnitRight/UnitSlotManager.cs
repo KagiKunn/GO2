@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using System.Collections;
 
 // 유닛 목록에 유저가 보유중인 유닛을 표시하기 위한 스크립트
 public class UnitSlotManager : MonoBehaviour
@@ -13,7 +14,6 @@ public class UnitSlotManager : MonoBehaviour
 
     private void Awake()
     {
-        // 슬롯의 하위 이미지 컴포넌트를 미리 찾아서 저장
         for (int i = 0; i < contentParent.childCount; i++)
         {
             Transform slot = contentParent.GetChild(i);
@@ -30,9 +30,9 @@ public class UnitSlotManager : MonoBehaviour
         }
     }
     
-    private void Start()
+    private IEnumerator Start()
     {
-        // 유저가 보유한 모든 유닛 데이터를 가져와 슬롯에 배치
+        yield return new WaitUntil(() => UnitGameManager.Instance != null && UnitGameManager.Instance.GetUnits() != null);
         userUnits = UnitGameManager.Instance.GetUnits();
         AssignUnitsToSlots();
         UpdateDraggableStates();
@@ -43,7 +43,6 @@ public class UnitSlotManager : MonoBehaviour
         // 슬롯의 개수와 유저가 가진 유닛 개수 중 작은 값을 사용하여 순회
         int unitCount = Mathf.Min(unitImages.Count, userUnits.Count);
 
-        // 각 슬롯의 하위 이미지에 유닛 데이터를 할당
         for (int i = 0; i < unitCount; i++)
         {
             SetUnitData(unitImages[i], unitDraggables[i], userUnits[i]);
@@ -62,37 +61,42 @@ public class UnitSlotManager : MonoBehaviour
         if (data != null && data.UnitImage != null)
         {
             unitImage.sprite = data.UnitImage;
-            unitImage.color = Color.white; // 이미지를 기본 색상으로 설정
-            unitImage.enabled = true; // 이미지 표시
+            unitImage.color = Color.white; 
+            unitImage.enabled = true;
 
-            unitDraggable.unitData = data; // UnitData를 UnitDraggable에 할당
-            unitDraggable.unitIndex = unitImages.IndexOf(unitImage); // 인덱스 설정
-            unitSlots[unitImages.IndexOf(unitImage)].raycastTarget = true; // 슬롯의 이벤트 활성화
+            unitDraggable.unitData = data;
+            unitDraggable.unitIndex = unitImages.IndexOf(unitImage);
+            unitSlots[unitImages.IndexOf(unitImage)].raycastTarget = true;
         }
         else
         {
             unitImage.sprite = null;
-            unitImage.enabled = false; // 이미지 숨기기
-            unitDraggable.unitData = null; // UnitData 초기화
-            unitSlots[unitImages.IndexOf(unitImage)].raycastTarget = false; // 슬롯의 이벤트 비활성화
+            unitImage.enabled = false;
+            unitDraggable.unitData = null;
+            unitSlots[unitImages.IndexOf(unitImage)].raycastTarget = false;
         }
     }
 
     public void UpdateDraggableStates()
     {
-        List<UnitData> selectedUnits = UnitGameManager.Instance.GetSelectedUnits();
-
         foreach (var draggable in unitDraggables)
         {
-            if (selectedUnits.Contains(draggable.unitData))
+            
+            if (draggable == null || draggable.unitData == null)
             {
-                draggable.SetDraggable(false); // 이미 배치된 유닛은 드래그 불가
-                draggable.GetComponent<Image>().color = new Color(0.5f, 0.5f, 0.5f, 1.0f); // 어둡게 표시
+                continue; 
+            }
+            bool isUnitSelected = UnitGameManager.Instance.IsUnitSelected(draggable.unitData);
+            
+            if (isUnitSelected)
+            {
+                draggable.SetDraggable(false);
+                draggable.GetComponent<Image>().color = new Color(0.5f, 0.5f, 0.5f, 1.0f);
             }
             else
             {
-                draggable.SetDraggable(true); // 배치되지 않은 유닛만 드래그 가능
-                draggable.GetComponent<Image>().color = Color.white; // 기본 색상으로 표시
+                draggable.SetDraggable(true);
+                draggable.GetComponent<Image>().color = Color.white;
             }
         }
     }
@@ -103,15 +107,14 @@ public class UnitSlotManager : MonoBehaviour
         {
             if (unitDraggable != null)
             {
-                unitDraggable.isDropped = false;  // 드래그 상태 초기화
-                unitDraggable.enabled = true;  // 드래그 기능 다시 활성화
-                unitDraggable.GetComponent<CanvasGroup>().blocksRaycasts = true;  // 드래그 가능하게 설정
+                unitDraggable.isDropped = false;
+                unitDraggable.enabled = true;
+                unitDraggable.GetComponent<CanvasGroup>().blocksRaycasts = true;
                 
-                // 이미지를 초기 상태로 되돌림
                 Image originalImage = unitDraggable.GetComponent<Image>();
                 if (originalImage != null)
                 {
-                    originalImage.color = Color.white;  // 색상을 흰색으로 초기화
+                    originalImage.color = Color.white;
                 }
                 UpdateDraggableStates();
             }

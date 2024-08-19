@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class UnitPlacementManagerLeft : MonoBehaviour
 {
     public Transform contentParent;
-    public PlacementUnitLeft placementUnit;  // 왼쪽 성벽 전용의 PlacementUnit
+    public PlacementUnitLeft placementUnit;
     private List<Image> placementImages = new List<Image>();
     private List<SlotUnitData> placementUnits;
 

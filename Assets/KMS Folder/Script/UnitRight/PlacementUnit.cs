@@ -6,13 +6,10 @@ public class PlacementUnit : MonoBehaviour
 {
     [SerializeField] private Transform[] slots;
     private List<SlotUnitData> slotUnitDataList;
-    UnitData ud;
-    private List<UnitData> uds;
-    // 배치 유닛 인덱스, 유닛 데이터 저장을 위한 스크립트 
+    
     private void Awake()
     {
         slotUnitDataList = new List<SlotUnitData>();
-        uds = new List<UnitData>();
         
         for (int i = 0; i < slots.Length; i++)
         {
@@ -20,10 +17,10 @@ public class PlacementUnit : MonoBehaviour
             if (assignedUnitData != null)
             {
                 slotUnitDataList.Add(new SlotUnitData(i, assignedUnitData)); // 인덱스를 사용하여 저장
-            }
+            } 
         }
     }
-
+    
     public void SavePlacementUnits()
     {
         // 저장 시, 현재 슬롯의 유닛 정보를 갱신
@@ -35,13 +32,17 @@ public class PlacementUnit : MonoBehaviour
             if (assignedUnitData != null)
             {
                 slotUnitDataList.Add(new SlotUnitData(i, assignedUnitData)); // 인덱스를 사용하여 저장
-            }
+            } 
         }
     }
 
     public List<SlotUnitData> GetSlotUnitDataList()
     {   
-    return slotUnitDataList;
+        if (slotUnitDataList == null)
+        {
+            return new List<SlotUnitData>(); // 빈 리스트 반환
+        }
+        return slotUnitDataList;
     }
 
     public void SetSlotUnitDataList(List<SlotUnitData> dataList)

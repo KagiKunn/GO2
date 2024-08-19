@@ -1,11 +1,12 @@
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using System.Collections;
 
 public class UnitSelectLeft : MonoBehaviour
 {
     public UnitGameManagerLeft unitGameManager;
-    public UnitPlacementManagerLeft unitPlacementManagerLeft;  // 왼쪽 성벽에 대한 PlacementManager
+    public UnitPlacementManagerLeft unitPlacementManagerLeft;
     public UnitSlotManagerLeft unitSlotManager;
     public Button resetBtn, saveBtn, upgradeBtn;
     public Image[] unitslots;
@@ -13,8 +14,9 @@ public class UnitSelectLeft : MonoBehaviour
     
     private List<UnitData> units;
 
-    private void Start()
+    private IEnumerator Start()
     {
+        yield return new WaitUntil(() => UnitGameManagerLeft.Instance != null && UnitGameManagerLeft.Instance.GetUnits() != null);
         if (unitGameManager == null)
         {
             unitGameManager = FindFirstObjectByType<UnitGameManagerLeft>();
@@ -30,14 +32,14 @@ public class UnitSelectLeft : MonoBehaviour
 
     private void ResetUnitSelection()
     {
-        UnitGameManagerLeft.Instance.ClearUnitFormation();  // 왼쪽 성벽 유닛 배치 정보 초기화
+        UnitGameManagerLeft.Instance.ClearUnitFormation();
         unitPlacementManagerLeft.ResetPlacementSlots(); 
         unitSlotManager.ResetUnitDrag();
     }
 
     private void SaveUnitSelection()
     {
-        UnitGameManagerLeft.Instance.SaveUnitFormation();  // 왼쪽 성벽 유닛 배치 정보 저장
+        UnitGameManagerLeft.Instance.SaveUnitFormation();
     }
     
     private void upgradeBtnClicked()
