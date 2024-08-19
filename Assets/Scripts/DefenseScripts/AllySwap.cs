@@ -32,12 +32,18 @@ public class AllySwap : MonoBehaviour {
 		playerObjCircle1.SetActive(false);
 		playerObjCircle2.SetActive(false);
 	}
-void Update() {
-    if (Input.GetMouseButtonDown(0) && !isMoving) // 마우스 왼쪽 버튼 클릭 확인 및 클릭 중인지 확인
-    {
-	    CustomLogger.Log("Update called at: " + Time.time);
-        Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector2 mousePosition2D = new Vector2(mousePosition.x, mousePosition.y);
+	void Update() {
+		
+		// 게임이 일시 정지된 상태인지 확인
+		if (StageC.Instance != null && StageC.Instance.isGamePaused)
+		{
+			return; // 게임이 일시 정지된 상태에서는 클릭을 무시함
+		}
+		
+		if (Input.GetMouseButtonDown(0) && !isMoving) // 마우스 왼쪽 버튼 클릭 확인 및 이동 중인지 확인
+		{
+			Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+			Vector2 mousePosition2D = new Vector2(mousePosition.x, mousePosition.y);
 
         Collider2D collider = Physics2D.OverlapPoint(mousePosition2D, clickableLayer); // 특정 레이어만 감지
 
