@@ -95,16 +95,12 @@ public class UnitSlotManagerA : MonoBehaviour
 
             if (isUnitSelected)
             {
-                draggable.isDropped = true;
-                draggable.enabled = false;
-                draggable.GetComponent<CanvasGroup>().blocksRaycasts = false;
+                draggable.SetDraggable(false);
                 draggable.GetComponent<Image>().color = new Color(0.5f, 0.5f, 0.5f, 1.0f);
             }
             else
             {
-                draggable.isDropped = false;
-                draggable.enabled = true;
-                draggable.GetComponent<CanvasGroup>().blocksRaycasts = true;
+                draggable.SetDraggable(true);
                 draggable.GetComponent<Image>().color = Color.white;
             }
         }
@@ -114,23 +110,28 @@ public class UnitSlotManagerA : MonoBehaviour
     {
         foreach (var unitDraggable in unitDraggables)
         {
+            if (unitDraggable != null)
+            {
                 unitDraggable.isDropped = false;
                 unitDraggable.enabled = true;
-                CanvasGroup canvasGroup = unitDraggable.GetComponent<CanvasGroup>();
-                if (canvasGroup != null)
-                {
-                    canvasGroup.blocksRaycasts = true;
-                    Debug.Log($"Resetting blocksRaycasts for {unitDraggable.name} to true");
-                }
+                unitDraggable.GetComponent<CanvasGroup>().blocksRaycasts = true;
 
-                // 유닛의 시각적 상태 초기화
                 Image originalImage = unitDraggable.GetComponent<Image>();
                 if (originalImage != null)
                 {
-                    originalImage.color = Color.white;
-                    Debug.Log($"Resetting color for {unitDraggable.name} to white");
+                    // 배치되지 않은 유닛만 하얀색으로 설정
+                    if (!UnitGameManagerA.Instance.IsUnitSelected(unitDraggable.unitData))
+                    {
+                        originalImage.color = Color.white;
+                    }
+                    else
+                    {
+                        originalImage.color = new Color(0.5f, 0.5f, 0.5f, 1.0f);
+                    }
                 }
+            }
         }
+
         UpdateDraggableStates();
     }
 }

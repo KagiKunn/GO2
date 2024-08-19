@@ -25,43 +25,51 @@ public class UnitSelectA : MonoBehaviour
         }
 
         units = unitGameManager.GetUnits();
-        unitSlotManager.UpdateDraggableStates();
-
         resetBtn.onClick.AddListener(ResetUnitSelection);
         saveBtn.onClick.AddListener(SaveUnitSelection);
-        
-        unitSlotManager.UpdateDraggableStates();
     }
 
     private void ResetUnitSelection()
     {
         if (leftPlacementManager != null)
         {
+            foreach (var slotUnit in leftPlacementManager.placementUnit.GetSlotUnitDataList())
+            {
+                unitGameManager.unitPlacementStatus[slotUnit.UnitData] = false;
+            }
             unitGameManager.ClearUnitFormation(leftPlacementManager.placementUnit, unitGameManager.leftWallFilePath);
             leftPlacementManager.ResetPlacementSlots();
+            unitSlotManager.UpdateDraggableStates();
         }
 
         if (rightPlacementManager != null)
         {
+            foreach (var slotUnit in rightPlacementManager.placementUnit.GetSlotUnitDataList())
+            {
+                unitGameManager.unitPlacementStatus[slotUnit.UnitData] = false;
+            }
             unitGameManager.ClearUnitFormation(rightPlacementManager.placementUnit, unitGameManager.rightWallFilePath);
             rightPlacementManager.ResetPlacementSlots();
+            unitSlotManager.UpdateDraggableStates();
         }
-        unitSlotManager.ResetUnitDrag();
+
     }
+
 
     private void SaveUnitSelection()
     {
         if (leftPlacementManager != null)
         {
             unitGameManager.SaveUnitFormation(leftPlacementManager.placementUnit, unitGameManager.leftWallFilePath);
+            unitSlotManager.UpdateDraggableStates();
         }
 
         if (rightPlacementManager != null)
         {
             unitGameManager.SaveUnitFormation(rightPlacementManager.placementUnit, unitGameManager.rightWallFilePath);
+            unitSlotManager.UpdateDraggableStates();
         }
         
-        unitSlotManager.UpdateDraggableStates();
     }
 
     private void upgradeBtnClicked()

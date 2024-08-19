@@ -35,6 +35,10 @@ public class PlacementUnitA : MonoBehaviour
     public void SetSlotUnitDataList(List<SlotUnitData> dataList)
     {
         slotUnitDataList = dataList ?? new List<SlotUnitData>();
+        foreach (var slotUnit in slotUnitDataList)
+        {
+            slotUnit.UnitData = UnitGameManagerA.Instance.LoadUnitDataById(slotUnit.ID);
+        }
         UpdateSlotImages();
     }
 

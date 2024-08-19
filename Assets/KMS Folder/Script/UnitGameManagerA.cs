@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -13,7 +14,7 @@ public class UnitGameManagerA : MonoBehaviour
 
     public PlacementUnitA leftPlacementUnit;
     public PlacementUnitA rightPlacementUnit;
-
+    
     private static UnitGameManagerA instance;
     public static UnitGameManagerA Instance {
         get {
@@ -95,7 +96,7 @@ public class UnitGameManagerA : MonoBehaviour
         }
     }
     
-     private void UpdatePlacementStatus(List<SlotUnitData> slotUnitDataList, bool isLeftWall) {
+    private void UpdatePlacementStatus(List<SlotUnitData> slotUnitDataList, bool isLeftWall) {
         if (slotUnitDataList == null)
         {
             Debug.LogError("slotUnitDataList is null in UpdatePlacementStatus!");
@@ -162,10 +163,10 @@ public class UnitGameManagerA : MonoBehaviour
         unitDataList = new List<UnitData>(Resources.LoadAll<UnitData>("ScriptableObjects/Unit"));
     }
     
-    private UnitData LoadUnitDataById(int instanceID) {
+    public UnitData LoadUnitDataById(int id) {
         UnitData[] allUnits = Resources.LoadAll<UnitData>("ScriptableObjects/Unit");
         foreach (var unit in allUnits) {
-            if (unit.GetInstanceID() == instanceID) {
+            if (unit.ID == id) {
                 return unit;
             }
         }
@@ -176,6 +177,19 @@ public class UnitGameManagerA : MonoBehaviour
     {
         placementUnit.SavePlacementUnits();
         List<SlotUnitData> slotUnitDataList = placementUnit.GetSlotUnitDataList();
+        
+        foreach (var unit in unitPlacementStatus.Keys.ToList())
+        {
+            unitPlacementStatus[unit] = false;
+        }
+
+        foreach (var slotUnit in slotUnitDataList)
+        {
+            if (slotUnit.UnitData != null)
+            {
+                unitPlacementStatus[slotUnit.UnitData] = true;
+            }
+        }
 
         SlotUnitDataWrapper wrapper = new SlotUnitDataWrapper(slotUnitDataList);
         string json = JsonUtility.ToJson(wrapper, true);
@@ -196,7 +210,7 @@ public class UnitGameManagerA : MonoBehaviour
                     {
                         if (slotUnit.UnitData != null) 
                         {
-                            slotUnit.UnitData = LoadUnitDataById(slotUnit.UnitData.GetInstanceID());
+                            slotUnit.UnitData = LoadUnitDataById(slotUnit.UnitData.ID);
                         }
                     }
                 
@@ -217,6 +231,11 @@ public class UnitGameManagerA : MonoBehaviour
     }
 
     public void ClearUnitFormation(PlacementUnitA placementUnit, string filePath) {
+        var slotUnitDataList = placementUnit.GetSlotUnitDataList();
+        foreach (var slotUnit in slotUnitDataList)
+        {
+            unitPlacementStatus[slotUnit.UnitData] = false;
+        }
         placementUnit.SetSlotUnitDataList(new List<SlotUnitData>());
         SaveUnitFormation(placementUnit, filePath);
     }
@@ -224,8 +243,6 @@ public class UnitGameManagerA : MonoBehaviour
     public bool IsUnitSelected(UnitData unit) {
         return unitPlacementStatus.ContainsKey(unit) && unitPlacementStatus[unit];
     }
-    
-    
 
     public List<UnitData> GetUnits() {
         return unitDataList;
