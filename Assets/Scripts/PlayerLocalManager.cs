@@ -15,7 +15,7 @@ public class PlayerLocalManager : MonoBehaviour
     private int L_moreEarnGold;
     private int L_moreCastleHealth;
     private int L_reduceCooldown;
-    private HeroList L_HeroeList;
+    private HeroList[] L_HeroeList;
 
     public int lMoney
     {
@@ -53,7 +53,7 @@ public class PlayerLocalManager : MonoBehaviour
         set => L_reduceCooldown = value;
     }
 
-    public HeroList lHeroeList
+    public HeroList[] lHeroeList
     {
         get => L_HeroeList;
         set => L_HeroeList = value;

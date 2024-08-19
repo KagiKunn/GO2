@@ -16,10 +16,10 @@ public class UpgradeHero : MonoBehaviour
     
     void OnEnable()
     {
-        HeroGameManager heroGameManager = HeroGameManager.Instance;
-        if (heroGameManager != null)
+        HeroManager heroManager = HeroManager.Instance;
+        if (heroManager != null)
         {
-            upgradeHero = heroGameManager.GetUpgradeHero();
+            upgradeHero = heroManager.GetUpgradeHero();
             CustomLogger.Log("Upgrade Hero Loaded" + (upgradeHero != null ? upgradeHero.Name : "Null"));
         }
         
@@ -46,10 +46,10 @@ public class UpgradeHero : MonoBehaviour
     private void OnCloseBtn()
     {
         // HeroGameManager의 upgradeHero를 초기화
-        HeroGameManager heroGameManager = FindFirstObjectByType<HeroGameManager>();
-        if (heroGameManager != null)
+        HeroManager heroManager = FindFirstObjectByType<HeroManager>();
+        if (heroManager != null)
         {
-            heroGameManager.ClearUpgradeHero();
+            heroManager.ClearUpgradeHero();
         }
 
         // 이전 씬으로 돌아가기

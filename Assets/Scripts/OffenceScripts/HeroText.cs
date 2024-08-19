@@ -36,16 +36,11 @@ public class HeroText : MonoBehaviour {
 			}
 		}
 
-		filePath = Path.Combine(Path.Combine(Application.dataPath, "save", "heroInfo"), "selectedHeroes.json");
-
-		if (File.Exists(filePath)) {
 			try {
-				string json = File.ReadAllText(filePath);
+				HeroList[] heroList = PlayerLocalManager.Instance.lHeroeList;
 
-				HeroDataWrapper wrapper = JsonUtility.FromJson<HeroDataWrapper>(json);
-
-				for (int i = 0; i < wrapper.Heroes.Count && i < activeTextName.Count; i++) {
-					HeroData hero = wrapper.Heroes[i];
+				for (int i = 0; i < heroList.Length && i < activeTextName.Count; i++) {
+					HeroData hero = HeroManager.Instance.heroDataList.Find(h=>h.Name == heroList[i].Item1);
 
 					Image heroColor = activeHeroColor[i].GetComponent<Image>();
 					Image heroIcon = activeHeroIcon[i].GetComponent<Image>();
@@ -64,6 +59,5 @@ public class HeroText : MonoBehaviour {
 			} catch (Exception e) {
 				CustomLogger.Log("Error parsing JSON: " + e.Message);
 			}
-		}
 	}
 }

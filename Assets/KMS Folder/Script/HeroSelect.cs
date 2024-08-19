@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine;
 using UnityEngine.Localization;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class HeroSelect : MonoBehaviour 
 {
 	public NoticeUI _notice;
-	public HeroGameManager heroGameManager;
+    public HeroManager heroManager;
 	public Image CharacterImage;
 	public Button[] heroButtons;
 	public Button[] selectedHeroSlots;
@@ -30,10 +31,12 @@ public class HeroSelect : MonoBehaviour
     
     private void Start()
     {
-        heroes = HeroGameManager.Instance.GetHeroes(); 
+        heroes = HeroManager.Instance.GetHeroes(); 
         InitializeHeroButtons();
         InitializeSelectedHeroSlots();
 
+        heroManager = HeroManager.Instance;
+        
 		resetBtn.onClick.AddListener(ResetHeroSelection);
 		saveBtn.onClick.AddListener(SaveHeroSelection);
         reinforceBtn.onClick.AddListener(ReinforceBtnClicked);
@@ -69,10 +72,10 @@ public class HeroSelect : MonoBehaviour
         HeroData selectedHeroData = heroes[index];
 
         // 클릭한 영웅이 이미 편성된 영웅인지 확인
-        bool isHeroAlreadySelected = HeroGameManager.Instance.GetSelectedHeroes().Exists(h => h.Name == selectedHeroData.Name);
+        bool isHeroAlreadySelected = HeroManager.Instance.GetSelectedHeroes().Exists(h => h.Name == selectedHeroData.Name);
 
         // 영웅 슬롯이 가득 찼거나, 이미 편성된 영웅일 경우 추가하지 않음
-        if (!isHeroAlreadySelected && HeroGameManager.Instance.GetSelectedHeroes().Count < 3)
+        if (!isHeroAlreadySelected && HeroManager.Instance.GetSelectedHeroes().Count < 3)
         {
             AddHeroToSlot(selectedHeroData);
         }
@@ -90,7 +93,7 @@ public class HeroSelect : MonoBehaviour
                 slotImage.sprite = heroData.ProfileImg;
                 slotImage.enabled = true;
                 SetMainCharacterImage(heroData.CharacterImg);
-                HeroGameManager.Instance.AddSelectedHero(heroData);
+                HeroManager.Instance.AddSelectedHero(heroData);
                 break;
             }
         }
@@ -101,7 +104,7 @@ public class HeroSelect : MonoBehaviour
         Image slotImage = selectedHeroSlots[index].GetComponent<Image>();
         if (slotImage.sprite != null)
         {
-            HeroGameManager.Instance.GetSelectedHeroes().RemoveAll(h => h.ProfileImg == slotImage.sprite);
+            HeroManager.Instance.GetSelectedHeroes().RemoveAll(h => h.ProfileImg == slotImage.sprite);
             slotImage.sprite = null;
             slotImage.enabled = false;
         }
@@ -121,7 +124,7 @@ public class HeroSelect : MonoBehaviour
             slotImage.sprite = null;
             slotImage.enabled = false;
         }
-        HeroGameManager.Instance.ClearHeroFormation();
+        HeroManager.Instance.ClearHeroFormation();
         SetMainCharacterImage(null);
         clickedHeroIndex = -1; // 리셋 시 클릭된 영웅 인덱스 초기화
         clickedHeroProfileImg = null;
@@ -129,7 +132,7 @@ public class HeroSelect : MonoBehaviour
     // 영웅 편성 정보 저장
     private void SaveHeroSelection()
     {
-        HeroGameManager.Instance.SaveHeroFormation();
+        HeroManager.Instance.SaveHeroFormation();
         saveString.StringChanged += OnSaveSuccessMessageChanged;
         //_notice.SUB("Save Successefully!");
     }
@@ -137,8 +140,8 @@ public class HeroSelect : MonoBehaviour
     //  시작할때 영웅 편성 정보 가져오는 메서드
     private void LoadHeroFormation()
     {
-        heroGameManager.LoadHeroFormation();
-        List<HeroData> selectedHeroes = heroGameManager.GetSelectedHeroes();
+        heroManager.LoadHeroFormation();
+        List<HeroData> selectedHeroes = heroManager.GetSelectedHeroes();
         for (int i = 0; i < selectedHeroes.Count; i++)
         {
             if (i < selectedHeroSlots.Length)
@@ -159,7 +162,7 @@ public class HeroSelect : MonoBehaviour
         if (clickedHeroIndex != -1)
         {
             HeroData clickedHero = heroes[clickedHeroIndex];
-            HeroGameManager.Instance.SetUpgradeHero(clickedHero); 
+            HeroManager.Instance.SetUpgradeHero(clickedHero); 
             CustomLogger.Log("Upgrade Hero Set: " + clickedHero.Name);
             SceneManager.LoadScene("HeroUpgrade");
         }
