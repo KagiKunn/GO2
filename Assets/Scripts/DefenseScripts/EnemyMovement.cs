@@ -44,9 +44,7 @@ public class EnemyMovement : MonoBehaviour {
 	public static event Action OnBossDie;
 
 	private bool isBossDied = false;
-
-	private DarkElfSpawner darkElfSpawner;
-
+	
 	private void Awake() {
 		// 여기에 스테이지당 증가될 값 세팅
 		// stageCount 가져오기
@@ -58,10 +56,8 @@ public class EnemyMovement : MonoBehaviour {
 		
 		// 기본 체력 값
 		float baseHealth = health;
-		// 10%씩 체력 증가 
-		// health = baseHealth + (baseHealth * 0.1f * (stageCount - 1));
-		// 스테이지마다 5씩 체력 증가
-		health = baseHealth + (5 * (stageCount - 1));
+		// 20%씩 체력 증가 
+		health = baseHealth + (baseHealth * 0.2f * (stageCount - 1));
 		
 		
 		// HorseRoot 오브젝트 찾기
@@ -272,6 +268,10 @@ public class EnemyMovement : MonoBehaviour {
 			crntgold = gold + defenseInit.extraGold1 / gold;
 		}
 
+		EnemySpawner enemySpawner = GameObject.Find("Spawner").GetComponent<EnemySpawner>();
+		enemySpawner.enemyDieCount++;
+		CustomLogger.Log("적 사망 카운트 :"+enemySpawner.enemyDieCount, "white");
+		
 		defenseInit.currentGold1 += crntgold;
 		CustomLogger.Log(defenseInit.currentGold1);
 
@@ -288,9 +288,6 @@ public class EnemyMovement : MonoBehaviour {
 
 			StageC stageC = FindObjectOfType<StageC>();
 			stageC.ShowStageClearUI();
-
-			Time.timeScale = 0;
-			CustomLogger.Log("게임이 정지되었습니다.");
 		}
 
 		gameObject.SetActive(false);
