@@ -162,9 +162,9 @@ public class EnemyMovement : MonoBehaviour {
 
 			if (projectile != null) {
 				if (isRight) {
-					projectile.Initialize(Vector3.left, attackDamage);
+					projectile.Initialize(Vector3.left, attackDamage, isRight);
 				} else {
-					projectile.Initialize(Vector3.right, attackDamage);
+					projectile.Initialize(Vector3.right, attackDamage, isRight);
 				}
 			} else {
 				castleWall.TakeDamage(attackDamage);
