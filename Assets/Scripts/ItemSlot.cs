@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -16,7 +17,9 @@ public class ItemSlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
     private int originalSiblingIndex;
 
     private InventoryUI inventoryUI;
+    private ScrollRect scrollRect;
 
+    private bool isDragging = false;
 
     private void Start()
     {
@@ -24,48 +27,85 @@ public class ItemSlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
         itemImage = GetComponentInChildren<Image>();
 
         inventoryUI = FindObjectOfType<InventoryUI>();
+        scrollRect = GetComponentInParent<ScrollRect>();
+
+        if (ItemInstance == null)
+        {
+            CustomLogger.Log($"Slot {gameObject.name} has no ItemInstance assigned.");
+            return;
+        }
         
-            if (inventoryUI != null)
+        if (inventoryUI != null)
+        {
+            if (ItemInstance != null && item != null)
             {
-               inventoryUI.UpdateSlotUI(this.transform, ItemInstance);
-               CustomLogger.Log($"Slot {gameObject.name} initialized with item: {item.itemName}");
+                inventoryUI.UpdateSlotUI(this.transform, ItemInstance);
+                CustomLogger.Log($"Slot {gameObject.name} initialized with item: {item.itemName}");
             }
             else
             {
-                CustomLogger.Log($"Slot {gameObject.name} has no item assigned.");
+                CustomLogger.Log($"Slot {gameObject.name} has no item assigned or item data is null.");
             }
-        
-
+        }
+        else
+        {
+            CustomLogger.LogError($"InventoryUI not found in the scene for slot {gameObject.name}.");
+        }
+            
         if (GetComponentInParent<Canvas>() == null)
         {
             CustomLogger.Log("Canvas not found in parent hierarchy.");
         }
+        
     }
+
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        isDragging = true;
         originalParent = transform.parent;
         layoutGroup = originalParent.GetComponent<LayoutGroup>();
         originalSiblingIndex = transform.GetSiblingIndex();
+        
         
         if (layoutGroup != null)
         {
             layoutGroup.enabled = false;
         }
 
+        if (scrollRect != null)
+        {
+            scrollRect.enabled = false;
+        }
+
         itemImage.raycastTarget = false;
         transform.SetAsLastSibling();
+
+        if (scrollRect != null)
+        {
+            scrollRect.vertical = true;
+            if (scrollRect.verticalScrollbar != null)
+            {
+                scrollRect.verticalScrollbar.gameObject.SetActive(true);
+            }
+        }
     }
 
     public void OnDrag(PointerEventData eventData)
     {
         rectTransform.position = Input.mousePosition;
+
+        if (Input.mouseScrollDelta.y != 0)
+        {
+            scrollRect.verticalNormalizedPosition += Input.mouseScrollDelta.y * 0.1f;
+        }
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
         itemImage.raycastTarget = true;
-
+        isDragging = false;
+        
         List<RaycastResult> results = new List<RaycastResult>();
         EventSystem.current.RaycastAll(eventData, results);
 
@@ -82,13 +122,18 @@ public class ItemSlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
                 break;
             }
         }
-        
+
         ResetSlotPosition();
         
         if (layoutGroup != null)
         {
             layoutGroup.enabled = true;
             LayoutRebuilder.ForceRebuildLayoutImmediate(originalParent.GetComponent<RectTransform>());
+        }
+
+        if (scrollRect != null)
+        {
+            scrollRect.enabled = true;
         }
 
         if (!itemSwapped)
@@ -99,6 +144,8 @@ public class ItemSlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
         
         CustomLogger.Log($"OnEndDrag: Parent = {transform.parent.name}, Position = {rectTransform.localPosition}");
     }
+    
+    
 
     private void SwapItems(ItemSlot targetSlot)
     {
