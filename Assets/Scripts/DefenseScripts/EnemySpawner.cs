@@ -1,7 +1,9 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 using System.Collections;
 using System.Collections.Generic;
+using Random = UnityEngine.Random;
 
 #pragma warning disable CS0618 // 형식 또는 멤버는 사용되지 않습니다.
 
@@ -51,6 +53,8 @@ public class EnemySpawner : MonoBehaviour {
 	//스테이지 정보 참조
 	[SerializeField] public int stageCount;
 	[SerializeField] public int weekCount;
+
+	public int enemyDieCount = 0;
 	
 	public void SetSelectedRace(string race) {
 		selectedRace = race;
@@ -65,7 +69,8 @@ public class EnemySpawner : MonoBehaviour {
 		weekCount = StageC.Instance.currentWeekCount;
 
 		//스테이지 수에 따른 웨이브당 스폰 숫자 증가
-		numberOfObjects *= stageCount;
+		// numberOfObjects *= stageCount;
+		numberOfObjects += 10;
 		CustomLogger.Log("StageCount를 받아와서 스폰할 숫자 재설정 결과 : " + numberOfObjects, "pink");
 		
 		// EnemyPrefabList 참조 가져오기
@@ -106,6 +111,17 @@ public class EnemySpawner : MonoBehaviour {
 		StartCoroutine(SpawnWaves());
 	}
 
+	private void Update()
+	{
+		if (PlusEnemyDieCount())
+		{
+			CustomLogger.Log("모든 적이 사망했습니다. 보스를 소환합니다.", "red");
+			SpawnBoss();
+			enemyDieCount = 0;
+		}
+		
+	}
+
 	IEnumerator SpawnWaves() {
 		CustomLogger.Log("SpawnWaves()입갤 ㅋ");
 
@@ -134,9 +150,27 @@ public class EnemySpawner : MonoBehaviour {
 			}
 		}
 
-		// 모든 웨이브가 끝난 후 보스 생성
-		CustomLogger.Log("모든 웨이브가 완료되었습니다. 보스를 소환합니다.", "red");
-		SpawnBoss();
+		// 모든 웨이브가 끝난 후 적이 모두 사망했는지 확인
+		
+		// 모든 적이 사망하면 보스를 생성
+
+		
+			
+	}
+
+	public bool PlusEnemyDieCount()
+	{
+		if (totalEnemiesToSpawn == enemyDieCount)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+
+		enemyDieCount++;
+		
 	}
 
 	IEnumerator SpawnObjects() {

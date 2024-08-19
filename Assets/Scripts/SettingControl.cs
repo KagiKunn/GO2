@@ -57,17 +57,17 @@ public class SettingControl : MonoBehaviour
         bgmVolSlider.onValueChanged.AddListener(value => SetLevel("BGM", bgmVolSlider.value, bgmVal, true));
         vibrationToggle.onValueChanged.AddListener(SetVibration);
 
-        if (PlayerDataControl.Instance != null)
+        if (PlayerSyncManager.Instance != null)
         {
-            if (PlayerDataControl.Instance.UUID != null)
+            if (PlayerSyncManager.Instance.UUID != null)
             {
-                UUID.text = "UUID : " + PlayerDataControl.Instance.UUID;
-                GUIUtility.systemCopyBuffer = PlayerDataControl.Instance.UUID;
+                UUID.text = "UUID : " + PlayerSyncManager.Instance.UUID;
+                GUIUtility.systemCopyBuffer = PlayerSyncManager.Instance.UUID;
             }
 
-            if (PlayerDataControl.Instance.Username != null)
+            if (PlayerSyncManager.Instance.Username != null)
             {
-                Username.text = PlayerDataControl.Instance.Username;
+                Username.text = PlayerSyncManager.Instance.Username;
             }
         }
     }

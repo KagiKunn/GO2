@@ -16,7 +16,7 @@ public class CastleWallManager : MonoBehaviour {
     [SerializeField] private float activateShieldValue = 80f; // 실드 활성화 시 설정할 값
     private float extraHealth;
 
-	private HeroGameManager heroGameManager;
+	private HeroManager heroManager;
 	public float shield;
 	public bool activateShield; // activateShield가 true이면 실드 적용 + hasShield를 true로 변경
 	private Coroutine resetShieldCoroutine;
@@ -205,7 +205,7 @@ public class CastleWallManager : MonoBehaviour {
 			Debug.LogWarning("StageC instance not found.");
 		}
 
-		HeroGameManager.Instance.ClearHeroFormation(); //영웅선택 저장정보 clear
+		HeroManager.Instance.ClearHeroFormation(); //영웅선택 저장정보 clear
 	}
 	
 	private void DestroyWallsWithTag(string tag) {

@@ -10,6 +10,9 @@ public abstract class HeroSkill : MonoBehaviour
     public Button skillButton; // 버튼 참조 추가
     public SkillPanelManager skillPanelManager; // SkillPanelManager 참조 추가
 
+    public AudioClip soundClip;
+    private AudioSource skillAudioSource;
+
     public bool isActive = true;
     public float cooldown = 10f;
     public float extraCool = 0;
@@ -37,6 +40,21 @@ public abstract class HeroSkill : MonoBehaviour
         extraCool = GameObject.Find("InitSetting").GetComponent<DefenseInit>().extraCool1;
         cooldown = cooldown - (cooldown * (extraCool/10));
     }
+
+    private void Start()
+    {
+        skillAudioSource = gameObject.AddComponent<AudioSource>();
+        skillAudioSource.clip = soundClip;
+    }
+    
+    public void PlaySound()
+    {
+        if (skillAudioSource != null && soundClip != null)
+        {
+            skillAudioSource.Play();
+        }
+    }
+
     private IEnumerator CreateSkillImage()
     {
         // 특정 태그를 가진 Canvas 찾기
@@ -71,7 +89,7 @@ public abstract class HeroSkill : MonoBehaviour
 
                 // 시간을 멈추기
                 Time.timeScale = 0f;
-
+                PlaySound();
                 // 왼쪽으로 이동 시작
                 yield return StartCoroutine(MoveAndPauseImage(skillImage));
             }

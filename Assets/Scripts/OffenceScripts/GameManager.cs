@@ -63,16 +63,14 @@ public class GameManager : MonoBehaviour {
 			Destroy(this.gameObject);
 		}
 
-		filePath = Path.Combine(Path.Combine(Application.dataPath, "save", "heroInfo"), "selectedHeroes.json");
 
 		if (File.Exists(filePath)) {
 			try {
-				string json = File.ReadAllText(filePath);
 
-				HeroDataWrapper wrapper = JsonUtility.FromJson<HeroDataWrapper>(json);
-
-				for (int i = 0; i < wrapper.Heroes.Count; i++) {
-					HeroData hero = wrapper.Heroes[i];
+				HeroList[] heroList = PlayerLocalManager.Instance.lHeroeList;
+                
+				for (int i = 0; i < heroList.Length; i++) {
+					HeroData hero = HeroManager.Instance.heroDataList.Find(h=>h.Name == heroList[i].Item1);
 
 					if (hero != null) {
 						selectedHeroes.Add(hero.Name);
