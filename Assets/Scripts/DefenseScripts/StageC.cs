@@ -10,7 +10,6 @@ using UnityEngine.SceneManagement;
 public class StageC : MonoBehaviour
 {
     public static StageC Instance { get; private set; }
-    
     [SerializeField] private Canvas gameOverCanvas; // 게임오버 UI 관련 참조
     [SerializeField] private Image gameOverImage;
     [SerializeField] private Button gameOverButton;
@@ -26,14 +25,14 @@ public class StageC : MonoBehaviour
     [SerializeField] private string[] currentStageRace; // 현재 stageRace 배열을 인스펙터에서 확인
     [SerializeField] public string selectedRace;
     [SerializeField] public int currentWeekCount;
-    
+
     private string saveFilePath;
     private EnemySpawner enemySpawner;
     [SerializeField] private CastleWallManager castleWallManager;
     [SerializeField] private TextMeshProUGUI stageInfoText;
     public bool isGamePaused;
-    
-    
+    [SerializeField] private GameObject uiGameObject;
+
     private void Awake()
     {
         if (Instance == null)
@@ -45,9 +44,9 @@ public class StageC : MonoBehaviour
         {
             Destroy(gameObject);
         }
-        
+
         currentWeekCount = defenseGameData.WeekCount;
-        
+
         Time.timeScale = 1f;
         // Save file path 설정
         string savePath = Path.Combine(Application.dataPath, "save", "DefenseData");
@@ -66,7 +65,7 @@ public class StageC : MonoBehaviour
         InitializeGameOverUI();
         InitializeStageClearUI();
         InitializeAllClearUI();
-        
+
 
         // 체력 데이터를 DefenseGameData에 업로드
         // UploadCastleWallDataToDefenseGameData();
@@ -144,15 +143,14 @@ public class StageC : MonoBehaviour
         {
             stageClearImage.enabled = false;
         }
-        
+
         if (stageClearButton != null)
         {
             stageClearButton.enabled = false;
             stageClearButton.onClick.AddListener(OnStageClearButtonClick);
         }
-        
     }
-    
+
     private void InitializeAllClearUI()
     {
         if (stageAllClearCanvas != null)
@@ -171,7 +169,7 @@ public class StageC : MonoBehaviour
             stageAllClearButton.onClick.AddListener(OnStageAllClearButtonClick);
         }
     }
-    
+
     private string SelectRandomRace()
     {
         // 랜덤으로 stageRace 배열에서 종족 선택
@@ -205,6 +203,13 @@ public class StageC : MonoBehaviour
     public void ShowGameOverUI()
     {
         isGamePaused = true;
+        //게임 종료시 메뉴UI들 버튼도 비활성화
+        Menu menuScript = uiGameObject.GetComponent<Menu>();
+        if (menuScript != null)
+        {
+            menuScript.DisableButtonInteractions();
+        }
+
         Time.timeScale = 0f; // 게임 일시 정지
         if (gameOverCanvas != null)
         {
@@ -230,21 +235,27 @@ public class StageC : MonoBehaviour
         else
         {
             CustomLogger.LogWarning("삭제할 세이브 파일이 존재하지 않습니다.");
-            
         }
     }
 
     public void ShowStageClearUI()
     {
         isGamePaused = true;
+        //게임 종료시 메뉴UI들 버튼도 비활성화
+        Menu menuScript = uiGameObject.GetComponent<Menu>();
+        if (menuScript != null)
+        {
+            menuScript.DisableButtonInteractions();
+        }
+
         Time.timeScale = 0f; // 게임 일시 정지
-      
+
         // 최종 스테이지가 아닐 경우 현재 stageCount와 stageRace 배열 업데이트
         // 최종 스테이지일 경우 버튼 호출
         if (currentStageCount == 5)
         {
-          allStageClear();
-          SaveGameData();
+            allStageClear();
+            SaveGameData();
         }
         else
         {
@@ -290,7 +301,7 @@ public class StageC : MonoBehaviour
         CustomLogger.Log("스테이지 올클리어 버튼 클릭됨");
         SceneManager.LoadScene("Title");
     }
-    
+
     private void SaveGameData()
     {
         defenseGameData.SaveToJson(saveFilePath);
@@ -300,6 +311,13 @@ public class StageC : MonoBehaviour
     private void allStageClear()
     {
         isGamePaused = true;
+        //게임 종료시 메뉴UI들 버튼도 비활성화
+        Menu menuScript = uiGameObject.GetComponent<Menu>();
+        if (menuScript != null)
+        {
+            menuScript.DisableButtonInteractions();
+        }
+
         CustomLogger.Log("축하합니다, 최종스테이지 클리어");
         if (stageAllClearCanvas != null)
         {
@@ -315,6 +333,7 @@ public class StageC : MonoBehaviour
         {
             stageAllClearButton.enabled = true;
         }
+
         //주차 횟수 증가, DTO에 전송
         currentWeekCount++;
         defenseGameData.WeekCount = currentWeekCount;
