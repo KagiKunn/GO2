@@ -36,11 +36,13 @@ public class Menu : MonoBehaviour
         if (Time.timeScale <= 0)
         {
             Time.timeScale = 1;
+            StageC.Instance.isGamePaused = false;
             settingObject.SetActive(false);
         }
         else
         {
             Time.timeScale = 0;
+            StageC.Instance.isGamePaused = true;
             settingObject.SetActive(true);
         }
     }
