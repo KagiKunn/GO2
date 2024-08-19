@@ -12,8 +12,8 @@ public class SkillPanelManager : MonoBehaviour
     public GameObject[] heroSkillArray;
 
     private VisualElement bottomPanel;
-    private bool isPanelVisible = false;
-    private float hiddenPosition = -100f; // 패널 숨김 위치 (패널 높이 만큼)
+    private bool isPanelVisible = true;
+    private float hiddenPosition = -120f; // 패널 숨김 위치 (패널 높이 만큼)
     private float visiblePosition = 0f;   // 패널 보임 위치 (화면 하단)
     
     private string filePath;
