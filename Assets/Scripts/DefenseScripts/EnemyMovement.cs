@@ -5,6 +5,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Unity.VisualScripting;
 using UnityEngine.Serialization;
 
 #pragma warning disable CS0618, CS0414 // 형식 또는 멤버는 사용되지 않습니다.
@@ -37,7 +38,6 @@ public class EnemyMovement : MonoBehaviour {
 	public bool isBoss; //보스 여부 확인
 	private GameObject horseRoot;
 	public NoticeUI stageEndNotice;
-	[FormerlySerializedAs("stageEndUI")] public StageClearUI stageClearUI;
 	
 	
 	// 이벤트 선언
@@ -90,7 +90,10 @@ public class EnemyMovement : MonoBehaviour {
 		}
 
 		// 이동 방향에 따라 속도 적용
-		rigid2d.velocity = movementdirection * (moveSpeed * Time.timeScale);
+		if (!IsDead())
+		{
+			rigid2d.velocity = movementdirection * (moveSpeed * Time.timeScale);
+		}
 	}
 
 	private bool CollisionCheck() {
@@ -162,9 +165,9 @@ public class EnemyMovement : MonoBehaviour {
 
 			if (projectile != null) {
 				if (isRight) {
-					projectile.Initialize(Vector3.left, attackDamage);
+					projectile.Initialize(Vector3.left, attackDamage, isRight);
 				} else {
-					projectile.Initialize(Vector3.right, attackDamage);
+					projectile.Initialize(Vector3.right, attackDamage, isRight);
 				}
 			} else {
 				castleWall.TakeDamage(attackDamage);
@@ -180,8 +183,11 @@ public class EnemyMovement : MonoBehaviour {
 			StartCoroutine(ChangeBrightnessTemporarily(0.1f, 0.6f)); // 예: 명도를 50%로 줄임
 		}
 
-		if (health <= 0 && deadJudge) {
-			Die();
+		if (health <= 0 && deadJudge)
+		{
+			this.movementdirection = Vector3.zero;
+			rigid2d.velocity = movementdirection * (moveSpeed * Time.timeScale);
+			animator.SetTrigger("Die");
 		}
 	}
 
