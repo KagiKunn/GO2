@@ -116,8 +116,8 @@ public class UnitSlotManager : MonoBehaviour
                 {
                     originalImage.color = Color.white;
                 }
-                UpdateDraggableStates();
             }
         }
+        UpdateDraggableStates();
     }
 }

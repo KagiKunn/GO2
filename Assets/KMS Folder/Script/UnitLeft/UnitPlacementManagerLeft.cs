@@ -22,24 +22,17 @@ public class UnitPlacementManagerLeft : MonoBehaviour
                 placementImages.Add(placementImage);
             }
         }
+    }
+
+    private void Start()
+    {
         UnitGameManagerLeft.Instance.LoadUnitFormation();
         AssignSavedUnitsToSlots();
     }
-
+    
     private void AssignSavedUnitsToSlots()
     {
-        if (placementUnit == null)
-        {
-            Debug.LogError("placementUnit is null in AssignSavedUnitsToSlots");
-            return;
-        }
         List<SlotUnitData> savedUnits = placementUnit.GetSlotUnitDataList();
-        
-        if (savedUnits == null || savedUnits.Count == 0)
-        {
-            Debug.LogWarning("No saved units to assign in AssignSavedUnitsToSlots");
-            return;
-        }
         
         foreach (var slotUnitData in savedUnits)
         {

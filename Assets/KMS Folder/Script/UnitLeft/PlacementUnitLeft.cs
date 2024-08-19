@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlacementUnitLeft : MonoBehaviour
 {
@@ -10,28 +11,18 @@ public class PlacementUnitLeft : MonoBehaviour
     private void Awake()
     {
         slotUnitDataList = new List<SlotUnitData>();
-
-        for (int i = 0; i < slots.Length; i++)
-        {
-            UnitData assignedUnitData = slots[i].GetComponent<UnitDropable>().assignedUnitData;
-            if (assignedUnitData != null)
-            {
-                slotUnitDataList.Add(new SlotUnitData(i, assignedUnitData)); // 인덱스를 사용하여 저장
-            }
-        }
     }
 
     public void SavePlacementUnits()
     {
-        // 저장 시, 현재 슬롯의 유닛 정보를 갱신
-        slotUnitDataList.Clear(); // 이전 데이터를 지우고 새롭게 저장
+        slotUnitDataList.Clear();
 
         for (int i = 0; i < slots.Length; i++)
         {
             UnitData assignedUnitData = slots[i].GetComponent<UnitDropable>().assignedUnitData;
             if (assignedUnitData != null)
             {
-                slotUnitDataList.Add(new SlotUnitData(i, assignedUnitData)); // 인덱스를 사용하여 저장
+                slotUnitDataList.Add(new SlotUnitData(i, assignedUnitData));
             }
         }
     }
@@ -44,5 +35,24 @@ public class PlacementUnitLeft : MonoBehaviour
     public void SetSlotUnitDataList(List<SlotUnitData> dataList)
     {
         slotUnitDataList = dataList ?? new List<SlotUnitData>();
+        UpdateSlotImages();
+    }
+    
+    private void UpdateSlotImages()
+    {
+        foreach (var slotUnit in slotUnitDataList)
+        {
+            if (slotUnit.SlotIndex >= 0 && slotUnit.SlotIndex < slots.Length)
+            {
+                var slot = slots[slotUnit.SlotIndex];
+                var image = slot.GetComponent<Image>();
+                if (image != null && slotUnit.UnitData != null)
+                {
+                    image.sprite = slotUnit.UnitData.UnitImage;
+                    image.color = Color.white;
+                    image.enabled = true;
+                }
+            }
+        }
     }
 }

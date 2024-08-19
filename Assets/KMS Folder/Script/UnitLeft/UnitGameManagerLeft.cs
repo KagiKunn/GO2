@@ -10,7 +10,7 @@ public class UnitGameManagerLeft : MonoBehaviour
     private string filePath;
     
     public PlacementUnitLeft placementUnit;
-
+    
     private static UnitGameManagerLeft instance;
     public static UnitGameManagerLeft Instance {
         get {
@@ -21,16 +21,30 @@ public class UnitGameManagerLeft : MonoBehaviour
                     instance = go.AddComponent<UnitGameManagerLeft>();
                     DontDestroyOnLoad(go);
                     instance.InitializeFilePath();
-                } 
+                } else {
+                    instance.InitializeFilePath();
+                }
             }
             return instance;
         }
     }
 
     private void Awake() {
-        if (instance == null) {
+        if (instance == null) 
+        {
             instance = this;
             instance.InitializeFilePath();
+            
+            // placementUnit이 null일 경우 초기화
+            if (placementUnit == null) {
+                GameObject unitDropObject = GameObject.Find("UnitDrop");
+                if (unitDropObject != null) {
+                    placementUnit = unitDropObject.GetComponent<PlacementUnitLeft>();
+                } else {
+                    Debug.LogError("UnitDrop 오브젝트를 찾을 수 없습니다.");
+                }
+            }
+
             
             if (unitDataList == null) {
                 LoadUnitData();
@@ -42,22 +56,24 @@ public class UnitGameManagerLeft : MonoBehaviour
                 CustomLogger.Log("unitPlacementStatus가 null인지 확인하고, 초기화");
             }
             if (placementUnit == null) {
-                placementUnit = FindFirstObjectByType<PlacementUnitLeft>();
+                GameObject unitDropObject = GameObject.Find("UnitDrop");
+                placementUnit = unitDropObject.GetComponent<PlacementUnitLeft>();
                 CustomLogger.Log(" placementUnit가 null인지 확인하고, 초기화");
             }
-            
             DontDestroyOnLoad(gameObject);
+            LoadUnitFormation();
         } 
         else if (instance != this) {
-            Destroy(instance.gameObject);
+            Destroy(instance.gameObject);  // 기존 인스턴스가 남아 있으면 삭제
             instance = this;
             instance.InitializeFilePath();
             DontDestroyOnLoad(gameObject);
             LoadUnitData();
             InitializeUnitPlacementStatus();
+            LoadUnitFormation();
         }
     }
-    
+
     private void InitializeUnitPlacementStatus() {
         if (unitPlacementStatus == null) {
             unitPlacementStatus = new Dictionary<UnitData, bool>();
@@ -102,6 +118,9 @@ public class UnitGameManagerLeft : MonoBehaviour
         File.WriteAllText(filePath, json);
         
         CustomLogger.Log("Unit formation saved successfully.");
+        
+        
+        
     }
 
     public void LoadUnitFormation() {
@@ -113,7 +132,6 @@ public class UnitGameManagerLeft : MonoBehaviour
                 if (wrapper != null && wrapper.SlotUnitDataList != null)
                 {
                     placementUnit.SetSlotUnitDataList(wrapper.SlotUnitDataList);
-                    Debug.Log($"Loaded {wrapper.SlotUnitDataList.Count} slot unit data entries.");
                 } else {
                     Debug.LogWarning("SlotUnitDataWrapper or SlotUnitDataList is null.");
                 }
@@ -143,7 +161,7 @@ public class UnitGameManagerLeft : MonoBehaviour
         }
 
         // 다른 성벽에 배치된 유닛 정보를 확인 (JSON 파일 로드)
-        string otherWallFilePath = Path.Combine(Application.dataPath, "save", "selectedUnits.json"); // 다른 성벽의 JSON 파일 경로
+        string otherWallFilePath = Path.Combine(Application.dataPath, "unitInfo", "selectedUnits.json"); // 다른 성벽의 JSON 파일 경로
         if (File.Exists(otherWallFilePath)) {
             string json = File.ReadAllText(otherWallFilePath);
             SlotUnitDataWrapper otherWallWrapper = JsonUtility.FromJson<SlotUnitDataWrapper>(json);
@@ -155,14 +173,10 @@ public class UnitGameManagerLeft : MonoBehaviour
                 }
             }
         }
-
         return false; // 어느 성벽에도 배치되지 않은 경우
     }
     
     public List<UnitData> GetUnits() {
-        if (unitDataList == null) {
-            Debug.LogError("unitDataList is null in GetUnits.");
-        }
         return instance.unitDataList;
     }
 }

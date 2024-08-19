@@ -23,14 +23,18 @@ public class UnitPlacementManager : MonoBehaviour
             }
             
         }
-        UnitGameManager.Instance.LoadUnitFormation();
-        AssignSavedUnitsToSlots();
     }
 
+    private void Start()
+    {
+        UnitGameManagerLeft.Instance.LoadUnitFormation();
+        AssignSavedUnitsToSlots();
+    }
+    
     private void AssignSavedUnitsToSlots()
     {
         List<SlotUnitData> savedUnits = placementUnit.GetSlotUnitDataList();
-        // 저장된 유닛 배치 정보를 각 배치 슬롯에 할당
+        
         foreach (var slotUnitData in savedUnits)
         {
             int slotIndex = slotUnitData.SlotIndex;
@@ -38,11 +42,11 @@ public class UnitPlacementManager : MonoBehaviour
             {
                 if (slotUnitData.UnitData != null)
                 {
-                    SetUnitData(placementImages[slotIndex], slotUnitData.UnitData);  // 각 슬롯 인덱스에 맞춰 유닛을 배치
+                    SetUnitData(placementImages[slotIndex], slotUnitData.UnitData);
                 }
                 else
                 {
-                    SetUnitData(placementImages[slotIndex], null);  // 유닛 데이터가 없을 경우 슬롯을 초기화
+                    SetUnitData(placementImages[slotIndex], null);
                 }
             }
             else
@@ -57,14 +61,13 @@ public class UnitPlacementManager : MonoBehaviour
         if (data != null && data.UnitImage != null)
         {
             unitImage.sprite = data.UnitImage;
-            unitImage.color = Color.white;  // 이미지를 기본 색상으로 설정
-            unitImage.enabled = true;  // 이미지 표시
+            unitImage.color = Color.white;
+            unitImage.enabled = true;
         }
     }
 
     public void ResetPlacementSlots()
     {
-        // 배치된 모든 슬롯의 이미지를 초기화
         foreach (var placementImage in placementImages)
         {
             var dropableComponent = placementImage.GetComponent<UnitDropable>();

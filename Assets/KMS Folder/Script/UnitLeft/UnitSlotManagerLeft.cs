@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
-using System.Collections;
 
 public class UnitSlotManagerLeft : MonoBehaviour
 {
@@ -29,9 +28,8 @@ public class UnitSlotManagerLeft : MonoBehaviour
         }
     }
     
-    private IEnumerator Start()
+    private void Start()
     {
-        yield return new WaitUntil(() => UnitGameManagerLeft.Instance != null && UnitGameManagerLeft.Instance.GetUnits() != null);
         userUnits = UnitGameManagerLeft.Instance.GetUnits();
         AssignUnitsToSlots();
         UpdateDraggableStates();
@@ -113,8 +111,8 @@ public class UnitSlotManagerLeft : MonoBehaviour
                 {
                     originalImage.color = Color.white;
                 }
-                UpdateDraggableStates();
             }
         }
+        UpdateDraggableStates();
     }
 }

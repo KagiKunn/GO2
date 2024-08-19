@@ -25,6 +25,8 @@ public class UnitGameManager : MonoBehaviour {
                     instance = go.AddComponent<UnitGameManager>();
                     DontDestroyOnLoad(go);
                     instance.InitializeFilePath(); 
+                }else {
+                    instance.InitializeFilePath();
                 }
             }
             return instance;
@@ -37,12 +39,21 @@ public class UnitGameManager : MonoBehaviour {
             instance = this;
             instance.InitializeFilePath();
 
+            // placementUnit이 null일 경우 초기화
+            if (placementUnit == null) {
+                GameObject unitDropObject = GameObject.Find("UnitDrop");
+                if (unitDropObject != null) {
+                    placementUnit = unitDropObject.GetComponent<PlacementUnit>();
+                } else {
+                    Debug.LogError("UnitDrop 오브젝트를 찾을 수 없습니다.");
+                }
+            }
+            
             if (unitDataList == null)
             {
                 LoadUnitData();
                 CustomLogger.Log(" unitDataList가 null인지 확인하고, 초기화");
             }
-
             if (unitPlacementStatus == null)
             {
                 unitPlacementStatus = new Dictionary<UnitData, bool>();
@@ -52,19 +63,21 @@ public class UnitGameManager : MonoBehaviour {
 
             if (placementUnit == null)
             {
-                placementUnit = FindFirstObjectByType<PlacementUnit>();
+                GameObject unitDropObject = GameObject.Find("UnitDrop");
+                placementUnit = unitDropObject.GetComponent<PlacementUnit>();
                 CustomLogger.Log(" placementUnit가 null인지 확인하고, 초기화");
             }
-
             DontDestroyOnLoad(gameObject);
+            LoadUnitFormation();
         }
-        else if (instance != this) {
-            Destroy(instance.gameObject);
+        if (instance != this) {
+            Destroy(instance.gameObject);  // 기존 인스턴스가 남아 있으면 삭제
             instance = this;
             instance.InitializeFilePath();
             DontDestroyOnLoad(gameObject);
             LoadUnitData();
             InitializeUnitPlacementStatus();
+            LoadUnitFormation();
         }
     }
 
@@ -90,25 +103,26 @@ public class UnitGameManager : MonoBehaviour {
         unitDataList = new List<UnitData>(Resources.LoadAll<UnitData>("ScriptableObjects/Unit"));
     }
 
-    private void InitializeFilePath() {
+    private void InitializeFilePath() 
+    {
         string savePath = Path.Combine(Application.dataPath, "save", "unitInfo");
         Directory.CreateDirectory(savePath);
         filePath = Path.Combine(savePath, "selectedUnits.json");
-        
-        if (string.IsNullOrEmpty(filePath)) {
-            Debug.LogError("filePath is null or empty in InitializeFilePath.");
-        }
-        
     }
 
     public void SaveUnitFormation()
     {
+        if (string.IsNullOrEmpty(filePath)) {
+            instance.InitializeFilePath();
+        }
+        
         placementUnit.SavePlacementUnits();
         List<SlotUnitData> slotUnitDataList = placementUnit.GetSlotUnitDataList();
 
         SlotUnitDataWrapper wrapper = new SlotUnitDataWrapper(slotUnitDataList);
         string json = JsonUtility.ToJson(wrapper, true);
         File.WriteAllText(filePath, json);
+        
         CustomLogger.Log("Unit formation saved successfully.");
     }
 
@@ -121,7 +135,6 @@ public class UnitGameManager : MonoBehaviour {
                 if (wrapper != null && wrapper.SlotUnitDataList != null)
                 {
                     placementUnit.SetSlotUnitDataList(wrapper.SlotUnitDataList);
-                    Debug.Log($"Loaded {wrapper.SlotUnitDataList.Count} slot unit data entries.");
                 } else {
                     Debug.LogWarning("SlotUnitDataWrapper or SlotUnitDataList is null.");
                 }
@@ -139,6 +152,10 @@ public class UnitGameManager : MonoBehaviour {
     }
     
     public bool IsUnitSelected(UnitData unit) {
+        if (placementUnit == null) {
+            Debug.LogWarning("placementUnit is null in IsUnitSelected!");
+            return false;
+        }
         // 현재 성벽에 배치된 유닛 정보를 확인
         List<SlotUnitData> slotUnitDataList = placementUnit.GetSlotUnitDataList();
         foreach (var slotUnit in slotUnitDataList) {
@@ -148,7 +165,7 @@ public class UnitGameManager : MonoBehaviour {
         }
 
         // 다른 성벽에 배치된 유닛 정보를 확인 (JSON 파일 로드)
-        string otherWallFilePath = Path.Combine(Application.dataPath, "save", "selectedUnitsLeft.json"); // 다른 성벽의 JSON 파일 경로
+        string otherWallFilePath = Path.Combine(Application.dataPath, "unitInfoLeft", "selectedUnitsLeft.json"); // 다른 성벽의 JSON 파일 경로
         if (File.Exists(otherWallFilePath)) {
             string json = File.ReadAllText(otherWallFilePath);
             SlotUnitDataWrapper otherWallWrapper = JsonUtility.FromJson<SlotUnitDataWrapper>(json);
@@ -165,9 +182,6 @@ public class UnitGameManager : MonoBehaviour {
     }
     
     public List<UnitData> GetUnits() {
-        if (unitDataList == null) {
-            Debug.LogError("unitDataList is null in GetUnits.");
-        }
         return instance.unitDataList;
     }
 }

@@ -17,10 +17,8 @@ public class SlotUnitData
 public class SlotUnitDataWrapper {
     public List<SlotUnitData> SlotUnitDataList;
 
-    // 기본 생성자
     public SlotUnitDataWrapper() {}
 
-    // 매개변수가 있는 생성자
     public SlotUnitDataWrapper(List<SlotUnitData> slotUnitDataList) {
         SlotUnitDataList = slotUnitDataList;
     }
