@@ -1,62 +1,41 @@
-using System.IO;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public class PlayerLocalData
 {
-    public string uuid;
-    public int lv;
-    public int repeat;
-    public string username;
+    //Local Save Data
+    
+    //Money for unit unlock
+    private int money;
+    
+    //Rogue Point
+    private int startGold;
+    private int moreEarnGold;
+    private int moreCastleHealth;
+    private int reduceCooldown;
+    
+    //Hero List
+    private HeroList HeroeList;
+}
 
-    public PlayerLocalData(string uuid, int lv, int repeat, string username)
+public class HeroList : Triple<HeroData, bool, bool>
+{
+    public HeroList(HeroData Hero, bool Unlocked, bool Selected) : base(Hero, Unlocked, Selected)
     {
-        this.uuid = uuid;
-        this.lv = lv;
-        this.repeat = repeat;
-        this.username = username;
     }
+}
 
-    public byte[] Serialize()
+public class Triple<T1, T2, T3>
+{
+    public T1 Item1 { get; set; }
+    public T2 Item2 { get; set; }
+    public T3 Item3 { get; set; }
+
+    public Triple(T1 item1, T2 item2, T3 item3)
     {
-        using (MemoryStream stream = new MemoryStream())
-        {
-            using (BinaryWriter writer = new BinaryWriter(stream))
-            {
-                writer.Write(uuid.Length);
-                writer.Write(uuid);
-                writer.Write(lv);
-                writer.Write(repeat);
-                writer.Write(username.Length);
-                writer.Write(username);
-            }
-            return stream.ToArray();
-        }
-    }
-
-    public static PlayerLocalData Deserialize(byte[] data)
-    {
-        using (MemoryStream stream = new MemoryStream(data))
-        {
-            using (BinaryReader reader = new BinaryReader(stream))
-            {
-                reader.ReadInt32();
-                int uuidLength = reader.ReadByte();
-                char[] uuidChars = reader.ReadChars(uuidLength);
-                string uuid = new string(uuidChars);
-
-                int lv = reader.ReadInt32();
-                int repeat = reader.ReadInt32();
-                
-                reader.ReadInt32();
-                int usernameLength = reader.ReadByte();
-                char[] usernameChars = reader.ReadChars(usernameLength);
-                string username = new string(usernameChars);
-                
-                CustomLogger.LogWarning($"UUID: {uuid}");
-                CustomLogger.LogWarning($"Username: {username}");
-
-                return new PlayerLocalData(uuid, lv, repeat, username);
-            }
-        }
+        Item1 = item1;
+        Item2 = item2;
+        Item3 = item3;
     }
 }
