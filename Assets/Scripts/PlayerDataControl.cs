@@ -26,6 +26,7 @@ public class PlayerDataControl : MonoBehaviour, IDisposable
     private const int maxReconnectAttempts = 5;
     private const int reconnectDelay = 5000;
     private bool syncInit;
+    private int roguePoint;
 
     public SceneControl SceneControl
     {
@@ -57,6 +58,12 @@ public class PlayerDataControl : MonoBehaviour, IDisposable
         set => username = value;
     }
 
+    public int RoguePoint
+    {
+        get => roguePoint;
+        set => roguePoint = value;
+    }
+    
     public static PlayerDataControl Instance { get; private set; }
 
     private void Update()
@@ -81,6 +88,7 @@ public class PlayerDataControl : MonoBehaviour, IDisposable
             Level = playerData.lv;
             Repeat = playerData.repeat;
             Username = playerData.username;
+            RoguePoint = playerData.roguePoint;
 
             // 로컬 데이터 저장
             SaveLocalData(playerData);
@@ -182,7 +190,7 @@ public class PlayerDataControl : MonoBehaviour, IDisposable
             }
 
             // 읽어온 데이터를 역직렬화합니다.
-            PlayerLocalData playerData = PlayerLocalData.Deserialize(data);
+            PlayerSyncData playerData = PlayerSyncData.Deserialize(data);
 
             // 역직렬화된 데이터를 클래스 필드에 할당합니다.
             uuid = playerData.uuid;
@@ -201,7 +209,7 @@ public class PlayerDataControl : MonoBehaviour, IDisposable
     {
         UUID = Guid.NewGuid().ToString();
 
-        PlayerLocalData playerData = new PlayerLocalData(UUID, 1, 0, "プレイヤー");
+        PlayerSyncData playerData = new PlayerSyncData(UUID, 1, 0, "プレイヤー",0);
 
         SaveLocalData(playerData);
         byte[] serializedData = SerializePlayerData(playerData);
@@ -211,30 +219,30 @@ public class PlayerDataControl : MonoBehaviour, IDisposable
     private void SyncWithServer()
     {
             // 서버에 보내기 위한 더미 데이터 생성
-            PlayerLocalData dummyUUID = new PlayerLocalData(UUID, 1, 0, "プレイヤー");
+            PlayerSyncData dummyUUID = new PlayerSyncData(UUID, 1, 0, "プレイヤー", 0);
             byte[] serializedData = SerializePlayerData(dummyUUID);
             sendStream(serializedData, 2);
             syncInit = true;
     }
 
-    private PlayerLocalData DeserializePlayerData(byte[] data, int length)
+    private PlayerSyncData DeserializePlayerData(byte[] data, int length)
     {
         using (MemoryStream ms = new MemoryStream(data, 0, length))
         {
-            return PlayerLocalData.Deserialize(data);
+            return PlayerSyncData.Deserialize(data);
         }
     }
 
     public void Save()
     {
-        PlayerLocalData playerData = new PlayerLocalData(UUID, Level, Repeat, Username);
+        PlayerSyncData playerData = new PlayerSyncData(UUID, Level, Repeat, Username, RoguePoint);
 
         SaveLocalData(playerData);
         byte[] serializedData = SerializePlayerData(playerData);
         sendStream(serializedData, 1);
     }
 
-    private void SaveLocalData(PlayerLocalData data)
+    private void SaveLocalData(PlayerSyncData data)
     {
         try
         {
@@ -303,7 +311,7 @@ public class PlayerDataControl : MonoBehaviour, IDisposable
         }
     }
 
-    private byte[] SerializePlayerData(PlayerLocalData playerData)
+    private byte[] SerializePlayerData(PlayerSyncData playerData)
     {
         // PlayerLocalData 클래스에서 직접 구현한 Serialize 메서드를 사용하여 직렬화
         return playerData.Serialize();
