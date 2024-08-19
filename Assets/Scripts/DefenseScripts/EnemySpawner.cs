@@ -65,7 +65,8 @@ public class EnemySpawner : MonoBehaviour {
 		weekCount = StageC.Instance.currentWeekCount;
 
 		//스테이지 수에 따른 웨이브당 스폰 숫자 증가
-		numberOfObjects *= stageCount;
+		// numberOfObjects *= stageCount;
+		numberOfObjects += 10;
 		CustomLogger.Log("StageCount를 받아와서 스폰할 숫자 재설정 결과 : " + numberOfObjects, "pink");
 		
 		// EnemyPrefabList 참조 가져오기

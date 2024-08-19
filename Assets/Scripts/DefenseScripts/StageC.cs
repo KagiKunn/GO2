@@ -31,6 +31,8 @@ public class StageC : MonoBehaviour
     private EnemySpawner enemySpawner;
     [SerializeField] private CastleWallManager castleWallManager;
     [SerializeField] private TextMeshProUGUI stageInfoText;
+    public bool isGamePaused;
+    
     
     private void Awake()
     {
@@ -202,6 +204,7 @@ public class StageC : MonoBehaviour
 
     public void ShowGameOverUI()
     {
+        isGamePaused = true;
         Time.timeScale = 0f; // 게임 일시 정지
         if (gameOverCanvas != null)
         {
@@ -233,6 +236,7 @@ public class StageC : MonoBehaviour
 
     public void ShowStageClearUI()
     {
+        isGamePaused = true;
         Time.timeScale = 0f; // 게임 일시 정지
       
         // 최종 스테이지가 아닐 경우 현재 stageCount와 stageRace 배열 업데이트
@@ -295,6 +299,7 @@ public class StageC : MonoBehaviour
 
     private void allStageClear()
     {
+        isGamePaused = true;
         CustomLogger.Log("축하합니다, 최종스테이지 클리어");
         if (stageAllClearCanvas != null)
         {
