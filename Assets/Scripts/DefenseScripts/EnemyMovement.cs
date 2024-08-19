@@ -90,7 +90,10 @@ public class EnemyMovement : MonoBehaviour {
 		}
 
 		// 이동 방향에 따라 속도 적용
-		rigid2d.velocity = movementdirection * (moveSpeed * Time.timeScale);
+		if (!IsDead())
+		{
+			rigid2d.velocity = movementdirection * (moveSpeed * Time.timeScale);
+		}
 	}
 
 	private bool CollisionCheck() {
@@ -180,8 +183,11 @@ public class EnemyMovement : MonoBehaviour {
 			StartCoroutine(ChangeBrightnessTemporarily(0.1f, 0.6f)); // 예: 명도를 50%로 줄임
 		}
 
-		if (health <= 0 && deadJudge) {
-			Die();
+		if (health <= 0 && deadJudge)
+		{
+			this.movementdirection = Vector3.zero;
+			rigid2d.velocity = movementdirection * (moveSpeed * Time.timeScale);
+			animator.SetTrigger("Die");
 		}
 	}
 
