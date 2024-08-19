@@ -31,7 +31,7 @@ public class RecoveryCastleHealth : MonoBehaviour
 
     public void OnRecovery()
     {
-        if (maxHealth == crntHealth)
+        if (Mathf.Approximately(maxHealth, crntHealth))
         {
             CustomLogger.Log("HP is already full!");
             return;
