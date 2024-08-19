@@ -44,9 +44,7 @@ public class EnemyMovement : MonoBehaviour {
 	public static event Action OnBossDie;
 
 	private bool isBossDied = false;
-
-	private DarkElfSpawner darkElfSpawner;
-
+	
 	private void Awake() {
 		// 여기에 스테이지당 증가될 값 세팅
 		// stageCount 가져오기
@@ -272,6 +270,10 @@ public class EnemyMovement : MonoBehaviour {
 			crntgold = gold + defenseInit.extraGold1 / gold;
 		}
 
+		EnemySpawner enemySpawner = GameObject.Find("Spawner").GetComponent<EnemySpawner>();
+		enemySpawner.enemyDieCount++;
+		CustomLogger.Log("적 사망 카운트 :"+enemySpawner.enemyDieCount, "white");
+		
 		defenseInit.currentGold1 += crntgold;
 		CustomLogger.Log(defenseInit.currentGold1);
 
@@ -288,9 +290,6 @@ public class EnemyMovement : MonoBehaviour {
 
 			StageC stageC = FindObjectOfType<StageC>();
 			stageC.ShowStageClearUI();
-
-			Time.timeScale = 0;
-			CustomLogger.Log("게임이 정지되었습니다.");
 		}
 
 		gameObject.SetActive(false);
