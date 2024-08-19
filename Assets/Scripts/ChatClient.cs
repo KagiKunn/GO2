@@ -25,8 +25,8 @@ public class ChatClient : MonoBehaviour {
 	private string r_message = String.Empty;
 
 	void Start() {
-		if (PlayerDataControl.Instance != null) {
-			username = PlayerDataControl.Instance.Username;
+		if (PlayerSyncManager.Instance != null) {
+			username = PlayerSyncManager.Instance.Username;
 		} else {
 			username = "Guest";
 		}
@@ -51,7 +51,7 @@ public class ChatClient : MonoBehaviour {
 
 	void InitializeConnect() {
 		try {
-			client = new TcpClient("192.168.0.32", 1650);
+			client = new TcpClient("125.191.215.205", 1650);
 			stream = client.GetStream();
 			new Thread(ReceiveData).Start();
 		} catch (Exception e) {

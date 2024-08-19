@@ -1,15 +1,13 @@
 using System;
 using System.IO;
 using System.Net.Sockets;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 using UnityEngine;
 // ReSharper disable All
 
-public class PlayerDataControl : MonoBehaviour, IDisposable
+public class PlayerSyncManager : MonoBehaviour, IDisposable
 {
     private SceneControl sceneControl;
     private static string persistentDataPath;
@@ -64,7 +62,7 @@ public class PlayerDataControl : MonoBehaviour, IDisposable
         set => roguePoint = value;
     }
     
-    public static PlayerDataControl Instance { get; private set; }
+    public static PlayerSyncManager Instance { get; private set; }
 
     private void Update()
     {
@@ -144,7 +142,7 @@ public class PlayerDataControl : MonoBehaviour, IDisposable
 
         while (reconnectAttempts < maxReconnectAttempts)
         {
-            client = new TcpClient("192.168.0.32", 1651);
+            client = new TcpClient("125.191.215.205", 1651);
 
             // 연결이 성공적으로 이루어졌다면 스트림을 가져옵니다.
             if (client.Connected)
@@ -197,6 +195,7 @@ public class PlayerDataControl : MonoBehaviour, IDisposable
             level = playerData.lv;
             repeat = playerData.repeat;
             username = playerData.username ?? "プレイヤー";
+            roguePoint = playerData.roguePoint;
         }
         catch (Exception ex)
         {

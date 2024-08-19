@@ -1,31 +1,52 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using System;
 
-[System.Serializable]
+[Serializable]
 public class PlayerLocalData
 {
     //Local Save Data
-    
+
     //Money for unit unlock
-    private int money;
-    
-    //Rogue Point
-    private int startGold;
-    private int moreEarnGold;
-    private int moreCastleHealth;
-    private int reduceCooldown;
-    
-    //Hero List
-    private HeroList HeroeList;
+    public int Money { get; set; }
+    public int RemainedPoint { get; set; }
+    public int StartGold { get; set; }
+    public int MoreEarnGold { get; set; }
+    public int MoreCastleHealth { get; set; }
+    public int ReduceCooldown { get; set; }
+    public HeroList HerosList { get; set; }
+
+    public PlayerLocalData()
+    {
+        Money = 0; // 초기 값 설정
+        RemainedPoint = 0;
+        StartGold = 0;
+        MoreEarnGold = 0;
+        MoreCastleHealth = 0;
+        ReduceCooldown = 0;
+        HerosList = new HeroList(null, false, false); // 초기 HeroList 생성
+    }
+
+    public PlayerLocalData(int money, int remainedPoint, int startGold, int moreEarnGold, int moreCastleHealth,
+        int reduceCooldown, HeroList herosList)
+    {
+        Money = money;
+        RemainedPoint = remainedPoint;
+        StartGold = startGold;
+        MoreEarnGold = moreEarnGold;
+        MoreCastleHealth = moreCastleHealth;
+        ReduceCooldown = reduceCooldown;
+        HerosList = herosList;
+    }
 }
 
-public class HeroList : Triple<HeroData, bool, bool>
+[Serializable]
+public class HeroList : Triple<HeroDataSerializable, bool, bool>
 {
-    public HeroList(HeroData Hero, bool Unlocked, bool Selected) : base(Hero, Unlocked, Selected)
+    public HeroList(HeroDataSerializable hero, bool unlocked, bool selected) : base(hero, unlocked, selected)
     {
     }
 }
 
+[Serializable]
 public class Triple<T1, T2, T3>
 {
     public T1 Item1 { get; set; }
@@ -37,5 +58,15 @@ public class Triple<T1, T2, T3>
         Item1 = item1;
         Item2 = item2;
         Item3 = item3;
+    }
+}
+
+[Serializable]
+public class HeroDataSerializable
+{
+    public string Name;
+    public HeroDataSerializable(HeroData heroData)
+    {
+        Name = heroData.Name;
     }
 }
