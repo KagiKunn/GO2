@@ -4,13 +4,13 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using DefenseScripts;
+using Unity.VisualScripting;
 
 #pragma warning disable CS0618 // 형식 또는 멤버는 사용되지 않습니다.
 
 public class CastleWallManager : MonoBehaviour {
 	public static CastleWallManager Instance;
 
-    [SerializeField] private DefenseGameDataMB gameData;
     [SerializeField] private float activateShieldValue = 80f; // 실드 활성화 시 설정할 값
     private float extraHealth;
 
@@ -39,17 +39,16 @@ public class CastleWallManager : MonoBehaviour {
 
 	private void Awake() {
 		// Load game data
-		if (gameData != null) {
-			maxHealth = gameData.MaxHealth;
-			extraHealth = gameData.ExtraHealth;
-			health = gameData.Health;
+		if (PlayerLocalManager.Instance != null) {
+			maxHealth = PlayerLocalManager.Instance.lCastleMaxHp;
+			extraHealth = PlayerLocalManager.Instance.lCastleExtraHp;
+			health = PlayerLocalManager.Instance.lCastleHp;
 		}
 
-        Debug.Log("캐슬월에서 가져온 스테이지카운트 : " + gameData.StageCount);
+        Debug.Log("캐슬월에서 가져온 스테이지카운트 : " + PlayerLocalManager.Instance.lStage);
         //1스테이지일 경우에만 health를 풀피로 설정
-        if (gameData.StageCount == 1)
+        if (PlayerLocalManager.Instance.lStage == 1)
         {
-            
             maxHealth += extraHealth; //2회차 1스테이지 경우에는 로그라이크 특전 추가체력을 더해줌
             health = maxHealth;
         }
@@ -97,8 +96,11 @@ public class CastleWallManager : MonoBehaviour {
 		if (!hasShield)
 		{
 			foreach (var wall in wallObjects) {
-				CastleWall cwall = wall.GetComponent<CastleWall>();
-				cwall.ChangeWallColor(false); // 실드 활성화 시 색상 변경
+				if (wall.IsUnityNull() && wall.gameObject.IsUnityNull())
+				{
+					CastleWall cwall = wall.GetComponent<CastleWall>();
+					cwall.ChangeWallColor(false); // 실드 활성화 시 색상 변경
+				}
 			}
 		}
 		// hasShield가 false가 되었을 때 실드 비활성화
@@ -228,9 +230,10 @@ public class CastleWallManager : MonoBehaviour {
     public void SaveWallHP()
     {
         CustomLogger.Log("성벽 HP 정보 저장됨 health, mH, eH"+health+","+maxHealth+","+extraHealth);
-        gameData.Health = health;
-        gameData.MaxHealth = maxHealth;
-        gameData.ExtraHealth = extraHealth;
+        PlayerLocalManager.Instance.lCastleHp = health;
+        PlayerLocalManager.Instance.lCastleMaxHp = maxHealth;
+        PlayerLocalManager.Instance.lCastleExtraHp = extraHealth;
+        PlayerLocalManager.Instance.Save();
     }
 
     public float GetHealth() => health;

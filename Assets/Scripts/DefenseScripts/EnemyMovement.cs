@@ -54,8 +54,7 @@ public class EnemyMovement : MonoBehaviour {
 
 		if (StageC.Instance == null) return;
 
-		stageCount = StageC.Instance.currentStageCount;
-		weekCount = StageC.Instance.currentWeekCount;
+		stageCount = PlayerLocalManager.Instance.lStage;
 
 		// 기본 체력 값
 		float baseHealth = health;
@@ -176,7 +175,7 @@ public class EnemyMovement : MonoBehaviour {
 		health -= damage * (1 + (percent / 100));
 
 		// 코루틴이 실행 중이지 않을 때만 호출
-		if (!isChangingBrightness) {
+		if (!isChangingBrightness && deadJudge) {
 			StartCoroutine(ChangeBrightnessTemporarily(0.1f, 0.6f)); // 예: 명도를 50%로 줄임
 		}
 
@@ -240,15 +239,20 @@ public class EnemyMovement : MonoBehaviour {
 
 	private IEnumerator RestoreOriginalColors(Dictionary<Transform, Color> originalColors) {
 		foreach (KeyValuePair<Transform, Color> entry in originalColors) {
-			SpriteRenderer spriteRenderer = entry.Key.GetComponent<SpriteRenderer>();
+			if (entry.Key != null && entry.Key.gameObject != null)
+			{
+				SpriteRenderer spriteRenderer = entry.Key.GetComponent<SpriteRenderer>();
 
-			if (spriteRenderer != null) {
-				spriteRenderer.color = entry.Value;
-			}
+				if (spriteRenderer != null)
+				{
+					spriteRenderer.color = entry.Value;
+				}
 
-			// 작업을 한 프레임에 모두 처리하지 않도록 대기
-			if (entry.Key.GetSiblingIndex() % 15 == 0) {
-				yield return null;
+				// 작업을 한 프레임에 모두 처리하지 않도록 대기
+				if (entry.Key.GetSiblingIndex() % 15 == 0)
+				{
+					yield return null;
+				}
 			}
 		}
 	}
