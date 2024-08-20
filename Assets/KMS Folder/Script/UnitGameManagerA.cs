@@ -110,7 +110,6 @@ public class UnitGameManagerA : MonoBehaviour
             }
         }
 
-        // 반대쪽 성벽의 배치 상태도 고려해야 한다면 추가 로직 필요
         if (isLeftWall)
         {
             LoadAndTrackRightWallStatus();
@@ -200,7 +199,6 @@ public class UnitGameManagerA : MonoBehaviour
         if (File.Exists(filePath)) {
             
             try {
-                
                 string json = File.ReadAllText(filePath);
                 SlotUnitDataWrapper wrapper = JsonUtility.FromJson<SlotUnitDataWrapper>(json);
 
@@ -227,6 +225,15 @@ public class UnitGameManagerA : MonoBehaviour
             }
         } else {
             Debug.LogError("File does not exist: " + filePath);
+            // json 기본 생성 해주기
+            List<SlotUnitData> defaultData = new List<SlotUnitData>();
+            SlotUnitDataWrapper wrapper = new SlotUnitDataWrapper(defaultData);
+            string json = JsonUtility.ToJson(wrapper, true);
+            File.WriteAllText(filePath, json);
+        
+            if (placementUnit != null) {
+                placementUnit.SetSlotUnitDataList(defaultData);
+            }
         }
     }
 
