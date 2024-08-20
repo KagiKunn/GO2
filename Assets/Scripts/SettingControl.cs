@@ -27,7 +27,7 @@ public class SettingControl : MonoBehaviour
     private string filepath;
 
     public static SettingControl Instance { get; private set; }
-    GameObject nickChange = GameObject.Find("SettingMenu").transform.Find("NickChange").gameObject;
+    private GameObject nickChange;
     [SerializeField] public bool IsVibrationEnabled { get; private set; }
 
     private void Awake()
@@ -42,6 +42,7 @@ public class SettingControl : MonoBehaviour
             Destroy(this);
         }
 
+        nickChange = GameObject.Find("SettingMenu").transform.Find("NickChange").gameObject;
         persistentDataPath = Application.persistentDataPath;
         filepath = Path.Combine(persistentDataPath, "Setting.dat");
 
