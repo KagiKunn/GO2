@@ -6529,6 +6529,11 @@ PrefabInstance:
       propertyPath: m_LocalPosition.x
       value: -129.76598
       objectReference: {fileID: 0}
+    - target: {fileID: 8613979523270249900, guid: f657df8988f762849af8896b4e423986,
+        type: 3}
+      propertyPath: InputBoxUI
+      value: 
+      objectReference: {fileID: 1962866747}
     - target: {fileID: 8797048681191088712, guid: f657df8988f762849af8896b4e423986,
         type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -6539,6 +6544,18 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f657df8988f762849af8896b4e423986, type: 3}
+--- !u!114 &854933427 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2842996225187606904, guid: f657df8988f762849af8896b4e423986,
+    type: 3}
+  m_PrefabInstance: {fileID: 854933426}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &854933428 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5019831617528311949, guid: f657df8988f762849af8896b4e423986,
@@ -8213,7 +8230,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Input: {fileID: 1962866751}
-  Username: {fileID: 0}
+  Username: {fileID: 854933427}
   Change: {fileID: 1962866750}
   Quit: {fileID: 1962866749}
 --- !u!114 &1962866749 stripped
@@ -8588,3 +8605,4 @@ SceneRoots:
   - {fileID: 3633082758075840541}
   - {fileID: 854933426}
   - {fileID: 1962866746}
+
