@@ -139,7 +139,8 @@ public class DefenseInit : MonoBehaviour
             case 3:
                 extraCool = 30;
                 break;
-            case 4:extraCool = 40;
+            case 4:
+                extraCool = 40;
                 break;
             default:
                 extraCool = 0;

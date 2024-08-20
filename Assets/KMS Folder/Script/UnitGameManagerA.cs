@@ -63,7 +63,15 @@ public class UnitGameManagerA : MonoBehaviour
             Destroy(gameObject);
         }
     }
-
+    
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            SceneManager.LoadScene("InternalAffairs");
+        }
+    }
+    
     private void OnEnable() {
         SceneManager.sceneLoaded += OnSceneLoaded;
     }

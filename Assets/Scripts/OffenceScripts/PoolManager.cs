@@ -1,8 +1,7 @@
-using System;
 using System.Collections.Generic;
-
+using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 #pragma warning disable CS0219 // 변수가 할당되었지만 해당 값이 사용되지 않았습니다.
 
@@ -32,19 +31,18 @@ public class PoolManager : MonoBehaviour {
 		GameObject select = null;
 
 		// ... 선택한 풀의 놀고 있는(비활성화 된) 게임 오브젝트 접근
-		foreach (GameObject item in pools[index]) {
-			if (!item.activeSelf) {
-				// ... 발견하면 select 변수에 할당
-				select = item;
+		foreach (var item in pools[index].Where(item => !item.activeSelf))
+		{
+			// ... 발견하면 select 변수에 할당
+			select = item;
 
-				select.SetActive(true);
+			select.SetActive(true);
 
-				break;
-			}
+			break;
 		}
 
 		// ... 못 찾았으면?
-		if (select == null) {
+		if (select.IsUnityNull()) {
 			// ... 새롭게 생성하고 select 변수에 할당
 			select = Instantiate(enemyPrefabs[index], transform);
 
@@ -58,19 +56,18 @@ public class PoolManager : MonoBehaviour {
 		GameObject select = null;
 
 		// ... 선택한 풀의 놀고 있는(비활성화 된) 게임 오브젝트 접근
-		foreach (GameObject item in pools[index]) {
-			if (!item.activeSelf) {
-				// ... 발견하면 select 변수에 할당
-				select = item;
+		foreach (var item in pools[index].Where(item => !item.activeSelf))
+		{
+			// ... 발견하면 select 변수에 할당
+			select = item;
 
-				select.SetActive(true);
+			select.SetActive(true);
 
-				break;
-			}
+			break;
 		}
 
 		// ... 못 찾았으면?
-		if (select == null) {
+		if (select.IsUnityNull()) {
 			// ... 새롭게 생성하고 select 변수에 할당
 			select = Instantiate(weaponPrefabs[index], transform);
 
@@ -84,19 +81,18 @@ public class PoolManager : MonoBehaviour {
 		GameObject select = null;
 
 		// ... 선택한 풀의 놀고 있는(비활성화 된) 게임 오브젝트 접근
-		foreach (GameObject item in pools[index]) {
-			if (!item.activeSelf) {
-				// ... 발견하면 select 변수에 할당
-				select = item;
+		foreach (var item in pools[index].Where(item => !item.activeSelf))
+		{
+			// ... 발견하면 select 변수에 할당
+			select = item;
 
-				select.SetActive(true);
+			select.SetActive(true);
 
-				break;
-			}
+			break;
 		}
 
 		// ... 못 찾았으면?
-		if (select == null) {
+		if (select.IsUnityNull()) {
 			// ... 새롭게 생성하고 select 변수에 할당
 			select = Instantiate(bulletPrefabs[index], transform);
 
