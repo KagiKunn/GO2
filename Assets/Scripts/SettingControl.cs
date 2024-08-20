@@ -24,6 +24,7 @@ public class SettingControl : MonoBehaviour
     [SerializeField] private Toggle vibrationToggle;
     [SerializeField] private TextMeshProUGUI UUID;
     [SerializeField] private TextMeshProUGUI Username;
+    [SerializeField] private GameObject InputBoxUI;
     private string filepath;
 
     public static SettingControl Instance { get; private set; }
@@ -112,7 +113,7 @@ public class SettingControl : MonoBehaviour
 
     private void openNickChange()
     {
-        
+        InputBoxUI.SetActive(true);
     }
     
     private void FirstSetting()
