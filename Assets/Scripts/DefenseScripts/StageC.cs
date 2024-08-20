@@ -327,6 +327,12 @@ public class StageC : MonoBehaviour
 
     private void allStageClear()
     {
+        //로그라이크 포인트 증가
+        PlayerSyncManager.Instance.RoguePoint += 1;
+        PlayerLocalManager.Instance.lPoint += 1;
+        PlayerSyncManager.Instance.Save();
+        PlayerLocalManager.Instance.Save();
+       
         isGamePaused = true;
         //게임 종료시 메뉴UI들 버튼도 비활성화
         Menu menuScript = uiGameObject.GetComponent<Menu>();

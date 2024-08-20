@@ -8,7 +8,8 @@ namespace DefenseScripts
     {
         //몇 회차인지 
         [SerializeField] public int weekCount = 1;
-
+        [SerializeField] public int roguePoint = 0;
+        
         [SerializeField] private string[] stageRace = { "Human", "DarkElf", "Orc", "Witch", "Skeleton" };
         [SerializeField] private int stageCount;
 
