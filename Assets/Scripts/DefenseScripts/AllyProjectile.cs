@@ -13,6 +13,7 @@ public class AllyProjectile : MonoBehaviour
     private bool isRight;
     private SpriteRenderer spriteRenderer;
     
+    
     public void Initialize(Transform target, int damage, DamageEffect effect, float aoe, bool isRight)
     {
         this.target = target;

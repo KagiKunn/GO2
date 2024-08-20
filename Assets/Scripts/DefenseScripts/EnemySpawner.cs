@@ -61,6 +61,11 @@ public class EnemySpawner : MonoBehaviour
     // 전체에서 사망한 적의 수
     public int totalEnemyDieCount = 0;
 
+    public GameObject bossImage;  // 보스 소환 전 나타날 이미지
+    public float displayTime = 2.0f;  // 이미지가 표시될 시간(초)
+    public float blinkDuration = 2.0f;  // 깜빡임이 지속될 시간(초)
+    public float blinkInterval = 0.5f;  // 깜빡임 간격(초)
+    
     public void SetSelectedRace(string race)
     {
         selectedRace = race;
@@ -70,7 +75,8 @@ public class EnemySpawner : MonoBehaviour
     private void Start()
     {
         CustomLogger.Log("EnemySpawner Start()진입", "pink");
-
+        bossImage.SetActive(false);
+        
         //스테이지 수에 따른 웨이브당 스폰 숫자 증가
         // numberOfObjects *= stageCount;
         numberOfObjects += 10;
@@ -124,9 +130,27 @@ public class EnemySpawner : MonoBehaviour
         if (CheckBossSpawn())
         {
             CustomLogger.Log("모든 적이 사망했습니다. 보스를 소환합니다.", "red");
-            SpawnBoss();
+            StartCoroutine(DisplayBossImageAndSpawn());
             totalEnemyDieCount = 0;
         }
+    }
+
+    private IEnumerator DisplayBossImageAndSpawn()
+    {
+        bossImage.SetActive(true);
+        float elapsedTime = 0f;
+
+        while (elapsedTime < blinkDuration)
+        {
+            // 이미지 깜빡이기 (활성화/비활성화 반복)
+            bossImage.SetActive(!bossImage.activeSelf);
+            yield return new WaitForSeconds(blinkInterval);
+            elapsedTime += blinkInterval;
+        }
+        
+        bossImage.SetActive(false);
+
+        SpawnBoss();
     }
 
     IEnumerator SpawnWaves()
