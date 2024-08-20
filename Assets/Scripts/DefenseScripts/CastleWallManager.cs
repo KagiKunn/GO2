@@ -87,7 +87,7 @@ public class CastleWallManager : MonoBehaviour {
 		if (!hasShield)
 		{
 			foreach (var wall in wallObjects) {
-				if (wall.IsUnityNull() && wall.gameObject.IsUnityNull())
+				if (wall != null && wall != null)
 				{
 					CastleWall cwall = wall.GetComponent<CastleWall>();
 					cwall.ChangeWallColor(false); // 실드 활성화 시 색상 변경
