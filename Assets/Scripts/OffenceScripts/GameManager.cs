@@ -2,7 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Unity.Cinemachine;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Animations;
 using UnityEngine.SceneManagement;
@@ -75,12 +77,9 @@ public class GameManager : MonoBehaviour
         }
 
         List<HeroData> heroList = HeroManager.Instance.selectedHeroes;
-        foreach (HeroData hero in heroList)
+        foreach (var hero in heroList.Where(hero => hero != null))
         {
-            if (hero != null)
-            {
-                selectedHeroes.Add(hero.Name);
-            }
+            selectedHeroes.Add(hero.Name);
         }
 
         // foreach (string selectedHero in selectedHeroes) {
@@ -92,15 +91,13 @@ public class GameManager : MonoBehaviour
     {
         health = maxHealth;
 
-        for (int i = 0; i < selectedHeroes.Count; i++)
+        foreach (var t in selectedHeroes)
         {
             CustomLogger.Log(text.text);
 
-            if (text.text == selectedHeroes[i])
+            if (text.text == t)
             {
-                HeroNames heroEnum;
-
-                if (Enum.TryParse(selectedHeroes[i], out heroEnum))
+                if (Enum.TryParse(t, out HeroNames heroEnum))
                 {
                     players[(int)heroEnum].gameObject.SetActive(true);
                     playerId = (int)heroEnum;
@@ -109,7 +106,7 @@ public class GameManager : MonoBehaviour
                 }
                 else
                 {
-                    CustomLogger.Log("Invalid hero name: " + selectedHeroes[i]);
+                    CustomLogger.Log("Invalid hero name: " + t);
                 }
             }
         }
@@ -237,11 +234,11 @@ public class GameManager : MonoBehaviour
     {
         get
         {
-            if (instance == null)
+            if (instance.IsUnityNull())
             {
                 instance = FindObjectOfType<GameManager>();
 
-                if (instance == null)
+                if (instance.IsUnityNull())
                 {
                     CustomLogger.Log("No Singleton Object", "red");
 
@@ -307,10 +304,7 @@ public class GameManager : MonoBehaviour
         set => exp = value;
     }
 
-    public int[] NextExp
-    {
-        get => nextExp;
-    }
+    public int[] NextExp => nextExp;
 
     public int PlayerId => playerId;
 }
