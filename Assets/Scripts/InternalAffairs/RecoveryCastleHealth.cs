@@ -13,9 +13,6 @@ public class RecoveryCastleHealth : MonoBehaviour
 
     private void Awake()
     {
-        string savePath = Path.Combine(Application.dataPath, "save", "DefenseData");
-        path = Path.Combine(savePath, "DefenseGameData.json");
-        Debug.Log("성벽 리커버리 json경로 : "+ path);
         if (File.Exists(path))
         {
             json = File.ReadAllText(path);
