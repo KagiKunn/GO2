@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UnitPlacementManager : MonoBehaviour
+public class UnitPlacementManagerA : MonoBehaviour
 {
     public Transform contentParent;
-    public PlacementUnit placementUnit;
+    public PlacementUnitA placementUnit;
     private List<Image> placementImages = new List<Image>();
-    private List<SlotUnitData> placementUnits;
 
     private void Awake()
     {
@@ -21,33 +20,25 @@ public class UnitPlacementManager : MonoBehaviour
             {
                 placementImages.Add(placementImage);
             }
-            
         }
-        UnitGameManager.Instance.LoadUnitFormation();
+    }
+
+    private void Start()
+    {
+        UnitGameManagerA.Instance.LoadUnitFormation(placementUnit, UnitGameManagerA.Instance.GetFilePath(placementUnit));
         AssignSavedUnitsToSlots();
     }
 
     private void AssignSavedUnitsToSlots()
     {
         List<SlotUnitData> savedUnits = placementUnit.GetSlotUnitDataList();
-        // 저장된 유닛 배치 정보를 각 배치 슬롯에 할당
+
         foreach (var slotUnitData in savedUnits)
         {
             int slotIndex = slotUnitData.SlotIndex;
             if (slotIndex >= 0 && slotIndex < placementImages.Count)
             {
-                if (slotUnitData.UnitData != null)
-                {
-                    SetUnitData(placementImages[slotIndex], slotUnitData.UnitData);  // 각 슬롯 인덱스에 맞춰 유닛을 배치
-                }
-                else
-                {
-                    SetUnitData(placementImages[slotIndex], null);  // 유닛 데이터가 없을 경우 슬롯을 초기화
-                }
-            }
-            else
-            {
-                Debug.LogError($"Invalid Slot Index or Null Image Reference: {slotUnitData.SlotIndex}");
+                SetUnitData(placementImages[slotIndex], slotUnitData.UnitData);
             }
         }
     }
@@ -57,14 +48,13 @@ public class UnitPlacementManager : MonoBehaviour
         if (data != null && data.UnitImage != null)
         {
             unitImage.sprite = data.UnitImage;
-            unitImage.color = Color.white;  // 이미지를 기본 색상으로 설정
-            unitImage.enabled = true;  // 이미지 표시
+            unitImage.color = Color.white;
+            unitImage.enabled = true;
         }
     }
 
     public void ResetPlacementSlots()
     {
-        // 배치된 모든 슬롯의 이미지를 초기화
         foreach (var placementImage in placementImages)
         {
             var dropableComponent = placementImage.GetComponent<UnitDropable>();

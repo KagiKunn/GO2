@@ -7,41 +7,34 @@ using UnityEngine.UIElements;
 
 public class SkillPanelManager : MonoBehaviour
 {
-    [SerializeField]
-    private UIDocument uiDocument;
+    [SerializeField] private UIDocument uiDocument;
     public GameObject[] heroSkillArray;
 
     private VisualElement bottomPanel;
+    
     private bool isPanelVisible = true;
     private float hiddenPosition = -120f; // 패널 숨김 위치 (패널 높이 만큼)
     private float visiblePosition = 0f;   // 패널 보임 위치 (화면 하단)
     
     private string filePath;
     private string jsonData;
-    
+
     private List<string> selectedHeroes = new List<string>();
+
     private void Awake()
     {
-        filePath = Path.Combine(Path.Combine(Application.dataPath, "save", "heroInfo"), "selectedHeroes.json");
+        List<HeroData> heroList = HeroManager.Instance.selectedHeroes;
 
-        if (File.Exists(filePath)) {
-            try {
-                string json = File.ReadAllText(filePath);
+        for (int i = 0; i < heroList.Count; i++)
+        {
+            HeroData hero = heroList[i];
+            CustomLogger.Log(hero.Name, "red");
+            heroSkillArray[i] = Resources.Load<GameObject>("Defense/Hero/" + hero.Name);
 
-                HeroDataWrapper wrapper = JsonUtility.FromJson<HeroDataWrapper>(json);
-                CustomLogger.Log(wrapper.Heroes.Count,"red");
-                for (int i = 0; i < wrapper.Heroes.Count; i++) {
-                    HeroData hero = wrapper.Heroes[i];
-                    CustomLogger.Log(hero.Name,"red");
-                    heroSkillArray[i] = Resources.Load<GameObject>("Defense/Hero/"+hero.Name);
-
-                    if (hero != null) {
-                        selectedHeroes.Add(hero.Name);
-                        CustomLogger.Log(hero.Name);
-                    }
-                }
-            } catch (Exception e) {
-                CustomLogger.Log("Error parsing JSON: " + e.Message);
+            if (hero != null)
+            {
+                selectedHeroes.Add(hero.Name);
+                CustomLogger.Log(hero.Name);
             }
         }
 
@@ -134,22 +127,13 @@ public class SkillPanelManager : MonoBehaviour
         Color originalColor = new Color(1f, 1f, 1f);
 
         // 호버 이벤트
-        button.RegisterCallback<MouseEnterEvent>(ev =>
-        {
-            button.style.backgroundColor = hoverColor;
-        });
+        button.RegisterCallback<MouseEnterEvent>(ev => { button.style.backgroundColor = hoverColor; });
 
         // 호버 종료 이벤트
-        button.RegisterCallback<MouseLeaveEvent>(ev =>
-        {
-            button.style.backgroundColor = originalColor;
-        });
+        button.RegisterCallback<MouseLeaveEvent>(ev => { button.style.backgroundColor = originalColor; });
 
         // 클릭 이벤트
-        button.RegisterCallback<ClickEvent>(ev =>
-        {
-            button.style.backgroundColor = clickColor;
-        });
+        button.RegisterCallback<ClickEvent>(ev => { button.style.backgroundColor = clickColor; });
     }
 
     public void UpdateSkillButtonCooldown(Button button, float cooldown)

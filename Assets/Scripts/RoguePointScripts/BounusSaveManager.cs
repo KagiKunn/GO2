@@ -27,10 +27,15 @@ public class BounusSaveManager : MonoBehaviour
         earnGold.GetComponent<UIButtonToggle>().level = PlayerLocalManager.Instance.lMoreEarnGold;
         castleHealth.GetComponent<UIButtonToggle>().level = PlayerLocalManager.Instance.lMoreCastleHealth;
         cooldown.GetComponent<UIButtonToggle>().level = PlayerLocalManager.Instance.lReduceCooldown;
-
-        soul = PlayerSyncManager.Instance.RoguePoint != PlayerLocalManager.Instance.lPoint
-            ? PlayerLocalManager.Instance.lPoint
-            : PlayerSyncManager.Instance.RoguePoint;
+        
+        bool allZero = PlayerLocalManager.Instance.lStartGold == 0 &&
+                       PlayerLocalManager.Instance.lMoreEarnGold == 0 &&
+                       PlayerLocalManager.Instance.lMoreCastleHealth == 0 &&
+                       PlayerLocalManager.Instance.lReduceCooldown == 0;
+        
+        soul = (allZero && PlayerSyncManager.Instance.RoguePoint != PlayerLocalManager.Instance.lPoint) 
+            ? PlayerSyncManager.Instance.RoguePoint 
+            : PlayerLocalManager.Instance.lPoint;
         CustomLogger.Log(soul, "yellow");
         GameObject.Find("Soul").transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = soul.ToString();
         saveButton.onClick.AddListener(() => SaveGame());

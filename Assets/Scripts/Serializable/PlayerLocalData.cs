@@ -12,7 +12,7 @@ public class PlayerLocalData
     public int MoreEarnGold { get; set; }
     public int MoreCastleHealth { get; set; }
     public int ReduceCooldown { get; set; }
-    public HeroList HerosList { get; set; }
+    public HeroList[] HerosList { get; set; }
 
     public PlayerLocalData()
     {
@@ -22,11 +22,12 @@ public class PlayerLocalData
         MoreEarnGold = 0;
         MoreCastleHealth = 0;
         ReduceCooldown = 0;
-        HerosList = new HeroList(null, false, false); // 초기 HeroList 생성
+        HerosList = new HeroList[1]; // 크기를 1로 지정 (원하는 크기로 변경 가능)
+        HerosList[0] = new HeroList(null, false, 0); // 배열의 첫 번째 요소 초기화
     }
 
     public PlayerLocalData(int money, int remainedPoint, int startGold, int moreEarnGold, int moreCastleHealth,
-        int reduceCooldown, HeroList herosList)
+        int reduceCooldown, HeroList[] herosList)
     {
         Money = money;
         RemainedPoint = remainedPoint;
@@ -39,9 +40,9 @@ public class PlayerLocalData
 }
 
 [Serializable]
-public class HeroList : Triple<HeroDataSerializable, bool, bool>
+public class HeroList : Triple<string, bool, int>
 {
-    public HeroList(HeroDataSerializable hero, bool unlocked, bool selected) : base(hero, unlocked, selected)
+    public HeroList(string heroName, bool unlocked, int selected) : base(heroName, unlocked, selected)
     {
     }
 }
@@ -58,15 +59,5 @@ public class Triple<T1, T2, T3>
         Item1 = item1;
         Item2 = item2;
         Item3 = item3;
-    }
-}
-
-[Serializable]
-public class HeroDataSerializable
-{
-    public string Name;
-    public HeroDataSerializable(HeroData heroData)
-    {
-        Name = heroData.Name;
     }
 }
