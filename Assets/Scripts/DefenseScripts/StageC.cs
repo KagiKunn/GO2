@@ -1,9 +1,11 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using DefenseScripts;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using Random = UnityEngine.Random;
 
 #pragma warning disable CS0618 // 형식 또는 멤버는 사용되지 않습니다.
 
@@ -32,6 +34,7 @@ public class StageC : MonoBehaviour
     [SerializeField] private TextMeshProUGUI stageInfoText;
     public bool isGamePaused;
     [SerializeField] private GameObject uiGameObject;
+    private int currentWaveInStageC;
 
     private void Awake()
     {
@@ -45,6 +48,7 @@ public class StageC : MonoBehaviour
             Destroy(gameObject);
         }
 
+        enemySpawner = FindObjectOfType<EnemySpawner>();
         currentWeekCount = defenseGameData.WeekCount;
 
         Time.timeScale = 1f;
@@ -87,6 +91,19 @@ public class StageC : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        int currentWave = enemySpawner.currentWave;
+
+        if (currentWaveInStageC != currentWave)
+        {
+            currentWaveInStageC = currentWave;
+            UpdateStageInfoText();
+        }
+        
+        
+    }
+
     private void UpdateStageData()
     {
         if (defenseGameData != null)
@@ -99,7 +116,7 @@ public class StageC : MonoBehaviour
     //스테이지 정보 표시
     private void UpdateStageInfoText()
     {
-        stageInfoText.text = $"Week:{currentWeekCount}\nStage: {currentStageCount}\nEnemy: {selectedRace}";
+        stageInfoText.text = $"Week:{currentWeekCount}\nStage: {currentStageCount}\nEnemy: {selectedRace}\nWave:{currentWaveInStageC}";
     }
 
     private void InitializeGameOverUI()

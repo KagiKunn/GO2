@@ -36,7 +36,7 @@ public class EnemySpawner : MonoBehaviour {
 	public float maxSpawnInterval = 2f;
 
 	[SerializeField] private int totalWave = 3;
-	private int currentWave = 0;
+	public int currentWave = 0;
 
 	// 보스 프리팹은 EnemyPrefabList의 마지막 인덱스로 설정
 	private GameObject bossPrefab;
@@ -156,6 +156,11 @@ public class EnemySpawner : MonoBehaviour {
 
 		
 			
+	}
+
+	public int ReturnCurrentWave()
+	{
+		return currentWave;
 	}
 
 	public bool PlusEnemyDieCount()
