@@ -45,6 +45,14 @@ public class HeroSelect : MonoBehaviour
         saveString.TableEntryReference = "SaveSuccess";
         LoadHeroFormation();
     }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            SceneManager.LoadScene("InternalAffairs");
+        }
+    }
     
 
 	private void InitializeHeroButtons()

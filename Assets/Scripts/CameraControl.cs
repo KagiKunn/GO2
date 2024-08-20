@@ -186,7 +186,16 @@ public class CameraControl : MonoBehaviour {
 			float currentMagnitude = (touchZero.position - touchOne.position).magnitude;
 
 			float difference = currentMagnitude - prevMagnitude;
-			camera.orthographicSize -= difference * speed * Time.deltaTime;
+			float newOrthographicSize = camera.orthographicSize - difference * speed * Time.deltaTime;
+
+			// 카메라 줌 범위를 26.7f와 100f 사이로 제한
+			if (newOrthographicSize < 26.7f) {
+				newOrthographicSize = 26.7f;
+			} else if (newOrthographicSize > 100f) {
+				newOrthographicSize = 100f;
+			}
+
+			camera.orthographicSize = newOrthographicSize;
 
 			// 카메라의 위치를 경계 내로 조정
 			halfHeight = camera.orthographicSize;
@@ -198,6 +207,7 @@ public class CameraControl : MonoBehaviour {
 			camera.transform.position = new Vector3(clampedX, clampedY, currentPosition.z);
 		}
 	}
+
 
 	private void SwitchTilemap() {
 		// 현재 카메라 위치를 저장

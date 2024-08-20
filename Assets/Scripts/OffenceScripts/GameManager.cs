@@ -168,7 +168,13 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (!isLive) return;
+        if (!isLive)
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                SceneManager.LoadScene("InternalAffairs");
+            }
+        }
 
         gameTime += Time.deltaTime;
 
