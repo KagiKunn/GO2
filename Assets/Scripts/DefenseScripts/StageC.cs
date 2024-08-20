@@ -207,17 +207,6 @@ public class StageC : MonoBehaviour
         {
             gameOverButton.enabled = true;
         }
-
-        //게임오버시 세이브파일 json삭제 처리
-        if (File.Exists(saveFilePath))
-        {
-            File.Delete(saveFilePath);
-            CustomLogger.Log("게임 오버로 인해 세이브 파일이 삭제되었습니다: " + saveFilePath);
-        }
-        else
-        {
-            CustomLogger.LogWarning("삭제할 세이브 파일이 존재하지 않습니다.");
-        }
     }
 
     public void ShowStageClearUI()
