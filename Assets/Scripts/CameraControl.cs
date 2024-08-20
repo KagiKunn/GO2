@@ -1,5 +1,3 @@
-using System;
-
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.UIElements;
@@ -15,7 +13,7 @@ public class CameraControl : MonoBehaviour {
 	private Vector3 _directionForce; // 조작을 멈췄을때 서서히 감속하면서 이동 시키기 위한 변수
 
 	[SerializeField] private Camera camera;
-	private int currentCameraIndex = 0;
+	private int currentCameraIndex;
 	[SerializeField] private Vector3[] initialCameraPositions;
 	private float temp_value;
 	[SerializeField] private float speed = 10.0f;
@@ -29,11 +27,9 @@ public class CameraControl : MonoBehaviour {
 	private float halfWidth;
 
 	private Button cameraButton;
-	private GameObject rootObject;
 	private bool fliped;
 
 	private void Awake() {
-		rootObject = GameObject.Find("Defense");
 		cameraButton = uiDocument.rootVisualElement.Q<Button>("CameraButton");
 		cameraButton.clicked += SwitchTilemap;
 	}
@@ -42,7 +38,7 @@ public class CameraControl : MonoBehaviour {
 		InitializeCamera();
 	}
 
-	public void InitializeCamera() {
+	private void InitializeCamera() {
 		// 카메라의 반높이와 반너비를 계산
 		halfHeight = camera.orthographicSize;
 		halfWidth = halfHeight * camera.aspect;
@@ -64,6 +60,7 @@ public class CameraControl : MonoBehaviour {
 		ReduceDirectionForce();
 		UpdateCameraPosition();
 		CameraZoom();
+		HandleTouchInput();
 	}
 
 	private void ControlCameraPosition() {
@@ -165,6 +162,42 @@ public class CameraControl : MonoBehaviour {
 		float clampedY = Mathf.Clamp(currentPosition.y, minBounds.y +  + halfHeight + 20, maxBounds.y - halfHeight);
 		camera.transform.position = new Vector3(clampedX, clampedY, currentPosition.z);
 	}
+	
+	private void HandleTouchInput() {
+		if (Input.touchCount == 1) {  // 터치 하나로 이동
+			Touch touch = Input.GetTouch(0);
+			Vector3 touchWorldPosition = camera.ScreenToWorldPoint(touch.position);
+
+			if (touch.phase == TouchPhase.Began) {
+				CameraPositionMoveStart(touchWorldPosition);
+			} else if (touch.phase == TouchPhase.Moved) {
+				CameraPositionMoveProgress(touchWorldPosition);
+			} else if (touch.phase == TouchPhase.Ended) {
+				CameraPositionMoveEnd();
+			}
+		} else if (Input.touchCount == 2) {  // 터치 두 개로 줌
+			Touch touchZero = Input.GetTouch(0);
+			Touch touchOne = Input.GetTouch(1);
+
+			Vector2 touchZeroPrevPos = touchZero.position - touchZero.deltaPosition;
+			Vector2 touchOnePrevPos = touchOne.position - touchOne.deltaPosition;
+
+			float prevMagnitude = (touchZeroPrevPos - touchOnePrevPos).magnitude;
+			float currentMagnitude = (touchZero.position - touchOne.position).magnitude;
+
+			float difference = currentMagnitude - prevMagnitude;
+			camera.orthographicSize -= difference * speed * Time.deltaTime;
+
+			// 카메라의 위치를 경계 내로 조정
+			halfHeight = camera.orthographicSize;
+			halfWidth = halfHeight * camera.aspect;
+
+			var currentPosition = camera.transform.position;
+			float clampedX = Mathf.Clamp(currentPosition.x, minBounds.x + halfWidth, maxBounds.x - halfWidth);
+			float clampedY = Mathf.Clamp(currentPosition.y, minBounds.y + halfHeight + 20, maxBounds.y - halfHeight);
+			camera.transform.position = new Vector3(clampedX, clampedY, currentPosition.z);
+		}
+	}
 
 	private void SwitchTilemap() {
 		// 현재 카메라 위치를 저장
@@ -177,8 +210,5 @@ public class CameraControl : MonoBehaviour {
 		UpdateBounds(tilemaps[currentCameraIndex]);
 
 		camera.transform.position = initialCameraPositions[currentCameraIndex];
-
-		// fliped = !fliped;
-		// rootObject.transform.localScale = new Vector3(fliped ? -1 : 1, 1, 1);
 	}
 }
