@@ -37,7 +37,7 @@ public class Weapon : MonoBehaviour {
 			case 14:
 			case 15:
 			case 16:
-				transform.Rotate(Vector3.back * speed * Time.deltaTime);
+				transform.Rotate(Vector3.back * (speed * Time.deltaTime));
 
 				break;
 
