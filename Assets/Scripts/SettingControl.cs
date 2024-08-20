@@ -7,6 +7,7 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
 using UnityEngine.Localization;
+using UnityEngine.SceneManagement;
 
 #pragma warning disable CS1998 // 이 비동기 메서드에는 'await' 연산자가 없으며 메서드가 동시에 실행됩니다.
 
@@ -26,6 +27,7 @@ public class SettingControl : MonoBehaviour
     private string filepath;
 
     public static SettingControl Instance { get; private set; }
+    GameObject nickChange = GameObject.Find("SettingMenu").transform.Find("NickChange").gameObject;
     [SerializeField] public bool IsVibrationEnabled { get; private set; }
 
     private void Awake()
@@ -51,6 +53,16 @@ public class SettingControl : MonoBehaviour
         {
             LoadSetting();
         }
+        if (SceneManager.GetActiveScene().name.Equals("InternalAffairs"))
+        {
+            nickChange.SetActive(true);
+            Button nickChangeButton = nickChange.GetComponent<Button>();
+            nickChangeButton.onClick.AddListener(openNickChange);
+        }
+        else
+        {
+            nickChange.SetActive(false);
+        }
 
         masterVolSlider.onValueChanged.AddListener(value => SetLevel("Master", masterVolSlider.value, masterVal, true));
         sfxVolSlider.onValueChanged.AddListener(value => SetLevel("SFX", sfxVolSlider.value, sfxVal, true));
@@ -62,7 +74,7 @@ public class SettingControl : MonoBehaviour
             if (PlayerSyncManager.Instance.UUID != null)
             {
                 UUID.text = "UUID : " + PlayerSyncManager.Instance.UUID;
-                GUIUtility.systemCopyBuffer = PlayerSyncManager.Instance.UUID;
+                //GUIUtility.systemCopyBuffer = PlayerSyncManager.Instance.UUID;
             }
 
             if (PlayerSyncManager.Instance.Username != null)
@@ -97,6 +109,11 @@ public class SettingControl : MonoBehaviour
         }
     }
 
+    private void openNickChange()
+    {
+        
+    }
+    
     private void FirstSetting()
     {
         SetSliderValueFromMixer("Master", masterVolSlider);
