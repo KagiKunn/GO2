@@ -17,12 +17,12 @@ public class UnitDropable : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (eventData.pointerDrag != null) // pointerDrag가 null인지 확인
+        if (eventData.pointerDrag != null)
         {
             UnitDraggable draggedUnit = eventData.pointerDrag.GetComponent<UnitDraggable>();
-            if (draggedUnit != null && !draggedUnit.isDropped) // draggedUnit이 null이 아닌지 확인
+            if (draggedUnit != null && !draggedUnit.isDropped)
             {
-                image.color = Color.yellow; // 배치되지 않은 유닛만 이벤트 발동 하도록
+                image.color = Color.yellow; 
             }
         }
     }
@@ -30,12 +30,12 @@ public class UnitDropable : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     // 마우스 포인터가 현재 아이템 슬롯 영역을 빠져나갈 때 1회 호출
     public void OnPointerExit(PointerEventData eventData)
     {
-        if (eventData.pointerDrag != null) // pointerDrag가 null인지 확인
+        if (eventData.pointerDrag != null) 
         {
             UnitDraggable draggedUnit = eventData.pointerDrag.GetComponent<UnitDraggable>();
-            if (draggedUnit != null && !draggedUnit.isDropped) // draggedUnit이 null이 아닌지 확인
+            if (draggedUnit != null && !draggedUnit.isDropped) 
             {
-                // 아이템 슬롯의 색상을 하얀색으로 변경
+                
                 image.color = Color.white;
             }
         }
@@ -54,12 +54,11 @@ public class UnitDropable : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             draggedUnit.transform.SetParent(transform);
             draggedUnit.GetComponent<RectTransform>().position = GetComponent<RectTransform>().position;
             
-            // 드래그된 유닛의 이미지를 드롭존에 표시
             Image dropZoneImage = GetComponent<Image>();
             if (dropZoneImage != null)
             {
-                dropZoneImage.sprite = draggedUnit.unitData.UnitImage; // 유닛 데이터에 연결된 이미지 설정
-                dropZoneImage.color = Color.white; // 색상을 기본으로 설정
+                dropZoneImage.sprite = draggedUnit.unitData.UnitImage; 
+                dropZoneImage.color = Color.white;
             }
             // 드래그된 유닛의 부모를 다시 목록으로 설정하고, 드롭존에는 데이터에서 추출한 이미지만 표시
             draggedUnit.transform.SetParent(draggedUnit.previousParent);
