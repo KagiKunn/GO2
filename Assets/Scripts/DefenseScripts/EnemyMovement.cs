@@ -50,6 +50,8 @@ public class EnemyMovement : MonoBehaviour {
 		// stageCount 가져오기
 		// ex) health = health + health/(stage*10) stage(1,2,3,4,5)
 		// 다른 속성 공격속도, 이동속도, 사거리등 해도되고 안해도 되고
+		
+		if(StageC.Instance == null) return;
 
 		stageCount = StageC.Instance.currentStageCount;
 		weekCount = StageC.Instance.currentWeekCount;
@@ -254,11 +256,14 @@ public class EnemyMovement : MonoBehaviour {
 	}
 
 	public bool IsDead() {
+		
+		
 		return health <= 0;
 	}
 
 	private void Die() {
 		// 적이 죽었을 때의 동작 (예: 오브젝트 비활성화)
+		if (GameObject.Find("InitSetting").GetComponent<DefenseInit>() == null) return;
 		DefenseInit defenseInit = GameObject.Find("InitSetting").GetComponent<DefenseInit>();
 		int crntgold;
 
@@ -289,8 +294,8 @@ public class EnemyMovement : MonoBehaviour {
 			StageC stageC = FindObjectOfType<StageC>();
 			stageC.ShowStageClearUI();
 		}
-
-		gameObject.SetActive(false);
+		
+		transform.parent.gameObject.SetActive(false);
 		deadJudge = false;
 	}
 

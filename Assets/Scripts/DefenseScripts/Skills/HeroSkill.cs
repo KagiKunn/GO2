@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.UIElements;
 
 public abstract class HeroSkill : MonoBehaviour
@@ -13,6 +14,8 @@ public abstract class HeroSkill : MonoBehaviour
     public AudioClip soundClip;
     private AudioSource skillAudioSource;
 
+    public AudioMixerGroup sfxMixerGroup;
+    
     public bool isActive = true;
     public float cooldown = 10f;
     public float extraCool = 0;
@@ -45,6 +48,7 @@ public abstract class HeroSkill : MonoBehaviour
     {
         skillAudioSource = gameObject.AddComponent<AudioSource>();
         skillAudioSource.clip = soundClip;
+        skillAudioSource.outputAudioMixerGroup = sfxMixerGroup;
     }
     
     public void PlaySound()
