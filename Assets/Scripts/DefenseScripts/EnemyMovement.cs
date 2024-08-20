@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Unity.VisualScripting;
+using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 
 #pragma warning disable CS0618, CS0414 // 형식 또는 멤버는 사용되지 않습니다.
@@ -263,41 +264,49 @@ public class EnemyMovement : MonoBehaviour {
 
 	private void Die() {
 		// 적이 죽었을 때의 동작 (예: 오브젝트 비활성화)
-		if (GameObject.Find("InitSetting").GetComponent<DefenseInit>() == null) return;
-		DefenseInit defenseInit = GameObject.Find("InitSetting").GetComponent<DefenseInit>();
-		int crntgold;
+		if (SceneManager.GetActiveScene().name == "Defense")
+		{
+			if (GameObject.Find("InitSetting").GetComponent<DefenseInit>() == null) return;
+			DefenseInit defenseInit = GameObject.Find("InitSetting").GetComponent<DefenseInit>();
+			int crntgold;
 
-		if (defenseInit.extraGold1 == 0) {
-			crntgold = gold;
-		} else {
-			crntgold = gold + defenseInit.extraGold1 / gold;
-		}
+			if (defenseInit.extraGold1 == 0) {
+				crntgold = gold;
+			} else {
+				crntgold = gold + defenseInit.extraGold1 / gold;
+			}
 
-		EnemySpawner enemySpawner = GameObject.Find("Spawner").GetComponent<EnemySpawner>();
-		enemySpawner.enemyDieCount++;
-		enemySpawner.totalEnemyDieCount++;
-		CustomLogger.Log("적 사망 카운트 :"+enemySpawner.enemyDieCount, "white");
+			EnemySpawner enemySpawner = GameObject.Find("Spawner").GetComponent<EnemySpawner>();
+			enemySpawner.enemyDieCount++;
+			enemySpawner.totalEnemyDieCount++;
+			CustomLogger.Log("적 사망 카운트 :"+enemySpawner.enemyDieCount, "white");
 		
-		defenseInit.currentGold1 += crntgold;
-		CustomLogger.Log(defenseInit.currentGold1);
+			defenseInit.currentGold1 += crntgold;
+			CustomLogger.Log(defenseInit.currentGold1);
 
-		// 적의 태그가 EnemyBoss 일때 실행
-		if (gameObject.CompareTag("EnemyBoss")) {
-			//여기에 보스가 죽었을때의 이벤트
-			CustomLogger.Log("보스 사망..............", "red");
+			// 적의 태그가 EnemyBoss 일때 실행
+			if (gameObject.CompareTag("EnemyBoss")) {
+				//여기에 보스가 죽었을때의 이벤트
+				CustomLogger.Log("보스 사망..............", "red");
 
-			// 보스 사망 플래그 설정
-			isBossDied = true;
+				// 보스 사망 플래그 설정
+				isBossDied = true;
 
-			// 보스 사망 이벤트 호출
-			OnBossDie?.Invoke();
+				// 보스 사망 이벤트 호출
+				OnBossDie?.Invoke();
 
-			StageC stageC = FindObjectOfType<StageC>();
-			stageC.ShowStageClearUI();
+				StageC stageC = FindObjectOfType<StageC>();
+				stageC.ShowStageClearUI();
+			}
+		
+			gameObject.SetActive(false);
+			deadJudge = false;
+		}
+		else
+		{
+			transform.parent.gameObject.SetActive(false);
 		}
 		
-		transform.parent.gameObject.SetActive(false);
-		deadJudge = false;
 	}
 
 	private void OnDrawGizmos() {
