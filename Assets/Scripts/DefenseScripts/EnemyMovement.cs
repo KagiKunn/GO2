@@ -270,6 +270,7 @@ public class EnemyMovement : MonoBehaviour {
 
 		EnemySpawner enemySpawner = GameObject.Find("Spawner").GetComponent<EnemySpawner>();
 		enemySpawner.enemyDieCount++;
+		enemySpawner.totalEnemyDieCount++;
 		CustomLogger.Log("적 사망 카운트 :"+enemySpawner.enemyDieCount, "white");
 		
 		defenseInit.currentGold1 += crntgold;
