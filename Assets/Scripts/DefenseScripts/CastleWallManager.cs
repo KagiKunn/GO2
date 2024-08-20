@@ -3,11 +3,11 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using DefenseScripts;
+using Unity.VisualScripting;
 
 public class CastleWallManager : MonoBehaviour {
     public static CastleWallManager Instance;
 
-    [SerializeField] private DefenseGameDataMB gameData;
     [SerializeField] private float activateShieldValue = 80f; // 실드 활성화 시 설정할 값
     private float extraHealth;
 
@@ -35,17 +35,19 @@ public class CastleWallManager : MonoBehaviour {
         set => extraHealth = value;
     }
 
-    private void Awake() {
-        // Load game data
-        if (gameData != null) {
-            maxHealth = gameData.MaxHealth;
-            extraHealth = gameData.ExtraHealth;
-            health = gameData.Health;
-        }
+	private void Awake() {
+		// Load game data
+		if (PlayerLocalManager.Instance != null) {
+			maxHealth = PlayerLocalManager.Instance.lCastleMaxHp;
+			extraHealth = PlayerLocalManager.Instance.lCastleExtraHp;
+			health = PlayerLocalManager.Instance.lCastleHp;
+		}
 
-        Debug.Log("캐슬월에서 가져온 스테이지카운트 : " + gameData.StageCount);
-        if (gameData.StageCount == 1) {
-            maxHealth += extraHealth;
+        Debug.Log("캐슬월에서 가져온 스테이지카운트 : " + PlayerLocalManager.Instance.lStage);
+        //1스테이지일 경우에만 health를 풀피로 설정
+        if (PlayerLocalManager.Instance.lStage == 1)
+        {
+            maxHealth += extraHealth; //2회차 1스테이지 경우에는 로그라이크 특전 추가체력을 더해줌
             health = maxHealth;
         }
 
@@ -82,12 +84,23 @@ public class CastleWallManager : MonoBehaviour {
             activateShield = false; // 한번 실행 후 비활성화
         }
 
-        if (shield <= 0 && hasShield) {
-            hasShield = false;
-            // 실드가 소멸했을 때 체력으로 다시 전환
-            UpdateSliders();
-        }
-    }
+		if (!hasShield)
+		{
+			foreach (var wall in wallObjects) {
+				if (wall.IsUnityNull() && wall.gameObject.IsUnityNull())
+				{
+					CastleWall cwall = wall.GetComponent<CastleWall>();
+					cwall.ChangeWallColor(false); // 실드 활성화 시 색상 변경
+				}
+			}
+		}
+		// hasShield가 false가 되었을 때 실드 비활성화
+		if (!hasShield && shield > 0)
+		{
+			SetShield(0); // 실드를 비활성화하고 초기화
+			Debug.Log("Shield deactivated.");
+		}
+	}
 
     public void ApplyDamage(float damage) {
         if (hasShield) {
@@ -225,11 +238,13 @@ public class CastleWallManager : MonoBehaviour {
         }
     }
 
-    public void SaveWallHP() {
-        CustomLogger.Log("성벽 HP 정보 저장됨 health, mH, eH" + health + "," + maxHealth + "," + extraHealth);
-        gameData.Health = health;
-        gameData.MaxHealth = maxHealth;
-        gameData.ExtraHealth = extraHealth;
+    public void SaveWallHP()
+    {
+        CustomLogger.Log("성벽 HP 정보 저장됨 health, mH, eH"+health+","+maxHealth+","+extraHealth);
+        PlayerLocalManager.Instance.lCastleHp = health;
+        PlayerLocalManager.Instance.lCastleMaxHp = maxHealth;
+        PlayerLocalManager.Instance.lCastleExtraHp = extraHealth;
+        PlayerLocalManager.Instance.Save();
     }
 
     public float GetHealth() => health;

@@ -77,10 +77,6 @@ public class EnemySpawner : MonoBehaviour
         CustomLogger.Log("EnemySpawner Start()진입", "pink");
         bossImage.SetActive(false);
         
-        //StageC로부터 스테이지 정보 받아오기
-        stageCount = StageC.Instance.currentStageCount;
-        weekCount = StageC.Instance.currentWeekCount;
-
         //스테이지 수에 따른 웨이브당 스폰 숫자 증가
         // numberOfObjects *= stageCount;
         numberOfObjects += 10;
