@@ -4,8 +4,6 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using DefenseScripts;
-using UnityEngine.SceneManagement;
-using UnityEngine.Tilemaps;
 
 #pragma warning disable CS0618 // 형식 또는 멤버는 사용되지 않습니다.
 
@@ -96,8 +94,16 @@ public class CastleWallManager : MonoBehaviour {
 			activateShield = false; // 실행 후 비활성화
 		}
 
+		if (!hasShield)
+		{
+			foreach (var wall in wallObjects) {
+				CastleWall cwall = wall.GetComponent<CastleWall>();
+				cwall.ChangeWallColor(false); // 실드 활성화 시 색상 변경
+			}
+		}
 		// hasShield가 false가 되었을 때 실드 비활성화
-		if (!hasShield && shield > 0) {
+		if (!hasShield && shield > 0)
+		{
 			SetShield(0); // 실드를 비활성화하고 초기화
 			Debug.Log("Shield deactivated.");
 		}
@@ -111,6 +117,7 @@ public class CastleWallManager : MonoBehaviour {
 				damage = -shield; // 남은 데미지를 체력에 적용
 				shield = 0;
 				hasShield = false;
+				
 				Debug.Log("Shield destroyed!");
 			} else {
 				damage = 0;
@@ -129,7 +136,7 @@ public class CastleWallManager : MonoBehaviour {
 
 	public void EarnShield(float duration, float shieldAmount) {
 		Debug.Log("EarnShield called with duration: " + duration + " and shieldAmount: " + shieldAmount);
-
+		hasShield = true;
 		// 기존의 실드 초기화 코루틴이 실행 중이면 중지
 		if (resetShieldCoroutine != null) {
 			StopCoroutine(resetShieldCoroutine);
@@ -139,12 +146,15 @@ public class CastleWallManager : MonoBehaviour {
 			CastleWall cwall = wall.GetComponent<CastleWall>();
 			cwall.ChangeWallColor(true); // 실드 활성화 시 색상 변경
 		}
-
 		AddShield(shieldAmount); // 실드 추가
 		resetShieldCoroutine = StartCoroutine(ResetEarnShieldAfterDelay(duration)); // 일정 시간 후 실드 초기화
 	}
 
 	private IEnumerator ResetEarnShieldAfterDelay(float delay) {
+		if (!hasShield)
+		{
+			yield break;
+		}
 		yield return new WaitForSeconds(delay);
 
 		foreach (var wall in wallObjects) {
