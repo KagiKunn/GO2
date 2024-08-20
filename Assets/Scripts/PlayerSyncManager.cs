@@ -202,8 +202,7 @@ public class PlayerSyncManager : MonoBehaviour, IDisposable
             Debug.LogError($"Failed to load save: {ex.Message}");
         }
     }
-
-
+    
     private void CreateNewPlayer()
     {
         UUID = Guid.NewGuid().ToString();
@@ -224,6 +223,12 @@ public class PlayerSyncManager : MonoBehaviour, IDisposable
             syncInit = true;
     }
 
+    private void ChangeNickname(string name)
+    {
+        Username = name;
+        Save();
+    }
+    
     private PlayerSyncData DeserializePlayerData(byte[] data, int length)
     {
         using (MemoryStream ms = new MemoryStream(data, 0, length))

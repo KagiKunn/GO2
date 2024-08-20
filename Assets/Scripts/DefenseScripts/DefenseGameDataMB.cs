@@ -8,12 +8,13 @@ namespace DefenseScripts
     {
         //몇 회차인지 
         [SerializeField] public int weekCount = 1;
-
+        [SerializeField] public int roguePoint = 0;
+        
         [SerializeField] private string[] stageRace = { "Human", "DarkElf", "Orc", "Witch", "Skeleton" };
         [SerializeField] private int stageCount;
 
         // 성벽 체력 데이터
-        [SerializeField] private float maxHealth = 5000f; // 기본값으로 100 설정
+        [SerializeField] private float maxHealth = 30000f; // 성벽 체력의 기본값
         [SerializeField] private float health; // 기본값으로 100 설정
         [SerializeField] private float extraHealth = 0f; // 기본값으로 0 설정 
 
@@ -100,7 +101,7 @@ namespace DefenseScripts
         // 성벽 체력 데이터를 기본값으로 재설정하는 메서드
         public void ResetHealthData()
         {
-            maxHealth = 5000f; // 기본값으로 재설정
+            maxHealth = 30000f; // 기본값으로 재설정
             health = maxHealth; // 기본값으로 재설정
             extraHealth = 0f; // 기본값으로 재설정
             Debug.Log("성벽 체력 데이터가 기본값으로 재설정되었습니다.");
