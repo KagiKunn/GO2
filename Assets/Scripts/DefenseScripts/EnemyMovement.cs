@@ -5,7 +5,9 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+
 using Unity.VisualScripting;
+
 using UnityEngine.Serialization;
 
 #pragma warning disable CS0618, CS0414 // 형식 또는 멤버는 사용되지 않습니다.
@@ -38,28 +40,28 @@ public class EnemyMovement : MonoBehaviour {
 	public bool isBoss; //보스 여부 확인
 	private GameObject horseRoot;
 	public NoticeUI stageEndNotice;
-	
-	
+
 	// 이벤트 선언
 	public static event Action OnBossDie;
 
 	private bool isBossDied = false;
-	
+
 	private void Awake() {
 		// 여기에 스테이지당 증가될 값 세팅
 		// stageCount 가져오기
 		// ex) health = health + health/(stage*10) stage(1,2,3,4,5)
 		// 다른 속성 공격속도, 이동속도, 사거리등 해도되고 안해도 되고
 
+		if (StageC.Instance == null) return;
+
 		stageCount = StageC.Instance.currentStageCount;
 		weekCount = StageC.Instance.currentWeekCount;
-		
+
 		// 기본 체력 값
 		float baseHealth = health;
 		// 20%씩 체력 증가 
 		health = baseHealth + (baseHealth * 0.2f * (stageCount - 1));
-		
-		
+
 		// HorseRoot 오브젝트 찾기
 		Transform horseRootTransform = transform.Find("HorseRoot");
 
@@ -73,7 +75,7 @@ public class EnemyMovement : MonoBehaviour {
 		animator.SetFloat("SkillState", skillState);
 		animator.SetFloat("NormalState", normalState);
 	}
-	
+
 	private void Update() {
 		if (!isKnockedBack) {
 			if (CollisionCheck()) {
@@ -86,8 +88,7 @@ public class EnemyMovement : MonoBehaviour {
 		}
 
 		// 이동 방향에 따라 속도 적용
-		if (!IsDead())
-		{
+		if (!IsDead()) {
 			rigid2d.velocity = movementdirection * (moveSpeed * Time.timeScale);
 		}
 	}
@@ -179,8 +180,7 @@ public class EnemyMovement : MonoBehaviour {
 			StartCoroutine(ChangeBrightnessTemporarily(0.1f, 0.6f)); // 예: 명도를 50%로 줄임
 		}
 
-		if (health <= 0 && deadJudge)
-		{
+		if (health <= 0 && deadJudge) {
 			this.movementdirection = Vector3.zero;
 			rigid2d.velocity = movementdirection * (moveSpeed * Time.timeScale);
 			animator.SetTrigger("Die");
@@ -271,8 +271,8 @@ public class EnemyMovement : MonoBehaviour {
 		EnemySpawner enemySpawner = GameObject.Find("Spawner").GetComponent<EnemySpawner>();
 		enemySpawner.enemyDieCount++;
 		enemySpawner.totalEnemyDieCount++;
-		CustomLogger.Log("적 사망 카운트 :"+enemySpawner.enemyDieCount, "white");
-		
+		CustomLogger.Log("적 사망 카운트 :" + enemySpawner.enemyDieCount, "white");
+
 		defenseInit.currentGold1 += crntgold;
 		CustomLogger.Log(defenseInit.currentGold1);
 
