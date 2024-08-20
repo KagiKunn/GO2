@@ -21,7 +21,7 @@ public class CastleWallManager : MonoBehaviour {
 
 	[SerializeField] private Slider healthSlider;
 	[SerializeField] private Slider shieldSlider;
-
+	
 	[SerializeField] private bool hasShield; // hasShield가 false가 되면 즉시 실드 무효화
 
 	private StageC stageC; // StageC 스크립트 참조
