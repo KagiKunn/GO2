@@ -27,7 +27,7 @@ public class EnemySpawner : MonoBehaviour
     private const float leftX = -100f;
 
     // 생성할 오브젝트의 개수
-    [SerializeField] public int numberOfObjects = 10;
+    [SerializeField] public int numberOfObjects = 1;
 
     // 스포너가 생성한 적 오브젝트 개수
     private int spawnedEnemy = 0;
@@ -62,9 +62,9 @@ public class EnemySpawner : MonoBehaviour
     public int totalEnemyDieCount = 0;
 
     public GameObject bossImage;  // 보스 소환 전 나타날 이미지
-    public float displayTime = 2.0f;  // 이미지가 표시될 시간(초)
-    public float blinkDuration = 2.0f;  // 깜빡임이 지속될 시간(초)
-    public float blinkInterval = 0.5f;  // 깜빡임 간격(초)
+    public float displayTime = 4.0f;  // 이미지가 표시될 시간(초)
+    private float blinkDuration = 4.0f;  // 깜빡임이 지속될 시간(초)
+    private float blinkInterval = 0.3f;  // 깜빡임 간격(초)
     
     public void SetSelectedRace(string race)
     {
@@ -78,8 +78,7 @@ public class EnemySpawner : MonoBehaviour
         bossImage.SetActive(false);
         
         //스테이지 수에 따른 웨이브당 스폰 숫자 증가
-        // numberOfObjects *= stageCount;
-        numberOfObjects += 10;
+        numberOfObjects *= stageCount;
         CustomLogger.Log("StageCount를 받아와서 스폰할 숫자 재설정 결과 : " + numberOfObjects, "pink");
 
         // EnemyPrefabList 참조 가져오기

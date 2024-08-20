@@ -188,7 +188,7 @@ public class CastleWallManager : MonoBehaviour {
                 // 실드가 비활성화된 경우: 슬라이더를 체력 값으로 설정
                 healthSlider.maxValue = maxHealth;
                 healthSlider.value = health;
-                fillImage.color = Color.green; // 체력 색상
+                fillImage.color = Color.red; // 체력 색상
                 handleImage.sprite = healthIcon; // 체력 아이콘
             }
         }

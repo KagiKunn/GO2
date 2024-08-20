@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using InternalAffairs;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,8 +20,7 @@ public class StageC : MonoBehaviour
     [SerializeField] private Canvas stageAllClearCanvas; // 스테이지 5까지 전부 클리어 UI 관련 참조
     [SerializeField] private Image stageAllClearImage;
     [SerializeField] private Button stageAllClearButton;
-    [SerializeField] private string[] currentStageRace; // 현재 stageRace 배열을 인스펙터에서 확인
-    [SerializeField] public string selectedRace;
+    [SerializeField] public string selectedRace; // EnemyRaceSelector에서 받아온 종족
 
     private string saveFilePath;
     private EnemySpawner enemySpawner;
@@ -30,8 +30,6 @@ public class StageC : MonoBehaviour
     [SerializeField] private GameObject uiGameObject;
     private int currentWaveInStageC;
 
-    private int randomIndex;
-    
     private void Awake()
     {
         if (Instance == null)
@@ -53,15 +51,13 @@ public class StageC : MonoBehaviour
         InitializeStageClearUI();
         InitializeAllClearUI();
 
-
-        // EnemySpawner 찾기
-        enemySpawner = FindObjectOfType<EnemySpawner>();
+        // EnemyRaceSelector 인스턴스에서 선택된 종족 받아오기
+        selectedRace = EnemyRaceSelector.Instance?.selectedRace;
+        CustomLogger.Log("EnemyRaceSelector에서 받아온 selectedRace : "+selectedRace, "black");
 
         // EnemySpawner가 존재하는지 확인
         if (enemySpawner != null)
         {
-            // stageRace 배열에서 랜덤으로 종족 선택 및 제거
-            selectedRace = SelectRandomRace();
             enemySpawner.SetSelectedRace(selectedRace); // 선택된 종족 설정
             UpdateStageInfoText();
         }
@@ -80,11 +76,9 @@ public class StageC : MonoBehaviour
             currentWaveInStageC = currentWave;
             UpdateStageInfoText();
         }
-        
-        
     }
 
-    //스테이지 정보 표시
+    // 스테이지 정보 표시
     private void UpdateStageInfoText()
     {
         stageInfoText.text = $"Week:{PlayerSyncManager.Instance.Repeat}\nStage: {PlayerLocalManager.Instance.lStage}\nEnemy: {selectedRace}\nWave:{currentWaveInStageC}";
@@ -158,34 +152,10 @@ public class StageC : MonoBehaviour
         }
     }
 
-    private string SelectRandomRace()
-    {
-        // 랜덤으로 stageRace 배열에서 종족 선택
-        randomIndex = Random.Range(0, PlayerLocalManager.Instance.lStageRace.Length);
-        selectedRace = PlayerLocalManager.Instance.lStageRace[randomIndex];
-
-        return selectedRace;
-    }
-
-    private string[] RemoveRaceAt(string[] array, int index)
-    {
-        string[] newArray = new string[array.Length - 1];
-
-        for (int i = 0, j = 0; i < array.Length; i++)
-        {
-            if (i != index)
-            {
-                newArray[j++] = array[i];
-            }
-        }
-
-        return newArray;
-    }
-
     public void ShowGameOverUI()
     {
         isGamePaused = true;
-        //게임 종료시 메뉴UI들 버튼도 비활성화
+        // 게임 종료시 메뉴UI들 버튼도 비활성화
         Menu menuScript = uiGameObject.GetComponent<Menu>();
         if (menuScript != null)
         {
@@ -212,7 +182,7 @@ public class StageC : MonoBehaviour
     public void ShowStageClearUI()
     {
         isGamePaused = true;
-        //게임 종료시 메뉴UI들 버튼도 비활성화
+        // 게임 종료시 메뉴UI들 버튼도 비활성화
         Menu menuScript = uiGameObject.GetComponent<Menu>();
         if (menuScript != null)
         {
@@ -244,22 +214,15 @@ public class StageC : MonoBehaviour
             {
                 stageClearButton.enabled = true;
             }
-
         }
-
-        // 선택된 종족을 배열에서 제거한 후 DefenseGameData의 stageRace에 재할당
-        PlayerLocalManager.Instance.lStageRace = RemoveRaceAt(PlayerLocalManager.Instance.lStageRace, randomIndex);
-        PlayerLocalManager.Instance.UpdateStageCount();
         
-        castleWallManager.SaveWallHP(); // 성벽 체력상태 저장
-        SaveGameData(); //DTO스크립트를 세이브파일로 저장명령
+        castleWallManager.SaveWallHP(); // 성벽 체력 상태 저장
+        SaveGameData(); // DTO 스크립트를 세이브파일로 저장명령
     }
 
     private void OnGameOverButtonClick()
     {
         CustomLogger.Log("게임 오버 버튼 클릭됨");
-
-
         SceneManager.LoadScene("Title");
     }
 
@@ -272,7 +235,7 @@ public class StageC : MonoBehaviour
     private void OnStageAllClearButtonClick()
     {
         CustomLogger.Log("스테이지 올클리어 버튼 클릭됨");
-        SceneManager.LoadScene("Title");
+        SceneManager.LoadScene("EndingCredit");
     }
 
     private void SaveGameData()
@@ -284,21 +247,21 @@ public class StageC : MonoBehaviour
 
     private void allStageClear()
     {
-        //로그라이크 포인트 증가
+        // 로그라이크 포인트 증가
         PlayerSyncManager.Instance.RoguePoint += 1;
         PlayerLocalManager.Instance.lPoint += 1;
         PlayerSyncManager.Instance.Save();
         PlayerLocalManager.Instance.Save();
-       
+
         isGamePaused = true;
-        //게임 종료시 메뉴UI들 버튼도 비활성화
+        // 게임 종료시 메뉴 UI들 버튼도 비활성화
         Menu menuScript = uiGameObject.GetComponent<Menu>();
         if (menuScript != null)
         {
             menuScript.DisableButtonInteractions();
         }
 
-        CustomLogger.Log("축하합니다, 최종스테이지 클리어");
+        CustomLogger.Log("축하합니다, 최종 스테이지 클리어");
         if (stageAllClearCanvas != null)
         {
             stageAllClearCanvas.enabled = true;
@@ -315,6 +278,6 @@ public class StageC : MonoBehaviour
         }
 
         PlayerSyncManager.Instance.Repeat++;
-        PlayerLocalManager.Instance.GoNextWeek(); //스테이지와 체력정보 초기화
+        PlayerLocalManager.Instance.GoNextWeek(); // 스테이지와 체력 정보 초기화
     }
 }
