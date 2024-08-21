@@ -184,7 +184,7 @@ public class EnemyMovement : MonoBehaviour {
 		}
 
 		if (health <= 0 && deadJudge) {
-			this.movementdirection = Vector3.zero;
+			movementdirection = Vector3.zero;
 			rigid2d.velocity = movementdirection * (moveSpeed * Time.timeScale);
 			animator.SetTrigger("Die");
 		}
@@ -270,11 +270,12 @@ public class EnemyMovement : MonoBehaviour {
 			DefenseInit defenseInit = GameObject.Find("InitSetting").GetComponent<DefenseInit>();
 			int crntgold;
 
-			if (defenseInit.extraGold1 == 0) {
-				crntgold = gold;
+			if (defenseInit.extraGold1 == 0)
+			{
+				defenseInit.currentGold += gold;
 			} else {
 				crntgold = gold + defenseInit.extraGold1 / gold;
-				GameObject.Find("Gold").GetComponent<TMP_InputField>().text = crntgold.ToString();
+				defenseInit.currentGold += crntgold;
 			}
 
 			EnemySpawner enemySpawner = GameObject.Find("Spawner").GetComponent<EnemySpawner>();
@@ -289,13 +290,13 @@ public class EnemyMovement : MonoBehaviour {
 			if (gameObject.CompareTag("EnemyBoss")) {
 				//여기에 보스가 죽었을때의 이벤트
 				CustomLogger.Log("보스 사망..............", "red");
-
 				// 보스 사망 플래그 설정
 				isBossDied = true;
-
 				// 보스 사망 이벤트 호출
 				OnBossDie?.Invoke();
 
+				defenseInit.Soul ++;
+				
 				StageC stageC = FindObjectOfType<StageC>();
 				stageC.ShowStageClearUI();
 			}

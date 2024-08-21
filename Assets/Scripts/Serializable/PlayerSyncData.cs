@@ -24,11 +24,9 @@ public class PlayerSyncData
         {
             using (BinaryWriter writer = new BinaryWriter(stream))
             {
-                writer.Write(uuid.Length);
                 writer.Write(uuid);
                 writer.Write(lv);
                 writer.Write(repeat);
-                writer.Write(username.Length);
                 writer.Write(username);
                 writer.Write(roguePoint);
             }
@@ -44,25 +42,24 @@ public class PlayerSyncData
             {
                 try
                 {
-                    int initialInt = reader.ReadInt32();
-
                     int uuidLength = reader.ReadByte();
 
                     char[] uuidChars = reader.ReadChars(uuidLength);
                     string uuid = new string(uuidChars);
 
-                    int lv = reader.ReadInt32();
+                    byte[] lvBytes = reader.ReadBytes(4);
+                    int lv = ReadInt32WithCondition(lvBytes);
 
-                    int repeat = reader.ReadInt32();
-
-                    int ignoreInt = reader.ReadInt32();
+                    byte[] repeatBytes = reader.ReadBytes(4);
+                    int repeat = ReadInt32WithCondition(repeatBytes);
 
                     int usernameLength = reader.ReadByte();
 
                     byte[] usernameBytes = reader.ReadBytes(usernameLength);
                     string username = System.Text.Encoding.UTF8.GetString(usernameBytes);
 
-                    int roguePoint = reader.ReadInt32();
+                    byte[] roguePointBytes = reader.ReadBytes(4);
+                    int roguePoint = ReadInt32WithCondition(roguePointBytes);
 
                     return new PlayerSyncData(uuid, lv, repeat, username, roguePoint);
                 }
@@ -72,5 +69,18 @@ public class PlayerSyncData
                 }
             }
         }
+    }
+    
+    static int ReadInt32WithCondition(Byte[] bytes)
+    {
+
+        // 4바이트 배열을 역순으로 변환
+        if (BitConverter.ToInt32(bytes, 0) > 1000)
+        {
+            Array.Reverse(bytes);
+        }
+
+        // 역순 또는 원래 순서의 배열로부터 Int32로 변환
+        return BitConverter.ToInt32(bytes, 0);
     }
 }
