@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 [Serializable]
 public class PlayerLocalData
@@ -19,6 +20,8 @@ public class PlayerLocalData
     public float CastleMaxHealth { get; set; }
     public float CastleHealth { get; set; }
     public float CastleExtraHealth { get; set; }
+    
+    public Dictionary<string, int> UnitList { get; set; }
 
     public PlayerLocalData()
     {
@@ -35,11 +38,12 @@ public class PlayerLocalData
         CastleMaxHealth = 5000f;
         CastleHealth = 5000f;
         CastleExtraHealth = 0;
+        UnitList = new Dictionary<string, int>();
     }
 
     public PlayerLocalData(int money, int remainedPoint, int startGold, int moreEarnGold, int moreCastleHealth,
         int reduceCooldown, HeroList[] herosList, int stage, string[] stageRace, float castleMaxHealth,
-        float castleHealth, float castleExtraHealth)
+        float castleHealth, float castleExtraHealth, Dictionary<string,int> unitList)
     {
         Money = money;
         RemainedPoint = remainedPoint;
@@ -53,6 +57,7 @@ public class PlayerLocalData
         CastleMaxHealth = castleMaxHealth;
         CastleHealth = castleHealth;
         CastleExtraHealth = castleExtraHealth;
+        UnitList = unitList;
     }
 }
 

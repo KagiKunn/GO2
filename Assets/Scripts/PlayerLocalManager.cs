@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
@@ -21,6 +22,7 @@ public class PlayerLocalManager : MonoBehaviour
     private float L_CastleMaxHP;
     private float L_CastleHP;
     private float L_CastleExtraHP;
+    private Dictionary<string, int> L_UnitList;
 
     public int lMoney
     {
@@ -95,6 +97,11 @@ public class PlayerLocalManager : MonoBehaviour
         set => L_CastleExtraHP = value;
     }
 
+    public Dictionary<string, int> lUnitList
+    {
+        get => L_UnitList;
+        set => L_UnitList = value;
+    }
 
     public SceneControl SceneControl
     {
@@ -132,27 +139,37 @@ public class PlayerLocalManager : MonoBehaviour
 
     private void LoadLocalData()
     {
-        if (File.Exists(filePath))
+        try
         {
-            using (FileStream file = File.Open(filePath, FileMode.Open))
+            if (File.Exists(filePath))
             {
-                BinaryFormatter formatter = new BinaryFormatter();
-                PlayerLocalData localData = (PlayerLocalData)formatter.Deserialize(file);
+                using (FileStream file = File.Open(filePath, FileMode.Open))
+                {
+                    BinaryFormatter formatter = new BinaryFormatter();
+                    PlayerLocalData localData = (PlayerLocalData)formatter.Deserialize(file);
 
-                // Deserialize된 데이터를 현재 클래스의 필드에 할당
-                lMoney = localData.Money;
-                lPoint = localData.RemainedPoint;
-                lStartGold = localData.StartGold;
-                lMoreEarnGold = localData.MoreEarnGold;
-                lMoreCastleHealth = localData.MoreCastleHealth;
-                lReduceCooldown = localData.ReduceCooldown;
-                lHeroeList = localData.HerosList;
-                lStage = localData.Stage;
-                lStageRace = localData.StageRace;
-                lCastleMaxHp = localData.CastleMaxHealth;
-                lCastleHp = localData.CastleHealth;
-                lCastleExtraHp = localData.CastleExtraHealth;
+                    // Deserialize된 데이터를 현재 클래스의 필드에 할당
+                    lMoney = localData.Money;
+                    lPoint = localData.RemainedPoint;
+                    lStartGold = localData.StartGold;
+                    lMoreEarnGold = localData.MoreEarnGold;
+                    lMoreCastleHealth = localData.MoreCastleHealth;
+                    lReduceCooldown = localData.ReduceCooldown;
+                    lHeroeList = localData.HerosList;
+                    lStage = localData.Stage;
+                    lStageRace = localData.StageRace;
+                    lCastleMaxHp = localData.CastleMaxHealth;
+                    lCastleHp = localData.CastleHealth;
+                    lCastleExtraHp = localData.CastleExtraHealth;
+                    lUnitList = localData.UnitList;
+                }
             }
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"Failed to load settings: {ex.Message}");
+            File.Delete(filePath);
+            CreateNewPlayer();
         }
     }
 
@@ -173,6 +190,7 @@ public class PlayerLocalManager : MonoBehaviour
         lCastleMaxHp = localData.CastleMaxHealth;
         lCastleHp = localData.CastleHealth;
         lCastleExtraHp = localData.CastleExtraHealth;
+        lUnitList = localData.UnitList;
 
         SaveLocalData(localData);
     }
@@ -212,7 +230,7 @@ public class PlayerLocalManager : MonoBehaviour
     public void Save()
     {
         PlayerLocalData localData = new PlayerLocalData(lMoney, lPoint, lStartGold, lMoreEarnGold, lMoreCastleHealth,
-            lReduceCooldown, lHeroeList, lStage, lStageRace, lCastleMaxHp, lCastleHp, lCastleExtraHp);
+            lReduceCooldown, lHeroeList, lStage, lStageRace, lCastleMaxHp, lCastleHp, lCastleExtraHp, lUnitList);
         SaveLocalData(localData);
     }
 
