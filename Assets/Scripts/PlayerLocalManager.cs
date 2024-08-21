@@ -18,10 +18,12 @@ public class PlayerLocalManager : MonoBehaviour
     private HeroList[] L_HeroeList;
     public int L_Stage;
     public string[] L_StageRace;
+    private string selectedRace;
     private float L_CastleMaxHP;
     private float L_CastleHP;
     private float L_CastleExtraHP;
 
+    
     public int lMoney
     {
         get => L_money;
@@ -77,6 +79,12 @@ public class PlayerLocalManager : MonoBehaviour
         set => L_StageRace = value;
     }
 
+    public string SelectedRace
+    {
+        get => selectedRace;
+        set => selectedRace = value;
+    }
+    
     public float lCastleMaxHp
     {
         get => L_CastleMaxHP;
