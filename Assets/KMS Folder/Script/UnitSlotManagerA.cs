@@ -38,6 +38,16 @@ public class UnitSlotManagerA : MonoBehaviour
             UnitGameManagerA.Instance != null && UnitGameManagerA.Instance.GetUnits() != null);
         
         userUnits = UnitGameManagerA.Instance.GetUnits();
+        
+        List<SlotUnitData> savedUnits = UnitGameManagerA.Instance.LoadSlotUnitData();
+        PlacementUnitA placementUnit = FindFirstObjectByType<PlacementUnitA>();
+        
+        if (savedUnits.Count > 0)
+        {
+            placementUnit.SetSlotUnitDataList(savedUnits);
+            CustomLogger.Log("UnitSlotManager에서 제이슨 데이터 불러와서 Assign", "red");
+        }
+        
         AssignUnitsToSlots();
         UpdateDraggableStates();
     }
@@ -77,8 +87,6 @@ public class UnitSlotManagerA : MonoBehaviour
 
     public void UpdateDraggableStates()
     {
-        int currentWallStatus = FindFirstObjectByType<StageManager>().GetCurrentWallStatus();
-
         foreach (var draggable in unitDraggables)
         {
             if (draggable == null || draggable.unitData == null)

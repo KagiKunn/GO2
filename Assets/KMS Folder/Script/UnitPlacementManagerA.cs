@@ -24,11 +24,20 @@ public class UnitPlacementManagerA : MonoBehaviour
 
     private void Start()
     {
+        List<SlotUnitData> savedUnits = UnitGameManagerA.Instance.LoadSlotUnitData();
+        if (savedUnits != null && savedUnits.Count > 0)
+        {
+            if (savedUnits.Count > 0)
+            {
+                placementUnit.SetSlotUnitDataList(savedUnits);
+                CustomLogger.Log("UnitPlacementManager에서 제이슨 데이터 불러와서 Assign", "red");
+            }
+        }
         AssignSavedUnitsToSlots();
     }
 
     private void AssignSavedUnitsToSlots()
-    {
+    { 
         List<SlotUnitData> savedUnits = placementUnit.GetSlotUnitDataList();
 
         foreach (var slotUnitData in savedUnits)
@@ -38,6 +47,11 @@ public class UnitPlacementManagerA : MonoBehaviour
             if (slotIndex >= 0 && slotIndex < placementImages.Count)
             {
                 SetUnitData(placementImages[slotIndex], slotUnitData.UnitData);
+            }
+            else
+            {
+                placementImages[slotIndex].sprite = null;
+                placementImages[slotIndex].color = Color.white;
             }
         }
     }
@@ -59,20 +73,11 @@ public class UnitPlacementManagerA : MonoBehaviour
             var dropableComponent = placementImage.GetComponent<UnitDropable>();
             if (dropableComponent != null && dropableComponent.assignedUnitData != null)
             {
-                UnitGameManagerA.Instance.SaveUnitPlacement(dropableComponent.assignedUnitData, 0); // 배치 해제
+                UnitGameManagerA.Instance.SaveUnitPlacement(-1, dropableComponent.assignedUnitData, 0);
                 dropableComponent.assignedUnitData = null;
             }
             placementImage.sprite = null;
         }
     }
-
-    public void SaveCurrentPlacements(bool isLeftWall)
-    {
-        placementUnit.SavePlacementUnits();
-
-        foreach (var slotUnit in placementUnit.GetSlotUnitDataList())
-        {
-            UnitGameManagerA.Instance.SaveUnitPlacement(slotUnit.UnitData, isLeftWall ? 1 : 2);
-        }
-    }
+    
 }

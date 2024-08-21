@@ -51,7 +51,6 @@ public class StageManager : MonoBehaviour
         {
             unit.SetActive(isActive);
         }
-
     }
 
     public int GetCurrentWallStatus()
