@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.UIElements;
 
 public abstract class HeroSkill : MonoBehaviour
@@ -13,10 +14,13 @@ public abstract class HeroSkill : MonoBehaviour
     public AudioClip soundClip;
     private AudioSource skillAudioSource;
 
+    public AudioMixerGroup sfxMixerGroup;
+    
     public bool isActive = true;
     public float cooldown = 10f;
     public float extraCool = 0;
 
+    private float originTime;
     public virtual void HeroSkillAction()
     {
         Time.timeScale /= 2;
@@ -32,6 +36,7 @@ public abstract class HeroSkill : MonoBehaviour
     {
         CustomLogger.Log("스킬 발동!!!!!!");
         // 이미지 오브젝트 생성 및 위치 설정
+        originTime = Time.timeScale;
         StartCoroutine(CreateSkillImage());
     }
 
@@ -45,6 +50,7 @@ public abstract class HeroSkill : MonoBehaviour
     {
         skillAudioSource = gameObject.AddComponent<AudioSource>();
         skillAudioSource.clip = soundClip;
+        skillAudioSource.outputAudioMixerGroup = sfxMixerGroup;
     }
     
     public void PlaySound()
@@ -88,7 +94,7 @@ public abstract class HeroSkill : MonoBehaviour
                 rectTransform.anchoredPosition = new Vector2(outsideRightPositionX, 0);
 
                 // 시간을 멈추기
-                Time.timeScale = 0f;
+                Time.timeScale = 0.5f;
                 PlaySound();
                 // 왼쪽으로 이동 시작
                 yield return StartCoroutine(MoveAndPauseImage(skillImage));
@@ -122,7 +128,7 @@ public abstract class HeroSkill : MonoBehaviour
         Destroy(skillImage);
 
         // 시간을 원래대로 돌리기
-        Time.timeScale = 1f;
+        Time.timeScale = originTime;
     }
 
     protected virtual void OnSkillImageComplete()

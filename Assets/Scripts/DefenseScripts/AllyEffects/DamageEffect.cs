@@ -17,7 +17,7 @@ public abstract class DamageEffect : ScriptableObject
         }
         else
         {
-            CustomLogger.LogWarning("<i><b><color=#FFFF00FF>[FireEffect::AreaAttack()] No enemy in area</color></b></i>");
+            //CustomLogger.LogWarning("<i><b><color=#FFFF00FF>[FireEffect::AreaAttack()] No enemy in area</color></b></i>");
             return null;
         }
     }

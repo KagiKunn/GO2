@@ -1,49 +1,58 @@
 using System;
+using TMPro;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class DefenseInit : MonoBehaviour
 {
     public AudioClip soundClip;
     private AudioSource audioSource;
     
-    
+    public AudioMixerGroup bgmMixerGroup; // 배경음악용 믹서 그룹
     
     private int startGold;
     private int earnGold;
     private int castleHealth;
     private int cooldown;
 
+    public int soul;
     public int currentGold;
+    
     public int extraGold;
     public int extraCool;
-    public int startGold1
+    public int StartGold
     {
         get => startGold;
         set => startGold = value;
     }
 
-    public int earnGold1
+    public int EarnGold
     {
         get => earnGold;
         set => earnGold = value;
     }
 
-    public int castleHealth1
+    public int CastleHealth
     {
         get => castleHealth;
         set => castleHealth = value;
     }
 
-    public int cooldown1
+    public int Cooldown
     {
         get => cooldown;
         set => cooldown = value;
     }
 
-    public int currentGold1
+    public int CurrentGold
     {
         get => currentGold;
         set => currentGold = value;
+    }
+    public int Soul
+    {
+        get => soul;
+        set => soul = value;
     }
 
     public int extraGold1
@@ -63,6 +72,8 @@ public class DefenseInit : MonoBehaviour
         EarnGoldSetup();
 
         CastleHealthSetup();
+        
+        PlayerLocalManager.Instance.Save();
     }
 
     private void Start()
@@ -70,6 +81,7 @@ public class DefenseInit : MonoBehaviour
         audioSource = gameObject.AddComponent<AudioSource>();
         audioSource.clip = soundClip;
         audioSource.loop = true;
+        audioSource.outputAudioMixerGroup = bgmMixerGroup;
         PlaySound();
     }
 
@@ -105,25 +117,15 @@ public class DefenseInit : MonoBehaviour
 
     void CastleHealthSetup()
     {
-        GameObject Wall = GameObject.Find("Wall HP Controller");
-        switch (earnGold)
+        int castleExtraHp = earnGold switch
         {
-            case 1:
-                Wall.GetComponent<CastleWallManager>().extraHealth1 = 100f;
-                break;
-            case 2:
-                Wall.GetComponent<CastleWallManager>().extraHealth1 = 200f;
-                break;
-            case 3:
-                Wall.GetComponent<CastleWallManager>().extraHealth1 = 300f;
-                break;
-            case 4:
-                Wall.GetComponent<CastleWallManager>().extraHealth1 = 400f;
-                break;
-            default:
-                Wall.GetComponent<CastleWallManager>().extraHealth1 = 0f;
-                break;
-        }
+            1 => 500,
+            2 => 1000,
+            3 => 1500,
+            4 => 2000,
+            _ => 0
+        };
+        PlayerLocalManager.Instance.lCastleExtraHp = castleExtraHp;
     }
 
     void CoolDownSetup()
@@ -146,5 +148,17 @@ public class DefenseInit : MonoBehaviour
                 extraCool = 0;
                 break;
         }
+    }
+
+    private void Update()
+    {
+        GameObject.Find("Gold").GetComponent<TMP_InputField>().text = currentGold.ToString();
+    }
+
+    private void OnDisable()
+    {
+        PlayerLocalManager.Instance.lMoney = currentGold;
+        PlayerLocalManager.Instance.lPoint = soul;
+        PlayerLocalManager.Instance.Save();
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using System.Collections;
+using UnityEngine.Audio;
 
 public class AllyScan : MonoBehaviour
 {
@@ -20,7 +21,7 @@ public class AllyScan : MonoBehaviour
 
     public AudioClip soundClip;
     private AudioSource attackAudioSource;
-    
+    public AudioMixerGroup sfxMixerGroup;
     private GameObject currentEffect; // 현재 효과 오브젝트를 저장할 필드
     private Animator animator;
     private GameObject closestObject;
@@ -37,6 +38,7 @@ public class AllyScan : MonoBehaviour
     {
         attackAudioSource = gameObject.AddComponent<AudioSource>();
         attackAudioSource.clip = soundClip;
+        attackAudioSource.outputAudioMixerGroup = sfxMixerGroup;
         attackCool = 1f / attackCool;
         animator = GetComponent<Animator>();
         animator.SetFloat("RunState", runState);

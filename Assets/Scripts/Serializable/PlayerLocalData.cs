@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 [Serializable]
 public class PlayerLocalData
@@ -14,6 +15,14 @@ public class PlayerLocalData
     public int ReduceCooldown { get; set; }
     public HeroList[] HerosList { get; set; }
 
+    public int Stage { get; set; }
+    public string[] StageRace { get; set; }
+    public float CastleMaxHealth { get; set; }
+    public float CastleHealth { get; set; }
+    public float CastleExtraHealth { get; set; }
+    
+    public List<KeyValuePair<string, int>> UnitList { get; set; }
+
     public PlayerLocalData()
     {
         Money = 0; // 초기 값 설정
@@ -24,10 +33,17 @@ public class PlayerLocalData
         ReduceCooldown = 0;
         HerosList = new HeroList[1]; // 크기를 1로 지정 (원하는 크기로 변경 가능)
         HerosList[0] = new HeroList(null, false, 0); // 배열의 첫 번째 요소 초기화
+        Stage = 1;
+        StageRace = new string[] { "Human", "DarkElf", "Orc", "Witch", "Skeleton" };
+        CastleMaxHealth = 5000f;
+        CastleHealth = 5000f;
+        CastleExtraHealth = 0;
+        UnitList = new List<KeyValuePair<string, int>>();
     }
 
     public PlayerLocalData(int money, int remainedPoint, int startGold, int moreEarnGold, int moreCastleHealth,
-        int reduceCooldown, HeroList[] herosList)
+        int reduceCooldown, HeroList[] herosList, int stage, string[] stageRace, float castleMaxHealth,
+        float castleHealth, float castleExtraHealth, List<KeyValuePair<string, int>> unitList)
     {
         Money = money;
         RemainedPoint = remainedPoint;
@@ -36,6 +52,12 @@ public class PlayerLocalData
         MoreCastleHealth = moreCastleHealth;
         ReduceCooldown = reduceCooldown;
         HerosList = herosList;
+        Stage = stage;
+        StageRace = stageRace;
+        CastleMaxHealth = castleMaxHealth;
+        CastleHealth = castleHealth;
+        CastleExtraHealth = castleExtraHealth;
+        UnitList = unitList;
     }
 }
 

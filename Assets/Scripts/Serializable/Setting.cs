@@ -7,4 +7,5 @@ public class Setting
     public float bgm;
     public float sfx;
     public bool vibrate;
+    public float voice;
 }

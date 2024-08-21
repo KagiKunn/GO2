@@ -1,6 +1,5 @@
-﻿using System;
-using System.IO;
-using DefenseScripts;
+﻿using System.IO;
+using InternalAffairs;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -21,12 +20,7 @@ public class StageC : MonoBehaviour
     [SerializeField] private Canvas stageAllClearCanvas; // 스테이지 5까지 전부 클리어 UI 관련 참조
     [SerializeField] private Image stageAllClearImage;
     [SerializeField] private Button stageAllClearButton;
-
-    [SerializeField] private DefenseGameDataMB defenseGameData; // 세이브데이터 관리 스크립트 참조
-    [SerializeField] public int currentStageCount; // 현재 stageCount 값을 인스펙터에서 확인
-    [SerializeField] private string[] currentStageRace; // 현재 stageRace 배열을 인스펙터에서 확인
-    [SerializeField] public string selectedRace;
-    [SerializeField] public int currentWeekCount;
+    [SerializeField] public string selectedRace; // PlayerLocalManager에서 받아온 종족
 
     private string saveFilePath;
     private EnemySpawner enemySpawner;
@@ -49,40 +43,22 @@ public class StageC : MonoBehaviour
         }
 
         enemySpawner = FindObjectOfType<EnemySpawner>();
-        currentWeekCount = defenseGameData.WeekCount;
 
         Time.timeScale = 1f;
-        // Save file path 설정
-        string savePath = Path.Combine(Application.dataPath, "save", "DefenseData");
-        Directory.CreateDirectory(savePath); // 디렉터리가 없으면 생성
-
-        // 파일 경로 설정
-        saveFilePath = Path.Combine(savePath, "DefenseGameData.json");
-
-        // 경로를 출력하여 확인
-        CustomLogger.Log("Save file path: " + saveFilePath);
-
-        // JSON에서 데이터를 불러옴
-        // defenseGameData.LoadFromJson(saveFilePath);
 
         // 초기화
         InitializeGameOverUI();
         InitializeStageClearUI();
         InitializeAllClearUI();
 
-
-        // 체력 데이터를 DefenseGameData에 업로드
-        // UploadCastleWallDataToDefenseGameData();
-
-        // EnemySpawner 찾기
-        enemySpawner = FindObjectOfType<EnemySpawner>();
+        // EnemyRaceSelector 인스턴스에서 선택된 종족 받아오기
+        selectedRace = PlayerLocalManager.Instance.SelectedRace;
+        CustomLogger.Log("로컬매니저에서 받아온 selectedRace : "+selectedRace, "black");
 
         // EnemySpawner가 존재하는지 확인
         if (enemySpawner != null)
         {
-            // stageRace 배열에서 랜덤으로 종족 선택 및 제거
-            selectedRace = SelectRandomRace();
-            enemySpawner.SetSelectedRace(selectedRace); // 선택된 종족 설정
+            enemySpawner.SetSelectedRace(selectedRace); // 선택된 종족을 스포너에 설정
             UpdateStageInfoText();
         }
         else
@@ -100,23 +76,12 @@ public class StageC : MonoBehaviour
             currentWaveInStageC = currentWave;
             UpdateStageInfoText();
         }
-        
-        
     }
 
-    private void UpdateStageData()
-    {
-        if (defenseGameData != null)
-        {
-            currentStageCount = defenseGameData.StageCount; // DefenseGameData의 stageCount 값을 가져옴
-            currentStageRace = defenseGameData.StageRace; // DefenseGameData의 stageRace 배열 값을 가져옴
-        }
-    }
-
-    //스테이지 정보 표시
+    // 스테이지 정보 표시
     private void UpdateStageInfoText()
     {
-        stageInfoText.text = $"Week:{currentWeekCount}\nStage: {currentStageCount}\nEnemy: {selectedRace}\nWave:{currentWaveInStageC}";
+        stageInfoText.text = $"Week:{PlayerSyncManager.Instance.Repeat}\nStage: {PlayerLocalManager.Instance.lStage}\nEnemy: {selectedRace}\nWave:{currentWaveInStageC}";
     }
 
     private void InitializeGameOverUI()
@@ -140,11 +105,11 @@ public class StageC : MonoBehaviour
 
     private void UploadCastleWallDataToDefenseGameData()
     {
-        if (castleWallManager != null && defenseGameData != null)
+        if (castleWallManager != null && PlayerLocalManager.Instance != null)
         {
-            defenseGameData.MaxHealth = castleWallManager.maxHealth;
-            defenseGameData.Health = castleWallManager.health;
-            defenseGameData.ExtraHealth = castleWallManager.extraHealth1;
+            PlayerLocalManager.Instance.lCastleMaxHp = castleWallManager.maxHealth;
+            PlayerLocalManager.Instance.lCastleHp = castleWallManager.health;
+            PlayerLocalManager.Instance.lCastleExtraHp = castleWallManager.extraHealth1;
             Debug.Log("현재 시점의 CastleWall 데이터가 DefenseGameData에 업로드되었습니다.");
         }
     }
@@ -187,40 +152,10 @@ public class StageC : MonoBehaviour
         }
     }
 
-    private string SelectRandomRace()
-    {
-        // 랜덤으로 stageRace 배열에서 종족 선택
-        int randomIndex = Random.Range(0, defenseGameData.StageRace.Length);
-        string selectedRace = defenseGameData.StageRace[randomIndex];
-
-        // 선택된 종족을 배열에서 제거한 후 DefenseGameData의 stageRace에 재할당
-        defenseGameData.StageRace = RemoveRaceAt(defenseGameData.StageRace, randomIndex);
-
-        // stageRace 배열을 업데이트
-        UpdateStageData();
-
-        return selectedRace;
-    }
-
-    private string[] RemoveRaceAt(string[] array, int index)
-    {
-        string[] newArray = new string[array.Length - 1];
-
-        for (int i = 0, j = 0; i < array.Length; i++)
-        {
-            if (i != index)
-            {
-                newArray[j++] = array[i];
-            }
-        }
-
-        return newArray;
-    }
-
     public void ShowGameOverUI()
     {
         isGamePaused = true;
-        //게임 종료시 메뉴UI들 버튼도 비활성화
+        // 게임 종료시 메뉴UI들 버튼도 비활성화
         Menu menuScript = uiGameObject.GetComponent<Menu>();
         if (menuScript != null)
         {
@@ -242,23 +177,13 @@ public class StageC : MonoBehaviour
         {
             gameOverButton.enabled = true;
         }
-
-        //게임오버시 세이브파일 json삭제 처리
-        if (File.Exists(saveFilePath))
-        {
-            File.Delete(saveFilePath);
-            CustomLogger.Log("게임 오버로 인해 세이브 파일이 삭제되었습니다: " + saveFilePath);
-        }
-        else
-        {
-            CustomLogger.LogWarning("삭제할 세이브 파일이 존재하지 않습니다.");
-        }
     }
 
     public void ShowStageClearUI()
     {
+        
         isGamePaused = true;
-        //게임 종료시 메뉴UI들 버튼도 비활성화
+        // 게임 종료시 메뉴UI들 버튼도 비활성화
         Menu menuScript = uiGameObject.GetComponent<Menu>();
         if (menuScript != null)
         {
@@ -269,7 +194,7 @@ public class StageC : MonoBehaviour
 
         // 최종 스테이지가 아닐 경우 현재 stageCount와 stageRace 배열 업데이트
         // 최종 스테이지일 경우 버튼 호출
-        if (currentStageCount == 5)
+        if (PlayerLocalManager.Instance.lStage == 5)
         {
             allStageClear();
             SaveGameData();
@@ -290,20 +215,15 @@ public class StageC : MonoBehaviour
             {
                 stageClearButton.enabled = true;
             }
-
-            UpdateStageData();
         }
-
-
-        castleWallManager.SaveWallHP(); // 성벽 체력상태 저장
-        SaveGameData(); //DTO스크립트를 세이브파일로 저장명령
+        
+        castleWallManager.SaveWallHP(); // 성벽 체력 상태 저장
+        SaveGameData(); // DTO 스크립트를 세이브파일로 저장명령
     }
 
     private void OnGameOverButtonClick()
     {
         CustomLogger.Log("게임 오버 버튼 클릭됨");
-
-
         SceneManager.LoadScene("Title");
     }
 
@@ -316,32 +236,33 @@ public class StageC : MonoBehaviour
     private void OnStageAllClearButtonClick()
     {
         CustomLogger.Log("스테이지 올클리어 버튼 클릭됨");
-        SceneManager.LoadScene("Title");
+        SceneManager.LoadScene("EndingCredit");
     }
 
     private void SaveGameData()
     {
-        defenseGameData.SaveToJson(saveFilePath);
+        PlayerSyncManager.Instance.Save();
+        PlayerLocalManager.Instance.Save();
         CustomLogger.Log("게임 데이터가 저장되었습니다: " + saveFilePath);
     }
 
     private void allStageClear()
     {
-        //로그라이크 포인트 증가
+        // 로그라이크 포인트 증가
         PlayerSyncManager.Instance.RoguePoint += 1;
         PlayerLocalManager.Instance.lPoint += 1;
         PlayerSyncManager.Instance.Save();
         PlayerLocalManager.Instance.Save();
-       
+
         isGamePaused = true;
-        //게임 종료시 메뉴UI들 버튼도 비활성화
+        // 게임 종료시 메뉴 UI들 버튼도 비활성화
         Menu menuScript = uiGameObject.GetComponent<Menu>();
         if (menuScript != null)
         {
             menuScript.DisableButtonInteractions();
         }
 
-        CustomLogger.Log("축하합니다, 최종스테이지 클리어");
+        CustomLogger.Log("축하합니다, 최종 스테이지 클리어");
         if (stageAllClearCanvas != null)
         {
             stageAllClearCanvas.enabled = true;
@@ -357,9 +278,7 @@ public class StageC : MonoBehaviour
             stageAllClearButton.enabled = true;
         }
 
-        //주차 횟수 증가, DTO에 전송
-        currentWeekCount++;
-        defenseGameData.WeekCount = currentWeekCount;
-        defenseGameData.GoNextWeek(); //스테이지와 체력정보 초기화
+        PlayerSyncManager.Instance.Repeat++;
+        PlayerLocalManager.Instance.GoNextWeek(); // 스테이지와 체력 정보 초기화
     }
 }

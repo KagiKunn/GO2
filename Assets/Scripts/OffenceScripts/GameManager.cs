@@ -1,10 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using Unity.Cinemachine;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Animations;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -14,7 +14,7 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    private static GameManager instance;
+    private static GameManager instance = null;
 
     [Header("# Game Control")] [SerializeField]
     private bool isLive;
@@ -74,10 +74,23 @@ public class GameManager : MonoBehaviour
             Destroy(this.gameObject);
         }
 
-        List<HeroData> heroList = HeroManager.Instance.selectedHeroes;
-        foreach (var hero in heroList.Where(hero => hero != null))
+        for (int i = 0; i < PlayerLocalManager.Instance.lHeroeList.Length; i++)
         {
-            selectedHeroes.Add(hero.Name);
+            if (PlayerLocalManager.Instance.lHeroeList[i].Item3 > 0)
+            {
+                string hero = PlayerLocalManager.Instance.lHeroeList[i].Item1;
+                CustomLogger.LogWarning(hero);
+
+                if (hero != null)
+                {
+                    selectedHeroes.Add(hero);
+                }
+            }
+        }
+        
+        foreach(string output in selectedHeroes)
+        {
+            CustomLogger.LogWarning(output, "green");
         }
 
         // foreach (string selectedHero in selectedHeroes) {
@@ -89,13 +102,15 @@ public class GameManager : MonoBehaviour
     {
         health = maxHealth;
 
-        foreach (var t in selectedHeroes)
+        for (int i = 0; i < selectedHeroes.Count; i++)
         {
             CustomLogger.Log(text.text);
 
-            if (text.text == t)
+            if (text.text == selectedHeroes[i])
             {
-                if (Enum.TryParse(t, out HeroNames heroEnum))
+                HeroNames heroEnum;
+
+                if (Enum.TryParse(selectedHeroes[i], out heroEnum))
                 {
                     players[(int)heroEnum].gameObject.SetActive(true);
                     playerId = (int)heroEnum;
@@ -104,7 +119,7 @@ public class GameManager : MonoBehaviour
                 }
                 else
                 {
-                    CustomLogger.Log("Invalid hero name: " + t);
+                    CustomLogger.Log("Invalid hero name: " + selectedHeroes[i]);
                 }
             }
         }
@@ -174,6 +189,7 @@ public class GameManager : MonoBehaviour
             {
                 SceneManager.LoadScene("InternalAffairs");
             }
+            return;
         }
 
         gameTime += Time.deltaTime;
@@ -238,11 +254,11 @@ public class GameManager : MonoBehaviour
     {
         get
         {
-            if (instance.IsUnityNull())
+            if (instance == null)
             {
                 instance = FindObjectOfType<GameManager>();
 
-                if (instance.IsUnityNull())
+                if (instance == null)
                 {
                     CustomLogger.Log("No Singleton Object", "red");
 
@@ -308,7 +324,10 @@ public class GameManager : MonoBehaviour
         set => exp = value;
     }
 
-    public int[] NextExp => nextExp;
+    public int[] NextExp
+    {
+        get => nextExp;
+    }
 
     public int PlayerId => playerId;
 }
