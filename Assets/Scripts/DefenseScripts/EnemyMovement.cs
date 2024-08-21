@@ -297,6 +297,8 @@ public class EnemyMovement : MonoBehaviour {
 				// 보스 사망 이벤트 호출
 				OnBossDie?.Invoke();
 
+				PlayerLocalManager.Instance.lMoney = int.Parse(GameObject.Find("Gold").GetComponent<TMP_InputField>().text);
+
 				StageC stageC = FindObjectOfType<StageC>();
 				stageC.ShowStageClearUI();
 			}
