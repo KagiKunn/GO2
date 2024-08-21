@@ -30,7 +30,6 @@ public class UnitPlacementManagerA : MonoBehaviour
             if (savedUnits.Count > 0)
             {
                 placementUnit.SetSlotUnitDataList(savedUnits);
-                CustomLogger.Log("UnitPlacementManager에서 제이슨 데이터 불러와서 Assign", "red");
             }
         }
         AssignSavedUnitsToSlots();

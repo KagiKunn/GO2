@@ -47,8 +47,8 @@ public class UnitDropable : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         if (draggedUnit != null)
         {
             assignedUnitData = draggedUnit.unitData;
-            
-            int placement = 0;
+
+            int placement;
             
             if (gameObject.transform.parent.name.Contains("Left Wall Stage"))
             {
@@ -57,6 +57,11 @@ public class UnitDropable : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             else if (gameObject.transform.parent.name.Contains("Right Wall Stage"))
             {
                 placement = 2;
+            }
+            else
+            {
+                placement = 0;
+                CustomLogger.Log("placement 왜 0임?? 미쳤나");
             }
             
             int slotIndex = transform.GetSiblingIndex();

@@ -57,23 +57,24 @@ public class UnitGameManagerA : MonoBehaviour
 
     public void SaveUnitPlacement(int slotIndex, UnitData unit, int placement)
     {
-        unitPlacementStatus[unit] = placement;
+        instance.unitPlacementStatus[unit] = placement;
+        CustomLogger.Log(placement);
         
         if (slotIndex < 0)
         {
             return;
         }
         
-        if (slotUnitDataList.Count <= slotIndex)
+        if (instance.slotUnitDataList.Count <= slotIndex)
         {
-            for (int i = slotUnitDataList.Count; i <= slotIndex; i++)
+            for (int i = instance.slotUnitDataList.Count; i <= slotIndex; i++)
             {
-                slotUnitDataList.Add(null);
+                instance.slotUnitDataList.Add(null);
             }
         }
-        
         var slotUnitData = new SlotUnitData(slotIndex, unit, placement);
-        slotUnitDataList[slotIndex] = slotUnitData;
+        instance.slotUnitDataList[slotIndex] = slotUnitData;
+        
     }
 
     public List<UnitData> GetUnits() {

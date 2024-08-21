@@ -57,15 +57,12 @@ public class StageManager : MonoBehaviour
     {
         if (!leftButton.gameObject.activeSelf)
         {
-            CustomLogger.Log("왼쪽 성벽", "Red");
             return 1;
         }
         if (!rightButton.gameObject.activeSelf)
         {
-            CustomLogger.Log("오른쪽 성벽", "Blue");
             return 2;
         }
-        Debug.LogError("StageManger가 잘못 된 듯");
         return 0;
     }
 }

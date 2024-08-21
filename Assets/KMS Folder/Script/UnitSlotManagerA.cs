@@ -45,7 +45,6 @@ public class UnitSlotManagerA : MonoBehaviour
         if (savedUnits.Count > 0)
         {
             placementUnit.SetSlotUnitDataList(savedUnits);
-            CustomLogger.Log("UnitSlotManager에서 제이슨 데이터 불러와서 Assign", "red");
         }
         
         AssignUnitsToSlots();
