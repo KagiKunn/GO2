@@ -25,6 +25,8 @@ public class InputBox : MonoBehaviour
         if (Input.text != null)
         {
             Username.text = Input.text;
+            PlayerSyncManager.Instance.Username = Input.text;
+            PlayerSyncManager.Instance.Save();
             CloseWindow();
         }
     }
