@@ -10,6 +10,9 @@ public class UnitSlotManagerA : MonoBehaviour
     private List<Image> unitImages = new List<Image>();
     private List<Graphic> unitSlots = new List<Graphic>();
     private List<UnitDraggable> unitDraggables = new List<UnitDraggable>();
+    
+    public UnitPlacementManagerA leftPlacementManager;
+    public UnitPlacementManagerA rightPlacementManager;
 
     private void Awake()
     {
@@ -85,7 +88,7 @@ public class UnitSlotManagerA : MonoBehaviour
 
             int placementStatus = UnitGameManagerA.Instance.unitPlacementStatus[draggable.unitData];
 
-            if (placementStatus != 0 && placementStatus == currentWallStatus)
+            if (placementStatus != 0)
             {
                 draggable.isDropped = true;
                 draggable.enabled = false;
@@ -101,4 +104,41 @@ public class UnitSlotManagerA : MonoBehaviour
             }
         }
     }
+    
+    public void ResetWallPlacement(int wallIndex)
+    {
+        foreach (var draggable in unitDraggables)
+        {
+            if (draggable == null || draggable.unitData == null)
+                continue;
+            
+            int placementStatus = UnitGameManagerA.Instance.unitPlacementStatus[draggable.unitData];
+            
+            CustomLogger.Log(placementStatus, Color.cyan);
+            CustomLogger.Log(wallIndex,Color.cyan);
+            // 현재 성벽에 배치된 유닛들만 리셋
+            if (placementStatus == wallIndex)
+            {
+                UnitGameManagerA.Instance.unitPlacementStatus[draggable.unitData] = 0;
+                draggable.isDropped = false;
+                draggable.enabled = true;
+                draggable.GetComponent<CanvasGroup>().blocksRaycasts = true;
+                draggable.GetComponent<Image>().color = Color.white;
+            }
+        }
+
+        // 성벽의 슬롯 초기화
+        if (wallIndex == 1)
+        {
+            leftPlacementManager.ResetPlacementSlots();
+        }
+        else if (wallIndex == 2)
+        {
+            rightPlacementManager.ResetPlacementSlots();
+        }
+
+        // 리셋 후 상태를 업데이트
+        UpdateDraggableStates();
+    }
 }
+

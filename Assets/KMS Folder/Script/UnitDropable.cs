@@ -48,13 +48,15 @@ public class UnitDropable : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         {
             assignedUnitData = draggedUnit.unitData;
             
+            CustomLogger.Log(gameObject.transform.parent.name);
+            
             // 드롭된 위치에 따라 배치 상태를 저장
             int placement = 0;
-            if (gameObject.name.Contains("LeftWall"))
+            if (gameObject.transform.parent.name.Contains("Left Wall Stage"))
             {
                 placement = 1; // 왼쪽 성벽
             }
-            else if (gameObject.name.Contains("RightWall"))
+            else if (gameObject.transform.parent.name.Contains("Right Wall Stage"))
             {
                 placement = 2; // 오른쪽 성벽
             }

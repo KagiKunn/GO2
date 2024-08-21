@@ -9,7 +9,7 @@ public class UnitSelectA : MonoBehaviour
     public UnitPlacementManagerA leftPlacementManager;
     public UnitPlacementManagerA rightPlacementManager;
     public UnitSlotManagerA unitSlotManager;
-    public Button resetBtn, saveBtn, upgradeBtn;
+    public Button resetBtn;
     public Button leftWallBtn, rightWallBtn;
     public GameObject leftWallContent, rightWallContent;
     public Image[] unitslots;
@@ -27,7 +27,6 @@ public class UnitSelectA : MonoBehaviour
         units = unitGameManager.GetUnits();
 
         resetBtn.onClick.AddListener(ResetUnitSelection);
-        saveBtn.onClick.AddListener(SaveUnitSelection);
         leftWallBtn.onClick.AddListener(ShowLeftWall);
         rightWallBtn.onClick.AddListener(ShowRightWall);
     }
@@ -46,41 +45,8 @@ public class UnitSelectA : MonoBehaviour
 
     private void ResetUnitSelection()
     {
-        if (leftWallContent.activeSelf)
-        {
-            ResetWallPlacement(1);
-        }
-        else if (rightWallContent.activeSelf)
-        {
-            ResetWallPlacement(2);
-        }
+        int currentWallStatus = FindFirstObjectByType<StageManager>().GetCurrentWallStatus();
+        unitSlotManager.ResetWallPlacement(currentWallStatus);
     }
-
-    private void ResetWallPlacement(int wallIndex)
-    {
-        if (wallIndex == 1)
-        {
-            leftPlacementManager.ResetPlacementSlots();
-        }
-        else if (wallIndex == 2)
-        {
-            rightPlacementManager.ResetPlacementSlots();
-        }
-
-        unitSlotManager.UpdateDraggableStates();
-    }
-
-    private void SaveUnitSelection()
-    {
-        if (leftWallContent.activeSelf)
-        {
-            leftPlacementManager.SaveCurrentPlacements(true);
-        }
-        else if (rightWallContent.activeSelf)
-        {
-            rightPlacementManager.SaveCurrentPlacements(false);
-        }
-
-        unitSlotManager.UpdateDraggableStates();
-    }
+    
 }
