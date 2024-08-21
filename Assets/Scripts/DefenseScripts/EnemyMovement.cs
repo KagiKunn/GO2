@@ -55,12 +55,15 @@ public class EnemyMovement : MonoBehaviour {
 		if (StageC.Instance == null) return;
 
 		stageCount = PlayerLocalManager.Instance.lStage;
-
+		CustomLogger.Log("무브먼트의 스테이지 카운트:"+stageCount, "black");
+		
 		// 기본 체력 값
 		float baseHealth = health;
 		// 20%씩 체력 증가 
-		health = baseHealth + (baseHealth * 0.2f * (stageCount - 1));
-
+		float plusHealth = (baseHealth * 0.2f * (stageCount));
+		health = baseHealth + plusHealth;
+		CustomLogger.Log("무브먼트의 증가된 plushealth값 :" + plusHealth, "black");
+		
 		// HorseRoot 오브젝트 찾기
 		Transform horseRootTransform = transform.Find("HorseRoot");
 
