@@ -21,7 +21,7 @@ public class PlayerLocalData
     public float CastleHealth { get; set; }
     public float CastleExtraHealth { get; set; }
     
-    public Dictionary<string, int> UnitList { get; set; }
+    public List<KeyValuePair<string, int>> UnitList { get; set; }
 
     public PlayerLocalData()
     {
@@ -38,12 +38,12 @@ public class PlayerLocalData
         CastleMaxHealth = 5000f;
         CastleHealth = 5000f;
         CastleExtraHealth = 0;
-        UnitList = new Dictionary<string, int>();
+        UnitList = new List<KeyValuePair<string, int>>();
     }
 
     public PlayerLocalData(int money, int remainedPoint, int startGold, int moreEarnGold, int moreCastleHealth,
         int reduceCooldown, HeroList[] herosList, int stage, string[] stageRace, float castleMaxHealth,
-        float castleHealth, float castleExtraHealth, Dictionary<string,int> unitList)
+        float castleHealth, float castleExtraHealth, List<KeyValuePair<string, int>> unitList)
     {
         Money = money;
         RemainedPoint = remainedPoint;
