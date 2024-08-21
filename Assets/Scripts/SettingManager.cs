@@ -20,6 +20,8 @@ public class SettingManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI bgmVal;
     [SerializeField] private Slider sfxVolSlider;
     [SerializeField] private TextMeshProUGUI sfxVal;
+    [SerializeField] private Slider voiceVolSlider;
+    [SerializeField] private TextMeshProUGUI voiceVal;
     [SerializeField] private AudioMixer audioMixer;
     [SerializeField] private Toggle vibrationToggle;
     [SerializeField] private TextMeshProUGUI UUID;
@@ -60,6 +62,7 @@ public class SettingManager : MonoBehaviour
         masterVolSlider.onValueChanged.AddListener(value => SetLevel("Master", masterVolSlider.value, masterVal, true));
         sfxVolSlider.onValueChanged.AddListener(value => SetLevel("SFX", sfxVolSlider.value, sfxVal, true));
         bgmVolSlider.onValueChanged.AddListener(value => SetLevel("BGM", bgmVolSlider.value, bgmVal, true));
+        voiceVolSlider.onValueChanged.AddListener(value => SetLevel("Voice", voiceVolSlider.value, voiceVal, true));
         vibrationToggle.onValueChanged.AddListener(SetVibration);
 
         if (PlayerSyncManager.Instance != null)
@@ -117,6 +120,7 @@ public class SettingManager : MonoBehaviour
         SetSliderValueFromMixer("Master", masterVolSlider);
         SetSliderValueFromMixer("SFX", sfxVolSlider);
         SetSliderValueFromMixer("BGM", bgmVolSlider);
+        SetSliderValueFromMixer("Voice", voiceVolSlider);
         Instance.IsVibrationEnabled = true;
         vibrationToggle.isOn = true;
 
@@ -142,6 +146,7 @@ public class SettingManager : MonoBehaviour
                 SetLevel("Master", masterVolSlider.value, masterVal, false);
                 SetLevel("BGM", bgmVolSlider.value, bgmVal, false);
                 SetLevel("SFX", sfxVolSlider.value, sfxVal, false);
+                SetLevel("Voice", voiceVolSlider.value, voiceVal, false);
                 Instance.IsVibrationEnabled = ss.vibrate;
             }
         }
@@ -168,6 +173,7 @@ public class SettingManager : MonoBehaviour
         SetLevel("Master", masterVolSlider.value, masterVal, false);
         SetLevel("BGM", bgmVolSlider.value, bgmVal, false);
         SetLevel("SFX", sfxVolSlider.value, sfxVal, false);
+        SetLevel("Voice", voiceVolSlider.value, voiceVal, false);
         if (PlayerSyncManager.Instance != null)
         {
             if (PlayerSyncManager.Instance.UUID != null)
@@ -191,7 +197,8 @@ public class SettingManager : MonoBehaviour
                 master = masterVolSlider.value,
                 bgm = bgmVolSlider.value,
                 sfx = sfxVolSlider.value,
-                vibrate = vibrationToggle.isOn
+                vibrate = vibrationToggle.isOn,
+                voice = voiceVolSlider.value
             };
 
             using (FileStream file = File.Create(filepath))
