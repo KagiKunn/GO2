@@ -24,7 +24,7 @@ public class PlayerLocalManager : MonoBehaviour
     private float L_CastleMaxHP;
     private float L_CastleHP;
     private float L_CastleExtraHP;
-    private Dictionary<string, int> L_UnitList;
+    private List<KeyValuePair<string, int>> L_UnitList;
 
     
     public int lMoney
@@ -110,7 +110,7 @@ public class PlayerLocalManager : MonoBehaviour
         set => L_CastleExtraHP = value;
     }
 
-    public Dictionary<string, int> lUnitList
+    public List<KeyValuePair<string, int>> lUnitList
     {
         get => L_UnitList;
         set => L_UnitList = value;

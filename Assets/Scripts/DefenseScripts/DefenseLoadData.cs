@@ -12,10 +12,10 @@ public class DefenseLoadData : MonoBehaviour
     private GameObject cooldown;
     void Awake()
     {
-        gameObject.GetComponent<DefenseInit>().startGold1 = PlayerLocalManager.Instance.lStartGold;
-        gameObject.GetComponent<DefenseInit>().earnGold1 = PlayerLocalManager.Instance.lMoreEarnGold;
-        gameObject.GetComponent<DefenseInit>().castleHealth1 = PlayerLocalManager.Instance.lMoreCastleHealth;
-        gameObject.GetComponent<DefenseInit>().cooldown1 = PlayerLocalManager.Instance.lReduceCooldown;
+        gameObject.GetComponent<DefenseInit>().StartGold = PlayerLocalManager.Instance.lStartGold;
+        gameObject.GetComponent<DefenseInit>().EarnGold = PlayerLocalManager.Instance.lMoreEarnGold;
+        gameObject.GetComponent<DefenseInit>().CastleHealth = PlayerLocalManager.Instance.lMoreCastleHealth;
+        gameObject.GetComponent<DefenseInit>().Cooldown = PlayerLocalManager.Instance.lReduceCooldown;
     }
 
     void Update()
