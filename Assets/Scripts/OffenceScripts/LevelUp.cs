@@ -61,8 +61,6 @@ public class LevelUp : MonoBehaviour {
 	}
 
 	public void Next(int playerId) {
-		CustomLogger.Log(playerId + 4);
-
 		// 1. 모든 아이템 비활성화
 		foreach (Item item in items) {
 			item.gameObject.SetActive(false);

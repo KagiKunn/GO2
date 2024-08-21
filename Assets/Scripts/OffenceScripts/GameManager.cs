@@ -76,8 +76,6 @@ public class GameManager : MonoBehaviour {
 
 				if (hero != null) {
 					selectedHeroes.Add(hero);
-					
-					CustomLogger.Log(selectedHeroes);
 				}
 			}
 		}
@@ -91,8 +89,6 @@ public class GameManager : MonoBehaviour {
 		health = maxHealth;
 
 		for (int i = 0; i < selectedHeroes.Count; i++) {
-			CustomLogger.Log(text.text);
-
 			if (text.text == selectedHeroes[i]) {
 				HeroNames heroEnum;
 
