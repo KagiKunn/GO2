@@ -1,4 +1,5 @@
 using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -14,37 +15,44 @@ public class DefenseInit : MonoBehaviour
     private int castleHealth;
     private int cooldown;
 
+    public int soul;
     public int currentGold;
+    
     public int extraGold;
     public int extraCool;
-    public int startGold1
+    public int StartGold
     {
         get => startGold;
         set => startGold = value;
     }
 
-    public int earnGold1
+    public int EarnGold
     {
         get => earnGold;
         set => earnGold = value;
     }
 
-    public int castleHealth1
+    public int CastleHealth
     {
         get => castleHealth;
         set => castleHealth = value;
     }
 
-    public int cooldown1
+    public int Cooldown
     {
         get => cooldown;
         set => cooldown = value;
     }
 
-    public int currentGold1
+    public int CurrentGold
     {
         get => currentGold;
         set => currentGold = value;
+    }
+    public int Soul
+    {
+        get => soul;
+        set => soul = value;
     }
 
     public int extraGold1
@@ -148,5 +156,17 @@ public class DefenseInit : MonoBehaviour
                 extraCool = 0;
                 break;
         }
+    }
+
+    private void Update()
+    {
+        GameObject.Find("Gold").GetComponent<TMP_InputField>().text = currentGold.ToString();
+    }
+
+    private void OnDisable()
+    {
+        PlayerLocalManager.Instance.lMoney = currentGold;
+        PlayerLocalManager.Instance.lPoint = soul;
+        PlayerLocalManager.Instance.Save();
     }
 }

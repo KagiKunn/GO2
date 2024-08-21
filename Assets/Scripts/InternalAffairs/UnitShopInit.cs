@@ -76,7 +76,7 @@ public class UnitShopInit : MonoBehaviour
         boughtUnit.Add(unit);
         PlayerLocalManager.Instance.lMoney -= price;
         //여기서 유닛 세이브
-        
+        PlayerLocalManager.Instance.lUnitList = boughtUnit;
         
         foreach (string b in boughtUnit)
         {
