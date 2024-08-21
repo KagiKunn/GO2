@@ -39,4 +39,10 @@ public class BtnScene : MonoBehaviour {
 		
 		CustomLogger.Log("Change UnitManagementLeft successfuly!");
 	}
+	public void UnitShopSceneChange()
+	{
+		SceneManager.LoadScene("UnitShop");
+		
+		CustomLogger.Log("Change UnitShop successfuly!");
+	}
 }

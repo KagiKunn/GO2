@@ -5,7 +5,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
@@ -275,6 +275,7 @@ public class EnemyMovement : MonoBehaviour {
 				crntgold = gold;
 			} else {
 				crntgold = gold + defenseInit.extraGold1 / gold;
+				GameObject.Find("Gold").GetComponent<TMP_InputField>().text = crntgold.ToString();
 			}
 
 		EnemySpawner enemySpawner = GameObject.Find("Spawner").GetComponent<EnemySpawner>();
