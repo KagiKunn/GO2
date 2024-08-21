@@ -4,11 +4,11 @@ using Random = UnityEngine.Random;
 
 namespace InternalAffairs
 {
-    public class EnemyRaceSelector : MonoBehaviour
+    public class EnemyRaceSelector999 : MonoBehaviour
     {
-        public static EnemyRaceSelector Instance { get; private set; }
+        public static EnemyRaceSelector999 Instance { get; private set; }
         [SerializeField] public string[] enemyRaces;
-        [SerializeField] public string lSelectedRace;
+        [SerializeField] public string selectedRace;
         private EnemySpawner enemySpawner;
         private int randomIndex;
         public int stageCount;
@@ -48,10 +48,10 @@ namespace InternalAffairs
                 CustomLogger.Log("세이브데이터 내 적 배열 목록: " + enemyRacesContent, "black");
 
                 SelectRandomRace();
-                CustomLogger.Log("lSelectedRace:" + lSelectedRace, "black");
+                CustomLogger.Log("selectedRace:" + selectedRace, "black");
 
                 // 선택된 종족을 PlayerLocalManager에 저장
-                PlayerLocalManager.Instance.lSelectedRace = lSelectedRace;
+                PlayerLocalManager.Instance.lSelectedRace = selectedRace;
                 CustomLogger.Log("로컬매니저에 저장된 종족123" + PlayerLocalManager.Instance.lSelectedRace, "white");
                 
                 // 선택된 종족을 배열에서 제거한 후 PlayerLocalManager의 lStageRace에 재할당
@@ -63,9 +63,9 @@ namespace InternalAffairs
             }
             else
             {
-                lSelectedRace = PlayerLocalManager.Instance.lSelectedRace;
+                selectedRace = PlayerLocalManager.Instance.lSelectedRace;
                 PlayerLocalManager.Instance.Save();
-                CustomLogger.Log("Save데이터 상에 종족이 선택되어 있으므로 그 값을 받아옴 : " + lSelectedRace, "black");
+                CustomLogger.Log("Save데이터 상에 종족이 선택되어 있으므로 그 값을 받아옴 : " + selectedRace, "black");
             }
         }
 
@@ -73,7 +73,7 @@ namespace InternalAffairs
         {
             // 랜덤으로 lStageRace 배열에서 종족 선택
             randomIndex = Random.Range(0, PlayerLocalManager.Instance.lStageRace.Length);
-            lSelectedRace = PlayerLocalManager.Instance.lStageRace[randomIndex];
+            selectedRace = PlayerLocalManager.Instance.lStageRace[randomIndex];
         }
 
         private string[] RemoveRaceAt(string[] array, int index)

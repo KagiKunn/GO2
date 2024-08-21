@@ -20,7 +20,7 @@ public class PlayerLocalManager : MonoBehaviour
     public int L_Week;
     public int L_Stage;
     public string[] L_StageRace;
-    private string selectedRace;
+    private string L_SelectedRace;
     private float L_CastleMaxHP;
     private float L_CastleHP;
     private float L_CastleExtraHP;
@@ -86,10 +86,10 @@ public class PlayerLocalManager : MonoBehaviour
         set => L_StageRace = value;
     }
 
-    public string SelectedRace
+    public string lSelectedRace
     {
-        get => selectedRace;
-        set => selectedRace = value;
+        get => L_SelectedRace;
+        set => L_SelectedRace = value;
     }
     
     public float lCastleMaxHp
@@ -227,8 +227,9 @@ public class PlayerLocalManager : MonoBehaviour
     public void ResetHealthData()
     {
         lCastleMaxHp = 30000f; // 기본값으로 재설정
-        lCastleHp = 30000; // 기본값으로 재설정
         lCastleExtraHp = 0f; // 기본값으로 재설정
+        lCastleMaxHp += lCastleExtraHp;
+        lCastleHp = lCastleMaxHp; // 기본값으로 재설정
         Debug.Log("성벽 체력 데이터가 기본값으로 재설정되었습니다.");
         Save();
     }
@@ -237,7 +238,6 @@ public class PlayerLocalManager : MonoBehaviour
     {
         CustomLogger.Log("GoNextWeek()호출", "orange");
         ResetStageRace();
-        ResetHealthData();
     }
     
     public void Save()

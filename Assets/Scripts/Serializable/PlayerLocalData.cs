@@ -33,7 +33,7 @@ public class PlayerLocalData
         ReduceCooldown = 0;
         HerosList = new HeroList[1]; // 크기를 1로 지정 (원하는 크기로 변경 가능)
         HerosList[0] = new HeroList(null, false, 0); // 배열의 첫 번째 요소 초기화
-        Stage = 1;
+        Stage = 0;
         StageRace = new string[] { "Human", "DarkElf", "Orc", "Witch", "Skeleton" };
         CastleMaxHealth = 5000f;
         CastleHealth = 5000f;
