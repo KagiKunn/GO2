@@ -5,7 +5,9 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+
 using TMPro;
+
 using Unity.VisualScripting;
 
 using UnityEngine.SceneManagement;
@@ -53,18 +55,18 @@ public class EnemyMovement : MonoBehaviour {
 		// ex) health = health + health/(stage*10) stage(1,2,3,4,5)
 		// 다른 속성 공격속도, 이동속도, 사거리등 해도되고 안해도 되고
 
-		if (StageC.Instance == null) return;
+		if (SceneManager.GetActiveScene().name != "Defense") return;
 
 		stageCount = PlayerLocalManager.Instance.lStage;
-		CustomLogger.Log("무브먼트의 스테이지 카운트:"+stageCount, "black");
-		
+		CustomLogger.Log("무브먼트의 스테이지 카운트:" + stageCount, "black");
+
 		// 기본 체력 값
 		float baseHealth = health;
 		// 20%씩 체력 증가 
 		float plusHealth = (baseHealth * 0.2f * (stageCount));
 		health = baseHealth + plusHealth;
 		CustomLogger.Log("무브먼트의 증가된 plushealth값 :" + plusHealth, "black");
-		
+
 		// HorseRoot 오브젝트 찾기
 		Transform horseRootTransform = transform.Find("HorseRoot");
 
@@ -270,8 +272,7 @@ public class EnemyMovement : MonoBehaviour {
 			DefenseInit defenseInit = GameObject.Find("InitSetting").GetComponent<DefenseInit>();
 			int crntgold = 0;
 
-			if (defenseInit.extraGold1 == 0)
-			{
+			if (defenseInit.extraGold1 == 0) {
 				defenseInit.currentGold += gold;
 			} else {
 				crntgold = gold + defenseInit.extraGold1 / gold;
@@ -295,8 +296,8 @@ public class EnemyMovement : MonoBehaviour {
 				// 보스 사망 이벤트 호출
 				OnBossDie?.Invoke();
 
-				defenseInit.soul ++;
-				
+				defenseInit.Soul++;
+
 				StageC stageC = FindObjectOfType<StageC>();
 				stageC.ShowStageClearUI();
 			}
