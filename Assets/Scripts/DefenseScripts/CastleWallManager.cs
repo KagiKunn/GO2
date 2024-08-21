@@ -14,7 +14,7 @@ public class CastleWallManager : MonoBehaviour {
 	public static CastleWallManager Instance;
 
 	[SerializeField] private float activateShieldValue = 80f; // 실드 활성화 시 설정할 값
-	private float extraHealth;
+	public float extraHealth;
 
 	private HeroManager heroManager;
 	private Coroutine resetShieldCoroutine;
@@ -35,13 +35,17 @@ public class CastleWallManager : MonoBehaviour {
 	public float health;
 	public float shield;
 
-	public float extraHealth1 {
-		get => extraHealth;
-
-		set => extraHealth = value;
-	}
-
 	private void Awake() {
+        
+        Debug.Log("특전 추가체력 : " + extraHealth);
+        
+        Debug.Log("캐슬월에서 가져온 스테이지카운트 : " + PlayerLocalManager.Instance.lStage);
+        if (PlayerLocalManager.Instance.lStage == 1)
+        {
+            maxHealth += extraHealth; //2회차 1스테이지 경우에는 로그라이크 특전 추가체력을 더해줌
+            health = maxHealth;
+           
+        }
 		// Load game data
 		if (PlayerLocalManager.Instance != null) {
 			maxHealth = PlayerLocalManager.Instance.lCastleMaxHp;
@@ -49,13 +53,8 @@ public class CastleWallManager : MonoBehaviour {
 			health = PlayerLocalManager.Instance.lCastleHp;
 		}
 
-		Debug.Log("캐슬월에서 가져온 스테이지카운트 : " + PlayerLocalManager.Instance.lStage);
-
-		//1스테이지일 경우에만 health를 풀피로 설정
-		if (PlayerLocalManager.Instance.lStage == 1) {
-			maxHealth += extraHealth; //2회차 1스테이지 경우에는 로그라이크 특전 추가체력을 더해줌
-			health = maxHealth;
-		}
+        //1스테이지일 경우에만 health를 풀피로 설정
+     
 
 		wallObjects = new List<GameObject>();
 		wallObjects.Add(GameObject.FindGameObjectsWithTag("RightWall")[0]);

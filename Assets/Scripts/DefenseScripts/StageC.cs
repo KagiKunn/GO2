@@ -52,7 +52,7 @@ public class StageC : MonoBehaviour
         InitializeAllClearUI();
 
         // EnemyRaceSelector 인스턴스에서 선택된 종족 받아오기
-        selectedRace = PlayerLocalManager.Instance.SelectedRace;
+        selectedRace = PlayerLocalManager.Instance.lSelectedRace;
         CustomLogger.Log("로컬매니저에서 받아온 selectedRace : "+selectedRace, "black");
 
         // EnemySpawner가 존재하는지 확인
@@ -109,7 +109,7 @@ public class StageC : MonoBehaviour
         {
             PlayerLocalManager.Instance.lCastleMaxHp = castleWallManager.maxHealth;
             PlayerLocalManager.Instance.lCastleHp = castleWallManager.health;
-            PlayerLocalManager.Instance.lCastleExtraHp = castleWallManager.extraHealth1;
+            PlayerLocalManager.Instance.lCastleExtraHp = castleWallManager.extraHealth;
             Debug.Log("현재 시점의 CastleWall 데이터가 DefenseGameData에 업로드되었습니다.");
         }
     }
@@ -236,7 +236,7 @@ public class StageC : MonoBehaviour
     private void OnStageAllClearButtonClick()
     {
         CustomLogger.Log("스테이지 올클리어 버튼 클릭됨");
-        SceneManager.LoadScene("EndingCredit");
+        SceneManager.LoadScene("Title");
     }
 
     private void SaveGameData()
@@ -251,8 +251,13 @@ public class StageC : MonoBehaviour
         // 로그라이크 포인트 증가
         PlayerSyncManager.Instance.RoguePoint += 1;
         PlayerLocalManager.Instance.lPoint += 1;
+        Debug.Log("증가 전 위크값:"+PlayerSyncManager.Instance.Repeat);
+        PlayerSyncManager.Instance.Repeat++;
+        PlayerLocalManager.Instance.GoNextWeek(); // 스테이지와 체력 정보 초기화
+        
         PlayerSyncManager.Instance.Save();
         PlayerLocalManager.Instance.Save();
+        Debug.Log("증가 후 위크값:"+PlayerSyncManager.Instance.Repeat);
 
         isGamePaused = true;
         // 게임 종료시 메뉴 UI들 버튼도 비활성화
@@ -278,7 +283,6 @@ public class StageC : MonoBehaviour
             stageAllClearButton.enabled = true;
         }
 
-        PlayerSyncManager.Instance.Repeat++;
-        PlayerLocalManager.Instance.GoNextWeek(); // 스테이지와 체력 정보 초기화
+        
     }
 }
