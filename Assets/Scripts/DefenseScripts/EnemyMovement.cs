@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using TMPro;
 using Unity.VisualScripting;
+
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 
@@ -55,12 +56,15 @@ public class EnemyMovement : MonoBehaviour {
 		if (StageC.Instance == null) return;
 
 		stageCount = PlayerLocalManager.Instance.lStage;
-
+		CustomLogger.Log("무브먼트의 스테이지 카운트:"+stageCount, "black");
+		
 		// 기본 체력 값
 		float baseHealth = health;
 		// 20%씩 체력 증가 
-		health = baseHealth + (baseHealth * 0.2f * (stageCount - 1));
-
+		float plusHealth = (baseHealth * 0.2f * (stageCount));
+		health = baseHealth + plusHealth;
+		CustomLogger.Log("무브먼트의 증가된 plushealth값 :" + plusHealth, "black");
+		
 		// HorseRoot 오브젝트 찾기
 		Transform horseRootTransform = transform.Find("HorseRoot");
 
@@ -180,7 +184,7 @@ public class EnemyMovement : MonoBehaviour {
 		}
 
 		if (health <= 0 && deadJudge) {
-			this.movementdirection = Vector3.zero;
+			movementdirection = Vector3.zero;
 			rigid2d.velocity = movementdirection * (moveSpeed * Time.timeScale);
 			animator.SetTrigger("Die");
 		}
@@ -239,18 +243,15 @@ public class EnemyMovement : MonoBehaviour {
 
 	private IEnumerator RestoreOriginalColors(Dictionary<Transform, Color> originalColors) {
 		foreach (KeyValuePair<Transform, Color> entry in originalColors) {
-			if (entry.Key != null && entry.Key.gameObject != null)
-			{
+			if (entry.Key != null && entry.Key.gameObject != null) {
 				SpriteRenderer spriteRenderer = entry.Key.GetComponent<SpriteRenderer>();
 
-				if (spriteRenderer != null)
-				{
+				if (spriteRenderer != null) {
 					spriteRenderer.color = entry.Value;
 				}
 
 				// 작업을 한 프레임에 모두 처리하지 않도록 대기
-				if (entry.Key.GetSiblingIndex() % 15 == 0)
-				{
+				if (entry.Key.GetSiblingIndex() % 15 == 0) {
 					yield return null;
 				}
 			}
@@ -258,57 +259,53 @@ public class EnemyMovement : MonoBehaviour {
 	}
 
 	public bool IsDead() {
-		
-		
 		return health <= 0;
 	}
 
 	private void Die() {
 		// 적이 죽었을 때의 동작 (예: 오브젝트 비활성화)
-		if (SceneManager.GetActiveScene().name == "Defense")
-		{
+		if (SceneManager.GetActiveScene().name == "Defense") {
 			if (GameObject.Find("InitSetting").GetComponent<DefenseInit>() == null) return;
+
 			DefenseInit defenseInit = GameObject.Find("InitSetting").GetComponent<DefenseInit>();
 			int crntgold;
 
-			if (defenseInit.extraGold1 == 0) {
-				crntgold = gold;
+			if (defenseInit.extraGold1 == 0)
+			{
+				defenseInit.currentGold += gold;
 			} else {
 				crntgold = gold + defenseInit.extraGold1 / gold;
-				GameObject.Find("Gold").GetComponent<TMP_InputField>().text = crntgold.ToString();
+				defenseInit.currentGold += crntgold;
 			}
 
-		EnemySpawner enemySpawner = GameObject.Find("Spawner").GetComponent<EnemySpawner>();
-		enemySpawner.enemyDieCount++;
-		enemySpawner.totalEnemyDieCount++;
-		CustomLogger.Log("적 사망 카운트 :" + enemySpawner.enemyDieCount, "white");
+			EnemySpawner enemySpawner = GameObject.Find("Spawner").GetComponent<EnemySpawner>();
+			enemySpawner.enemyDieCount++;
+			enemySpawner.totalEnemyDieCount++;
+			CustomLogger.Log("적 사망 카운트 :" + enemySpawner.enemyDieCount, "white");
 
-		defenseInit.currentGold1 += crntgold;
-		CustomLogger.Log(defenseInit.currentGold1);
+			defenseInit.currentGold1 += crntgold;
+			CustomLogger.Log(defenseInit.currentGold1);
 
 			// 적의 태그가 EnemyBoss 일때 실행
 			if (gameObject.CompareTag("EnemyBoss")) {
 				//여기에 보스가 죽었을때의 이벤트
 				CustomLogger.Log("보스 사망..............", "red");
-
 				// 보스 사망 플래그 설정
 				isBossDied = true;
-
 				// 보스 사망 이벤트 호출
 				OnBossDie?.Invoke();
 
+				defenseInit.Soul ++;
+				
 				StageC stageC = FindObjectOfType<StageC>();
 				stageC.ShowStageClearUI();
 			}
-		
+
 			gameObject.SetActive(false);
 			deadJudge = false;
-		}
-		else
-		{
+		} else {
 			transform.parent.gameObject.SetActive(false);
 		}
-		
 	}
 
 	private void OnDrawGizmos() {

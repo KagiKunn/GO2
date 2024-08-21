@@ -13,6 +13,8 @@ public class InputBox : MonoBehaviour
     {
         Quit.onClick.AddListener(CloseWindow);
         Change.onClick.AddListener(ChangeNick);
+        DontDestroyOnLoad(this);
+        this.gameObject.SetActive(false);
     }
 
     void Update()

@@ -17,7 +17,7 @@ public class MSBtn : MonoBehaviour {
 	private void Start() {
 		originalImage = targetImage.sprite;
 		originalTxtColor = btn_txt.color;
-		
+
 		CustomLogger.Log("Original IMG Set", "red");
 	}
 
@@ -26,14 +26,14 @@ public class MSBtn : MonoBehaviour {
 		newTxtColor = new Color(156f / 255f, 146f / 255f, 73f / 255f);
 		btn_txt.color = newTxtColor;
 		Invoke("RestoreOriginal", 0.3f);
-		
-		CustomLogger.Log("Change color method", "blue");
+
+		CustomLogger.Log("Change color method", Color.cyan);
 	}
 
 	private void RestoreOriginal() {
 		targetImage.sprite = originalImage;
 		btn_txt.color = originalTxtColor;
-		
-		CustomLogger.Log("Restore original Color", "green");
+
+		CustomLogger.Log("Restore original Color");
 	}
 }

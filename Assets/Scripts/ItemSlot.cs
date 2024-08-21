@@ -5,6 +5,8 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+#pragma warning disable CS0414 // 필드가 대입되었으나 값이 사용되지 않습니다
+
 #pragma warning disable CS0618 // 형식 또는 멤버는 사용되지 않습니다.
 
 public class ItemSlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler {

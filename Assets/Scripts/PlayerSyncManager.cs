@@ -95,6 +95,13 @@ public class PlayerSyncManager : MonoBehaviour, IDisposable
 
     private async void Awake()
     {
+        /*float orthoSize = Camera.main.orthographicSize;
+        float screenAspect = (float)Screen.width / (float)Screen.height;
+        float cameraHeight = orthoSize * 2;
+        float cameraWidth = cameraHeight * screenAspect;
+        GameObject TitleImage = GameObject.Find("TitleImage");
+        TitleImage.transform.localScale = new Vector3(cameraWidth, cameraHeight, TitleImage.transform.localScale.z);*/
+            
         sceneControl = gameObject.AddComponent<SceneControl>();
         persistentDataPath = Application.persistentDataPath;
         filePath = Path.Combine(persistentDataPath, "Player.dat");

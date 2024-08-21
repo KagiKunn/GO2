@@ -11,7 +11,7 @@ using UnityEngine.SceneManagement;
 
 #pragma warning disable CS1998 // 이 비동기 메서드에는 'await' 연산자가 없으며 메서드가 동시에 실행됩니다.
 
-public class SettingControl : MonoBehaviour
+public class SettingManager : MonoBehaviour
 {
     private static string persistentDataPath;
     [SerializeField] private Slider masterVolSlider;
@@ -20,6 +20,8 @@ public class SettingControl : MonoBehaviour
     [SerializeField] private TextMeshProUGUI bgmVal;
     [SerializeField] private Slider sfxVolSlider;
     [SerializeField] private TextMeshProUGUI sfxVal;
+    [SerializeField] private Slider voiceVolSlider;
+    [SerializeField] private TextMeshProUGUI voiceVal;
     [SerializeField] private AudioMixer audioMixer;
     [SerializeField] private Toggle vibrationToggle;
     [SerializeField] private TextMeshProUGUI UUID;
@@ -27,7 +29,7 @@ public class SettingControl : MonoBehaviour
     [SerializeField] private GameObject InputBoxUI;
     private string filepath;
 
-    public static SettingControl Instance { get; private set; }
+    public static SettingManager Instance { get; private set; }
     private GameObject nickChange;
     [SerializeField] public bool IsVibrationEnabled { get; private set; }
 
@@ -36,14 +38,15 @@ public class SettingControl : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(this);
+            DontDestroyOnLoad(gameObject);
+            this.gameObject.SetActive(false);
         }
         else
         {
-            Destroy(this);
+            Destroy(gameObject);
         }
 
-        nickChange = GameObject.Find("SettingMenu").transform.Find("NickChange").gameObject;
+        nickChange = gameObject.transform.Find("NickChange").gameObject;
         persistentDataPath = Application.persistentDataPath;
         filepath = Path.Combine(persistentDataPath, "Setting.dat");
 
@@ -55,20 +58,11 @@ public class SettingControl : MonoBehaviour
         {
             LoadSetting();
         }
-        if (SceneManager.GetActiveScene().name.Equals("InternalAffairs"))
-        {
-            nickChange.SetActive(true);
-            Button nickChangeButton = nickChange.GetComponent<Button>();
-            nickChangeButton.onClick.AddListener(openNickChange);
-        }
-        else
-        {
-            nickChange.SetActive(false);
-        }
 
         masterVolSlider.onValueChanged.AddListener(value => SetLevel("Master", masterVolSlider.value, masterVal, true));
         sfxVolSlider.onValueChanged.AddListener(value => SetLevel("SFX", sfxVolSlider.value, sfxVal, true));
         bgmVolSlider.onValueChanged.AddListener(value => SetLevel("BGM", bgmVolSlider.value, bgmVal, true));
+        voiceVolSlider.onValueChanged.AddListener(value => SetLevel("Voice", voiceVolSlider.value, voiceVal, true));
         vibrationToggle.onValueChanged.AddListener(SetVibration);
 
         if (PlayerSyncManager.Instance != null)
@@ -84,6 +78,11 @@ public class SettingControl : MonoBehaviour
                 Username.text = PlayerSyncManager.Instance.Username;
             }
         }
+    }
+
+    public void SetMainCamera()
+    {
+        GetComponent<Canvas>().worldCamera = Camera.main;
     }
 
     public void SetVibration(bool isEnabled)
@@ -121,6 +120,7 @@ public class SettingControl : MonoBehaviour
         SetSliderValueFromMixer("Master", masterVolSlider);
         SetSliderValueFromMixer("SFX", sfxVolSlider);
         SetSliderValueFromMixer("BGM", bgmVolSlider);
+        SetSliderValueFromMixer("Voice", voiceVolSlider);
         Instance.IsVibrationEnabled = true;
         vibrationToggle.isOn = true;
 
@@ -146,6 +146,7 @@ public class SettingControl : MonoBehaviour
                 SetLevel("Master", masterVolSlider.value, masterVal, false);
                 SetLevel("BGM", bgmVolSlider.value, bgmVal, false);
                 SetLevel("SFX", sfxVolSlider.value, sfxVal, false);
+                SetLevel("Voice", voiceVolSlider.value, voiceVal, false);
                 Instance.IsVibrationEnabled = ss.vibrate;
             }
         }
@@ -154,6 +155,36 @@ public class SettingControl : MonoBehaviour
             Debug.LogError($"Failed to load settings: {ex.Message}");
             File.Delete(filepath);
             FirstSetting();
+        }
+    }
+
+    public void LoadText()
+    {
+        if (SceneManager.GetActiveScene().name.Equals("InternalAffairs"))
+        {
+            nickChange.SetActive(true);
+            Button nickChangeButton = nickChange.GetComponent<Button>();
+            nickChangeButton.onClick.AddListener(openNickChange);
+        }
+        else
+        {
+            nickChange.SetActive(false);
+        }
+        SetLevel("Master", masterVolSlider.value, masterVal, false);
+        SetLevel("BGM", bgmVolSlider.value, bgmVal, false);
+        SetLevel("SFX", sfxVolSlider.value, sfxVal, false);
+        SetLevel("Voice", voiceVolSlider.value, voiceVal, false);
+        if (PlayerSyncManager.Instance != null)
+        {
+            if (PlayerSyncManager.Instance.UUID != null)
+            {
+                UUID.text = "UUID : " + PlayerSyncManager.Instance.UUID;
+            }
+
+            if (PlayerSyncManager.Instance.Username != null)
+            {
+                Username.text = PlayerSyncManager.Instance.Username;
+            }
         }
     }
 
@@ -166,7 +197,8 @@ public class SettingControl : MonoBehaviour
                 master = masterVolSlider.value,
                 bgm = bgmVolSlider.value,
                 sfx = sfxVolSlider.value,
-                vibrate = vibrationToggle.isOn
+                vibrate = vibrationToggle.isOn,
+                voice = voiceVolSlider.value
             };
 
             using (FileStream file = File.Create(filepath))
