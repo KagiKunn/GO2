@@ -20,7 +20,7 @@ public class StageC : MonoBehaviour
     [SerializeField] private Canvas stageAllClearCanvas; // 스테이지 5까지 전부 클리어 UI 관련 참조
     [SerializeField] private Image stageAllClearImage;
     [SerializeField] private Button stageAllClearButton;
-    [SerializeField] public string selectedRace; // EnemyRaceSelector에서 받아온 종족
+    [SerializeField] public string selectedRace; // PlayerLocalManager에서 받아온 종족
 
     private string saveFilePath;
     private EnemySpawner enemySpawner;
@@ -52,13 +52,13 @@ public class StageC : MonoBehaviour
         InitializeAllClearUI();
 
         // EnemyRaceSelector 인스턴스에서 선택된 종족 받아오기
-        selectedRace = EnemyRaceSelector.Instance?.selectedRace;
-        CustomLogger.Log("EnemyRaceSelector에서 받아온 selectedRace : "+selectedRace, "black");
+        selectedRace = PlayerLocalManager.Instance.SelectedRace;
+        CustomLogger.Log("로컬매니저에서 받아온 selectedRace : "+selectedRace, "black");
 
         // EnemySpawner가 존재하는지 확인
         if (enemySpawner != null)
         {
-            enemySpawner.SetSelectedRace(selectedRace); // 선택된 종족 설정
+            enemySpawner.SetSelectedRace(selectedRace); // 선택된 종족을 스포너에 설정
             UpdateStageInfoText();
         }
         else
@@ -181,6 +181,7 @@ public class StageC : MonoBehaviour
 
     public void ShowStageClearUI()
     {
+        
         isGamePaused = true;
         // 게임 종료시 메뉴UI들 버튼도 비활성화
         Menu menuScript = uiGameObject.GetComponent<Menu>();
