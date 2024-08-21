@@ -60,10 +60,10 @@ public class BounusSaveManager : MonoBehaviour
     {
         PlayerLocalManager.Instance.lMoney = PlayerLocalManager.Instance.lStartGold switch
         {
-            1 => 100,
-            2 => 200,
-            3 => 300,
-            4 => 400,
+            1 => 500,
+            2 => 1000,
+            3 => 1500,
+            4 => 2000,
             _ => 0
         };
     }

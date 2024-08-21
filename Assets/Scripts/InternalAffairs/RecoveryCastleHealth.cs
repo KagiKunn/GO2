@@ -28,10 +28,21 @@ public class RecoveryCastleHealth : MonoBehaviour
         CustomLogger.Log("Now HP is "+emptyHealth,"red");
         // 여기에 골드 연동 관련 로직 추가
         // 예: playerGold -= recoveryCost;
-
+        if (emptyHealth > PlayerLocalManager.Instance.lMoney)
+        {
+            PlayerLocalManager.Instance.lMoney -= PlayerLocalManager.Instance.lMoney;
+            crntHealth += PlayerLocalManager.Instance.lMoney;
+            PlayerLocalManager.Instance.lCastleHp = crntHealth;
+        }
+        else
+        {
+            PlayerLocalManager.Instance.lMoney -= (int)emptyHealth;
+            crntHealth = maxHealth;
+            PlayerLocalManager.Instance.lCastleHp = crntHealth;
+        }
         // 체력을 회복하고 데이터를 저장
-        crntHealth = maxHealth;
-        PlayerLocalManager.Instance.lCastleHp = PlayerLocalManager.Instance.lCastleMaxHp;
+        
+        
         PlayerLocalManager.Instance.Save();
     }
 }
