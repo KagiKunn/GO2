@@ -12,10 +12,13 @@ namespace InternalAffairs
         [SerializeField] public string selectedRace;
         private EnemySpawner enemySpawner;
         private int randomIndex;
-
-        private void Awake()
+        public int stageCount;
+        public int weekCount;
+        
+        
+        private void Start()
         {
-            CustomLogger.Log("EnemyRaceSelector Awake()진입", "black");
+            CustomLogger.Log("EnemyRaceSelector Start()진입", "black");
             if (Instance == null)
             {
                 Instance = this;
@@ -27,6 +30,11 @@ namespace InternalAffairs
                 Destroy(this.gameObject);
             }
 
+            weekCount = PlayerSyncManager.Instance.Repeat;
+            stageCount = PlayerLocalManager.Instance.L_Stage;
+            CustomLogger.Log("위크카운트  : "+weekCount+", 스테이지카운트 : "+stageCount,"white");
+            
+            
             var enemyRaces = PlayerLocalManager.Instance.lStageRace;
             string enemyRacesContent = string.Join(", ", enemyRaces);
             CustomLogger.Log("세이브데이터 내 적 배열 목록: " + enemyRacesContent, "black");
@@ -39,6 +47,7 @@ namespace InternalAffairs
 
             // 선택된 종족을 배열에서 제거한 후 PlayerLocalManager의 lStageRace에 재할당
             PlayerLocalManager.Instance.lStageRace = RemoveRaceAt(PlayerLocalManager.Instance.lStageRace, randomIndex);
+            stageCount = PlayerLocalManager.Instance.L_Stage;
             PlayerLocalManager.Instance.UpdateStageCount();
         }
 

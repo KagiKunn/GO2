@@ -16,6 +16,7 @@ public class PlayerLocalManager : MonoBehaviour
     private int L_moreCastleHealth;
     private int L_reduceCooldown;
     private HeroList[] L_HeroeList;
+    public int L_Week;
     public int L_Stage;
     public string[] L_StageRace;
     private string selectedRace;
@@ -65,8 +66,12 @@ public class PlayerLocalManager : MonoBehaviour
         get => L_HeroeList;
         set => L_HeroeList = value;
     }
-
-
+    
+    public int lWeek
+    {
+        get => L_Week;
+        set => L_Week = value;
+    }
     public int lStage
     {
         get => L_Stage;
@@ -196,7 +201,7 @@ public class PlayerLocalManager : MonoBehaviour
     // stageRace 배열의 길이에 따라 stageCount를 동기화
     public void UpdateStageCount()
     {
-        lStage++; // 남은 종족 수에 따라 stageCount를 계산
+        lStage = 5 - lStageRace.Length; // 남은 종족 수에 따라 stageCount를 계산
         Save();
     }
 

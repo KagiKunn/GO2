@@ -20,7 +20,7 @@ public class StageC : MonoBehaviour
     [SerializeField] private Canvas stageAllClearCanvas; // 스테이지 5까지 전부 클리어 UI 관련 참조
     [SerializeField] private Image stageAllClearImage;
     [SerializeField] private Button stageAllClearButton;
-    [SerializeField] public string selectedRace; // EnemyRaceSelector에서 받아온 종족
+    [SerializeField] public string selectedRace; // PlayerLocalManager에서 받아온 종족
 
     private string saveFilePath;
     private EnemySpawner enemySpawner;

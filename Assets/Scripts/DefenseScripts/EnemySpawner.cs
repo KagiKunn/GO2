@@ -75,6 +75,8 @@ public class EnemySpawner : MonoBehaviour
     private void Start()
     {
         CustomLogger.Log("EnemySpawner Start()진입", "pink");
+        stageCount = PlayerLocalManager.Instance.L_Stage;
+        CustomLogger.Log("스포너에서 받은 stageCount값:" + stageCount, "black");
         bossImage.SetActive(false);
         
         //스테이지 수에 따른 웨이브당 스폰 숫자 증가
