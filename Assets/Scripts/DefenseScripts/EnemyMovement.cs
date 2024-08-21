@@ -268,7 +268,7 @@ public class EnemyMovement : MonoBehaviour {
 			if (GameObject.Find("InitSetting").GetComponent<DefenseInit>() == null) return;
 
 			DefenseInit defenseInit = GameObject.Find("InitSetting").GetComponent<DefenseInit>();
-			int crntgold;
+			int crntgold = 0;
 
 			if (defenseInit.extraGold1 == 0)
 			{
@@ -283,8 +283,8 @@ public class EnemyMovement : MonoBehaviour {
 			enemySpawner.totalEnemyDieCount++;
 			CustomLogger.Log("적 사망 카운트 :" + enemySpawner.enemyDieCount, "white");
 
-			defenseInit.currentGold1 += crntgold;
-			CustomLogger.Log(defenseInit.currentGold1);
+			defenseInit.currentGold += crntgold;
+			CustomLogger.Log(defenseInit.currentGold);
 
 			// 적의 태그가 EnemyBoss 일때 실행
 			if (gameObject.CompareTag("EnemyBoss")) {

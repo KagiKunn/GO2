@@ -8,7 +8,7 @@ namespace InternalAffairs
     {
         public static EnemyRaceSelector Instance { get; private set; }
         [SerializeField] public string[] enemyRaces;
-        [SerializeField] public string lSelectedRace;
+        [SerializeField] public string SelectedRace;
         private EnemySpawner enemySpawner;
         private int randomIndex;
         public int stageCount;
@@ -42,16 +42,17 @@ namespace InternalAffairs
                 {
                     PlayerLocalManager.Instance.ResetHealthData();
                 }
-
+                
+                //세이브데이터내 배열 표시하기위한거 
                 var enemyRaces = PlayerLocalManager.Instance.lStageRace;
                 string enemyRacesContent = string.Join(", ", enemyRaces);
                 CustomLogger.Log("세이브데이터 내 적 배열 목록: " + enemyRacesContent, "black");
 
                 SelectRandomRace();
-                CustomLogger.Log("lSelectedRace:" + lSelectedRace, "black");
+                CustomLogger.Log("SelectedRace:" + SelectedRace, "black");
 
                 // 선택된 종족을 PlayerLocalManager에 저장
-                PlayerLocalManager.Instance.lSelectedRace = lSelectedRace;
+                PlayerLocalManager.Instance.lSelectedRace = SelectedRace;
                 CustomLogger.Log("로컬매니저에 저장된 종족123" + PlayerLocalManager.Instance.lSelectedRace, "white");
                 
                 // 선택된 종족을 배열에서 제거한 후 PlayerLocalManager의 lStageRace에 재할당
@@ -59,13 +60,17 @@ namespace InternalAffairs
                 stageCount = PlayerLocalManager.Instance.L_Stage;
                 PlayerLocalManager.Instance.UpdateStageCount();
                 PlayerLocalManager.Instance.Save();
+                
+                var enemyRaces1 = PlayerLocalManager.Instance.lStageRace;
+                string enemyRacesContent1 = string.Join(", ", enemyRaces1);
+                CustomLogger.Log("종족 선택 후 세이브데이터 내 적 배열 목록: " + enemyRacesContent1, "black");
                 CustomLogger.Log("업데이트 후 스테이지카운트 : " + stageCount, "white");
             }
             else
             {
-                lSelectedRace = PlayerLocalManager.Instance.lSelectedRace;
+                SelectedRace = PlayerLocalManager.Instance.lSelectedRace;
                 PlayerLocalManager.Instance.Save();
-                CustomLogger.Log("Save데이터 상에 종족이 선택되어 있으므로 그 값을 받아옴 : " + lSelectedRace, "black");
+                CustomLogger.Log("Save데이터 상에 종족이 선택되어 있으므로 그 값을 받아옴 : " + SelectedRace, "black");
             }
         }
 
@@ -73,7 +78,7 @@ namespace InternalAffairs
         {
             // 랜덤으로 lStageRace 배열에서 종족 선택
             randomIndex = Random.Range(0, PlayerLocalManager.Instance.lStageRace.Length);
-            lSelectedRace = PlayerLocalManager.Instance.lStageRace[randomIndex];
+            SelectedRace = PlayerLocalManager.Instance.lStageRace[randomIndex];
         }
 
         private string[] RemoveRaceAt(string[] array, int index)

@@ -243,7 +243,7 @@ public class PlayerLocalManager : MonoBehaviour
     public void Save()
     {
         PlayerLocalData localData = new PlayerLocalData(lMoney, lPoint, lStartGold, lMoreEarnGold, lMoreCastleHealth,
-            lReduceCooldown, lHeroeList, lStage, lStageRace, lCastleMaxHp, lCastleHp, lCastleExtraHp, lUnitList);
+            lReduceCooldown, lHeroeList, lStage, lStageRace, lSelectedRace,lCastleMaxHp, lCastleHp, lCastleExtraHp, lUnitList);
         SaveLocalData(localData);
     }
 

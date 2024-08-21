@@ -109,7 +109,7 @@ public class StageC : MonoBehaviour
         {
             PlayerLocalManager.Instance.lCastleMaxHp = castleWallManager.maxHealth;
             PlayerLocalManager.Instance.lCastleHp = castleWallManager.health;
-            PlayerLocalManager.Instance.lCastleExtraHp = castleWallManager.extraHealth1;
+            PlayerLocalManager.Instance.lCastleExtraHp = castleWallManager.extraHealth;
             Debug.Log("현재 시점의 CastleWall 데이터가 DefenseGameData에 업로드되었습니다.");
         }
     }
