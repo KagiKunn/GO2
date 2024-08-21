@@ -13,6 +13,8 @@ public class InputBox : MonoBehaviour
     {
         Quit.onClick.AddListener(CloseWindow);
         Change.onClick.AddListener(ChangeNick);
+        DontDestroyOnLoad(this);
+        this.gameObject.SetActive(false);
     }
 
     void Update()
@@ -25,6 +27,8 @@ public class InputBox : MonoBehaviour
         if (Input.text != null)
         {
             Username.text = Input.text;
+            PlayerSyncManager.Instance.Username = Input.text;
+            PlayerSyncManager.Instance.Save();
             CloseWindow();
         }
     }

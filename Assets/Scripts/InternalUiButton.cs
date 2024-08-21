@@ -6,7 +6,6 @@ public class InternalUiButton : MonoBehaviour
 {
     public Button settingButton;
     public Button giveupButton;
-    public GameObject settingObject;
 
     private bool settingActive;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -27,11 +26,13 @@ public class InternalUiButton : MonoBehaviour
         settingActive = !settingActive;
         if (settingActive)
         {
-            settingObject.SetActive(true);
+            SettingManager.Instance.SetMainCamera();
+            SettingManager.Instance.gameObject.SetActive(true);
+            SettingManager.Instance.LoadText();
         }
         else
         {
-            settingObject.SetActive(false);
+            SettingManager.Instance.gameObject.SetActive(false);
         }
     }
     public void GiveupControl()
