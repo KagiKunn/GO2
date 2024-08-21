@@ -72,6 +72,8 @@ public class DefenseInit : MonoBehaviour
         EarnGoldSetup();
 
         CastleHealthSetup();
+        
+        PlayerLocalManager.Instance.Save();
     }
 
     private void Start()
@@ -115,25 +117,15 @@ public class DefenseInit : MonoBehaviour
 
     void CastleHealthSetup()
     {
-        GameObject Wall = GameObject.Find("Wall HP Controller");
-        switch (earnGold)
+        int castleExtraHp = earnGold switch
         {
-            case 1:
-                Wall.GetComponent<CastleWallManager>().extraHealth1 = 100f;
-                break;
-            case 2:
-                Wall.GetComponent<CastleWallManager>().extraHealth1 = 200f;
-                break;
-            case 3:
-                Wall.GetComponent<CastleWallManager>().extraHealth1 = 300f;
-                break;
-            case 4:
-                Wall.GetComponent<CastleWallManager>().extraHealth1 = 400f;
-                break;
-            default:
-                Wall.GetComponent<CastleWallManager>().extraHealth1 = 0f;
-                break;
-        }
+            1 => 500,
+            2 => 1000,
+            3 => 1500,
+            4 => 2000,
+            _ => 0
+        };
+        PlayerLocalManager.Instance.lCastleExtraHp = castleExtraHp;
     }
 
     void CoolDownSetup()
