@@ -1,15 +1,17 @@
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class UnitShopInit : MonoBehaviour
 {
     public GameObject[] units;
     private int unitIndex = 0;
 
-    private List<string> boughtUnit = new List<string>();
+    private List<KeyValuePair<string, int>> boughtUnit;
     private void Awake()
     {
+        boughtUnit = PlayerLocalManager.Instance.lUnitList ?? new List<KeyValuePair<string, int>>();
         GameObject prefabObject = Instantiate(units[unitIndex],transform.position,quaternion.identity,transform);
         RectTransform newObjectRect = prefabObject.GetComponent<RectTransform>();
 
@@ -17,6 +19,10 @@ public class UnitShopInit : MonoBehaviour
         newObjectRect.anchoredPosition = new Vector2(0,-50);
     }
 
+    public void Back()
+    {
+        SceneManager.LoadScene("InternalAffairs");
+    }
     public void NextUnitButton()
     {
         unitIndex++;
@@ -63,8 +69,6 @@ public class UnitShopInit : MonoBehaviour
             CustomLogger.Log("Need More Money!","red");
             return;
         }
-        
-        
         string unit = unitIndex switch
         {
             0 => "Bow",
@@ -73,15 +77,11 @@ public class UnitShopInit : MonoBehaviour
             3 => "Mage",
             _ => "err"
         };
-        boughtUnit.Add(unit);
+        KeyValuePair<string, int> keyVal = new KeyValuePair<string, int>(unit, 0);
+        boughtUnit.Add(keyVal);
         PlayerLocalManager.Instance.lMoney -= price;
         //여기서 유닛 세이브
         PlayerLocalManager.Instance.lUnitList = boughtUnit;
-        
-        foreach (string b in boughtUnit)
-        {
-            CustomLogger.Log(b);
-        }
         PlayerLocalManager.Instance.Save();
     }
 }
