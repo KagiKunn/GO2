@@ -31,32 +31,4 @@ public class PlacementUnitA : MonoBehaviour
     {
         return slotUnitDataList ?? new List<SlotUnitData>();
     }
-
-    public void SetSlotUnitDataList(List<SlotUnitData> dataList)
-    {
-        slotUnitDataList = dataList ?? new List<SlotUnitData>();
-        foreach (var slotUnit in slotUnitDataList)
-        {
-            slotUnit.UnitData = UnitGameManagerA.Instance.LoadUnitDataById(slotUnit.ID);
-        }
-        UpdateSlotImages();
-    }
-
-    private void UpdateSlotImages()
-    {
-        foreach (var slotUnit in slotUnitDataList)
-        {
-            if (slotUnit.SlotIndex >= 0 && slotUnit.SlotIndex < slots.Length)
-            {
-                var slot = slots[slotUnit.SlotIndex];
-                var image = slot.GetComponent<Image>();
-                if (image != null && slotUnit.UnitData != null)
-                {
-                    image.sprite = slotUnit.UnitData.UnitImage;
-                    image.color = Color.white;
-                    image.enabled = true;
-                }
-            }
-        }
-    }
 }
