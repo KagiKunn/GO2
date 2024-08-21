@@ -30,11 +30,6 @@ public class CastleWallManager : MonoBehaviour {
     public float health;
     public float shield;
 
-    public float extraHealth1 {
-        get => extraHealth;
-        set => extraHealth = value;
-    }
-
 	private void Awake() {
 		// Load game data
 		if (PlayerLocalManager.Instance != null) {

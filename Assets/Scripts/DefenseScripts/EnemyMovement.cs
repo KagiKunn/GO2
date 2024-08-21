@@ -295,7 +295,7 @@ public class EnemyMovement : MonoBehaviour {
 				// 보스 사망 이벤트 호출
 				OnBossDie?.Invoke();
 
-				defenseInit.Soul ++;
+				defenseInit.soul ++;
 				
 				StageC stageC = FindObjectOfType<StageC>();
 				stageC.ShowStageClearUI();
