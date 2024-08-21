@@ -35,12 +35,6 @@ public class CastleWallManager : MonoBehaviour {
 	public float health;
 	public float shield;
 
-	public float extraHealth1 {
-		get => extraHealth;
-
-		set => extraHealth = value;
-	}
-
 	private void Awake() {
         
         Debug.Log("특전 추가체력 : " + extraHealth1);
