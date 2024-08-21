@@ -5,9 +5,9 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-
+using TMPro;
 using Unity.VisualScripting;
-
+using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 
 #pragma warning disable CS0618, CS0414 // 형식 또는 멤버는 사용되지 않습니다.
@@ -54,8 +54,7 @@ public class EnemyMovement : MonoBehaviour {
 
 		if (StageC.Instance == null) return;
 
-		stageCount = StageC.Instance.currentStageCount;
-		weekCount = StageC.Instance.currentWeekCount;
+		stageCount = PlayerLocalManager.Instance.lStage;
 
 		// 기본 체력 값
 		float baseHealth = health;
@@ -176,7 +175,7 @@ public class EnemyMovement : MonoBehaviour {
 		health -= damage * (1 + (percent / 100));
 
 		// 코루틴이 실행 중이지 않을 때만 호출
-		if (!isChangingBrightness) {
+		if (!isChangingBrightness && deadJudge) {
 			StartCoroutine(ChangeBrightnessTemporarily(0.1f, 0.6f)); // 예: 명도를 50%로 줄임
 		}
 
@@ -240,33 +239,44 @@ public class EnemyMovement : MonoBehaviour {
 
 	private IEnumerator RestoreOriginalColors(Dictionary<Transform, Color> originalColors) {
 		foreach (KeyValuePair<Transform, Color> entry in originalColors) {
-			SpriteRenderer spriteRenderer = entry.Key.GetComponent<SpriteRenderer>();
+			if (entry.Key != null && entry.Key.gameObject != null)
+			{
+				SpriteRenderer spriteRenderer = entry.Key.GetComponent<SpriteRenderer>();
 
-			if (spriteRenderer != null) {
-				spriteRenderer.color = entry.Value;
-			}
+				if (spriteRenderer != null)
+				{
+					spriteRenderer.color = entry.Value;
+				}
 
-			// 작업을 한 프레임에 모두 처리하지 않도록 대기
-			if (entry.Key.GetSiblingIndex() % 15 == 0) {
-				yield return null;
+				// 작업을 한 프레임에 모두 처리하지 않도록 대기
+				if (entry.Key.GetSiblingIndex() % 15 == 0)
+				{
+					yield return null;
+				}
 			}
 		}
 	}
 
 	public bool IsDead() {
+		
+		
 		return health <= 0;
 	}
 
 	private void Die() {
 		// 적이 죽었을 때의 동작 (예: 오브젝트 비활성화)
-		DefenseInit defenseInit = GameObject.Find("InitSetting").GetComponent<DefenseInit>();
-		int crntgold;
+		if (SceneManager.GetActiveScene().name == "Defense")
+		{
+			if (GameObject.Find("InitSetting").GetComponent<DefenseInit>() == null) return;
+			DefenseInit defenseInit = GameObject.Find("InitSetting").GetComponent<DefenseInit>();
+			int crntgold;
 
-		if (defenseInit.extraGold1 == 0) {
-			crntgold = gold;
-		} else {
-			crntgold = gold + defenseInit.extraGold1 / gold;
-		}
+			if (defenseInit.extraGold1 == 0) {
+				crntgold = gold;
+			} else {
+				crntgold = gold + defenseInit.extraGold1 / gold;
+				GameObject.Find("Gold").GetComponent<TMP_InputField>().text = crntgold.ToString();
+			}
 
 		EnemySpawner enemySpawner = GameObject.Find("Spawner").GetComponent<EnemySpawner>();
 		enemySpawner.enemyDieCount++;
@@ -276,23 +286,29 @@ public class EnemyMovement : MonoBehaviour {
 		defenseInit.currentGold1 += crntgold;
 		CustomLogger.Log(defenseInit.currentGold1);
 
-		// 적의 태그가 EnemyBoss 일때 실행
-		if (gameObject.CompareTag("EnemyBoss")) {
-			//여기에 보스가 죽었을때의 이벤트
-			CustomLogger.Log("보스 사망..............", "red");
+			// 적의 태그가 EnemyBoss 일때 실행
+			if (gameObject.CompareTag("EnemyBoss")) {
+				//여기에 보스가 죽었을때의 이벤트
+				CustomLogger.Log("보스 사망..............", "red");
 
-			// 보스 사망 플래그 설정
-			isBossDied = true;
+				// 보스 사망 플래그 설정
+				isBossDied = true;
 
-			// 보스 사망 이벤트 호출
-			OnBossDie?.Invoke();
+				// 보스 사망 이벤트 호출
+				OnBossDie?.Invoke();
 
-			StageC stageC = FindObjectOfType<StageC>();
-			stageC.ShowStageClearUI();
+				StageC stageC = FindObjectOfType<StageC>();
+				stageC.ShowStageClearUI();
+			}
+		
+			gameObject.SetActive(false);
+			deadJudge = false;
 		}
-
-		gameObject.SetActive(false);
-		deadJudge = false;
+		else
+		{
+			transform.parent.gameObject.SetActive(false);
+		}
+		
 	}
 
 	private void OnDrawGizmos() {

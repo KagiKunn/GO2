@@ -27,7 +27,7 @@ public class EnemySpawner : MonoBehaviour
     private const float leftX = -100f;
 
     // 생성할 오브젝트의 개수
-    [SerializeField] public int numberOfObjects = 10;
+    [SerializeField] public int numberOfObjects = 1;
 
     // 스포너가 생성한 적 오브젝트 개수
     private int spawnedEnemy = 0;
@@ -61,6 +61,11 @@ public class EnemySpawner : MonoBehaviour
     // 전체에서 사망한 적의 수
     public int totalEnemyDieCount = 0;
 
+    public GameObject bossImage;  // 보스 소환 전 나타날 이미지
+    public float displayTime = 4.0f;  // 이미지가 표시될 시간(초)
+    private float blinkDuration = 4.0f;  // 깜빡임이 지속될 시간(초)
+    private float blinkInterval = 0.3f;  // 깜빡임 간격(초)
+    
     public void SetSelectedRace(string race)
     {
         selectedRace = race;
@@ -70,14 +75,10 @@ public class EnemySpawner : MonoBehaviour
     private void Start()
     {
         CustomLogger.Log("EnemySpawner Start()진입", "pink");
-
-        //StageC로부터 스테이지 정보 받아오기
-        stageCount = StageC.Instance.currentStageCount;
-        weekCount = StageC.Instance.currentWeekCount;
-
+        bossImage.SetActive(false);
+        
         //스테이지 수에 따른 웨이브당 스폰 숫자 증가
-        // numberOfObjects *= stageCount;
-        numberOfObjects += 10;
+        numberOfObjects *= stageCount;
         CustomLogger.Log("StageCount를 받아와서 스폰할 숫자 재설정 결과 : " + numberOfObjects, "pink");
 
         // EnemyPrefabList 참조 가져오기
@@ -128,9 +129,27 @@ public class EnemySpawner : MonoBehaviour
         if (CheckBossSpawn())
         {
             CustomLogger.Log("모든 적이 사망했습니다. 보스를 소환합니다.", "red");
-            SpawnBoss();
+            StartCoroutine(DisplayBossImageAndSpawn());
             totalEnemyDieCount = 0;
         }
+    }
+
+    private IEnumerator DisplayBossImageAndSpawn()
+    {
+        bossImage.SetActive(true);
+        float elapsedTime = 0f;
+
+        while (elapsedTime < blinkDuration)
+        {
+            // 이미지 깜빡이기 (활성화/비활성화 반복)
+            bossImage.SetActive(!bossImage.activeSelf);
+            yield return new WaitForSeconds(blinkInterval);
+            elapsedTime += blinkInterval;
+        }
+        
+        bossImage.SetActive(false);
+
+        SpawnBoss();
     }
 
     IEnumerator SpawnWaves()

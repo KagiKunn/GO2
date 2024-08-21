@@ -42,7 +42,7 @@ public class PoolManager : MonoBehaviour {
 		}
 
 		// ... 못 찾았으면?
-		if (select.IsUnityNull()) {
+		if (select == null) {
 			// ... 새롭게 생성하고 select 변수에 할당
 			select = Instantiate(enemyPrefabs[index], transform);
 
@@ -67,7 +67,7 @@ public class PoolManager : MonoBehaviour {
 		}
 
 		// ... 못 찾았으면?
-		if (select.IsUnityNull()) {
+		if (select == null) {
 			// ... 새롭게 생성하고 select 변수에 할당
 			select = Instantiate(weaponPrefabs[index], transform);
 
@@ -92,7 +92,7 @@ public class PoolManager : MonoBehaviour {
 		}
 
 		// ... 못 찾았으면?
-		if (select.IsUnityNull()) {
+		if (select == null) {
 			// ... 새롭게 생성하고 select 변수에 할당
 			select = Instantiate(bulletPrefabs[index], transform);
 

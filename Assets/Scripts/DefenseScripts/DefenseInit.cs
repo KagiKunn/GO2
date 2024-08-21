@@ -1,12 +1,13 @@
 using System;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class DefenseInit : MonoBehaviour
 {
     public AudioClip soundClip;
     private AudioSource audioSource;
     
-    
+    public AudioMixerGroup bgmMixerGroup; // 배경음악용 믹서 그룹
     
     private int startGold;
     private int earnGold;
@@ -70,6 +71,7 @@ public class DefenseInit : MonoBehaviour
         audioSource = gameObject.AddComponent<AudioSource>();
         audioSource.clip = soundClip;
         audioSource.loop = true;
+        audioSource.outputAudioMixerGroup = bgmMixerGroup;
         PlaySound();
     }
 

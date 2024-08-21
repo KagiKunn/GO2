@@ -142,7 +142,8 @@ public class PlayerSyncManager : MonoBehaviour, IDisposable
 
         while (reconnectAttempts < maxReconnectAttempts)
         {
-            client = new TcpClient("125.191.215.205", 1651);
+            bool test = false;
+            client = new TcpClient(test ? "127.0.0.1" : "125.191.215.205", 1651);
 
             // 연결이 성공적으로 이루어졌다면 스트림을 가져옵니다.
             if (client.Connected)
