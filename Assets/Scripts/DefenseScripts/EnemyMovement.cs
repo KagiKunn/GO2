@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using TMPro;
 using Unity.VisualScripting;
+
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 
@@ -242,18 +243,15 @@ public class EnemyMovement : MonoBehaviour {
 
 	private IEnumerator RestoreOriginalColors(Dictionary<Transform, Color> originalColors) {
 		foreach (KeyValuePair<Transform, Color> entry in originalColors) {
-			if (entry.Key != null && entry.Key.gameObject != null)
-			{
+			if (entry.Key != null && entry.Key.gameObject != null) {
 				SpriteRenderer spriteRenderer = entry.Key.GetComponent<SpriteRenderer>();
 
-				if (spriteRenderer != null)
-				{
+				if (spriteRenderer != null) {
 					spriteRenderer.color = entry.Value;
 				}
 
 				// 작업을 한 프레임에 모두 처리하지 않도록 대기
-				if (entry.Key.GetSiblingIndex() % 15 == 0)
-				{
+				if (entry.Key.GetSiblingIndex() % 15 == 0) {
 					yield return null;
 				}
 			}
@@ -261,16 +259,14 @@ public class EnemyMovement : MonoBehaviour {
 	}
 
 	public bool IsDead() {
-		
-		
 		return health <= 0;
 	}
 
 	private void Die() {
 		// 적이 죽었을 때의 동작 (예: 오브젝트 비활성화)
-		if (SceneManager.GetActiveScene().name == "Defense")
-		{
+		if (SceneManager.GetActiveScene().name == "Defense") {
 			if (GameObject.Find("InitSetting").GetComponent<DefenseInit>() == null) return;
+
 			DefenseInit defenseInit = GameObject.Find("InitSetting").GetComponent<DefenseInit>();
 			int crntgold;
 
@@ -281,13 +277,13 @@ public class EnemyMovement : MonoBehaviour {
 				GameObject.Find("Gold").GetComponent<TMP_InputField>().text = crntgold.ToString();
 			}
 
-		EnemySpawner enemySpawner = GameObject.Find("Spawner").GetComponent<EnemySpawner>();
-		enemySpawner.enemyDieCount++;
-		enemySpawner.totalEnemyDieCount++;
-		CustomLogger.Log("적 사망 카운트 :" + enemySpawner.enemyDieCount, "white");
+			EnemySpawner enemySpawner = GameObject.Find("Spawner").GetComponent<EnemySpawner>();
+			enemySpawner.enemyDieCount++;
+			enemySpawner.totalEnemyDieCount++;
+			CustomLogger.Log("적 사망 카운트 :" + enemySpawner.enemyDieCount, "white");
 
-		defenseInit.currentGold1 += crntgold;
-		CustomLogger.Log(defenseInit.currentGold1);
+			defenseInit.currentGold1 += crntgold;
+			CustomLogger.Log(defenseInit.currentGold1);
 
 			// 적의 태그가 EnemyBoss 일때 실행
 			if (gameObject.CompareTag("EnemyBoss")) {
@@ -303,15 +299,12 @@ public class EnemyMovement : MonoBehaviour {
 				StageC stageC = FindObjectOfType<StageC>();
 				stageC.ShowStageClearUI();
 			}
-		
+
 			gameObject.SetActive(false);
 			deadJudge = false;
-		}
-		else
-		{
+		} else {
 			transform.parent.gameObject.SetActive(false);
 		}
-		
 	}
 
 	private void OnDrawGizmos() {
