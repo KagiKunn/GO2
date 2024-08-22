@@ -20,7 +20,7 @@ public class PlayerLocalManager : MonoBehaviour
     public int L_Week;
     public int L_Stage;
     public string[] L_StageRace;
-    private string L_SelectedRace;
+    public string L_SelectedRace;
     private float L_CastleMaxHP;
     private float L_CastleHP;
     private float L_CastleExtraHP;
