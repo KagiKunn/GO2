@@ -5,8 +5,9 @@ public class EndingCredit : MonoBehaviour
 {
     private RectTransform rectTransform;
 
-    void Start()
+    void Awake()
     {
+        Time.timeScale = 1f;
         rectTransform = gameObject.GetComponent<RectTransform>();
         Debug.Log("Starting EndingCredit script");
     }
@@ -40,5 +41,5 @@ public class EndingCredit : MonoBehaviour
     {
         Debug.Log("EndingCredit script disabled");
     }
-
+ 
 }
