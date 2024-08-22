@@ -25,6 +25,8 @@ public class PlayerLocalData
     public bool GameStarted { get; set; }
     
     public List<KeyValuePair<string, int>> UnitList { get; set; }
+    
+    public List<KeyValuePair<int, string>> AllyUnitList { get; set; }
 
     public PlayerLocalData()
     {
@@ -43,12 +45,13 @@ public class PlayerLocalData
         CastleHealth = 5000f;
         CastleExtraHealth = 0;
         UnitList = new List<KeyValuePair<string, int>>();
+        AllyUnitList = new List<KeyValuePair<int, string>>();
         GameStarted = false;
     }
 
     public PlayerLocalData(int money, int remainedPoint, int startGold, int moreEarnGold, int moreCastleHealth,
         int reduceCooldown, HeroList[] herosList, int stage, string[] stageRace, string selectedRace, float castleMaxHealth,
-        float castleHealth, float castleExtraHealth, List<KeyValuePair<string, int>> unitList, bool gameStarted)
+        float castleHealth, float castleExtraHealth, List<KeyValuePair<string, int>> unitList, List<KeyValuePair<int, string>> allyUnitList, bool gameStarted)
     {
         Money = money;
         RemainedPoint = remainedPoint;
@@ -64,6 +67,7 @@ public class PlayerLocalData
         CastleHealth = castleHealth;
         CastleExtraHealth = castleExtraHealth;
         UnitList = unitList;
+        AllyUnitList = allyUnitList;
         GameStarted = gameStarted;
     }
 }
