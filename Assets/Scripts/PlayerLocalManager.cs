@@ -181,7 +181,7 @@ public class PlayerLocalManager : MonoBehaviour {
 		}
 	}
 
-	private void CreateNewPlayer() {
+	public void CreateNewPlayer() {
 		PlayerLocalData localData = new PlayerLocalData(); // 기본 생성자 호출
 
 		// 초기값 설정
