@@ -66,6 +66,11 @@ public class UpgradeHero : MonoBehaviour
 
     public void OnUpgradeBtn()
     {
+        if (100 < PlayerLocalManager.Instance.lMoney)
+        {
+            PlayerLocalManager.Instance.lMoney -= 100;
+            PlayerLocalManager.Instance.Save();
+        }
         HeroManager.Instance.upgradeHero.OffenceHP += 20;
         HeroManager.Instance.upgradeHero.OffenceAttack += 10;
         HeroManager.Instance.upgradeHero.OffenceAttackSpeed += 5;

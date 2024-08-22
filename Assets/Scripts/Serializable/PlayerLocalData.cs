@@ -74,6 +74,10 @@ public class HeroList : Quad<string, bool, int, ItemSO[]>
     public HeroList(string heroName, bool unlocked, int selected, ItemSO[] equip) : base(heroName, unlocked, selected, equip)
     {
     }
+
+    public HeroList(string heroName, bool unlocked, int selected) : base(heroName, unlocked, selected)
+    {
+    }
 }
 
 [Serializable]
@@ -90,5 +94,11 @@ public class Quad<T1, T2, T3, T4>
         Item2 = item2;
         Item3 = item3;
         Item4 = item4;
+    }
+    public Quad(T1 item1, T2 item2, T3 item3)
+    {
+        Item1 = item1;
+        Item2 = item2;
+        Item3 = item3;
     }
 }
