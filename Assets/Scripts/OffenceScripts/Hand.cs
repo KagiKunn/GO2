@@ -39,7 +39,7 @@ public class Hand : MonoBehaviour {
 
 			spriteRenderer.flipY = isReverse;
 			spriteRenderer.sortingOrder = isReverse ? 14 : 25;
-		} else if (player.Scanner.NearestTarget) {
+		} else if (player.Scanner.NearestTarget && player.Scanner.NearestTarget != null) {
 			Vector3 targetPos = player.Scanner.NearestTarget.position;
 			Vector3 dir = targetPos - transform.position;
 

@@ -44,8 +44,8 @@ public class HeroText : MonoBehaviour {
 			if (PlayerLocalManager.Instance.lHeroeList[i].Item3 > 0)
 				hero.Add(HeroManager.Instance.heroDataList.Find(h => h.Name == heroList[i].Item1));
 		}
-
-		for (int i = 0; i < activeTextName.Count; i++) {
+		
+		for (int i = 0; i < hero.Count; i++) {
 			Image heroColor = activeHeroColor[i].GetComponent<Image>();
 			Image heroIcon = activeHeroIcon[i].GetComponent<Image>();
 			Text heroName = activeTextName[i].GetComponent<Text>();

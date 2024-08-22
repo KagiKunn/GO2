@@ -132,7 +132,7 @@ public class Weapon : MonoBehaviour {
 			if (i < transform.childCount) {
 				bullet = transform.GetChild(i);
 			} else {
-				bullet = poolManager.GetWeapon(prefabId).transform;
+				bullet = poolManager.GetObject(1, prefabId).transform;
 				bullet.parent = transform;
 			}
 
@@ -158,7 +158,7 @@ public class Weapon : MonoBehaviour {
 
 		direction = direction.normalized;
 
-		Transform bullet = poolManager.GetFire(prefabId).transform;
+		Transform bullet = poolManager.GetObject(2, prefabId).transform;
 
 		bullet.position = transform.position;
 		bullet.rotation = Quaternion.FromToRotation(Vector3.up, direction);
