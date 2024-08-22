@@ -76,7 +76,7 @@ public class PlayerSyncManager : MonoBehaviour, IDisposable
         if (syncInit)
         {
             syncInit = false;
-            int byteSize = 0;
+            buffer = new byte[1024];
             var bytes = stream.Read(buffer, 0, buffer.Length);
 
             if (bytes <= 4)
@@ -87,7 +87,6 @@ public class PlayerSyncManager : MonoBehaviour, IDisposable
             for (int i = 0; i < bytes - 4; i++)
             {
                 buffer[i] = buffer[i + 4];
-                byteSize++;
             }
 
             for (int i = bytes - 4; i < bytes; i++)
@@ -96,8 +95,8 @@ public class PlayerSyncManager : MonoBehaviour, IDisposable
             }
 
             if (bytes <= 0) return;
-            CustomLogger.LogWarning($"Byte : {byteSize}");
-            if (byteSize < 20)
+            CustomLogger.LogWarning($"Byte : {bytes}");
+            if (bytes < 20)
             {
                 string code = DeserializeCode(buffer, 16);
                 InputBox.Instance.Input.text = code.Substring(0,8);
@@ -119,7 +118,11 @@ public class PlayerSyncManager : MonoBehaviour, IDisposable
                 {
                     changeAccount = false;
                     PlayerLocalManager.Instance.CreateNewPlayer();
-                    SceneControl.LoadScene("Title");
+                    #if UNITY_EDITOR
+                            UnityEditor.EditorApplication.isPlaying = false;
+                    #else
+                            Application.Quit();
+                    #endif
                 }
             }
         }
