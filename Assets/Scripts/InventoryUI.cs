@@ -207,7 +207,7 @@ public class InventoryUI : MonoBehaviour
     //     SaveInventory();
     // }
 
-    void SaveInventory()
+    public void SaveInventory()
     {
             string jsonContent = JsonUtility.ToJson(inventoryData, true);
             CustomLogger.Log($"JSON Content Before Writing: {jsonContent}");
@@ -281,7 +281,7 @@ public class InventoryUI : MonoBehaviour
         CustomLogger.Log($"Expanding Inventory by {additionalSlots} slots");
         for (int i = 0; i < additionalSlots; i++)
         {
-            GameObject newSlot = Resources.Load<GameObject>("Assets/JSFolder/PreFab/Slot.prefab");
+            GameObject newSlot = Resources.Load<GameObject>("PreFab/Slot");
             if (newSlot != null)
             {
                 Instantiate(newSlot, inventoryContent);
