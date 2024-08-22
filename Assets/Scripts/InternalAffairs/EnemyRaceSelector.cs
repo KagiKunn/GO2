@@ -52,23 +52,21 @@ namespace InternalAffairs
             }
         }
 
-        private void SelectAndSaveRace()
-        {
-            SelectRandomRace();
-            CustomLogger.Log("SelectedRace:" + SelectedRace, "black");
+		private void SelectAndSaveRace() {
+			SelectRandomRace();
+			CustomLogger.Log("SelectedRace:" + SelectedRace, Color.cyan);
 
-            // 선택된 종족을 PlayerLocalManager에 저장
-            PlayerLocalManager.Instance.lSelectedRace = SelectedRace;
-            CustomLogger.Log("로컬매니저에 저장된 종족 : " + PlayerLocalManager.Instance.lSelectedRace, "white");
+			// 선택된 종족을 PlayerLocalManager에 저장
+			PlayerLocalManager.Instance.lSelectedRace = SelectedRace;
+			CustomLogger.Log("로컬매니저에 저장된 종족 : " + PlayerLocalManager.Instance.lSelectedRace, "white");
 
-            PlayerLocalManager.Instance.Save();
-        }
+			PlayerLocalManager.Instance.Save();
+		}
 
-        private void SelectRandomRace()
-        {
-            // 랜덤으로 lStageRace 배열에서 종족 선택
-            randomIndex = Random.Range(0, PlayerLocalManager.Instance.lStageRace.Length);
-            SelectedRace = PlayerLocalManager.Instance.lStageRace[randomIndex];
-        }
-    }
+		private void SelectRandomRace() {
+			// 랜덤으로 lStageRace 배열에서 종족 선택
+			randomIndex = Random.Range(0, PlayerLocalManager.Instance.lStageRace.Length);
+			SelectedRace = PlayerLocalManager.Instance.lStageRace[randomIndex];
+		}
+	}
 }
