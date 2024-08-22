@@ -161,7 +161,9 @@ public class DefenseInit : MonoBehaviour {
 
 	private void OnDisable() {
 		PlayerLocalManager.Instance.lMoney = currentGold;
-		PlayerLocalManager.Instance.lPoint = soul;
+		PlayerLocalManager.Instance.lPoint ++;
 		PlayerLocalManager.Instance.Save();
+		PlayerSyncManager.Instance.RoguePoint ++;
+		PlayerSyncManager.Instance.Save();
 	}
 }
