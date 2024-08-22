@@ -252,6 +252,7 @@ public class StageC : MonoBehaviour
 
     private void allStageClear()
     {
+        PlayerLocalManager.Instance.lGameStarted = false;
         // 로그라이크 포인트 증가
         PlayerSyncManager.Instance.RoguePoint += 1;
         PlayerLocalManager.Instance.lPoint += 1;

@@ -18,6 +18,10 @@ public class BounusSaveManager : MonoBehaviour
 
     void Awake()
     {
+        if (PlayerLocalManager.Instance.lGameStarted)
+        {
+            SceneManager.LoadScene("InternalAffairs");
+        }
         startGold = GameObject.Find("StartGold");
         earnGold = GameObject.Find("EarnGold");
         castleHealth = GameObject.Find("CastleHealth");
@@ -49,6 +53,7 @@ public class BounusSaveManager : MonoBehaviour
         PlayerLocalManager.Instance.lReduceCooldown = cooldown.GetComponent<UIButtonToggle>().level;
         PlayerLocalManager.Instance.lPoint =
             int.Parse(GameObject.Find("Soul").transform.GetChild(0).GetComponent<TextMeshProUGUI>().text);
+        PlayerLocalManager.Instance.lGameStarted = true;
         PlayerLocalManager.Instance.Save();
 
         StartGoldSetup();
