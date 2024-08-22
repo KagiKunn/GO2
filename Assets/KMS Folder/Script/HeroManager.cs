@@ -56,7 +56,7 @@ public class HeroManager : MonoBehaviour
         for (int i = 0; i < heroDataList.Count; i++)
         {
             HeroData hero = heroDataList[i];
-            heroList[i] = new HeroList(hero.Name, true, 0);
+            heroList[i] = new HeroList(hero.Name, true, 0, heroList[i].Item4);
         }
 
         foreach (HeroList heroL in heroList)
