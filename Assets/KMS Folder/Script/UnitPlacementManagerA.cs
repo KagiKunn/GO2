@@ -25,6 +25,7 @@ public class UnitPlacementManagerA : MonoBehaviour
     private void Start()
     {
         List<SlotUnitData> savedUnits = UnitGameManagerA.Instance.LoadSlotUnitData();
+        
         if (savedUnits != null && savedUnits.Count > 0)
         {
             if (savedUnits.Count > 0)

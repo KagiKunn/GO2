@@ -54,10 +54,18 @@ public class PlacementUnitA : MonoBehaviour
 
         slotUnitDataList = dataList;
 
+
         for (int i = 0; i < slotUnitDataList.Count; i++)
         {
             int slotIndex = slotUnitDataList[i].SlotIndex;
-        
+            int placementStatus = slotUnitDataList[i].Placement;
+
+            if (placementStatus == 0)
+            {
+                CustomLogger.Log($"Slot {slotIndex} is empty because PlacementStatus is 0.", Color.yellow);
+                continue;
+            }
+            
             if (slotIndex >= 0 && slotIndex < slots.Length)
             {
                 var slot = slots[slotIndex];
@@ -70,6 +78,11 @@ public class PlacementUnitA : MonoBehaviour
                         dropableComponent.assignedUnitData = slotUnitDataList[i].UnitData;
                         slot.GetComponent<Image>().sprite = slotUnitDataList[i].UnitData.UnitImage;
                         slot.GetComponent<Image>().color = Color.white;
+                        
+                        
+                        
+                        
+                        
                     }
                     else
                     {

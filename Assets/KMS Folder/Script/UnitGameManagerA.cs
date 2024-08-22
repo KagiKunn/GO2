@@ -72,6 +72,7 @@ public class UnitGameManagerA : MonoBehaviour
                 instance.slotUnitDataList.Add(null);
             }
         }
+        
         var slotUnitData = new SlotUnitData(slotIndex, unit, placement);
         instance.slotUnitDataList[slotIndex] = slotUnitData;
         
@@ -83,6 +84,21 @@ public class UnitGameManagerA : MonoBehaviour
     
     public void SaveSlotUnitData(List<SlotUnitData> dataList)
     {
+        List<SlotUnitData> existingDataList = LoadSlotUnitData();
+        
+        foreach (var newData in dataList)
+        {
+            int index = existingDataList.FindIndex(d => d.SlotIndex == newData.SlotIndex);
+            if (index >= 0)
+            {
+                existingDataList[index] = newData;
+            }
+            else
+            {
+                existingDataList.Add(newData);
+            }
+        }
+        
         if (dataList.Count == 0)
         {
             Debug.LogWarning("No data to save.");
@@ -116,6 +132,7 @@ public class UnitGameManagerA : MonoBehaviour
             string json = File.ReadAllText(filePath);
             SlotUnitDataWrapper wrapper = JsonUtility.FromJson<SlotUnitDataWrapper>(json);
             return wrapper.SlotUnitDataList;
+
         }
         else
         {

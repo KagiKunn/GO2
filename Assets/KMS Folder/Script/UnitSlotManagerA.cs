@@ -123,7 +123,6 @@ public class UnitSlotManagerA : MonoBehaviour
             
             CustomLogger.Log(placementStatus, Color.cyan);
             CustomLogger.Log(wallIndex,Color.cyan);
-            // 현재 성벽에 배치된 유닛들만 리셋
             if (placementStatus == wallIndex)
             {
                 UnitGameManagerA.Instance.unitPlacementStatus[draggable.unitData] = 0;
@@ -134,7 +133,6 @@ public class UnitSlotManagerA : MonoBehaviour
             }
         }
 
-        // 성벽의 슬롯 초기화
         if (wallIndex == 1)
         {
             leftPlacementManager.ResetPlacementSlots();
@@ -144,7 +142,6 @@ public class UnitSlotManagerA : MonoBehaviour
             rightPlacementManager.ResetPlacementSlots();
         }
 
-        // 리셋 후 상태를 업데이트
         UpdateDraggableStates();
     }
 }

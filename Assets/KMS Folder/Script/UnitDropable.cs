@@ -61,7 +61,6 @@ public class UnitDropable : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             else
             {
                 placement = 0;
-                CustomLogger.Log("placement 왜 0임?? 미쳤나");
             }
             
             int slotIndex = transform.GetSiblingIndex();
@@ -77,11 +76,10 @@ public class UnitDropable : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                 dropZoneImage.sprite = draggedUnit.unitData.UnitImage;
                 dropZoneImage.color = Color.white;
             }
-            // 드래그된 유닛의 부모를 다시 목록으로 설정하고, 드롭존에는 데이터에서 추출한 이미지만 표시
+            
             draggedUnit.transform.SetParent(draggedUnit.previousParent);
             draggedUnit.GetComponent<RectTransform>().position = draggedUnit.previousParent.GetComponent<RectTransform>().position;
             
-            // 드래그된 유닛의 슬롯 이벤트를 비활성화하여 중복 배치를 방지
             UnitDraggable originalDraggable = draggedUnit.previousParent.GetComponentInChildren<UnitDraggable>();
             if (originalDraggable != null)
             { 
