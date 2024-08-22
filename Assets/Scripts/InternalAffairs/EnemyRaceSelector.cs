@@ -16,6 +16,7 @@ namespace InternalAffairs
         private void Awake()
         {
             CustomLogger.Log("EnemyRaceSelector Awake()진입", "black");
+            PlayerLocalManager.Instance.UpdateStageCount();
             if (Instance == null)
             {
                 Instance = this;
@@ -28,14 +29,14 @@ namespace InternalAffairs
 
             weekCount = PlayerSyncManager.Instance.Repeat;
             stageCount = PlayerLocalManager.Instance.L_Stage;
-            CustomLogger.Log("위크카운트  : " + weekCount + ", 업데이트 전 스테이지카운트 : " + stageCount, "white");
+            CustomLogger.Log("위크카운트  : " + weekCount + ", 스테이지카운트 : " + stageCount, "white");
 
             CustomLogger.Log("save상 선택된 종족: " + PlayerLocalManager.Instance.lSelectedRace, "black");
 
             if (string.IsNullOrEmpty(PlayerLocalManager.Instance.lSelectedRace)) 
             {
                 CustomLogger.Log("종족 선택되지 않음. 종족 선택으로 이행", "black");
-                if (stageCount == 0)
+                if (stageCount == 1) //1스테이지일때 벽 체력정보 리셋
                 {
                     PlayerLocalManager.Instance.ResetHealthData();
                 }

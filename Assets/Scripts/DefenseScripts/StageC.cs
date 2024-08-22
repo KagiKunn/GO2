@@ -197,7 +197,7 @@ public class StageC : MonoBehaviour
 
         // 최종 스테이지가 아닐 경우 현재 stageCount와 stageRace 배열 업데이트
         // 최종 스테이지일 경우 버튼 호출
-        if (PlayerLocalManager.Instance.lStage == 5)
+        if (PlayerLocalManager.Instance.lStage == 6)
         {
             allStageClear();
             SaveGameData();

@@ -219,7 +219,8 @@ public class PlayerLocalManager : MonoBehaviour
     // stageRace 배열의 길이에 따라 stageCount를 동기화
     public void UpdateStageCount()
     {
-        lStage = 5 - lStageRace.Length; // 남은 종족 수에 따라 stageCount를 계산
+        //스테이지 카운트 업뎃
+        lStage = 6 - lStageRace.Length; // 남은 종족 수에 따라 stageCount를 계산
         Save();
     }
 
