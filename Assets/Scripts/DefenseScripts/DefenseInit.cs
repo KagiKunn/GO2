@@ -1,149 +1,167 @@
 using System;
+
+using TMPro;
+
 using UnityEngine;
+using UnityEngine.Audio;
 
-public class DefenseInit : MonoBehaviour
-{
-    public AudioClip soundClip;
-    private AudioSource audioSource;
-    
-    
-    
-    private int startGold;
-    private int earnGold;
-    private int castleHealth;
-    private int cooldown;
+public class DefenseInit : MonoBehaviour {
+	public AudioClip soundClip;
+	private AudioSource audioSource;
 
-    public int currentGold;
-    public int extraGold;
-    public int extraCool;
-    public int startGold1
-    {
-        get => startGold;
-        set => startGold = value;
-    }
+	public AudioMixerGroup bgmMixerGroup; // 배경음악용 믹서 그룹
 
-    public int earnGold1
-    {
-        get => earnGold;
-        set => earnGold = value;
-    }
+	private int startGold;
+	private int earnGold;
+	private int castleHealth;
+	private int cooldown;
 
-    public int castleHealth1
-    {
-        get => castleHealth;
-        set => castleHealth = value;
-    }
+	public int soul;
+	public int currentGold;
 
-    public int cooldown1
-    {
-        get => cooldown;
-        set => cooldown = value;
-    }
+	public int extraGold;
+	public int extraCool;
 
-    public int currentGold1
-    {
-        get => currentGold;
-        set => currentGold = value;
-    }
+	public int StartGold {
+		get => startGold;
 
-    public int extraGold1
-    {
-        get => extraGold;
-        set => extraGold = value;
-    }
+		set => startGold = value;
+	}
 
-    public int extraCool1
-    {
-        get => extraCool;
-        set => extraCool = value;
-    }
+	public int EarnGold {
+		get => earnGold;
 
-    private void Awake()
-    {
-        EarnGoldSetup();
+		set => earnGold = value;
+	}
+
+	public int CastleHealth {
+		get => castleHealth;
+
+		set => castleHealth = value;
+	}
+
+	public int Cooldown {
+		get => cooldown;
+
+		set => cooldown = value;
+	}
+
+	public int CurrentGold {
+		get => currentGold;
+
+		set => currentGold = value;
+	}
+
+	public int Soul {
+		get => soul;
+
+		set => soul = value;
+	}
+
+	public int extraGold1 {
+		get => extraGold;
+
+		set => extraGold = value;
+	}
+
+	public int extraCool1 {
+		get => extraCool;
+
+		set => extraCool = value;
+	}
+
+	private void Awake() {
+		EarnGoldSetup();
 
         CastleHealthSetup();
+        
+        PlayerLocalManager.Instance.Save();
     }
 
-    private void Start()
-    {
-        audioSource = gameObject.AddComponent<AudioSource>();
-        audioSource.clip = soundClip;
-        audioSource.loop = true;
-        PlaySound();
-    }
+	private void Start() {
+		audioSource = gameObject.AddComponent<AudioSource>();
+		audioSource.clip = soundClip;
+		audioSource.loop = true;
+		audioSource.outputAudioMixerGroup = bgmMixerGroup;
+		PlaySound();
+	}
 
-    public void PlaySound()
-    {
-        if (audioSource != null && soundClip != null)
-        {
-            audioSource.Play();
-        }
-    }
-    void EarnGoldSetup()
-    {
-        switch (earnGold)
-        {
-            case 1:
-                extraGold1 = 10;
-                break;
-            case 2:
-                extraGold1 = 20;
-                break;
-            case 3:
-                extraGold1 = 30;
-                break;
-            case 4:
-                extraGold1 = 40;
-                break;
-            default:
-                extraGold1 = 0;
-                break;
-        }
+	public void PlaySound() {
+		if (audioSource != null && soundClip != null) {
+			audioSource.Play();
+		}
+	}
 
-    }
+	void EarnGoldSetup() {
+		switch (earnGold) {
+			case 1:
+				extraGold1 = 10;
+
+				break;
+			case 2:
+				extraGold1 = 20;
+
+				break;
+			case 3:
+				extraGold1 = 30;
+
+				break;
+			case 4:
+				extraGold1 = 40;
+
+				break;
+			default:
+				extraGold1 = 0;
+
+				break;
+		}
+	}
 
     void CastleHealthSetup()
     {
-        GameObject Wall = GameObject.Find("Wall HP Controller");
-        switch (earnGold)
+        int castleExtraHp = earnGold switch
         {
-            case 1:
-                Wall.GetComponent<CastleWallManager>().extraHealth1 = 100f;
-                break;
-            case 2:
-                Wall.GetComponent<CastleWallManager>().extraHealth1 = 200f;
-                break;
-            case 3:
-                Wall.GetComponent<CastleWallManager>().extraHealth1 = 300f;
-                break;
-            case 4:
-                Wall.GetComponent<CastleWallManager>().extraHealth1 = 400f;
-                break;
-            default:
-                Wall.GetComponent<CastleWallManager>().extraHealth1 = 0f;
-                break;
-        }
+            1 => 500,
+            2 => 1000,
+            3 => 1500,
+            4 => 2000,
+            _ => 0
+        };
+        PlayerLocalManager.Instance.lCastleExtraHp = castleExtraHp;
     }
 
-    void CoolDownSetup()
-    {
-        switch (cooldown)
-        {
-            case 1:
-                extraCool = 10;
-                break;
-            case 2:
-                extraCool = 20;
-                break;
-            case 3:
-                extraCool = 30;
-                break;
-            case 4:extraCool = 40;
-                break;
-            default:
-                extraCool = 0;
-                break;
-        }
-    }
+	void CoolDownSetup() {
+		switch (cooldown) {
+			case 1:
+				extraCool = 10;
+
+				break;
+			case 2:
+				extraCool = 20;
+
+				break;
+			case 3:
+				extraCool = 30;
+
+				break;
+			case 4:
+				extraCool = 40;
+
+				break;
+			default:
+				extraCool = 0;
+
+				break;
+		}
+	}
+
+	private void Update() {
+		GameObject.Find("Gold").GetComponent<TMP_InputField>().text = currentGold.ToString();
+	}
+
+	private void OnDisable() {
+		PlayerLocalManager.Instance.lMoney = currentGold;
+		PlayerLocalManager.Instance.lPoint = soul;
+		PlayerLocalManager.Instance.Save();
+	}
 }

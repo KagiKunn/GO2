@@ -36,33 +36,28 @@ public class HeroText : MonoBehaviour {
 			}
 		}
 
-		filePath = Path.Combine(Path.Combine(Application.dataPath, "save", "heroInfo"), "selectedHeroes.json");
+		HeroList[] heroList = PlayerLocalManager.Instance.lHeroeList;
 
-		if (File.Exists(filePath)) {
-			try {
-				string json = File.ReadAllText(filePath);
+		List<HeroData> hero = new List<HeroData>();
 
-				HeroDataWrapper wrapper = JsonUtility.FromJson<HeroDataWrapper>(json);
+		for (int i = 0; i < heroList.Length; i++) {
+			if (PlayerLocalManager.Instance.lHeroeList[i].Item3 > 0)
+				hero.Add(HeroManager.Instance.heroDataList.Find(h => h.Name == heroList[i].Item1));
+		}
 
-				for (int i = 0; i < wrapper.Heroes.Count && i < activeTextName.Count; i++) {
-					HeroData hero = wrapper.Heroes[i];
+		for (int i = 0; i < activeTextName.Count; i++) {
+			Image heroColor = activeHeroColor[i].GetComponent<Image>();
+			Image heroIcon = activeHeroIcon[i].GetComponent<Image>();
+			Text heroName = activeTextName[i].GetComponent<Text>();
+			Text heroAdvantage = activeTextAdvantage[i].GetComponent<Text>();
 
-					Image heroColor = activeHeroColor[i].GetComponent<Image>();
-					Image heroIcon = activeHeroIcon[i].GetComponent<Image>();
-					Text heroName = activeTextName[i].GetComponent<Text>();
-					Text heroAdvantage = activeTextAdvantage[i].GetComponent<Text>();
-
-					if (heroName != null) {
-						heroColor.color = new Color(hero.r / 255f, hero.g / 255f, hero.b / 255f);
-						heroIcon.sprite = hero.ProfileImg;
-						heroName.text = hero.Name;
-						heroAdvantage.text = hero.OffenceHeroAdvantage;
-					} else {
-						CustomLogger.Log("No Text component found on grandchild: " + activeTextName[i].name);
-					}
-				}
-			} catch (Exception e) {
-				CustomLogger.Log("Error parsing JSON: " + e.Message);
+			if (heroName != null) {
+				heroColor.color = new Color(hero[i].r / 255f, hero[i].g / 255f, hero[i].b / 255f);
+				heroIcon.sprite = hero[i].ProfileImg;
+				heroName.text = hero[i].Name;
+				heroAdvantage.text = hero[i].OffenceHeroAdvantage;
+			} else {
+				CustomLogger.Log("No Text component found on grandchild: " + activeTextName[i].name);
 			}
 		}
 	}

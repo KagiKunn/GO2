@@ -37,19 +37,13 @@ public class CastleWall : MonoBehaviour
         CastleWallManager.Instance.ApplyDamage(damage);
 
         PlaySound();
+        
         Debug.Log($"Damage applied to {wallTag}");
         if (CastleWallManager.Instance.GetHealth() <= 0)
         {
             Debug.Log($"{wallTag} destroyed.");
             Destroy(gameObject);  // 성벽 오브젝트 삭제
         }
-    }
-
-    public void EarnShield(float duration, float shieldAmount)
-    {
-        Debug.Log("EarnShield called with duration: " + duration + " and shieldAmount: " + shieldAmount);
-        ChangeWallColor(true);  // 실드 활성화 시 색상 변경
-        CastleWallManager.Instance.EarnShield(duration, shieldAmount);
     }
 
     public void ChangeWallColor(bool activateShield)

@@ -17,14 +17,14 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour {
 	private static GameManager instance = null;
 
-	[Header("# Game Control")]
-	[SerializeField] private bool isLive;
+	[Header("# Game Control")] [SerializeField]
+	private bool isLive;
 
 	[SerializeField] private float gameTime;
 	[SerializeField] private float maxGameTime = 2 * 10f;
 
-	[Header("# Player Info")]
-	[SerializeField] private int playerId;
+	[Header("# Player Info")] [SerializeField]
+	private int playerId;
 
 	[SerializeField] private float health;
 	[SerializeField] private float maxHealth = 100;
@@ -33,8 +33,8 @@ public class GameManager : MonoBehaviour {
 	[SerializeField] private int exp;
 	[SerializeField] private int[] nextExp = { 3, 5, 10, 100, 150, 210, 280, 360, 450, 600 };
 
-	[Header("# Game Object")]
-	[SerializeField] private Player[] players;
+	[Header("# Game Object")] [SerializeField]
+	private Player[] players;
 
 	[SerializeField] private PoolManager poolManager;
 	[SerializeField] private LevelUp uiLevelUp;
@@ -49,7 +49,14 @@ public class GameManager : MonoBehaviour {
 	private Weapon weapon;
 
 	public enum HeroNames {
-		Dummy, KKS01, Novice, Knight, DualWeapon, Elf, LSH01, CHS01
+		Dummy,
+		KKS01,
+		Novice,
+		Knight,
+		DualWeapon,
+		Elf,
+		LSH01,
+		CHS01
 	}
 
 	public HeroNames heroNames;
@@ -63,37 +70,25 @@ public class GameManager : MonoBehaviour {
 			Destroy(this.gameObject);
 		}
 
-		filePath = Path.Combine(Path.Combine(Application.dataPath, "save", "heroInfo"), "selectedHeroes.json");
+		for (int i = 0; i < PlayerLocalManager.Instance.lHeroeList.Length; i++) {
+			if (PlayerLocalManager.Instance.lHeroeList[i].Item3 > 0) {
+				string hero = PlayerLocalManager.Instance.lHeroeList[i].Item1;
 
-		if (File.Exists(filePath)) {
-			try {
-				string json = File.ReadAllText(filePath);
-
-				HeroDataWrapper wrapper = JsonUtility.FromJson<HeroDataWrapper>(json);
-
-				for (int i = 0; i < wrapper.Heroes.Count; i++) {
-					HeroData hero = wrapper.Heroes[i];
-
-					if (hero != null) {
-						selectedHeroes.Add(hero.Name);
-					}
+				if (hero != null) {
+					selectedHeroes.Add(hero);
 				}
-
-				// foreach (string selectedHero in selectedHeroes) {
-				// 	CustomLogger.Log(selectedHero);
-				// }
-			} catch (Exception e) {
-				CustomLogger.Log("Error parsing JSON: " + e.Message);
 			}
 		}
+
+		// foreach (string selectedHero in selectedHeroes) {
+		// 	CustomLogger.Log(selectedHero);
+		// }
 	}
 
 	public void GameStart(Text text) {
 		health = maxHealth;
 
 		for (int i = 0; i < selectedHeroes.Count; i++) {
-			CustomLogger.Log(text.text);
-
 			if (text.text == selectedHeroes[i]) {
 				HeroNames heroEnum;
 
@@ -160,7 +155,13 @@ public class GameManager : MonoBehaviour {
 	}
 
 	private void Update() {
-		if (!isLive) return;
+		if (!isLive) {
+			if (Input.GetKeyDown(KeyCode.Escape)) {
+				SceneManager.LoadScene("InternalAffairs");
+			}
+
+			return;
+		}
 
 		gameTime += Time.deltaTime;
 

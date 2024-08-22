@@ -7,35 +7,34 @@ public class UnitDropable : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 {
     private Image image;
     private RectTransform rect;
-    public UnitData assignedUnitData; // 슬롯에 배정된 유닛 데이터
+    public UnitData assignedUnitData;
 
     private void Awake()
     {
         image = GetComponent<Image>();
         rect = GetComponent<RectTransform>();
     }
-    
+
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (eventData.pointerDrag != null) // pointerDrag가 null인지 확인
+        if (eventData.pointerDrag != null)
         {
             UnitDraggable draggedUnit = eventData.pointerDrag.GetComponent<UnitDraggable>();
-            if (draggedUnit != null && !draggedUnit.isDropped) // draggedUnit이 null이 아닌지 확인
+            if (draggedUnit != null && !draggedUnit.isDropped)
             {
-                image.color = Color.yellow; // 배치되지 않은 유닛만 이벤트 발동 하도록
+                image.color = Color.yellow;
             }
         }
     }
-    
-    // 마우스 포인터가 현재 아이템 슬롯 영역을 빠져나갈 때 1회 호출
+
     public void OnPointerExit(PointerEventData eventData)
     {
-        if (eventData.pointerDrag != null) // pointerDrag가 null인지 확인
+        if (eventData.pointerDrag != null)
         {
             UnitDraggable draggedUnit = eventData.pointerDrag.GetComponent<UnitDraggable>();
-            if (draggedUnit != null && !draggedUnit.isDropped) // draggedUnit이 null이 아닌지 확인
+            if (draggedUnit != null && !draggedUnit.isDropped)
             {
-                // 아이템 슬롯의 색상을 하얀색으로 변경
+
                 image.color = Color.white;
             }
         }
@@ -47,19 +46,32 @@ public class UnitDropable : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
         if (draggedUnit != null)
         {
-            // 드래그된 유닛의 데이터를 현재 드롭존에 저장
             assignedUnitData = draggedUnit.unitData;
             
-            // 드래그된 유닛을 현재 드롭존으로 이동
+            CustomLogger.Log(gameObject.transform.parent.name);
+            
+            // 드롭된 위치에 따라 배치 상태를 저장
+            int placement = 0;
+            if (gameObject.transform.parent.name.Contains("Left Wall Stage"))
+            {
+                placement = 1; // 왼쪽 성벽
+            }
+            else if (gameObject.transform.parent.name.Contains("Right Wall Stage"))
+            {
+                placement = 2; // 오른쪽 성벽
+            }
+
+            // UnitGameManagerA에 배치 상태를 저장
+            UnitGameManagerA.Instance.SaveUnitPlacement(draggedUnit.unitData, placement);
+
             draggedUnit.transform.SetParent(transform);
             draggedUnit.GetComponent<RectTransform>().position = GetComponent<RectTransform>().position;
-            
-            // 드래그된 유닛의 이미지를 드롭존에 표시
+
             Image dropZoneImage = GetComponent<Image>();
             if (dropZoneImage != null)
             {
-                dropZoneImage.sprite = draggedUnit.unitData.UnitImage; // 유닛 데이터에 연결된 이미지 설정
-                dropZoneImage.color = Color.white; // 색상을 기본으로 설정
+                dropZoneImage.sprite = draggedUnit.unitData.UnitImage;
+                dropZoneImage.color = Color.white;
             }
             // 드래그된 유닛의 부모를 다시 목록으로 설정하고, 드롭존에는 데이터에서 추출한 이미지만 표시
             draggedUnit.transform.SetParent(draggedUnit.previousParent);

@@ -95,6 +95,13 @@ public class PlayerSyncManager : MonoBehaviour, IDisposable
 
     private async void Awake()
     {
+        /*float orthoSize = Camera.main.orthographicSize;
+        float screenAspect = (float)Screen.width / (float)Screen.height;
+        float cameraHeight = orthoSize * 2;
+        float cameraWidth = cameraHeight * screenAspect;
+        GameObject TitleImage = GameObject.Find("TitleImage");
+        TitleImage.transform.localScale = new Vector3(cameraWidth, cameraHeight, TitleImage.transform.localScale.z);*/
+            
         sceneControl = gameObject.AddComponent<SceneControl>();
         persistentDataPath = Application.persistentDataPath;
         filePath = Path.Combine(persistentDataPath, "Player.dat");
@@ -142,7 +149,8 @@ public class PlayerSyncManager : MonoBehaviour, IDisposable
 
         while (reconnectAttempts < maxReconnectAttempts)
         {
-            client = new TcpClient("125.191.215.205", 1651);
+            bool test = false;
+            client = new TcpClient(test ? "127.0.0.1" : "125.191.215.205", 1651);
 
             // 연결이 성공적으로 이루어졌다면 스트림을 가져옵니다.
             if (client.Connected)
@@ -202,8 +210,7 @@ public class PlayerSyncManager : MonoBehaviour, IDisposable
             Debug.LogError($"Failed to load save: {ex.Message}");
         }
     }
-
-
+    
     private void CreateNewPlayer()
     {
         UUID = Guid.NewGuid().ToString();
@@ -224,6 +231,12 @@ public class PlayerSyncManager : MonoBehaviour, IDisposable
             syncInit = true;
     }
 
+    private void ChangeNickname(string name)
+    {
+        Username = name;
+        Save();
+    }
+    
     private PlayerSyncData DeserializePlayerData(byte[] data, int length)
     {
         using (MemoryStream ms = new MemoryStream(data, 0, length))
