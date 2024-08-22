@@ -74,7 +74,8 @@ public class DefenseInit : MonoBehaviour {
 		EarnGoldSetup();
 
         CastleHealthSetup();
-        
+        currentGold = PlayerLocalManager.Instance.lMoney;
+        soul = PlayerLocalManager.Instance.lPoint;
         PlayerLocalManager.Instance.Save();
     }
 
@@ -161,9 +162,9 @@ public class DefenseInit : MonoBehaviour {
 
 	private void OnDisable() {
 		PlayerLocalManager.Instance.lMoney = currentGold;
-		PlayerLocalManager.Instance.lPoint ++;
+		PlayerLocalManager.Instance.lPoint = soul;
 		PlayerLocalManager.Instance.Save();
-		PlayerSyncManager.Instance.RoguePoint ++;
+		PlayerSyncManager.Instance.RoguePoint = soul;
 		PlayerSyncManager.Instance.Save();
 	}
 }

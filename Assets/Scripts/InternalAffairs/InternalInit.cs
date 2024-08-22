@@ -1,3 +1,4 @@
+using System;
 using System.Globalization;
 using TMPro;
 using UnityEngine;
@@ -20,5 +21,11 @@ public class InternalInit : MonoBehaviour
         max.GetComponent<TextMeshProUGUI>().text = PlayerLocalManager.Instance.lCastleMaxHp.ToString(CultureInfo.CurrentCulture);
         gold.GetComponent<TMP_InputField>().text = PlayerLocalManager.Instance.lMoney.ToString();
         soul.GetComponent<TMP_InputField>().text = PlayerLocalManager.Instance.lPoint.ToString();
+    }
+
+    private void Update()
+    {
+        current.GetComponent<TextMeshProUGUI>().text = PlayerLocalManager.Instance.lCastleHp.ToString(CultureInfo.CurrentCulture);
+        gold.GetComponent<TMP_InputField>().text = PlayerLocalManager.Instance.lMoney.ToString();
     }
 }
