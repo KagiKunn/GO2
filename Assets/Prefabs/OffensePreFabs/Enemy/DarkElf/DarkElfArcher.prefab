@@ -686,7 +686,7 @@ GameObject:
   - component: {fileID: 5038866618620806565}
   m_Layer: 6
   m_Name: UnitRoot
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -701,8 +701,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 122061055972930261}
   - {fileID: 600417824683887963}
@@ -860,14 +860,16 @@ MonoBehaviour:
   normalState: 0
   skillState: 0
   boxSize: {x: 2, y: 0.1}
+  stageCount: 0
+  weekCount: 0
   isRight: 0
   projectilePrefab: {fileID: 0}
   movementdirection: {x: 0, y: 0, z: 0}
   isKnockedBack: 0
   percent: 0
+  gold: 10
   isBoss: 0
   stageEndNotice: {fileID: 0}
-  stageClearUI: {fileID: 0}
 --- !u!212 &5038866618620806565
 SpriteRenderer:
   m_ObjectHideFlags: 0

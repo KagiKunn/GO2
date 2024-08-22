@@ -434,8 +434,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 5296307770879080420}
   - {fileID: 5297483125811082351}
@@ -526,14 +526,16 @@ MonoBehaviour:
   normalState: 0
   skillState: 0
   boxSize: {x: 3, y: 0.1}
+  stageCount: 0
+  weekCount: 0
   isRight: 0
   projectilePrefab: {fileID: 0}
   movementdirection: {x: 0, y: 0, z: 0}
   isKnockedBack: 0
   percent: 0
+  gold: 10
   isBoss: 0
   stageEndNotice: {fileID: 0}
-  stageClearUI: {fileID: 0}
 --- !u!114 &5186064107844444139
 MonoBehaviour:
   m_ObjectHideFlags: 0
