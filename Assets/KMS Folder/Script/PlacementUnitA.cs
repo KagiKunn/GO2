@@ -36,8 +36,15 @@ public class PlacementUnitA : MonoBehaviour
                 }
                 int slotIndex = Array.IndexOf(slots, dropable.transform); 
                 
-                slotUnitDataList.Add(new SlotUnitData(slotIndex, assignedUnitData, placementStatus));
-                CustomLogger.Log($"Saved Slot Index: {slotIndex}, Unit: {assignedUnitData.name}, Placement: {placementStatus}");
+                if (placementStatus != 0 && slotIndex != -1)
+                {
+                    slotUnitDataList.Add(new SlotUnitData(slotIndex, assignedUnitData, placementStatus));
+                    CustomLogger.Log($"Saved Slot Index: {slotIndex}, Unit: {assignedUnitData.name}, Placement: {placementStatus}");
+                }
+                else
+                {
+                    CustomLogger.Log($"Skipped saving: {assignedUnitData.name} with Placement: {placementStatus}, SlotIndex: {slotIndex}", Color.yellow);
+                }
             }
         }
         Debug.Log("Saved Units: " + slotUnitDataList.Count);
@@ -53,42 +60,34 @@ public class PlacementUnitA : MonoBehaviour
         }
 
         slotUnitDataList = dataList;
-
-
-        for (int i = 0; i < slotUnitDataList.Count; i++)
+        
+        int currentWallStatus = FindFirstObjectByType<StageManager>().GetCurrentWallStatus();
+        
+        foreach (var slotUnitData in slotUnitDataList)
         {
-            int slotIndex = slotUnitDataList[i].SlotIndex;
-            int placementStatus = slotUnitDataList[i].Placement;
+            if (slotUnitData.Placement == currentWallStatus)
+            {
+                int slotIndex = slotUnitData.SlotIndex;
 
-            if (placementStatus == 0)
-            {
-                CustomLogger.Log($"Slot {slotIndex} is empty because PlacementStatus is 0.", Color.yellow);
-                continue;
-            }
-            
-            if (slotIndex >= 0 && slotIndex < slots.Length)
-            {
-                var slot = slots[slotIndex];
-                var dropableComponent = slot.GetComponent<UnitDropable>();
-            
-                if (dropableComponent != null)
+                if (slotIndex >= 0 && slotIndex < slots.Length)
                 {
-                    if (slotUnitDataList[i].UnitData != null)
+                    var slot = slots[slotIndex];
+                    var dropableComponent = slot.GetComponent<UnitDropable>();
+
+                    if (dropableComponent != null)
                     {
-                        dropableComponent.assignedUnitData = slotUnitDataList[i].UnitData;
-                        slot.GetComponent<Image>().sprite = slotUnitDataList[i].UnitData.UnitImage;
-                        slot.GetComponent<Image>().color = Color.white;
-                        
-                        
-                        
-                        
-                        
-                    }
-                    else
-                    {
-                        dropableComponent.assignedUnitData = null;
-                        slot.GetComponent<Image>().sprite = null;
-                        slot.GetComponent<Image>().color = Color.white;
+                        if (slotUnitData.UnitData != null)
+                        {
+                            dropableComponent.assignedUnitData = slotUnitData.UnitData;
+                            slot.GetComponent<Image>().sprite = slotUnitData.UnitData.UnitImage;
+                            slot.GetComponent<Image>().color = Color.white;
+                        }
+                        else
+                        {
+                            dropableComponent.assignedUnitData = null;
+                            slot.GetComponent<Image>().sprite = null;
+                            slot.GetComponent<Image>().color = Color.white;
+                        }
                     }
                 }
             }

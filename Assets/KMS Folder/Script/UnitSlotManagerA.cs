@@ -123,25 +123,28 @@ public class UnitSlotManagerA : MonoBehaviour
             
             CustomLogger.Log(placementStatus, Color.cyan);
             CustomLogger.Log(wallIndex,Color.cyan);
+            
             if (placementStatus == wallIndex)
             {
                 UnitGameManagerA.Instance.unitPlacementStatus[draggable.unitData] = 0;
                 draggable.isDropped = false;
                 draggable.enabled = true;
+                
                 draggable.GetComponent<CanvasGroup>().blocksRaycasts = true;
                 draggable.GetComponent<Image>().color = Color.white;
             }
         }
 
         if (wallIndex == 1)
-        {
+        {   
+            leftPlacementManager = FindFirstObjectByType<UnitPlacementManagerA>();
             leftPlacementManager.ResetPlacementSlots();
         }
         else if (wallIndex == 2)
         {
+            rightPlacementManager = FindFirstObjectByType<UnitPlacementManagerA>();
             rightPlacementManager.ResetPlacementSlots();
         }
-
         UpdateDraggableStates();
     }
 }
