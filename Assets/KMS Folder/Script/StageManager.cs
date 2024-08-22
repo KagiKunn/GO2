@@ -5,13 +5,14 @@ using System.Collections;
 
 public class StageManager : MonoBehaviour
 {
-    public GameObject[] leftStageUnits;
-    public GameObject[] rightStageUnits;
     public Button leftButton;
     public Button rightButton;
 
     private UnitGameManagerA unitGameManager;
     private UnitSlotManagerA unitSlotManager;
+    
+    public GameObject[] slots;
+    
 
     private IEnumerator Start()
     {
@@ -22,6 +23,8 @@ public class StageManager : MonoBehaviour
 
         leftButton.onClick.AddListener(ShowLeftStage);
         rightButton.onClick.AddListener(ShowRightStage);
+        
+        ShowLeftStage(); 
 
         CustomLogger.Log("StageManagement 스타트 메서드 활성화", "green");
     }
@@ -29,10 +32,7 @@ public class StageManager : MonoBehaviour
     private void ShowLeftStage()
     {
         
-        SaveCurrentWallPlacement();
-        
-        SetStageActive(leftStageUnits, true);
-        SetStageActive(rightStageUnits, false);
+        SetSlotVisibility(0, 13);
         
         leftButton.gameObject.SetActive(false);
         rightButton.gameObject.SetActive(true);
@@ -42,47 +42,18 @@ public class StageManager : MonoBehaviour
     private void ShowRightStage()
     {
         
-        SaveCurrentWallPlacement();
-        
-        SetStageActive(leftStageUnits, false);
-        SetStageActive(rightStageUnits, true);
+        SetSlotVisibility(14, 27);
 
         rightButton.gameObject.SetActive(false);
         leftButton.gameObject.SetActive(true);
     }
 
-    private void SetStageActive(GameObject[] stageUnits, bool isActive)
+    private void SetSlotVisibility(int start, int end)
     {
-        foreach (var unit in stageUnits)
+        for (int i = 0; i < slots.Length; i++)
         {
-            unit.SetActive(isActive);
+            slots[i].SetActive(i >= start && i <= end);
         }
-    }
-
-    public int GetCurrentWallStatus()
-    {
-        if (!leftButton.gameObject.activeSelf)
-        {
-            return 1;
-        }
-        if (!rightButton.gameObject.activeSelf)
-        {
-            return 2;
-        }
-        return 0;
     }
     
-    private void SaveCurrentWallPlacement()
-    {
-        PlacementUnitA placementUnit = FindAnyObjectByType<PlacementUnitA>();
-        if (placementUnit != null)
-        {
-            placementUnit.SavePlacementUnits();
-            CustomLogger.Log("현재 성벽 데이터를 저장했습니다.", Color.green);
-        }
-        else
-        {
-            CustomLogger.Log("PlacementUnitA를 찾을 수 없습니다.", Color.red);
-        }
-    }
 }

@@ -112,40 +112,25 @@ public class UnitSlotManagerA : MonoBehaviour
         }
     }
     
-    public void ResetWallPlacement(int wallIndex)
+    public void ResetWallPlacement()
     {
         foreach (var draggable in unitDraggables)
         {
             if (draggable == null || draggable.unitData == null)
                 continue;
-            
-            int placementStatus = UnitGameManagerA.Instance.unitPlacementStatus[draggable.unitData];
-            
-            CustomLogger.Log(placementStatus, Color.cyan);
-            CustomLogger.Log(wallIndex,Color.cyan);
-            
-            if (placementStatus == wallIndex)
-            {
-                UnitGameManagerA.Instance.unitPlacementStatus[draggable.unitData] = 0;
-                draggable.isDropped = false;
-                draggable.enabled = true;
-                
-                draggable.GetComponent<CanvasGroup>().blocksRaycasts = true;
-                draggable.GetComponent<Image>().color = Color.white;
-            }
+        
+            // 유닛의 배치 상태를 초기화
+            UnitGameManagerA.Instance.unitPlacementStatus[draggable.unitData] = 0;
+            draggable.isDropped = false;
+            draggable.enabled = true;
+        
+            // 드래그 가능 상태와 외형 초기화
+            draggable.GetComponent<CanvasGroup>().blocksRaycasts = true;
+            draggable.GetComponent<Image>().color = Color.white;
         }
 
-        if (wallIndex == 1)
-        {   
-            leftPlacementManager = FindFirstObjectByType<UnitPlacementManagerA>();
-            leftPlacementManager.ResetPlacementSlots();
-        }
-        else if (wallIndex == 2)
-        {
-            rightPlacementManager = FindFirstObjectByType<UnitPlacementManagerA>();
-            rightPlacementManager.ResetPlacementSlots();
-        }
         UpdateDraggableStates();
     }
+
 }
 

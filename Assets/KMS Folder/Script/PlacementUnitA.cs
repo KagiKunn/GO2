@@ -61,12 +61,9 @@ public class PlacementUnitA : MonoBehaviour
 
         slotUnitDataList = dataList;
         
-        int currentWallStatus = FindFirstObjectByType<StageManager>().GetCurrentWallStatus();
         
         foreach (var slotUnitData in slotUnitDataList)
         {
-            if (slotUnitData.Placement == currentWallStatus)
-            {
                 int slotIndex = slotUnitData.SlotIndex;
 
                 if (slotIndex >= 0 && slotIndex < slots.Length)
@@ -90,7 +87,6 @@ public class PlacementUnitA : MonoBehaviour
                         }
                     }
                 }
-            }
         }
     }
 

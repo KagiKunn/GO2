@@ -1,5 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
+using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class UnitGameManagerA : MonoBehaviour
@@ -7,7 +10,6 @@ public class UnitGameManagerA : MonoBehaviour
     public List<UnitData> unitDataList;
     public Dictionary<UnitData, int> unitPlacementStatus; // 0: 미배치, 1: 왼쪽 성벽, 2: 오른쪽 성벽
     private List<SlotUnitData> slotUnitDataList = new List<SlotUnitData>();
-    
     private static UnitGameManagerA instance;
     public static UnitGameManagerA Instance {
         get {

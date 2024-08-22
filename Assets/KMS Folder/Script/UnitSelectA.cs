@@ -45,8 +45,7 @@ public class UnitSelectA : MonoBehaviour
 
     private void ResetUnitSelection()
     {
-        int currentWallStatus = FindFirstObjectByType<StageManager>().GetCurrentWallStatus();
-        unitSlotManager.ResetWallPlacement(currentWallStatus);
+        unitSlotManager.ResetWallPlacement();
     }
     
 }
