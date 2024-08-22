@@ -16,6 +16,7 @@ namespace InternalAffairs
         private void Awake()
         {
             CustomLogger.Log("EnemyRaceSelector Awake()진입", "black");
+            PlayerLocalManager.Instance.UpdateStageCount();
             if (Instance == null)
             {
                 Instance = this;
@@ -28,14 +29,14 @@ namespace InternalAffairs
 
             weekCount = PlayerSyncManager.Instance.Repeat;
             stageCount = PlayerLocalManager.Instance.L_Stage;
-            CustomLogger.Log("위크카운트  : " + weekCount + ", 업데이트 전 스테이지카운트 : " + stageCount, "white");
+            CustomLogger.Log("위크카운트  : " + weekCount + ", 스테이지카운트 : " + stageCount, "white");
 
             CustomLogger.Log("save상 선택된 종족: " + PlayerLocalManager.Instance.lSelectedRace, "black");
 
             if (string.IsNullOrEmpty(PlayerLocalManager.Instance.lSelectedRace)) 
             {
                 CustomLogger.Log("종족 선택되지 않음. 종족 선택으로 이행", "black");
-                if (stageCount == 0)
+                if (stageCount == 1) //1스테이지일때 벽 체력정보 리셋
                 {
                     PlayerLocalManager.Instance.ResetHealthData();
                 }
@@ -51,23 +52,21 @@ namespace InternalAffairs
             }
         }
 
-        private void SelectAndSaveRace()
-        {
-            SelectRandomRace();
-            CustomLogger.Log("SelectedRace:" + SelectedRace, "black");
+		private void SelectAndSaveRace() {
+			SelectRandomRace();
+			CustomLogger.Log("SelectedRace:" + SelectedRace, Color.cyan);
 
-            // 선택된 종족을 PlayerLocalManager에 저장
-            PlayerLocalManager.Instance.lSelectedRace = SelectedRace;
-            CustomLogger.Log("로컬매니저에 저장된 종족 : " + PlayerLocalManager.Instance.lSelectedRace, "white");
+			// 선택된 종족을 PlayerLocalManager에 저장
+			PlayerLocalManager.Instance.lSelectedRace = SelectedRace;
+			CustomLogger.Log("로컬매니저에 저장된 종족 : " + PlayerLocalManager.Instance.lSelectedRace, "white");
 
-            PlayerLocalManager.Instance.Save();
-        }
+			PlayerLocalManager.Instance.Save();
+		}
 
-        private void SelectRandomRace()
-        {
-            // 랜덤으로 lStageRace 배열에서 종족 선택
-            randomIndex = Random.Range(0, PlayerLocalManager.Instance.lStageRace.Length);
-            SelectedRace = PlayerLocalManager.Instance.lStageRace[randomIndex];
-        }
-    }
+		private void SelectRandomRace() {
+			// 랜덤으로 lStageRace 배열에서 종족 선택
+			randomIndex = Random.Range(0, PlayerLocalManager.Instance.lStageRace.Length);
+			SelectedRace = PlayerLocalManager.Instance.lStageRace[randomIndex];
+		}
+	}
 }

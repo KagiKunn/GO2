@@ -54,10 +54,10 @@ public class BounusSaveManager : MonoBehaviour
         PlayerLocalManager.Instance.lPoint =
             int.Parse(GameObject.Find("Soul").transform.GetChild(0).GetComponent<TextMeshProUGUI>().text);
         PlayerLocalManager.Instance.lGameStarted = true;
+        PlayerLocalManager.Instance.lMoreEarnGold = 10000;
         PlayerLocalManager.Instance.Save();
 
         StartGoldSetup();
-
         SceneManager.LoadScene("InternalAffairs");
     }
     

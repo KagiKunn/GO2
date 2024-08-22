@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
@@ -11,9 +12,9 @@ public class UpgradeHero : MonoBehaviour
     public TMP_Text heroAttackSpeed;
     public Image heroCharacterImage;
     public Button closeBtn;
-    
+
     private HeroData upgradeHero;
-    
+
     void OnEnable()
     {
         HeroManager heroManager = HeroManager.Instance;
@@ -34,12 +35,19 @@ public class UpgradeHero : MonoBehaviour
         closeBtn.onClick.AddListener(OnCloseBtn);
     }
 
+    private void Update()
+    {
+        heroHP.text = $"HP: {upgradeHero.OffenceHP}";
+        heroAttack.text = $"Attack: {upgradeHero.OffenceAttack}";
+        heroAttackSpeed.text = $"Attack Speed: {upgradeHero.OffenceAttackSpeed}";
+    }
+
     private void DisplayHeroInfo()
     {
         heroName.text = upgradeHero.Name;
-        heroHP.text = $"HP: {upgradeHero.HP}";
-        heroAttack.text = $"Attack: {upgradeHero.Attack}";
-        heroAttackSpeed.text = $"Attack Speed: {upgradeHero.AttackSpeed}";
+        heroHP.text = $"HP: {upgradeHero.OffenceHP}";
+        heroAttack.text = $"Attack: {upgradeHero.OffenceAttack}";
+        heroAttackSpeed.text = $"Attack Speed: {upgradeHero.OffenceAttackSpeed}";
         heroCharacterImage.sprite = upgradeHero.CharacterImg;
     }
     
@@ -54,5 +62,18 @@ public class UpgradeHero : MonoBehaviour
 
         // 이전 씬으로 돌아가기
         SceneManager.LoadScene("HeroManagement");
+    }
+
+    public void OnUpgradeBtn()
+    {
+        if (100 < PlayerLocalManager.Instance.lMoney)
+        {
+            PlayerLocalManager.Instance.lMoney -= 100;
+            PlayerLocalManager.Instance.Save();
+        }
+        HeroManager.Instance.upgradeHero.OffenceHP += 20;
+        HeroManager.Instance.upgradeHero.OffenceAttack += 10;
+        HeroManager.Instance.upgradeHero.OffenceAttackSpeed += 5;
+        HeroManager.Instance.SaveHeroFormation();
     }
 }
