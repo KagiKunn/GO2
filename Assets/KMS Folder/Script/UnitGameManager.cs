@@ -7,8 +7,8 @@ public class UnitGameManager : MonoBehaviour
     public GameObject slotPrefab;
     public Transform slotParent;
 
-    private List<KeyValuePair<string, int>> userUnits; // 유저 구매 유닛 및 가진 유닛들
-    // private List<SlotUnitData<string, GameObject ,int>> selectedUnits;
+    private List<KeyValuePair<int, string>> userUnits; // 유저 구매 유닛 및 가진 유닛들
+    private List<SlotUnitData<string, GameObject ,int>> selectedUnits;
 
     private void Start()
     {
@@ -18,11 +18,7 @@ public class UnitGameManager : MonoBehaviour
 
     private void LoadUserUnit()
     {
-        userUnits = PlayerLocalManager.Instance.lUnitList;
-        if (userUnits == null)
-        {
-            CustomLogger.Log("NULL");
-        }
+        userUnits = PlayerLocalManager.Instance.lAllyUnitList;
     }
     
     private void DisplayUnits()
@@ -34,7 +30,7 @@ public class UnitGameManager : MonoBehaviour
             TextMeshProUGUI unitName = newSlot.GetComponentInChildren<TextMeshProUGUI>();
             if (unitName != null)
             {
-                unitName.text = unitData.Key;
+                unitName.text = unitData.Value;
             }
             else
             {
@@ -43,4 +39,20 @@ public class UnitGameManager : MonoBehaviour
             
         }
     }
+
+    private void SaveUnitList(string name, GameObject prefab, int index)
+    {
+        // 성벽 버튼에서 넘어오기(StageManager) / 배치할때 
+        
+        
+        
+        // SlotUnitData<string, GameObject ,int> slotUnit = new SlotUnitData<string, GameObject ,int>(유닛 이름, 프리팹, slotindex);
+        // selectedUnits.Add(slotUnit);
+
+        // PlayerLocalManager.Instance.l_SelectedUnitList = selectedUnits;
+        PlayerLocalManager.Instance.Save();
+    }
+    
 }
+
+

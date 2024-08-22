@@ -46,34 +46,22 @@ public class UnitDropable : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
         if (draggedUnit != null)
         {
-            assignedUnitData = draggedUnit.unitData;
-
-            int placement;
+            // 현재 드롭된 위치의 인덱스 가져오기
+            // int slotIndex = transform.GetSiblingIndex();
+            //
+            // // SaveUnitList 호출하여 유닛 정보 저장
+            // SaveUnitList(draggedUnit.unitName, draggedUnit.unitPrefab, slotIndex);
             
-            if (gameObject.transform.parent.name.Contains("Left Wall Stage"))
-            {
-                placement = 1;
-            }
-            else if (gameObject.transform.parent.name.Contains("Right Wall Stage"))
-            {
-                placement = 2;
-            }
-            else
-            {
-                placement = 0;
-            }
-            
-            int slotIndex = transform.GetSiblingIndex();
-
-            UnitGameManagerA.Instance.SaveUnitPlacement(slotIndex, draggedUnit.unitData, placement);
+            // assignedUnitData = draggedUnit.unitData;
 
             draggedUnit.transform.SetParent(transform);
             draggedUnit.GetComponent<RectTransform>().position = GetComponent<RectTransform>().position;
 
             Image dropZoneImage = GetComponent<Image>();
-            if (dropZoneImage != null)
+            
+            if (dropZoneImage != null) // 배치 후
             {
-                dropZoneImage.sprite = draggedUnit.unitData.UnitImage;
+                // dropZoneImage.sprite = draggedUnit.unitData.UnitImage;
                 dropZoneImage.color = Color.white;
             }
             

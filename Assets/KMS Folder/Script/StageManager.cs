@@ -12,7 +12,6 @@ public class StageManager : MonoBehaviour
     private UnitSlotManagerA unitSlotManager;
     
     public GameObject[] slots;
-    
 
     private IEnumerator Start()
     {

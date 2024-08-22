@@ -17,7 +17,6 @@ public class UnitDraggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     private bool isDraggable = true;
     public bool isDropped = false;
     
-    private UnitGameManagerA unitGameManager;
     private StageManager stageManager;
     
     private void Awake()
@@ -25,8 +24,6 @@ public class UnitDraggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         Canvas = FindFirstObjectByType<Canvas>().transform;
         rect = GetComponent<RectTransform>();
         canvasGroup = GetComponent<CanvasGroup>();
-        
-        unitGameManager = UnitGameManagerA.Instance;
         stageManager = FindFirstObjectByType<StageManager>();
     }
     

@@ -58,9 +58,9 @@ public class UnitPlacementManagerA : MonoBehaviour
 
     private void SetUnitData(Image unitImage, UnitData data)
     {
-        if (data != null && data.UnitImage != null)
+        if (data != null)
         {
-            unitImage.sprite = data.UnitImage;
+            // unitImage.sprite = data.UnitImage;
             unitImage.color = Color.white;
             unitImage.enabled = true;
         }

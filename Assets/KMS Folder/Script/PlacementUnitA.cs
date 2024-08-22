@@ -38,7 +38,7 @@ public class PlacementUnitA : MonoBehaviour
                 
                 if (placementStatus != 0 && slotIndex != -1)
                 {
-                    slotUnitDataList.Add(new SlotUnitData(slotIndex, assignedUnitData, placementStatus));
+                    // slotUnitDataList.Add(new SlotUnitData(slotIndex, assignedUnitData, placementStatus));
                     CustomLogger.Log($"Saved Slot Index: {slotIndex}, Unit: {assignedUnitData.name}, Placement: {placementStatus}");
                 }
                 else
@@ -76,7 +76,7 @@ public class PlacementUnitA : MonoBehaviour
                         if (slotUnitData.UnitData != null)
                         {
                             dropableComponent.assignedUnitData = slotUnitData.UnitData;
-                            slot.GetComponent<Image>().sprite = slotUnitData.UnitData.UnitImage;
+                            // slot.GetComponent<Image>().sprite = slotUnitData.UnitData.UnitImage;
                             slot.GetComponent<Image>().color = Color.white;
                         }
                         else

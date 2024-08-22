@@ -75,8 +75,8 @@ public class UnitGameManagerA : MonoBehaviour
             }
         }
         
-        var slotUnitData = new SlotUnitData(slotIndex, unit, placement);
-        instance.slotUnitDataList[slotIndex] = slotUnitData;
+        // var slotUnitData = new SlotUnitData(slotIndex, unit, placement);
+        // instance.slotUnitDataList[slotIndex] = slotUnitData;
         
     }
 

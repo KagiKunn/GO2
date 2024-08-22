@@ -5,14 +5,14 @@ using System.Collections;
 
 public class UnitSlotManagerA : MonoBehaviour
 {
+    // 유닛 목록 관리 스크립트 -> 유닛 매니저로 옮길 예정
+    // 배치 후 이미지 관리
     public Transform contentParent;
     private List<UnitData> userUnits;
     private List<Image> unitImages = new List<Image>();
     private List<Graphic> unitSlots = new List<Graphic>();
     private List<UnitDraggable> unitDraggables = new List<UnitDraggable>();
     
-    public UnitPlacementManagerA leftPlacementManager;
-    public UnitPlacementManagerA rightPlacementManager;
 
     private void Awake()
     {
@@ -68,12 +68,10 @@ public class UnitSlotManagerA : MonoBehaviour
 
     private void SetUnitData(Image unitImage, UnitDraggable unitDraggable, UnitData data)
     {
-        if (data != null && data.UnitImage != null)
+        if (data != null)
         {
-            unitImage.sprite = data.UnitImage;
             unitImage.color = Color.white;
             unitImage.enabled = true;
-
             unitDraggable.unitData = data;
         }
         else
