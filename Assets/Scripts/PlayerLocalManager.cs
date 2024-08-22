@@ -20,13 +20,13 @@ public class PlayerLocalManager : MonoBehaviour
     public int L_Week;
     public int L_Stage;
     public string[] L_StageRace;
-    private string L_SelectedRace;
+    public string L_SelectedRace;
     private float L_CastleMaxHP;
     private float L_CastleHP;
     private float L_CastleExtraHP;
     private List<KeyValuePair<string, int>> L_UnitList;
+    private bool L_GameStarted;
 
-    
     public int lMoney
     {
         get => L_money;
@@ -121,6 +121,12 @@ public class PlayerLocalManager : MonoBehaviour
         get => sceneControl;
         set => sceneControl = value;
     }
+    
+    public bool lGameStarted
+    {
+        get => L_GameStarted;
+        set => L_GameStarted = value;
+    }
 
     public static PlayerLocalManager Instance { get; private set; }
 
@@ -175,6 +181,7 @@ public class PlayerLocalManager : MonoBehaviour
                     lCastleHp = localData.CastleHealth;
                     lCastleExtraHp = localData.CastleExtraHealth;
                     lUnitList = localData.UnitList;
+                    lGameStarted = localData.GameStarted;
                 }
             }
         }
@@ -204,6 +211,7 @@ public class PlayerLocalManager : MonoBehaviour
         lCastleHp = localData.CastleHealth;
         lCastleExtraHp = localData.CastleExtraHealth;
         lUnitList = localData.UnitList;
+        lGameStarted = localData.GameStarted;
 
         SaveLocalData(localData);
     }
@@ -243,7 +251,7 @@ public class PlayerLocalManager : MonoBehaviour
     public void Save()
     {
         PlayerLocalData localData = new PlayerLocalData(lMoney, lPoint, lStartGold, lMoreEarnGold, lMoreCastleHealth,
-            lReduceCooldown, lHeroeList, lStage, lStageRace, lSelectedRace,lCastleMaxHp, lCastleHp, lCastleExtraHp, lUnitList);
+            lReduceCooldown, lHeroeList, lStage, lStageRace, lSelectedRace,lCastleMaxHp, lCastleHp, lCastleExtraHp, lUnitList, lGameStarted);
         SaveLocalData(localData);
     }
 
