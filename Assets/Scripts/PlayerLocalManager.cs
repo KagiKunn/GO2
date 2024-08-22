@@ -2,262 +2,249 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+
 using UnityEngine;
 
-public class PlayerLocalManager : MonoBehaviour
-{
-    private SceneControl sceneControl;
-    private static string persistentDataPath;
-    private string filePath;
+public class PlayerLocalManager : MonoBehaviour {
+	private SceneControl sceneControl;
+	private static string persistentDataPath;
+	private string filePath;
 
-    private int L_money;
-    private int L_point;
-    private int L_startGold;
-    private int L_moreEarnGold;
-    private int L_moreCastleHealth;
-    private int L_reduceCooldown;
-    private HeroList[] L_HeroeList;
-    public int L_Week;
-    public int L_Stage;
-    public string[] L_StageRace;
-    private string selectedRace;
-    private float L_CastleMaxHP;
-    private float L_CastleHP;
-    private float L_CastleExtraHP;
-    private List<KeyValuePair<string, int>> L_UnitList;
+	private int L_money;
+	private int L_point;
+	private int L_startGold;
+	private int L_moreEarnGold;
+	private int L_moreCastleHealth;
+	private int L_reduceCooldown;
+	private HeroList[] L_HeroeList;
+	public int L_Week;
+	public int L_Stage;
+	public string[] L_StageRace;
+	public string L_SelectedRace;
+	private float L_CastleMaxHP;
+	private float L_CastleHP;
+	private float L_CastleExtraHP;
+	private List<KeyValuePair<string, int>> L_UnitList;
+	private bool L_GameStarted;
 
-    
-    public int lMoney
-    {
-        get => L_money;
-        set => L_money = value;
-    }
+	public int lMoney {
+		get => L_money;
 
-    public int lPoint
-    {
-        get => L_point;
-        set => L_point = value;
-    }
+		set => L_money = value;
+	}
 
-    public int lStartGold
-    {
-        get => L_startGold;
-        set => L_startGold = value;
-    }
+	public int lPoint {
+		get => L_point;
 
-    public int lMoreEarnGold
-    {
-        get => L_moreEarnGold;
-        set => L_moreEarnGold = value;
-    }
+		set => L_point = value;
+	}
 
-    public int lMoreCastleHealth
-    {
-        get => L_moreCastleHealth;
-        set => L_moreCastleHealth = value;
-    }
+	public int lStartGold {
+		get => L_startGold;
 
-    public int lReduceCooldown
-    {
-        get => L_reduceCooldown;
-        set => L_reduceCooldown = value;
-    }
+		set => L_startGold = value;
+	}
 
-    public HeroList[] lHeroeList
-    {
-        get => L_HeroeList;
-        set => L_HeroeList = value;
-    }
-    
-    public int lWeek
-    {
-        get => L_Week;
-        set => L_Week = value;
-    }
-    public int lStage
-    {
-        get => L_Stage;
-        set => L_Stage = value;
-    }
+	public int lMoreEarnGold {
+		get => L_moreEarnGold;
 
-    public string[] lStageRace
-    {
-        get => L_StageRace;
-        set => L_StageRace = value;
-    }
+		set => L_moreEarnGold = value;
+	}
 
-    public string SelectedRace
-    {
-        get => selectedRace;
-        set => selectedRace = value;
-    }
-    
-    public float lCastleMaxHp
-    {
-        get => L_CastleMaxHP;
-        set => L_CastleMaxHP = value;
-    }
+	public int lMoreCastleHealth {
+		get => L_moreCastleHealth;
 
-    public float lCastleHp
-    {
-        get => L_CastleHP;
-        set => L_CastleHP = value;
-    }
+		set => L_moreCastleHealth = value;
+	}
 
-    public float lCastleExtraHp
-    {
-        get => L_CastleExtraHP;
-        set => L_CastleExtraHP = value;
-    }
+	public int lReduceCooldown {
+		get => L_reduceCooldown;
 
-    public List<KeyValuePair<string, int>> lUnitList
-    {
-        get => L_UnitList;
-        set => L_UnitList = value;
-    }
+		set => L_reduceCooldown = value;
+	}
 
-    public SceneControl SceneControl
-    {
-        get => sceneControl;
-        set => sceneControl = value;
-    }
+	public HeroList[] lHeroeList {
+		get => L_HeroeList;
 
-    public static PlayerLocalManager Instance { get; private set; }
+		set => L_HeroeList = value;
+	}
 
-    private void Awake()
-    {
-        sceneControl = gameObject.AddComponent<SceneControl>();
-        persistentDataPath = Application.persistentDataPath;
-        filePath = Path.Combine(persistentDataPath, "Save.dat");
+	public int lWeek {
+		get => L_Week;
 
-        if (File.Exists(filePath))
-        {
-            LoadLocalData();
-        }
-        else
-        {
-            CreateNewPlayer();
-        }
+		set => L_Week = value;
+	}
 
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(this);
-        }
-        else
-        {
-            Destroy(this);
-        }
-    }
+	public int lStage {
+		get => L_Stage;
 
-    private void LoadLocalData()
-    {
-        try
-        {
-            if (File.Exists(filePath))
-            {
-                using (FileStream file = File.Open(filePath, FileMode.Open))
-                {
-                    BinaryFormatter formatter = new BinaryFormatter();
-                    PlayerLocalData localData = (PlayerLocalData)formatter.Deserialize(file);
+		set => L_Stage = value;
+	}
 
-                    // Deserialize된 데이터를 현재 클래스의 필드에 할당
-                    lMoney = localData.Money;
-                    lPoint = localData.RemainedPoint;
-                    lStartGold = localData.StartGold;
-                    lMoreEarnGold = localData.MoreEarnGold;
-                    lMoreCastleHealth = localData.MoreCastleHealth;
-                    lReduceCooldown = localData.ReduceCooldown;
-                    lHeroeList = localData.HerosList;
-                    lStage = localData.Stage;
-                    lStageRace = localData.StageRace;
-                    lCastleMaxHp = localData.CastleMaxHealth;
-                    lCastleHp = localData.CastleHealth;
-                    lCastleExtraHp = localData.CastleExtraHealth;
-                    lUnitList = localData.UnitList;
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            Debug.LogError($"Failed to load settings: {ex.Message}");
-            File.Delete(filePath);
-            CreateNewPlayer();
-        }
-    }
+	public string[] lStageRace {
+		get => L_StageRace;
 
-    private void CreateNewPlayer()
-    {
-        PlayerLocalData localData = new PlayerLocalData(); // 기본 생성자 호출
+		set => L_StageRace = value;
+	}
 
-        // 초기값 설정
-        lMoney = localData.Money;
-        lPoint = localData.RemainedPoint;
-        lStartGold = localData.StartGold;
-        lMoreEarnGold = localData.MoreEarnGold;
-        lMoreCastleHealth = localData.MoreCastleHealth;
-        lReduceCooldown = localData.ReduceCooldown;
-        lHeroeList = localData.HerosList;
-        lStage = localData.Stage;
-        lStageRace = localData.StageRace;
-        lCastleMaxHp = localData.CastleMaxHealth;
-        lCastleHp = localData.CastleHealth;
-        lCastleExtraHp = localData.CastleExtraHealth;
-        lUnitList = localData.UnitList;
+	public string lSelectedRace {
+		get => L_SelectedRace;
 
-        SaveLocalData(localData);
-    }
+		set => L_SelectedRace = value;
+	}
 
-    
-    public void ResetStageRace()
-    {
-        lStage = 0;
-        lStageRace = new string[] { "Human", "DarkElf", "Orc", "Witch", "Skeleton" };
-        UpdateStageCount(); // 배열 리셋 후 stageCount도 동기화
-    }
+	public float lCastleMaxHp {
+		get => L_CastleMaxHP;
 
-    // stageRace 배열의 길이에 따라 stageCount를 동기화
-    public void UpdateStageCount()
-    {
-        lStage = 5 - lStageRace.Length; // 남은 종족 수에 따라 stageCount를 계산
-        Save();
-    }
+		set => L_CastleMaxHP = value;
+	}
 
-    // 성벽 체력 데이터를 기본값으로 재설정하는 메서드
-    public void ResetHealthData()
-    {
-        lCastleMaxHp = 30000f; // 기본값으로 재설정
-        lCastleHp = 30000; // 기본값으로 재설정
-        lCastleExtraHp = 0f; // 기본값으로 재설정
-        Debug.Log("성벽 체력 데이터가 기본값으로 재설정되었습니다.");
-        Save();
-    }
-        
-    public void GoNextWeek()
-    {
-        CustomLogger.Log("GoNextWeek()호출", "orange");
-        ResetStageRace();
-        ResetHealthData();
-    }
-    
-    public void Save()
-    {
-        PlayerLocalData localData = new PlayerLocalData(lMoney, lPoint, lStartGold, lMoreEarnGold, lMoreCastleHealth,
-            lReduceCooldown, lHeroeList, lStage, lStageRace, lCastleMaxHp, lCastleHp, lCastleExtraHp, lUnitList);
-        SaveLocalData(localData);
-    }
+	public float lCastleHp {
+		get => L_CastleHP;
 
-    private void SaveLocalData(PlayerLocalData data)
-    {
-        using (FileStream file = File.Create(filePath))
-        {
-            BinaryFormatter formatter = new BinaryFormatter();
-            formatter.Serialize(file, data);
-        }
-    }
+		set => L_CastleHP = value;
+	}
 
-    void OnApplicationQuit()
-    {
-        Destroy(this);
-    }
+	public float lCastleExtraHp {
+		get => L_CastleExtraHP;
+
+		set => L_CastleExtraHP = value;
+	}
+
+	public List<KeyValuePair<string, int>> lUnitList {
+		get => L_UnitList;
+
+		set => L_UnitList = value;
+	}
+
+	public SceneControl SceneControl {
+		get => sceneControl;
+
+		set => sceneControl = value;
+	}
+
+	public bool lGameStarted {
+		get => L_GameStarted;
+
+		set => L_GameStarted = value;
+	}
+
+	public static PlayerLocalManager Instance { get; private set; }
+
+	private void Awake() {
+		sceneControl = gameObject.AddComponent<SceneControl>();
+		persistentDataPath = Application.persistentDataPath;
+		filePath = Path.Combine(persistentDataPath, "Save.dat");
+
+		if (File.Exists(filePath)) {
+			LoadLocalData();
+		} else {
+			CreateNewPlayer();
+		}
+
+		if (Instance == null) {
+			Instance = this;
+			DontDestroyOnLoad(this);
+		} else {
+			Destroy(this);
+		}
+	}
+
+	private void LoadLocalData() {
+		try {
+			if (File.Exists(filePath)) {
+				using (FileStream file = File.Open(filePath, FileMode.Open)) {
+					BinaryFormatter formatter = new BinaryFormatter();
+					PlayerLocalData localData = (PlayerLocalData)formatter.Deserialize(file);
+
+					// Deserialize된 데이터를 현재 클래스의 필드에 할당
+					lMoney = localData.Money;
+					lPoint = localData.RemainedPoint;
+					lStartGold = localData.StartGold;
+					lMoreEarnGold = localData.MoreEarnGold;
+					lMoreCastleHealth = localData.MoreCastleHealth;
+					lReduceCooldown = localData.ReduceCooldown;
+					lHeroeList = localData.HerosList;
+					lStage = localData.Stage;
+					lStageRace = localData.StageRace;
+					lCastleMaxHp = localData.CastleMaxHealth;
+					lCastleHp = localData.CastleHealth;
+					lCastleExtraHp = localData.CastleExtraHealth;
+					lUnitList = localData.UnitList;
+					lGameStarted = localData.GameStarted;
+				}
+			}
+		} catch (Exception ex) {
+			Debug.LogError($"Failed to load settings: {ex.Message}");
+			File.Delete(filePath);
+			CreateNewPlayer();
+		}
+	}
+
+	private void CreateNewPlayer() {
+		PlayerLocalData localData = new PlayerLocalData(); // 기본 생성자 호출
+
+		// 초기값 설정
+		lMoney = localData.Money;
+		lPoint = localData.RemainedPoint;
+		lStartGold = localData.StartGold;
+		lMoreEarnGold = localData.MoreEarnGold;
+		lMoreCastleHealth = localData.MoreCastleHealth;
+		lReduceCooldown = localData.ReduceCooldown;
+		lHeroeList = localData.HerosList;
+		lStage = localData.Stage;
+		lStageRace = localData.StageRace;
+		lCastleMaxHp = localData.CastleMaxHealth;
+		lCastleHp = localData.CastleHealth;
+		lCastleExtraHp = localData.CastleExtraHealth;
+		lUnitList = localData.UnitList;
+		lGameStarted = localData.GameStarted;
+
+		SaveLocalData(localData);
+	}
+
+	public void ResetStageRace() {
+		lStage = 0;
+		lStageRace = new string[] { "Human", "DarkElf", "Orc", "Witch", "Skeleton" };
+		UpdateStageCount(); // 배열 리셋 후 stageCount도 동기화
+	}
+
+	// stageRace 배열의 길이에 따라 stageCount를 동기화
+	public void UpdateStageCount() {
+		lStage = 5 - lStageRace.Length; // 남은 종족 수에 따라 stageCount를 계산
+		Save();
+	}
+
+	// 성벽 체력 데이터를 기본값으로 재설정하는 메서드
+	public void ResetHealthData() {
+		lCastleMaxHp = 30000f; // 기본값으로 재설정
+		lCastleExtraHp = 0f; // 기본값으로 재설정
+		lCastleMaxHp += lCastleExtraHp;
+		lCastleHp = lCastleMaxHp; // 기본값으로 재설정
+		CustomLogger.Log("성벽 체력 데이터가 기본값으로 재설정되었습니다.");
+		Save();
+	}
+
+	public void GoNextWeek() {
+		CustomLogger.Log("GoNextWeek()호출", "orange");
+		ResetStageRace();
+	}
+
+	public void Save() {
+		PlayerLocalData localData = new PlayerLocalData(lMoney, lPoint, lStartGold, lMoreEarnGold, lMoreCastleHealth,
+			lReduceCooldown, lHeroeList, lStage, lStageRace, lSelectedRace, lCastleMaxHp, lCastleHp, lCastleExtraHp, lUnitList, lGameStarted);
+
+		SaveLocalData(localData);
+	}
+
+	private void SaveLocalData(PlayerLocalData data) {
+		using (FileStream file = File.Create(filePath)) {
+			BinaryFormatter formatter = new BinaryFormatter();
+			formatter.Serialize(file, data);
+		}
+	}
+
+	void OnApplicationQuit() {
+		Destroy(this);
+	}
 }

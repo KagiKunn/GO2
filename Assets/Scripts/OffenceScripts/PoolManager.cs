@@ -1,112 +1,89 @@
 using System.Collections.Generic;
 using System.Linq;
+
 using Unity.VisualScripting;
+
 using UnityEngine;
 
 #pragma warning disable CS0219 // 변수가 할당되었지만 해당 값이 사용되지 않았습니다.
-
 public class PoolManager : MonoBehaviour {
-	// .. 프리펩들을 보관할 변수
 	[Header("Enemy")]
-	[SerializeField] private GameObject[] enemyPrefabs;
+	[SerializeField] private GameObject[] darkElfPrefabs;
+
+	[SerializeField] private GameObject[] humanPrefabs;
+	[SerializeField] private GameObject[] witchPrefabs;
+	[SerializeField] private GameObject[] orcPrefabs;
+	[SerializeField] private GameObject[] skeletonPrefabs;
 
 	[Header("Weapon")]
 	[SerializeField] private GameObject[] weaponPrefabs;
-	
+
 	[Header("Bullet")]
 	[SerializeField] private GameObject[] bulletPrefabs;
 
-	// .. 풀 담당을 하는 리스트들
-	private List<GameObject>[] pools;
+	private Dictionary<string, List<GameObject>> pools;
+	private Dictionary<string, GameObject[]> prefabDictionary;
 
 	private void Awake() {
-		pools = new List<GameObject>[enemyPrefabs.Length + weaponPrefabs.Length + bulletPrefabs.Length];
+		// 프리팹 그룹을 딕셔너리에 저장
+		prefabDictionary = new Dictionary<string, GameObject[]> {
+			{ "DarkElf", darkElfPrefabs },
+			{ "Human", humanPrefabs },
+			{ "Witch", witchPrefabs },
+			{ "Orc", orcPrefabs },
+			{ "Skeleton", skeletonPrefabs },
+			{ "Weapon", weaponPrefabs },
+			{ "Bullet", bulletPrefabs }
+		};
 
-		for (int i = 0; i < pools.Length; i++) {
-			pools[i] = new List<GameObject>();
+		// 풀 초기화
+		pools = new Dictionary<string, List<GameObject>>();
+
+		foreach (var key in prefabDictionary.Keys) {
+			pools[key] = new List<GameObject>();
 		}
 	}
 
-	public GameObject Get(int index) {
-		GameObject select = null;
+	public GameObject GetObject(string category, int index) {
+		// 카테고리와 인덱스를 사용해 풀에 있는 비활성화된 오브젝트 찾기
+		var pool = pools[category];
+		var prefabList = prefabDictionary[category];
 
-		// ... 선택한 풀의 놀고 있는(비활성화 된) 게임 오브젝트 접근
-		foreach (var item in pools[index].Where(item => !item.activeSelf))
-		{
-			// ... 발견하면 select 변수에 할당
-			select = item;
+		GameObject select = pool.FirstOrDefault(item => !item.activeSelf);
 
-			select.SetActive(true);
-
-			break;
-		}
-
-		// ... 못 찾았으면?
+		// 비활성화된 오브젝트가 없으면 새로 생성
 		if (select == null) {
-			// ... 새롭게 생성하고 select 변수에 할당
-			select = Instantiate(enemyPrefabs[index], transform);
+			if (index >= 0 && index < prefabList.Length) {
+				select = Instantiate(prefabList[index], transform);
+				
+				pool.Add(select);
+			} else {
+				Debug.LogError("Invalid index for prefab array.");
 
-			pools[index].Add(select);
+				return null;
+			}
 		}
 
-		return select;
-	}
-	
-	public GameObject GetWeapon(int index) {
-		GameObject select = null;
-
-		// ... 선택한 풀의 놀고 있는(비활성화 된) 게임 오브젝트 접근
-		foreach (var item in pools[index].Where(item => !item.activeSelf))
-		{
-			// ... 발견하면 select 변수에 할당
-			select = item;
-
-			select.SetActive(true);
-
-			break;
-		}
-
-		// ... 못 찾았으면?
-		if (select == null) {
-			// ... 새롭게 생성하고 select 변수에 할당
-			select = Instantiate(weaponPrefabs[index], transform);
-
-			pools[index].Add(select);
-		}
-
-		return select;
-	}
-	
-	public GameObject GetFire(int index) {
-		GameObject select = null;
-
-		// ... 선택한 풀의 놀고 있는(비활성화 된) 게임 오브젝트 접근
-		foreach (var item in pools[index].Where(item => !item.activeSelf))
-		{
-			// ... 발견하면 select 변수에 할당
-			select = item;
-
-			select.SetActive(true);
-
-			break;
-		}
-
-		// ... 못 찾았으면?
-		if (select == null) {
-			// ... 새롭게 생성하고 select 변수에 할당
-			select = Instantiate(bulletPrefabs[index], transform);
-
-			pools[index].Add(select);
-		}
+		select.SetActive(true);
 
 		return select;
 	}
 
-	public GameObject[] EnemyPrefabs => enemyPrefabs;
+	public GameObject[] GetPrefabs(string category) {
+		return prefabDictionary.ContainsKey(category) ? prefabDictionary[category] : null;
+	}
+
+	public GameObject[] DarkElfPrefabs => darkElfPrefabs;
+
+	public GameObject[] HumanPrefabs => humanPrefabs;
+
+	public GameObject[] WitchPrefabs => witchPrefabs;
+
+	public GameObject[] OrcPrefabs => orcPrefabs;
+
+	public GameObject[] SkeletonPrefabs => skeletonPrefabs;
 
 	public GameObject[] WeaponPrefabs => weaponPrefabs;
 
 	public GameObject[] BulletPrefabs => bulletPrefabs;
-
-	public List<GameObject>[] Pools => pools;
 }
