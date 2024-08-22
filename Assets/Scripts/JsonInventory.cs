@@ -26,18 +26,9 @@ public static class JsonInventory
             return default(T);    
         }
 
-        try
-        {
-            string json = File.ReadAllText(filePath);
-            CustomLogger.Log($"JSON content: {json}");
-            return JsonUtility.FromJson<T>(json);
-        }
-        catch (Exception ex)
-        {
-            return default(T);
-        }
-
-        
+        string json = File.ReadAllText(filePath);
+        CustomLogger.Log($"JSON content: {json}");
+        return JsonUtility.FromJson<T>(json);
 
     }
 
