@@ -6,11 +6,14 @@ using Unity.VisualScripting;
 using UnityEngine;
 
 #pragma warning disable CS0219 // 변수가 할당되었지만 해당 값이 사용되지 않았습니다.
-
 public class PoolManager : MonoBehaviour {
-	// .. 프리펩들을 보관할 변수
 	[Header("Enemy")]
-	[SerializeField] private GameObject[] enemyPrefabs;
+	[SerializeField] private GameObject[] darkElfPrefabs;
+
+	[SerializeField] private GameObject[] humanPrefabs;
+	[SerializeField] private GameObject[] witchPrefabs;
+	[SerializeField] private GameObject[] orcPrefabs;
+	[SerializeField] private GameObject[] skeletonPrefabs;
 
 	[Header("Weapon")]
 	[SerializeField] private GameObject[] weaponPrefabs;
@@ -18,68 +21,69 @@ public class PoolManager : MonoBehaviour {
 	[Header("Bullet")]
 	[SerializeField] private GameObject[] bulletPrefabs;
 
-	// .. 풀 담당을 하는 리스트들
-	private List<GameObject>[] pools;
+	private Dictionary<string, List<GameObject>> pools;
+	private Dictionary<string, GameObject[]> prefabDictionary;
 
 	private void Awake() {
-		int totalLength = enemyPrefabs.Length + weaponPrefabs.Length + bulletPrefabs.Length;
-		pools = new List<GameObject>[totalLength];
+		// 프리팹 그룹을 딕셔너리에 저장
+		prefabDictionary = new Dictionary<string, GameObject[]> {
+			{ "DarkElf", darkElfPrefabs },
+			{ "Human", humanPrefabs },
+			{ "Witch", witchPrefabs },
+			{ "Orc", orcPrefabs },
+			{ "Skeleton", skeletonPrefabs },
+			{ "Weapon", weaponPrefabs },
+			{ "Bullet", bulletPrefabs }
+		};
 
-		for (int i = 0; i < pools.Length; i++) {
-			pools[i] = new List<GameObject>();
+		// 풀 초기화
+		pools = new Dictionary<string, List<GameObject>>();
+
+		foreach (var key in prefabDictionary.Keys) {
+			pools[key] = new List<GameObject>();
 		}
 	}
 
-	private int GetPoolIndex(int categoryIndex, int index) {
-		switch (categoryIndex) {
-			case 0: return index; // Enemy
-			case 1: return enemyPrefabs.Length + index; // Weapon
-			case 2: return enemyPrefabs.Length + weaponPrefabs.Length + index; // Bullet
-			default: throw new System.ArgumentOutOfRangeException("Invalid category index");
-		}
-	}
+	public GameObject GetObject(string category, int index) {
+		// 카테고리와 인덱스를 사용해 풀에 있는 비활성화된 오브젝트 찾기
+		var pool = pools[category];
+		var prefabList = prefabDictionary[category];
 
-	public GameObject GetObject(int categoryIndex, int index) {
-		int poolIndex = GetPoolIndex(categoryIndex, index);
-		GameObject select = null;
+		GameObject select = pool.FirstOrDefault(item => !item.activeSelf);
 
-		foreach (var item in pools[poolIndex].Where(item => !item.activeSelf)) {
-			select = item;
-			select.SetActive(true);
-
-			break;
-		}
-
+		// 비활성화된 오브젝트가 없으면 새로 생성
 		if (select == null) {
-			GameObject prefab = null;
+			if (index >= 0 && index < prefabList.Length) {
+				select = Instantiate(prefabList[index], transform);
+				
+				pool.Add(select);
+			} else {
+				Debug.LogError("Invalid index for prefab array.");
 
-			switch (categoryIndex) {
-				case 0:
-					prefab = enemyPrefabs[index];
-
-					break;
-				case 1:
-					prefab = weaponPrefabs[index];
-
-					break;
-				case 2:
-					prefab = bulletPrefabs[index];
-
-					break;
+				return null;
 			}
-
-			select = Instantiate(prefab, transform);
-			pools[poolIndex].Add(select);
 		}
+
+		select.SetActive(true);
 
 		return select;
 	}
 
-	public GameObject[] EnemyPrefabs => enemyPrefabs;
+	public GameObject[] GetPrefabs(string category) {
+		return prefabDictionary.ContainsKey(category) ? prefabDictionary[category] : null;
+	}
+
+	public GameObject[] DarkElfPrefabs => darkElfPrefabs;
+
+	public GameObject[] HumanPrefabs => humanPrefabs;
+
+	public GameObject[] WitchPrefabs => witchPrefabs;
+
+	public GameObject[] OrcPrefabs => orcPrefabs;
+
+	public GameObject[] SkeletonPrefabs => skeletonPrefabs;
 
 	public GameObject[] WeaponPrefabs => weaponPrefabs;
 
 	public GameObject[] BulletPrefabs => bulletPrefabs;
-
-	public List<GameObject>[] Pools => pools;
 }

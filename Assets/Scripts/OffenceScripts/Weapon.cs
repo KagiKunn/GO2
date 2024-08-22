@@ -1,12 +1,14 @@
 using System;
 
 using UnityEngine;
+using UnityEngine.Serialization;
 
 #pragma warning disable CS0414 // 필드가 대입되었으나 값이 사용되지 않습니다
 
 public class Weapon : MonoBehaviour {
 	[SerializeField] private int id;
-	[SerializeField] private int prefabId;
+	[SerializeField] private int meleePrefabId;
+	[SerializeField] private int rangePrefabId;
 	[SerializeField] private float damage;
 	[SerializeField] private int count;
 	[SerializeField] private float speed;
@@ -82,7 +84,7 @@ public class Weapon : MonoBehaviour {
 
 		for (int i = 1; i < poolManager.WeaponPrefabs.Length; i++) {
 			if (itemData.Projectile == poolManager.WeaponPrefabs[i]) {
-				prefabId = i;
+				meleePrefabId = i;
 
 				break;
 			}
@@ -132,7 +134,7 @@ public class Weapon : MonoBehaviour {
 			if (i < transform.childCount) {
 				bullet = transform.GetChild(i);
 			} else {
-				bullet = poolManager.GetObject(1, prefabId).transform;
+				bullet = poolManager.GetObject("Weapon", meleePrefabId).transform;
 				bullet.parent = transform;
 			}
 
@@ -158,7 +160,7 @@ public class Weapon : MonoBehaviour {
 
 		direction = direction.normalized;
 
-		Transform bullet = poolManager.GetObject(2, prefabId).transform;
+		Transform bullet = poolManager.GetObject("Bullet", 1).transform;
 
 		bullet.position = transform.position;
 		bullet.rotation = Quaternion.FromToRotation(Vector3.up, direction);
@@ -170,7 +172,9 @@ public class Weapon : MonoBehaviour {
 
 	public int ID => id;
 
-	public int PrefabId => prefabId;
+	public int MeleePrefabId => meleePrefabId;
+
+	public int RangePrefabId => rangePrefabId;
 
 	public float Damage => damage;
 
