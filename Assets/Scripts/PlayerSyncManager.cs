@@ -110,6 +110,10 @@ public class PlayerSyncManager : MonoBehaviour, IDisposable {
 		if (File.Exists(filePath)) {
 			await LoadPlayerAsync();
 		}
+		else
+		{
+			CreateNewPlayer();
+		}
 
 		if (Instance == null) {
 			Instance = this;
