@@ -17,10 +17,4 @@ public class DefenseLoadData : MonoBehaviour
         gameObject.GetComponent<DefenseInit>().CastleHealth = PlayerLocalManager.Instance.lMoreCastleHealth;
         gameObject.GetComponent<DefenseInit>().Cooldown = PlayerLocalManager.Instance.lReduceCooldown;
     }
-
-    void Update()
-    {
-        
-        
-    }
 }
