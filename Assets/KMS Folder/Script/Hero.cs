@@ -18,7 +18,8 @@ public class HeroData : ScriptableObject {
 	public int OffenceHP; // 체력
 	public int OffenceAttack; // 공격력
 	public float OffenceAttackSpeed; // 공속
-
+	public ItemSO Equipment;
+	
 	[Header("# Color")]
 	public float r;
 	public float g;

@@ -65,8 +65,15 @@ public class Enemy : MonoBehaviour {
 
 		if (!isLive) return;
 
-		if (target.position.x < rigidbody2D.position.x) scale.x = 1;
-		else if (target.position.x > rigidbody2D.position.x) scale.x = -1;
+		if (target.position.x < rigidbody2D.position.x) {
+			scale.x = 1.5f;
+			scale.y = 1.5f;
+			scale.z = 1.5f;
+		} else if (target.position.x > rigidbody2D.position.x) {
+			scale.x = -1.5f;
+			scale.y = 1.5f;
+			scale.z = 1.5f;
+		}
 
 		transform.localScale = scale;
 	}

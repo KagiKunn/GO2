@@ -3,8 +3,8 @@ using System.IO;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
-
 using UnityEngine;
+
 // ReSharper disable All
 
 public class PlayerSyncManager : MonoBehaviour, IDisposable
@@ -24,44 +24,51 @@ public class PlayerSyncManager : MonoBehaviour, IDisposable
     private const int maxReconnectAttempts = 5;
     private const int reconnectDelay = 5000;
     private bool syncInit;
+    private bool changeAccount;
     private int roguePoint;
 
     public SceneControl SceneControl
     {
         get => sceneControl;
+
         set => sceneControl = value;
     }
 
     public string UUID
     {
         get => uuid;
+
         set => uuid = value;
     }
 
     public int Level
     {
         get => level;
+
         set => level = value;
     }
 
     public int Repeat
     {
         get => repeat;
+
         set => repeat = value;
     }
 
     public string Username
     {
         get => username;
+
         set => username = value;
     }
 
     public int RoguePoint
     {
         get => roguePoint;
+
         set => roguePoint = value;
     }
-    
+
     public static PlayerSyncManager Instance { get; private set; }
 
     private void Update()
@@ -69,27 +76,55 @@ public class PlayerSyncManager : MonoBehaviour, IDisposable
         if (syncInit)
         {
             syncInit = false;
+            buffer = new byte[1024];
             var bytes = stream.Read(buffer, 0, buffer.Length);
+
+            if (bytes <= 4)
+            {
+                return;
+            }
+            
             for (int i = 0; i < bytes - 4; i++)
             {
                 buffer[i] = buffer[i + 4];
             }
+
             for (int i = bytes - 4; i < bytes; i++)
             {
                 buffer[i] = 0;
             }
+
             if (bytes <= 0) return;
-            var playerData = DeserializePlayerData(buffer, bytes - 4);
+            CustomLogger.LogWarning($"Byte : {bytes}");
+            if (bytes < 20)
+            {
+                string code = DeserializeCode(buffer, 16);
+                InputBox.Instance.Input.text = code.Substring(0,8);
+            }
+            else
+            {
+                var playerData = DeserializePlayerData(buffer, bytes - 4);
 
-            // 서버에서 받은 데이터를 로컬에 반영
-            UUID = playerData.uuid;
-            Level = playerData.lv;
-            Repeat = playerData.repeat;
-            Username = playerData.username;
-            RoguePoint = playerData.roguePoint;
+                // 서버에서 받은 데이터를 로컬에 반영
+                UUID = playerData.uuid;
+                Level = playerData.lv;
+                Repeat = playerData.repeat;
+                Username = playerData.username;
+                RoguePoint = playerData.roguePoint;
 
-            // 로컬 데이터 저장
-            SaveLocalData(playerData);
+                // 로컬 데이터 저장
+                SaveLocalData(playerData);
+                if (changeAccount)
+                {
+                    changeAccount = false;
+                    PlayerLocalManager.Instance.CreateNewPlayer();
+                    #if UNITY_EDITOR
+                            UnityEditor.EditorApplication.isPlaying = false;
+                    #else
+                            Application.Quit();
+                    #endif
+                }
+            }
         }
     }
 
@@ -101,15 +136,20 @@ public class PlayerSyncManager : MonoBehaviour, IDisposable
         float cameraWidth = cameraHeight * screenAspect;
         GameObject TitleImage = GameObject.Find("TitleImage");
         TitleImage.transform.localScale = new Vector3(cameraWidth, cameraHeight, TitleImage.transform.localScale.z);*/
-            
+
         sceneControl = gameObject.AddComponent<SceneControl>();
         persistentDataPath = Application.persistentDataPath;
         filePath = Path.Combine(persistentDataPath, "Player.dat");
 
         InitializeConnect();
+
         if (File.Exists(filePath))
         {
             await LoadPlayerAsync();
+        }
+        else
+        {
+            CreateNewPlayer();
         }
 
         if (Instance == null)
@@ -137,7 +177,6 @@ public class PlayerSyncManager : MonoBehaviour, IDisposable
         }
     }
 
-
     void InitializeConnect()
     {
         TryConnect();
@@ -149,24 +188,24 @@ public class PlayerSyncManager : MonoBehaviour, IDisposable
 
         while (reconnectAttempts < maxReconnectAttempts)
         {
-            bool test = false;
+            bool test = true;
             client = new TcpClient(test ? "127.0.0.1" : "125.191.215.205", 1651);
 
             // 연결이 성공적으로 이루어졌다면 스트림을 가져옵니다.
             if (client.Connected)
             {
                 stream = client.GetStream();
-                Debug.Log("Connected to server.");
+                CustomLogger.Log("Connected to server.");
                 isReconnecting = false; // 재접속 성공 시 플래그 해제
+
                 //new Thread(ReceiveData).Start();
                 return;
             }
         }
 
-        Debug.LogError("Max reconnect attempts reached. Could not connect to server.");
+        CustomLogger.LogError("Max reconnect attempts reached. Could not connect to server.");
         isReconnecting = false; // 재접속 시도 실패
     }
-
 
     private async Task LoadPlayerAsync()
     {
@@ -174,14 +213,16 @@ public class PlayerSyncManager : MonoBehaviour, IDisposable
         {
             // 비동기로 파일을 열어 데이터를 읽어옵니다.
             byte[] data;
+
             using (FileStream file = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.None))
             {
                 long fileSize = file.Length;
-                Debug.Log($"File size: {fileSize}");
+                CustomLogger.Log($"File size: {fileSize}");
 
                 if (fileSize == 0)
                 {
-                    Debug.LogError("Save file is empty.");
+                    CustomLogger.LogError("Save file is empty.");
+
                     return;
                 }
 
@@ -190,7 +231,8 @@ public class PlayerSyncManager : MonoBehaviour, IDisposable
 
                 if (bytesRead < fileSize)
                 {
-                    Debug.LogError("Failed to read the entire file.");
+                    CustomLogger.LogError("Failed to read the entire file.");
+
                     return;
                 }
             }
@@ -207,15 +249,15 @@ public class PlayerSyncManager : MonoBehaviour, IDisposable
         }
         catch (Exception ex)
         {
-            Debug.LogError($"Failed to load save: {ex.Message}");
+            CustomLogger.LogError($"Failed to load save: {ex.Message}");
         }
     }
-    
+
     private void CreateNewPlayer()
     {
         UUID = Guid.NewGuid().ToString();
 
-        PlayerSyncData playerData = new PlayerSyncData(UUID, 1, 0, "プレイヤー",0);
+        PlayerSyncData playerData = new PlayerSyncData(UUID, 1, 0, "プレイヤー", 0);
 
         SaveLocalData(playerData);
         byte[] serializedData = SerializePlayerData(playerData);
@@ -224,11 +266,30 @@ public class PlayerSyncManager : MonoBehaviour, IDisposable
 
     private void SyncWithServer()
     {
-            // 서버에 보내기 위한 더미 데이터 생성
-            PlayerSyncData dummyUUID = new PlayerSyncData(UUID, 1, 0, "プレイヤー", 0);
-            byte[] serializedData = SerializePlayerData(dummyUUID);
-            sendStream(serializedData, 2);
-            syncInit = true;
+        // 서버에 보내기 위한 더미 데이터 생성
+        PlayerSyncData dummyUUID = new PlayerSyncData(UUID, 1, 0, "プレイヤー", 0);
+        byte[] serializedData = SerializePlayerData(dummyUUID);
+        sendStream(serializedData, 2);
+        syncInit = true;
+    }
+
+    public void IssueCode()
+    {
+        // 서버에 보내기 위한 더미 데이터 생성
+        PlayerSyncData dummyUUID = new PlayerSyncData(UUID, 1, 0, "プレイヤー", 0);
+        byte[] serializedData = SerializePlayerData(dummyUUID);
+        sendStream(serializedData, 3);
+        syncInit = true;
+    }
+
+    public void ChangeAccount(string code)
+    {
+        // 서버에 보내기 위한 더미 데이터 생성
+        PlayerSyncData dummyUUID = new PlayerSyncData(UUID, 1, 0, code, 0);
+        byte[] serializedData = SerializePlayerData(dummyUUID);
+        sendStream(serializedData, 4);
+        syncInit = true;
+        changeAccount = true;
     }
 
     private void ChangeNickname(string name)
@@ -236,7 +297,15 @@ public class PlayerSyncManager : MonoBehaviour, IDisposable
         Username = name;
         Save();
     }
-    
+
+    private string DeserializeCode(byte[] data, int length)
+    {
+        using (MemoryStream ms = new MemoryStream(data, 0, length))
+        {
+            return PlayerSyncData.DeserializeCode(data);
+        }
+    }
+
     private PlayerSyncData DeserializePlayerData(byte[] data, int length)
     {
         using (MemoryStream ms = new MemoryStream(data, 0, length))
@@ -267,14 +336,13 @@ public class PlayerSyncManager : MonoBehaviour, IDisposable
                 file.Write(serializedData, 0, serializedData.Length);
             }
 
-            Debug.Log("Data saved successfully.");
+            CustomLogger.Log("Data saved successfully.");
         }
         catch (Exception ex)
         {
-            Debug.LogError($"Failed to save data: {ex.Message}");
+            CustomLogger.LogError($"Failed to save data: {ex.Message}");
         }
     }
-
 
     public void sendStream(byte[] bytesData, int opcode)
     {
@@ -316,7 +384,7 @@ public class PlayerSyncManager : MonoBehaviour, IDisposable
             }
             catch (Exception e)
             {
-                Debug.Log("Error: " + e.Message);
+                CustomLogger.Log("Error: " + e.Message);
 
                 break;
             }
@@ -328,7 +396,6 @@ public class PlayerSyncManager : MonoBehaviour, IDisposable
         // PlayerLocalData 클래스에서 직접 구현한 Serialize 메서드를 사용하여 직렬화
         return playerData.Serialize();
     }
-
 
     public void Dispose()
     {

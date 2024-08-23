@@ -5,22 +5,41 @@ public class EndingCredit : MonoBehaviour
 {
     private RectTransform rectTransform;
 
-    void Start()
+    void Awake()
     {
+        Time.timeScale = 1f;
         rectTransform = gameObject.GetComponent<RectTransform>();
+        Debug.Log("Starting EndingCredit script");
     }
 
     private void Update()
     {
-        // rectTransform의 anchoredPosition.y가 특정 값에 도달했을 때 씬을 전환합니다.
+        if (rectTransform == null)
+        {
+            Debug.LogError("RectTransform is not assigned!");
+            return;
+        }
+
+        Debug.Log($"Current Position: {rectTransform.anchoredPosition.y}");
+
         if (rectTransform.anchoredPosition.y >= 2000f)
         {
+            Debug.Log("Position reached 2000, loading Title scene.");
             SceneManager.LoadScene("Title");
         }
 
-        // 위로 움직이도록 anchoredPosition을 증가시킵니다.
         Vector2 newPosition = rectTransform.anchoredPosition;
-        newPosition.y += 100f * Time.deltaTime; // y 값을 증가시킵니다.
+        newPosition.y += 100f * Time.deltaTime;
         rectTransform.anchoredPosition = newPosition;
     }
+    void OnEnable()
+    {
+        Debug.Log("EndingCredit script enabled");
+    }
+
+    void OnDisable()
+    {
+        Debug.Log("EndingCredit script disabled");
+    }
+ 
 }

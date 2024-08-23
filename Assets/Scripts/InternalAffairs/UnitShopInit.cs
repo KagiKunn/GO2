@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -17,6 +18,7 @@ public class UnitShopInit : MonoBehaviour
 
         newObjectRect.localScale = new Vector3(200, 200, 1);
         newObjectRect.anchoredPosition = new Vector2(0,-50);
+        GameObject.Find("RealPrice ").GetComponent<TextMeshProUGUI>().text = UnitPrice().ToString();
     }
 
     public void Back()
@@ -52,9 +54,10 @@ public class UnitShopInit : MonoBehaviour
 
         newObjectRect.localScale = new Vector3(200, 200, 1);
         newObjectRect.anchoredPosition = new Vector2(0,-50);
+        GameObject.Find("RealPrice ").GetComponent<TextMeshProUGUI>().text = UnitPrice().ToString();
     }
 
-    public void BuyUnit()
+    private int UnitPrice()
     {
         int price = unitIndex switch
         {
@@ -64,6 +67,11 @@ public class UnitShopInit : MonoBehaviour
             3 => 200,
             _ => 0
         };
+        return price;
+    }
+    public void BuyUnit()
+    {
+        int price = UnitPrice();
         if (PlayerLocalManager.Instance.lMoney < price)
         {
             CustomLogger.Log("Need More Money!","red");

@@ -7,6 +7,7 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
 using UnityEngine.Localization;
+using UnityEngine.Localization.SmartFormat.Core.Parsing;
 using UnityEngine.SceneManagement;
 
 #pragma warning disable CS1998 // 이 비동기 메서드에는 'await' 연산자가 없으며 메서드가 동시에 실행됩니다.
@@ -31,6 +32,11 @@ public class SettingManager : MonoBehaviour
 
     public static SettingManager Instance { get; private set; }
     private GameObject nickChange;
+    private GameObject ContinueGet;
+    private GameObject ContinueInput;
+    public TMP_InputField inputField;
+    private LocalizedString localizedString;
+    private TMP_Text plt;
     [SerializeField] public bool IsVibrationEnabled { get; private set; }
 
     private void Awake()
@@ -39,7 +45,7 @@ public class SettingManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
-            this.gameObject.SetActive(false);
+            gameObject.SetActive(false);
         }
         else
         {
@@ -47,8 +53,12 @@ public class SettingManager : MonoBehaviour
         }
 
         nickChange = gameObject.transform.Find("NickChange").gameObject;
+        ContinueGet = gameObject.transform.Find("ContinueGet").gameObject;
+        ContinueInput = gameObject.transform.Find("ContinueInput").gameObject;
+
         persistentDataPath = Application.persistentDataPath;
         filepath = Path.Combine(persistentDataPath, "Setting.dat");
+        plt = inputField.placeholder as TMP_Text;
 
         if (!File.Exists(filepath))
         {
@@ -110,8 +120,23 @@ public class SettingManager : MonoBehaviour
         }
     }
 
-    private void openNickChange()
+    public void openNickChange()
     {
+        InputBox.Instance.nowType = "Nick";
+        SetPlaceholderText("NickChange");
+        InputBoxUI.SetActive(true);
+    }
+
+    public void openIssue()
+    {
+        InputBox.Instance.nowType = "Issue";
+        SetPlaceholderText("Continous");
+        InputBoxUI.SetActive(true);
+    }
+    public void openContinue()
+    {
+        InputBox.Instance.nowType = "Continue";
+        SetPlaceholderText("Continous");
         InputBoxUI.SetActive(true);
     }
     
@@ -163,12 +188,20 @@ public class SettingManager : MonoBehaviour
         if (SceneManager.GetActiveScene().name.Equals("InternalAffairs"))
         {
             nickChange.SetActive(true);
+            ContinueGet.SetActive(true);
+            ContinueInput.SetActive(true);
             Button nickChangeButton = nickChange.GetComponent<Button>();
             nickChangeButton.onClick.AddListener(openNickChange);
+            Button ContinueGetBtn = ContinueGet.GetComponent<Button>();
+            ContinueGetBtn.onClick.AddListener(openIssue);
+            Button ContinueInputBtn = ContinueInput.GetComponent<Button>();
+            ContinueInputBtn.onClick.AddListener(openContinue);
         }
         else
         {
             nickChange.SetActive(false);
+            ContinueGet.SetActive(false);
+            ContinueInput.SetActive(false);
         }
         SetLevel("Master", masterVolSlider.value, masterVal, false);
         SetLevel("BGM", bgmVolSlider.value, bgmVal, false);
@@ -219,6 +252,53 @@ public class SettingManager : MonoBehaviour
         if (audioMixer.GetFloat(parameter, out float value))
         {
             slider.value = Mathf.Pow(10, value / 20f);
+        }
+    }
+    
+    private void SetPlaceholderText(string tableEntryReference)
+    {
+        // 이전 이벤트 구독 해제
+        if (localizedString != null && plt != null)
+        {
+            localizedString.StringChanged -= UpdatePlaceholderText;
+        }
+
+        // 새로운 LocalizedString 생성
+        localizedString = new LocalizedString
+        {
+            TableReference = "UI",
+            TableEntryReference = tableEntryReference
+        };
+
+        if (plt != null)
+        {
+            // 새로운 이벤트 구독
+            localizedString.StringChanged += UpdatePlaceholderText;
+        }
+    }
+
+    private void UpdatePlaceholderText(string localizedText)
+    {
+        if (plt != null)
+        {
+            plt.text = localizedText;
+        }
+    }
+    private void OnDisable()
+    {
+        // 오브젝트가 파괴될 때 이벤트 구독 해제
+        if (localizedString != null && plt != null)
+        {
+            localizedString.StringChanged -= UpdatePlaceholderText;
+        }
+    }
+    
+    private void OnDestroy()
+    {
+        // 오브젝트가 파괴될 때 이벤트 구독 해제
+        if (localizedString != null && plt != null)
+        {
+            localizedString.StringChanged -= UpdatePlaceholderText;
         }
     }
 }

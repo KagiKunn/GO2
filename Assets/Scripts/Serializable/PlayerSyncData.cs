@@ -34,6 +34,29 @@ public class PlayerSyncData
             return stream.ToArray();
         }
     }
+
+    public static string DeserializeCode(byte[] data)
+    {
+        using (MemoryStream stream = new MemoryStream(data))
+        {
+            using (BinaryReader reader = new BinaryReader(stream))
+            {
+                try
+                {
+                    int codeLength = reader.ReadByte();
+
+                    byte[] codeBytes = reader.ReadBytes(codeLength);
+                    string code = System.Text.Encoding.UTF8.GetString(codeBytes);
+                    CustomLogger.LogWarning(code);
+                    return code;
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"Failed to deserialize data: {ex.Message}", ex);
+                }
+            }
+        }
+    }
     public static PlayerSyncData Deserialize(byte[] data)
     {
         using (MemoryStream stream = new MemoryStream(data))

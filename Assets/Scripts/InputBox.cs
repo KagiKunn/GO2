@@ -5,34 +5,58 @@ using UnityEngine.UI;
 
 public class InputBox : MonoBehaviour
 {
-    [SerializeField] private TMP_InputField Input;
+    [SerializeField] public TMP_InputField Input;
     [SerializeField] private TextMeshProUGUI Username;
     [SerializeField] private Button Change;
     [SerializeField] private Button Quit;
-    public string Type = "Nick";
+    public string nowType = "Nick";
+    public string beforeType = "Nick";
+    public static InputBox Instance { get; private set; }
     void Start()
     {
         Quit.onClick.AddListener(CloseWindow);
-        if (Type == "Nick")
+    }
+    
+    void Awake()
+    {
+        if (Instance != null)
         {
-            Change.onClick.AddListener(ChangeNick);
-        } else if (Type == "Continue")
-        {
-            Change.onClick.AddListener(Continue);
+            Destroy(gameObject);
         }
-
-        DontDestroyOnLoad(this);
-        this.gameObject.SetActive(false);
+        else
+        {
+            Instance = this;
+            this.gameObject.SetActive(false);
+            DontDestroyOnLoad(gameObject);
+        }
     }
 
     void Update()
     {
-        
+        if (nowType == "Nick" && nowType != beforeType)
+        {
+            Change.onClick.AddListener(ChangeNick);
+            Change.onClick.RemoveListener(Continue);
+            Change.onClick.RemoveListener(Issue);
+            beforeType = nowType;
+        } else if (nowType == "Continue" && nowType != beforeType)
+        {
+            Change.onClick.AddListener(Continue);
+            Change.onClick.RemoveListener(ChangeNick);
+            Change.onClick.RemoveListener(Issue);
+            beforeType = nowType;
+        } else if (nowType == "Issue" && nowType != beforeType)
+        {
+            Change.onClick.AddListener(Issue);
+            Change.onClick.RemoveListener(ChangeNick);
+            Change.onClick.RemoveListener(Continue);
+            beforeType = nowType;
+        }
     }
 
     void ChangeNick()
     {
-        if (Input.text != null)
+        if (!string.IsNullOrEmpty(Input.text))
         {
             Username.text = Input.text;
             PlayerSyncManager.Instance.Username = Input.text;
@@ -43,9 +67,17 @@ public class InputBox : MonoBehaviour
 
     void Continue()
     {
-        if (Input.text != null)
+        CustomLogger.LogWarning("Continue");
+        if (!string.IsNullOrEmpty(Input.text))
         {
+            PlayerSyncManager.Instance.ChangeAccount(Input.text);
         }
+    }
+
+    void Issue()
+    {
+        CustomLogger.LogWarning("Issue");
+        PlayerSyncManager.Instance.IssueCode();
     }
     
     void CloseWindow()

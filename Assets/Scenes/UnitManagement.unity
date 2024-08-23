@@ -4340,8 +4340,6 @@ MonoBehaviour:
   rightPlacementManager: {fileID: 331406595}
   unitSlotManager: {fileID: 1092586646}
   resetBtn: {fileID: 1379062682}
-  saveBtn: {fileID: 1090192119}
-  upgradeBtn: {fileID: 878797163}
   leftWallBtn: {fileID: 373024560}
   rightWallBtn: {fileID: 299737138}
   leftWallContent: {fileID: 1574783477}
@@ -7089,6 +7087,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   contentParent: {fileID: 1092586643}
+  leftPlacementManager: {fileID: 0}
+  rightPlacementManager: {fileID: 0}
 --- !u!1 &1108177588
 GameObject:
   m_ObjectHideFlags: 0
@@ -8985,6 +8985,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73b8fadef84bb463c86a450c888490cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  defensePopupPrefab: {fileID: 0}
+  offencePopupPrefab: {fileID: 0}
 --- !u!114 &1584983496
 MonoBehaviour:
   m_ObjectHideFlags: 0

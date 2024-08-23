@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -23,7 +24,6 @@ public class BtnScene : MonoBehaviour
     {
         // 팝업을 생성하고, 팝업 UI에 접근
         GameObject popup = Instantiate(defensePopupPrefab);
-        
 
         // PopupBackground 패널 하위의 ConfirmButton 찾기
         Transform confirmButtonTransform = popup.transform.Find("PopupBackground/ConfirmButton");
@@ -36,7 +36,7 @@ public class BtnScene : MonoBehaviour
         // 확인 버튼 클릭 이벤트 등록
         confirmButton.onClick.AddListener(() =>
         {
-            Debug.Log("Confirm button clicked!");
+            CustomLogger.Log("Confirm button clicked!");
             SceneManager.LoadScene("Defense");
             CustomLogger.Log("Change Defense successfuly!");
             Destroy(popup); // 팝업을 닫음
@@ -45,11 +45,11 @@ public class BtnScene : MonoBehaviour
         // 취소 버튼 클릭 시 팝업을 닫기
         cancelButton.onClick.AddListener(() =>
         {
-            Debug.Log("Cancel button clicked!");
+            CustomLogger.Log("Cancel button clicked!");
             Destroy(popup);
         });
 
-        Debug.Log("Event listeners added.");
+        CustomLogger.Log("Event listeners added.");
     }
 
     public void OffenceSceneChange()
@@ -64,23 +64,40 @@ public class BtnScene : MonoBehaviour
         // PopupBackground 패널 하위의 CancelButton 찾기
         Transform cancelButtonTransform = popup.transform.Find("PopupBackground/CancelButton");
         Button cancelButton = cancelButtonTransform.GetComponent<Button>();
+        
+        // PopupBackground 패널 하위의 OffencePopupText 찾기
+        Transform offencePopupTextTransform = popup.transform.Find("PopupBackground/OffencePopupText");
+
+        // TextMeshProUGUI 컴포넌트 가져오기
+        TextMeshProUGUI offencePopupText = offencePopupTextTransform.GetComponent<TextMeshProUGUI>();
 
         // 확인 버튼 클릭 이벤트 등록
         confirmButton.onClick.AddListener(() =>
         {
-            Debug.Log("Confirm button clicked!");
-            SceneManager.LoadScene("Offence");
-            Destroy(popup); // 팝업을 닫음
+            CustomLogger.Log("Confirm button clicked!");
+
+            //offence 출격 시 골드200 소모
+            if (PlayerLocalManager.Instance.lMoney >= 200)
+            {
+                PlayerLocalManager.Instance.lMoney -= 200;
+                PlayerLocalManager.Instance.Save();
+                SceneManager.LoadScene("Offence");
+                Destroy(popup); // 팝업을 닫음
+            }
+            else
+            {
+                // 팝업 텍스트를 수정
+                offencePopupText.text = "NOT ENOUGH GOLD";
+            }
         });
 
         // 취소 버튼 클릭 시 팝업을 닫기
         cancelButton.onClick.AddListener(() =>
         {
-            Debug.Log("Cancel button clicked!");
+            CustomLogger.Log("Cancel button clicked!");
             Destroy(popup);
         });
     }
-
 
     public void UnitManagementSceneChange()
     {

@@ -471,6 +471,7 @@ MonoBehaviour:
   L_Week: 0
   L_Stage: 0
   L_StageRace: []
+  L_SelectedRace: 
 --- !u!1001 &854933426
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -879,6 +880,11 @@ PrefabInstance:
       propertyPath: InputBoxUI
       value: 
       objectReference: {fileID: 1962866747}
+    - target: {fileID: 8613979523270249900, guid: f657df8988f762849af8896b4e423986,
+        type: 3}
+      propertyPath: inputField
+      value: 
+      objectReference: {fileID: 1962866751}
     - target: {fileID: 8797048681191088712, guid: f657df8988f762849af8896b4e423986,
         type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -1380,6 +1386,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2989785245935646593, guid: 195b2d8a95f50214986fdbf0e47b3ce9,
+        type: 3}
+      propertyPath: m_fontSize
+      value: 24
+      objectReference: {fileID: 0}
+    - target: {fileID: 2989785245935646593, guid: 195b2d8a95f50214986fdbf0e47b3ce9,
+        type: 3}
+      propertyPath: m_fontSizeBase
+      value: 24
+      objectReference: {fileID: 0}
+    - target: {fileID: 2989785245935646593, guid: 195b2d8a95f50214986fdbf0e47b3ce9,
+        type: 3}
+      propertyPath: m_VerticalAlignment
+      value: 512
+      objectReference: {fileID: 0}
     - target: {fileID: 5568211745154241619, guid: 195b2d8a95f50214986fdbf0e47b3ce9,
         type: 3}
       propertyPath: m_IsActive
@@ -1511,7 +1532,7 @@ MonoBehaviour:
   Username: {fileID: 854933427}
   Change: {fileID: 1962866750}
   Quit: {fileID: 1962866749}
-  Type: Nick
+  nowType: Nick
 --- !u!114 &1962866749 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8608395370034028595, guid: 195b2d8a95f50214986fdbf0e47b3ce9,
