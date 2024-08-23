@@ -232,6 +232,8 @@ public class StageC : MonoBehaviour
 
     private void OnStageClearButtonClick()
     {
+        DefenseInit init = GameObject.Find("InitSetting").GetComponent<DefenseInit>();
+        init.OnGameEnd();
         CustomLogger.Log("스테이지 클리어 버튼 클릭됨");
         SceneManager.LoadScene("InternalAffairs");
     }
