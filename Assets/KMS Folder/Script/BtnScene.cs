@@ -127,4 +127,8 @@ public class BtnScene : MonoBehaviour {
 		SceneManager.LoadScene("UnitShop");
 		CustomLogger.Log("Change UnitShop successfuly!");
 	}
+	public void UnitManageSceneChange() {
+		SceneManager.LoadScene("UnitManagement");
+		CustomLogger.Log("Change UnitManagement successfuly!");
+	}
 }
