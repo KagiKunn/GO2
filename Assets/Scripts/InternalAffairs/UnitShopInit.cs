@@ -18,7 +18,7 @@ public class UnitShopInit : MonoBehaviour
 
         newObjectRect.localScale = new Vector3(200, 200, 1);
         newObjectRect.anchoredPosition = new Vector2(0,-50);
-        GameObject.Find("RealPrice ").GetComponent<TextMeshProUGUI>().text = UnitPrice().ToString();
+        GameObject.Find("RealPrice").GetComponent<TextMeshProUGUI>().text = UnitPrice().ToString();
     }
 
     public void Back()
