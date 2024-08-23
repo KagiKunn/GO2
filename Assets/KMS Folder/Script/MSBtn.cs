@@ -36,4 +36,9 @@ public class MSBtn : MonoBehaviour {
 
 		CustomLogger.Log("Restore original Color");
 	}
+	
+	public void CallRepairPopup()
+	{
+		Instantiate(Resources.Load<GameObject>("PreFab/SmithPopupCanvas"));
+	}
 }
