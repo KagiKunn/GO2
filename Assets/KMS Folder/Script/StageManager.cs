@@ -33,9 +33,7 @@ public class StageManager : MonoBehaviour
         leftButton.gameObject.SetActive(false);
         rightButton.gameObject.SetActive(true);
 
-		// 3. 성벽 전환
-		SwitchToStage(leftStageUnits, rightStageUnits, leftButton, rightButton);
-	}
+    }
 
     private void ShowRightStage()
     {
@@ -43,13 +41,9 @@ public class StageManager : MonoBehaviour
         SetSlotVisibility(14, 27);
         SetSlotInvisibility(0, 13);
 
-	private void SwitchToStage(GameObject[] stageToActivate, GameObject[] stageToDeactivate, Button buttonToDisable, Button buttonToEnable) {
-		SetStageActive(stageToActivate, true);
-		SetStageActive(stageToDeactivate, false);
-
-		buttonToDisable.gameObject.SetActive(false);
-		buttonToEnable.gameObject.SetActive(true);
-	}
+        rightButton.gameObject.SetActive(false);
+        leftButton.gameObject.SetActive(true);
+    }
 
     private void SetSlotVisibility(int start, int end)
     {
