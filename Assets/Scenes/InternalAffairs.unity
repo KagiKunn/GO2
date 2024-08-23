@@ -259,7 +259,7 @@ MonoBehaviour:
     m_TableReference:
       m_TableCollectionName: GUID:442136af7662acc44bb0c06213db89a5
     m_TableEntryReference:
-      m_KeyId: 16746258280448
+      m_KeyId: 3313473582030848
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
@@ -8867,9 +8867,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 7416970482584298697}
-        m_TargetAssemblyTypeName: RecoveryCastleHealth, Assembly-CSharp
-        m_MethodName: OnRecovery
+      - m_Target: {fileID: 6802175193743370786}
+        m_TargetAssemblyTypeName: MSBtn, Assembly-CSharp
+        m_MethodName: CallRepairPopup
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -9021,7 +9021,6 @@ GameObject:
   - component: {fileID: 5300628026762408582}
   - component: {fileID: 625447414778681417}
   - component: {fileID: 6802175193743370786}
-  - component: {fileID: 7416970482584298697}
   m_Layer: 5
   m_Name: SmithBtn
   m_TagString: Untagged
@@ -12287,18 +12286,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6165440750871374068}
   m_CullTransparentMesh: 1
---- !u!114 &7416970482584298697
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 830870180502592919}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 18a9edb7b56e5a948b137bf064c671b8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!224 &7436887360187018653
 RectTransform:
   m_ObjectHideFlags: 0

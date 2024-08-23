@@ -4,8 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class SlotUnitData
-{
+public class SlotUnitData {
 	public int SlotIndex; // 슬롯의 인덱스 번호
 	public int ID;
 	[NonSerialized] public UnitData UnitData;
@@ -13,8 +12,7 @@ public class SlotUnitData
 
 	public SlotUnitData() { }
 
-	public SlotUnitData(int slotIndex, UnitData unitData, int placement)
-	{
+	public SlotUnitData(int slotIndex, UnitData unitData, int placement) {
 		SlotIndex = slotIndex;
 		ID = unitData.ID;
 		UnitData = unitData;
@@ -22,13 +20,11 @@ public class SlotUnitData
 	}
 }
 
-
 [System.Serializable]
 public class SlotUnitDataWrapper {
 	public List<SlotUnitData> SlotUnitDataList;
 
-	public SlotUnitDataWrapper() {
-	}
+	public SlotUnitDataWrapper() { }
 
 	public SlotUnitDataWrapper(List<SlotUnitData> slotUnitDataList) {
 		SlotUnitDataList = slotUnitDataList;
