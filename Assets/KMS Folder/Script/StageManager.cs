@@ -13,20 +13,16 @@ public class StageManager : MonoBehaviour
 
     void Start()
     {
-
         leftButton.onClick.AddListener(ShowLeftStage);
         rightButton.onClick.AddListener(ShowRightStage);
         resetButton.onClick.AddListener(reset);
         
         ShowLeftStage(); 
-
-        CustomLogger.Log("StageManagement 스타트 메서드 활성화", "green");
     }
     
 
     private void ShowLeftStage()
     {
-        CustomLogger.Log("show left stage start");
         SetSlotVisibility(0, 13);
         SetSlotInvisibility(14, 27);
         
@@ -37,7 +33,6 @@ public class StageManager : MonoBehaviour
 
     private void ShowRightStage()
     {
-        CustomLogger.Log("show right stage start");
         SetSlotVisibility(14, 27);
         SetSlotInvisibility(0, 13);
 
@@ -49,7 +44,6 @@ public class StageManager : MonoBehaviour
     {
         for (int i = start; i <= end; i++)
         {
-            CustomLogger.Log(slots[i].name);
             slots[i].SetActive(true);
         }
     }
@@ -58,7 +52,6 @@ public class StageManager : MonoBehaviour
     {
         for (int i = start; i <= end; i++)
         {
-            CustomLogger.Log(slots[i].name);
             slots[i].SetActive(false);
         }
     }
@@ -67,5 +60,9 @@ public class StageManager : MonoBehaviour
     {
         unitGameManager.ResetList();
     }
-    
+
+    private void OnDestroy()
+    {
+        unitGameManager.SaveDefaultUnitData();
+    }
 }

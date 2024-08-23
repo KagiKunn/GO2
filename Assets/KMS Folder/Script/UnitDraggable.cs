@@ -67,7 +67,6 @@ public class UnitDraggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     {
         if (isDragging)
         {
-            // rect.position = eventData.position;
             draggingInstance.GetComponent<RectTransform>().position = eventData.position;
         }
 

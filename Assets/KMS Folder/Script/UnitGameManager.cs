@@ -153,6 +153,28 @@ public class UnitGameManager : MonoBehaviour
             unitDraggable.GetComponent<CanvasGroup>().alpha = 1f;
         }
     }
+    
+    public void SaveDefaultUnitData()
+    {
+        HashSet<int> occupiedSlots = new HashSet<int>();
+        foreach (var unit in selectedUnits)
+        {
+            occupiedSlots.Add(unit.Key);
+        }
+
+        for (int i = 0; i < 28; i++)
+        {
+            if (!occupiedSlots.Contains(i))
+            {
+                KeyValuePair<int, string> defaultUnitData = new KeyValuePair<int, string>(i, "Default");
+                CustomLogger.Log(defaultUnitData.Key + " " + defaultUnitData.Value, Color.magenta);
+                selectedUnits.Add(defaultUnitData);
+            }
+        }
+        PlayerLocalManager.Instance.lAllyUnitList = selectedUnits;
+        PlayerLocalManager.Instance.Save();
+    }
 }
+
 
 
