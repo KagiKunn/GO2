@@ -97,7 +97,7 @@ public class UnitGameManager : MonoBehaviour
                 if (prefabname != null)
                 {
                     GameObject prefabObject = Instantiate(prefabname, Slot[slotIndex].transform); // 부모 객체
-                    RectTransform prefab = prefabObject.GetComponent<RectTransform>(); // 드래그 했을때 그 유닛의 이름을 바탕으로 뽑아와야함
+                    RectTransform prefab = prefabObject.GetComponent<RectTransform>(); // 드래그 했을때 그 유닛의 이름을 바탕
                     RectTransform slotRect = Slot[slotIndex].GetComponent<RectTransform>();
 
                     // 프리팹 크기 = 슬롯 크기
@@ -115,7 +115,7 @@ public class UnitGameManager : MonoBehaviour
         }
     }
     
-    private GameObject FindPrefabByName(string unitName)
+    public GameObject FindPrefabByName(string unitName)
     {
         Prefabs = Resources.LoadAll<GameObject>("Defense/Unit");
         foreach (GameObject prefab in Prefabs)
