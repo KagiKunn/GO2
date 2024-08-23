@@ -43,11 +43,8 @@ public class PlayerSyncData
             {
                 try
                 {
-                    int codeLength = reader.ReadByte();
-
-                    byte[] codeBytes = reader.ReadBytes(codeLength);
+                    byte[] codeBytes = reader.ReadBytes(8);
                     string code = System.Text.Encoding.UTF8.GetString(codeBytes);
-                    CustomLogger.LogWarning(code);
                     return code;
                 }
                 catch (Exception ex)

@@ -36,4 +36,24 @@ public class MSBtn : MonoBehaviour {
 
 		CustomLogger.Log("Restore original Color");
 	}
+
+	public void CallRepairPopup() {
+		if (Mathf.Approximately(PlayerLocalManager.Instance.lCastleHp, PlayerLocalManager.Instance.lCastleMaxHp)) {
+			if (GameObject.FindWithTag("Popup") != null) return;
+
+			GameObject fullPopup = Instantiate(Resources.Load<GameObject>("PreFab/SmithPopupHpFull"));
+
+			fullPopup.tag = "Popup";
+
+			Transform confirmButtonTransform = fullPopup.transform.Find("PopupBackground/ConfirmButton");
+			Button confirmButton = confirmButtonTransform.GetComponent<Button>();
+
+			confirmButton.onClick.AddListener(() => {
+				CustomLogger.Log("Confirm button clicked!");
+				Destroy(fullPopup); // 팝업을 닫음
+			});
+		} else {
+			Instantiate(Resources.Load<GameObject>("PreFab/SmithPopupCanvas"));
+		}
+	}
 }
