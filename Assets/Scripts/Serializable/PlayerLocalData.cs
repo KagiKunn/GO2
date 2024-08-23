@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine.Localization.Settings;
 
 [Serializable]
 public class PlayerLocalData
@@ -27,6 +28,8 @@ public class PlayerLocalData
     public List<KeyValuePair<string, int>> UnitList { get; set; }
     
     public List<KeyValuePair<int, string>> AllyUnitList { get; set; }
+    
+    public string Locale { get; set; }
 
     public PlayerLocalData()
     {
@@ -47,11 +50,12 @@ public class PlayerLocalData
         UnitList = new List<KeyValuePair<string, int>>();
         AllyUnitList = new List<KeyValuePair<int, string>>();
         GameStarted = false;
+        Locale = LocalizationSettings.SelectedLocale.Identifier.Code;
     }
 
     public PlayerLocalData(int money, int remainedPoint, int startGold, int moreEarnGold, int moreCastleHealth,
         int reduceCooldown, HeroList[] herosList, int stage, string[] stageRace, string selectedRace, float castleMaxHealth,
-        float castleHealth, float castleExtraHealth, List<KeyValuePair<string, int>> unitList, List<KeyValuePair<int, string>> allyUnitList, bool gameStarted)
+        float castleHealth, float castleExtraHealth, List<KeyValuePair<string, int>> unitList, List<KeyValuePair<int, string>> allyUnitList, bool gameStarted, string locale)
     {
         Money = money;
         RemainedPoint = remainedPoint;
@@ -69,6 +73,7 @@ public class PlayerLocalData
         UnitList = unitList;
         AllyUnitList = allyUnitList;
         GameStarted = gameStarted;
+        Locale = locale;
     }
 }
 

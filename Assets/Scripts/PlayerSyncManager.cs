@@ -106,11 +106,7 @@ public class PlayerSyncManager : MonoBehaviour, IDisposable {
 					changeAccount = false;
 					PlayerLocalManager.Instance.CreateNewPlayer();
 					SaveLocalData(new PlayerSyncData(UUID, Level, Repeat, Username, RoguePoint));
-					#if UNITY_EDITOR
-					UnityEditor.EditorApplication.isPlaying = false;
-					#else
-                            Application.Quit();
-					#endif
+					Quit();
 					CustomLogger.LogWarning("Make NEW");
 				}
 			}
@@ -336,6 +332,15 @@ public class PlayerSyncManager : MonoBehaviour, IDisposable {
 	private byte[] SerializePlayerData(PlayerSyncData playerData) {
 		// PlayerLocalData 클래스에서 직접 구현한 Serialize 메서드를 사용하여 직렬화
 		return playerData.Serialize();
+	}
+
+	public void Quit()
+	{
+#if UNITY_EDITOR
+		UnityEditor.EditorApplication.isPlaying = false;
+#else
+                            Application.Quit();
+#endif
 	}
 
 	public void Dispose()
