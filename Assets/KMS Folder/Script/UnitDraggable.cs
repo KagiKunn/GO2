@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using System.Collections.Generic;
 
 public class UnitDraggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
@@ -58,7 +57,7 @@ public class UnitDraggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         }
 
     }
-    // 현재 오브젝트의 드래그를 종료할 때 1회 호출
+    
     public void OnEndDrag(PointerEventData eventData)
     {
         if (isDragging)

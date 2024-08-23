@@ -6,9 +6,10 @@ public class UnitGameManager : MonoBehaviour
 {
     public GameObject slotPrefab;
     public Transform slotParent;
+    public Transform placementParent;
 
     public GameObject[] Prefabs; // 리소스 폴더 내 유닛 프리팹
-    public GameObject[] Slot; // Unit 1. 2. 3. 4 같은 Dropable 이미지 컴퍼넌트 가진 애들
+    public GameObject[] Slot; // 유닛 배치 슬롯
     
     private List<KeyValuePair<string, int>> userUnits; // 유저 구매 유닛 및 가진 유닛들
     public List<KeyValuePair<int, string>> selectedUnits;
@@ -34,10 +35,8 @@ public class UnitGameManager : MonoBehaviour
     {
         userUnits = PlayerLocalManager.Instance.lUnitList;
 
-        CustomLogger.Log("LoadUserUnit start");
         if (PlayerLocalManager.Instance.lAllyUnitList != null)
         {
-            CustomLogger.Log("null 아님");
             selectedUnits = PlayerLocalManager.Instance.lAllyUnitList;
         }
         else
@@ -56,7 +55,6 @@ public class UnitGameManager : MonoBehaviour
             if (unitName != null)
             {
                 unitName.text = unitData.Key;
-                CustomLogger.Log(unitData.Key+ unitData.Value, Color.cyan);
             }
             else
             {
@@ -69,8 +67,7 @@ public class UnitGameManager : MonoBehaviour
                 unitDraggable.unitName = unitData.Key;
                 unitDraggables.Add(unitDraggable);
 
-                // 유닛이 이미 배치된 상태인지 확인하고, 배치된 경우 드래그 불가 설정
-                if (IsUnitAlreadyPlaced(unitData.Value)) // 유닛이 이미 배치된 상태인지 확인
+                if (IsUnitAlreadyPlaced(unitData.Value))
                 {
                     unitDraggable.SetDraggable(false);
                     unitDraggable.GetComponent<CanvasGroup>().alpha = 0.6f;
@@ -95,7 +92,6 @@ public class UnitGameManager : MonoBehaviour
                 int slotIndex = unitData.Key;
                 string unitName = unitData.Value;
 
-                // 이름과 일치하는 프리팹 찾기
                 GameObject prefabname = FindPrefabByName(unitName);
 
                 if (prefabname != null)
@@ -138,13 +134,16 @@ public class UnitGameManager : MonoBehaviour
         selectedUnits = new List<KeyValuePair<int, string>>();
         PlayerLocalManager.Instance.lAllyUnitList = selectedUnits;
         PlayerLocalManager.Instance.Save();
-        
-        // 기존에 배치된 프리팹 제거 (필요한 경우)
-        foreach (Transform slot in slotParent)
+
+        foreach (Transform slot in placementParent)
         {
-            if (slot.childCount > 0)
+            foreach (Transform child in slot)
             {
-                Destroy(slot.GetChild(0).gameObject);
+                // 프리팹 삭제
+                if (child.name.EndsWith("(Clone)"))
+                {
+                    Destroy(child.gameObject);
+                }
             }
         }
 
