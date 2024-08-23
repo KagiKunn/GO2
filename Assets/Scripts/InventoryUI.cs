@@ -85,6 +85,7 @@ public class InventoryUI : MonoBehaviour
     public void CanvasEnabled()
     {
         canvas.enabled = !canvas.enabled;
+        
         if (canvas.enabled)
         {
             ResetScrollRect();
