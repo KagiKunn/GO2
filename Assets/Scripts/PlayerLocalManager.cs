@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-
 using UnityEngine;
 
-public class PlayerLocalManager : MonoBehaviour {
-	private SceneControl sceneControl;
-	private static string persistentDataPath;
-	private string filePath;
+public class PlayerLocalManager : MonoBehaviour
+{
+    private SceneControl sceneControl;
+    private static string persistentDataPath;
+    private string filePath;
 
 	private int L_money;
 	private int L_point;
@@ -25,8 +25,9 @@ public class PlayerLocalManager : MonoBehaviour {
 	private float L_CastleHP;
 	private float L_CastleExtraHP;
 	private List<KeyValuePair<string, int>> L_UnitList;
+	private List<KeyValuePair<int, string>> L_AllyUnitList;
 	private bool L_GameStarted;
-
+    
 	public int lMoney {
 		get => L_money;
 
@@ -116,6 +117,12 @@ public class PlayerLocalManager : MonoBehaviour {
 
 		set => L_UnitList = value;
 	}
+	
+	public List<KeyValuePair<int, string>> lAllyUnitList {
+		get => L_AllyUnitList;
+
+		set => L_AllyUnitList = value;
+	}
 
 	public SceneControl SceneControl {
 		get => sceneControl;
@@ -171,6 +178,7 @@ public class PlayerLocalManager : MonoBehaviour {
 					lCastleHp = localData.CastleHealth;
 					lCastleExtraHp = localData.CastleExtraHealth;
 					lUnitList = localData.UnitList;
+					lAllyUnitList = localData.AllyUnitList;
 					lGameStarted = localData.GameStarted;
 				}
 			}
@@ -181,7 +189,7 @@ public class PlayerLocalManager : MonoBehaviour {
 		}
 	}
 
-	private void CreateNewPlayer() {
+	public void CreateNewPlayer() {
 		PlayerLocalData localData = new PlayerLocalData(); // 기본 생성자 호출
 
 		// 초기값 설정
@@ -198,6 +206,7 @@ public class PlayerLocalManager : MonoBehaviour {
 		lCastleHp = localData.CastleHealth;
 		lCastleExtraHp = localData.CastleExtraHealth;
 		lUnitList = localData.UnitList;
+		lAllyUnitList = localData.AllyUnitList;
 		lGameStarted = localData.GameStarted;
 
 		SaveLocalData(localData);
@@ -209,11 +218,13 @@ public class PlayerLocalManager : MonoBehaviour {
 		UpdateStageCount(); // 배열 리셋 후 stageCount도 동기화
 	}
 
-	// stageRace 배열의 길이에 따라 stageCount를 동기화
-	public void UpdateStageCount() {
-		lStage = 5 - lStageRace.Length; // 남은 종족 수에 따라 stageCount를 계산
-		Save();
-	}
+    // stageRace 배열의 길이에 따라 stageCount를 동기화
+    public void UpdateStageCount()
+    {
+        //스테이지 카운트 업뎃
+        lStage = 6 - lStageRace.Length; // 남은 종족 수에 따라 stageCount를 계산
+        Save();
+    }
 
 	// 성벽 체력 데이터를 기본값으로 재설정하는 메서드
 	public void ResetHealthData() {
@@ -232,7 +243,7 @@ public class PlayerLocalManager : MonoBehaviour {
 
 	public void Save() {
 		PlayerLocalData localData = new PlayerLocalData(lMoney, lPoint, lStartGold, lMoreEarnGold, lMoreCastleHealth,
-			lReduceCooldown, lHeroeList, lStage, lStageRace, lSelectedRace, lCastleMaxHp, lCastleHp, lCastleExtraHp, lUnitList, lGameStarted);
+			lReduceCooldown, lHeroeList, lStage, lStageRace, lSelectedRace, lCastleMaxHp, lCastleHp, lCastleExtraHp, lUnitList, lAllyUnitList, lGameStarted);
 
 		SaveLocalData(localData);
 	}

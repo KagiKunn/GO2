@@ -180,6 +180,9 @@ public class SkillPanelManager : MonoBehaviour
 
     void OnButtonClicked(HeroSkill heroSkill)
     {
+        if (StageC.Instance != null && StageC.Instance.isGamePaused) {
+            return; // 게임이 일시 정지된 상태에서는 클릭을 무시함
+        }
         heroSkill.HeroSkillStart();
     }
 }
