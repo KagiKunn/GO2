@@ -56,6 +56,7 @@ public class SettingManager : MonoBehaviour
         ContinueGet = gameObject.transform.Find("ContinueGet").gameObject;
         ContinueInput = gameObject.transform.Find("ContinueInput").gameObject;
 
+
         persistentDataPath = Application.persistentDataPath;
         filepath = Path.Combine(persistentDataPath, "Setting.dat");
         plt = inputField.placeholder as TMP_Text;
@@ -77,15 +78,23 @@ public class SettingManager : MonoBehaviour
 
         if (PlayerSyncManager.Instance != null)
         {
-            if (PlayerSyncManager.Instance.UUID != null)
+            if (PlayerSyncManager.Instance.isOnline != null)
             {
-                UUID.text = "UUID : " + PlayerSyncManager.Instance.UUID;
-                //GUIUtility.systemCopyBuffer = PlayerSyncManager.Instance.UUID;
-            }
+                if (PlayerSyncManager.Instance.UUID != null)
+                {
+                    UUID.text = "UUID : " + PlayerSyncManager.Instance.UUID;
+                    //GUIUtility.systemCopyBuffer = PlayerSyncManager.Instance.UUID;
+                }
 
-            if (PlayerSyncManager.Instance.Username != null)
+                if (PlayerSyncManager.Instance.Username != null)
+                {
+                    Username.text = PlayerSyncManager.Instance.Username;
+                }
+            }
+            else
             {
-                Username.text = PlayerSyncManager.Instance.Username;
+                UUID.text = "";
+                Username.text = "Offline";
             }
         }
     }
@@ -133,13 +142,14 @@ public class SettingManager : MonoBehaviour
         SetPlaceholderText("Continous");
         InputBoxUI.SetActive(true);
     }
+
     public void openContinue()
     {
         InputBox.Instance.nowType = "Continue";
         SetPlaceholderText("Continous");
         InputBoxUI.SetActive(true);
     }
-    
+
     private void FirstSetting()
     {
         SetSliderValueFromMixer("Master", masterVolSlider);
@@ -164,6 +174,7 @@ public class SettingManager : MonoBehaviour
                 masterVolSlider.value = ss.master;
                 bgmVolSlider.value = ss.bgm;
                 sfxVolSlider.value = ss.sfx;
+                voiceVolSlider.value = ss.voice;
                 vibrationToggle.isOn = ss.vibrate;
 
                 await Task.Delay(10);
@@ -185,7 +196,7 @@ public class SettingManager : MonoBehaviour
 
     public void LoadText()
     {
-        if (SceneManager.GetActiveScene().name.Equals("InternalAffairs"))
+        if (SceneManager.GetActiveScene().name.Equals("InternalAffairs") && PlayerSyncManager.Instance.isOnline)
         {
             nickChange.SetActive(true);
             ContinueGet.SetActive(true);
@@ -203,20 +214,30 @@ public class SettingManager : MonoBehaviour
             ContinueGet.SetActive(false);
             ContinueInput.SetActive(false);
         }
+
         SetLevel("Master", masterVolSlider.value, masterVal, false);
         SetLevel("BGM", bgmVolSlider.value, bgmVal, false);
         SetLevel("SFX", sfxVolSlider.value, sfxVal, false);
         SetLevel("Voice", voiceVolSlider.value, voiceVal, false);
+
         if (PlayerSyncManager.Instance != null)
         {
-            if (PlayerSyncManager.Instance.UUID != null)
+            if (PlayerSyncManager.Instance.isOnline)
             {
-                UUID.text = "UUID : " + PlayerSyncManager.Instance.UUID;
-            }
+                if (PlayerSyncManager.Instance.UUID != null)
+                {
+                    UUID.text = "UUID : " + PlayerSyncManager.Instance.UUID;
+                }
 
-            if (PlayerSyncManager.Instance.Username != null)
+                if (PlayerSyncManager.Instance.Username != null)
+                {
+                    Username.text = PlayerSyncManager.Instance.Username;
+                }
+            }
+            else
             {
-                Username.text = PlayerSyncManager.Instance.Username;
+                UUID.text = "";
+                Username.text = "Offline";
             }
         }
     }
@@ -254,7 +275,7 @@ public class SettingManager : MonoBehaviour
             slider.value = Mathf.Pow(10, value / 20f);
         }
     }
-    
+
     private void SetPlaceholderText(string tableEntryReference)
     {
         // 이전 이벤트 구독 해제
@@ -284,6 +305,7 @@ public class SettingManager : MonoBehaviour
             plt.text = localizedText;
         }
     }
+
     private void OnDisable()
     {
         // 오브젝트가 파괴될 때 이벤트 구독 해제
@@ -292,7 +314,7 @@ public class SettingManager : MonoBehaviour
             localizedString.StringChanged -= UpdatePlaceholderText;
         }
     }
-    
+
     private void OnDestroy()
     {
         // 오브젝트가 파괴될 때 이벤트 구독 해제

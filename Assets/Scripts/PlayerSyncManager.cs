@@ -21,11 +21,12 @@ public class PlayerSyncManager : MonoBehaviour, IDisposable
     private byte[] buffer = new byte[1024];
     private string r_message = String.Empty;
     private bool isReconnecting;
-    private const int maxReconnectAttempts = 5;
-    private const int reconnectDelay = 5000;
+    private const int maxReconnectAttempts = 3;
+    private const int reconnectDelay = 1000;
     private bool syncInit;
     private bool changeAccount;
     private int roguePoint;
+    public bool isOnline;
 
     public SceneControl SceneControl
     {
@@ -95,7 +96,6 @@ public class PlayerSyncManager : MonoBehaviour, IDisposable
             }
 
             if (bytes <= 0) return;
-            CustomLogger.LogWarning($"Byte : {bytes}");
             if (bytes < 20)
             {
                 string code = DeserializeCode(buffer, 16);
@@ -111,47 +111,32 @@ public class PlayerSyncManager : MonoBehaviour, IDisposable
                 Repeat = playerData.repeat;
                 Username = playerData.username;
                 RoguePoint = playerData.roguePoint;
-
+                
                 // 로컬 데이터 저장
                 SaveLocalData(playerData);
                 if (changeAccount)
                 {
                     changeAccount = false;
                     PlayerLocalManager.Instance.CreateNewPlayer();
-                    #if UNITY_EDITOR
-                            UnityEditor.EditorApplication.isPlaying = false;
-                    #else
+                    SaveLocalData(new PlayerSyncData(UUID,Level,Repeat,Username,RoguePoint));
+#if UNITY_EDITOR
+                    UnityEditor.EditorApplication.isPlaying = false;
+#else
                             Application.Quit();
-                    #endif
+#endif
+                    CustomLogger.LogWarning("Make NEW");
                 }
+
             }
         }
     }
 
     private async void Awake()
     {
-        /*float orthoSize = Camera.main.orthographicSize;
-        float screenAspect = (float)Screen.width / (float)Screen.height;
-        float cameraHeight = orthoSize * 2;
-        float cameraWidth = cameraHeight * screenAspect;
-        GameObject TitleImage = GameObject.Find("TitleImage");
-        TitleImage.transform.localScale = new Vector3(cameraWidth, cameraHeight, TitleImage.transform.localScale.z);*/
-
         sceneControl = gameObject.AddComponent<SceneControl>();
         persistentDataPath = Application.persistentDataPath;
         filePath = Path.Combine(persistentDataPath, "Player.dat");
-
-        InitializeConnect();
-
-        if (File.Exists(filePath))
-        {
-            await LoadPlayerAsync();
-        }
-        else
-        {
-            CreateNewPlayer();
-        }
-
+        
         if (Instance == null)
         {
             Instance = this;
@@ -162,6 +147,17 @@ public class PlayerSyncManager : MonoBehaviour, IDisposable
             Destroy(this);
         }
 
+        InitializeConnect();
+        
+        if (File.Exists(filePath))
+        {
+            await LoadPlayerAsync();
+        }
+        else
+        {
+            CreateNewPlayer();
+        }
+        
         GameStart();
     }
 
@@ -197,10 +193,16 @@ public class PlayerSyncManager : MonoBehaviour, IDisposable
                 stream = client.GetStream();
                 CustomLogger.Log("Connected to server.");
                 isReconnecting = false; // 재접속 성공 시 플래그 해제
+                isOnline = true;
 
                 //new Thread(ReceiveData).Start();
                 return;
             }
+        }
+
+        if (reconnectAttempts >= maxReconnectAttempts)
+        {
+            isOnline = false;
         }
 
         CustomLogger.LogError("Max reconnect attempts reached. Could not connect to server.");
@@ -288,8 +290,8 @@ public class PlayerSyncManager : MonoBehaviour, IDisposable
         PlayerSyncData dummyUUID = new PlayerSyncData(UUID, 1, 0, code, 0);
         byte[] serializedData = SerializePlayerData(dummyUUID);
         sendStream(serializedData, 4);
-        syncInit = true;
         changeAccount = true;
+        syncInit = true;
     }
 
     private void ChangeNickname(string name)
@@ -355,12 +357,16 @@ public class PlayerSyncManager : MonoBehaviour, IDisposable
             }
         }
 
-        byte[] dataWithOpcode = new byte[bytesData.Length + 1];
-        dataWithOpcode[0] = (byte)opcode; // 첫 번째 바이트에 opcode 설정
-        Buffer.BlockCopy(bytesData, 0, dataWithOpcode, 1, bytesData.Length);
+        if (isOnline)
+        {
+            byte[] dataWithOpcode = new byte[bytesData.Length + 1];
+            dataWithOpcode[0] = (byte)opcode; // 첫 번째 바이트에 opcode 설정
+            Buffer.BlockCopy(bytesData, 0, dataWithOpcode, 1, bytesData.Length);
 
-        stream.Write(dataWithOpcode, 0, dataWithOpcode.Length);
-        stream.Flush(); // 스트림 플러시
+            stream.Write(dataWithOpcode, 0, dataWithOpcode.Length);
+            stream.Flush(); // 스트림 플러시
+        }
+
     }
 
     public void send()
