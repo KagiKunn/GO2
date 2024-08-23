@@ -21,11 +21,12 @@ public class PlayerSyncManager : MonoBehaviour, IDisposable
     private byte[] buffer = new byte[1024];
     private string r_message = String.Empty;
     private bool isReconnecting;
-    private const int maxReconnectAttempts = 5;
-    private const int reconnectDelay = 5000;
+    private const int maxReconnectAttempts = 3;
+    private const int reconnectDelay = 1000;
     private bool syncInit;
     private bool changeAccount;
     private int roguePoint;
+    public bool isOnline;
 
     public SceneControl SceneControl
     {
@@ -140,18 +141,7 @@ public class PlayerSyncManager : MonoBehaviour, IDisposable
         sceneControl = gameObject.AddComponent<SceneControl>();
         persistentDataPath = Application.persistentDataPath;
         filePath = Path.Combine(persistentDataPath, "Player.dat");
-
-        InitializeConnect();
-
-        if (File.Exists(filePath))
-        {
-            await LoadPlayerAsync();
-        }
-        else
-        {
-            CreateNewPlayer();
-        }
-
+        
         if (Instance == null)
         {
             Instance = this;
@@ -162,6 +152,17 @@ public class PlayerSyncManager : MonoBehaviour, IDisposable
             Destroy(this);
         }
 
+        InitializeConnect();
+        
+        if (File.Exists(filePath))
+        {
+            await LoadPlayerAsync();
+        }
+        else
+        {
+            CreateNewPlayer();
+        }
+        
         GameStart();
     }
 
@@ -188,7 +189,7 @@ public class PlayerSyncManager : MonoBehaviour, IDisposable
 
         while (reconnectAttempts < maxReconnectAttempts)
         {
-            bool test = false;
+            bool test = true;
             client = new TcpClient(test ? "127.0.0.1" : "125.191.215.205", 1651);
 
             // 연결이 성공적으로 이루어졌다면 스트림을 가져옵니다.
@@ -197,10 +198,16 @@ public class PlayerSyncManager : MonoBehaviour, IDisposable
                 stream = client.GetStream();
                 CustomLogger.Log("Connected to server.");
                 isReconnecting = false; // 재접속 성공 시 플래그 해제
+                isOnline = true;
 
                 //new Thread(ReceiveData).Start();
                 return;
             }
+        }
+
+        if (reconnectAttempts >= maxReconnectAttempts)
+        {
+            isOnline = false;
         }
 
         CustomLogger.LogError("Max reconnect attempts reached. Could not connect to server.");
@@ -355,12 +362,16 @@ public class PlayerSyncManager : MonoBehaviour, IDisposable
             }
         }
 
-        byte[] dataWithOpcode = new byte[bytesData.Length + 1];
-        dataWithOpcode[0] = (byte)opcode; // 첫 번째 바이트에 opcode 설정
-        Buffer.BlockCopy(bytesData, 0, dataWithOpcode, 1, bytesData.Length);
+        if (isOnline)
+        {
+            byte[] dataWithOpcode = new byte[bytesData.Length + 1];
+            dataWithOpcode[0] = (byte)opcode; // 첫 번째 바이트에 opcode 설정
+            Buffer.BlockCopy(bytesData, 0, dataWithOpcode, 1, bytesData.Length);
 
-        stream.Write(dataWithOpcode, 0, dataWithOpcode.Length);
-        stream.Flush(); // 스트림 플러시
+            stream.Write(dataWithOpcode, 0, dataWithOpcode.Length);
+            stream.Flush(); // 스트림 플러시
+        }
+
     }
 
     public void send()
