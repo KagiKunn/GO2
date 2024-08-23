@@ -61,6 +61,11 @@ public class GachaBoxController : MonoBehaviour
 
     public void ShowItemInfo()
     {
+        if (Gacha.Instance.inventoryUI != null && !Gacha.Instance.inventoryUI.CanAdditems(1))
+        {
+            CustomLogger.LogWarning("인벤토리에 충분한 공간이 없습니다.");
+            return;
+        }
         
         if (isMultiGacha)
         {

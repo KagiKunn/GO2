@@ -317,19 +317,23 @@ public class InventoryUI : MonoBehaviour {
 		}
 	}
 
-	private void RearrangeInventorySlots() {
-		for (int i = 0; i < inventoryData.items.Count; i++) {
-			Transform slot = inventoryContent.GetChild(i);
-			UpdateSlotUI(slot, inventoryData.items[i]);
-		}
+	 private void RearrangeInventorySlots()
+    {
+        for (int i = 0; i < inventoryData.items.Count; i++)
+        {
+            Transform slot = inventoryContent.GetChild(i);
+            UpdateSlotUI(slot, inventoryData.items[i]);
+        }
 
-		for (int i = inventoryData.items.Count; i < inventoryContent.childCount; i++) {
-			Transform slot = inventoryContent.GetChild(i);
-			UpdateSlotUI(slot, null);
-		}
-	}
+        for (int i = inventoryData.items.Count; i < inventoryContent.childCount; i++)
+        {
+            Transform slot = inventoryContent.GetChild(i);
+            UpdateSlotUI(slot, null);
+        }
+    }
 
-	private void CloseInventory() {
-		CanvasEnabled();
-	}
+    private void CloseInventory()
+    {
+        CanvasEnabled();
+    }
 }
