@@ -25,8 +25,11 @@ public class RecoveryCastleHealth : MonoBehaviour {
 		crntHealth = PlayerLocalManager.Instance.lCastleHp;
 		maxHealth = PlayerLocalManager.Instance.lCastleMaxHp;
 		emptyHealth = maxHealth - crntHealth;
-		repairSlider.maxValue = emptyHealth / 10;
-		repairSlider.value = 0;
+		if (repairSlider != null)
+		{
+			repairSlider.maxValue = emptyHealth / 10;
+			repairSlider.value = 0;
+		}
 
 		SetRepairPopup();
 	}
@@ -36,11 +39,11 @@ public class RecoveryCastleHealth : MonoBehaviour {
 	}
 
 	public void RepairSliderController() {
-		spendGold = (int)repairSlider.value;
+		spendGold = repairSlider != null ? (int)repairSlider.value : 0;
 		repairHealth = spendGold * 10;
 
 		// 채워야 하는 체력이 10 미만일 경우 처리
-		if (emptyHealth < 10) {
+		if (emptyHealth > 0 && emptyHealth < 10) {
 			repairHealth = (int)emptyHealth;
 			spendGold = 1; // 최소 골드 1을 소비하여 나머지 체력을 채움
 			repairSlider.value = 1; // 슬라이더 값을 1로 설정
@@ -50,8 +53,14 @@ public class RecoveryCastleHealth : MonoBehaviour {
 			repairSlider.value = spendGold; // 슬라이더 값을 조정
 		}
 
-		repairText.text = $"HP: {repairHealth}";
-		goldText.text = $"Gold: {spendGold}";
+		if (repairText != null)
+		{
+			repairText.text = $"HP: {repairHealth}";
+		}
+		if (goldText != null)
+		{
+			goldText.text = $"HP: {spendGold}";
+		}
 	}
 
 	public void OnRecovery() {
