@@ -4,20 +4,20 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 
 public class UnitDraggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
-{   
+{
+    public string unitName;
+    
     private Transform Canvas;
     public Transform previousParent; 
     private RectTransform rect;
     private CanvasGroup canvasGroup;
 
     public int unitIndex;
-    public UnitData unitData;
     
     private bool isDragging = false;
     private bool isDraggable = true;
     public bool isDropped = false;
     
-    private UnitGameManagerA unitGameManager;
     private StageManager stageManager;
     
     private void Awake()
@@ -25,8 +25,6 @@ public class UnitDraggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         Canvas = FindFirstObjectByType<Canvas>().transform;
         rect = GetComponent<RectTransform>();
         canvasGroup = GetComponent<CanvasGroup>();
-        
-        unitGameManager = UnitGameManagerA.Instance;
         stageManager = FindFirstObjectByType<StageManager>();
     }
     
@@ -47,8 +45,8 @@ public class UnitDraggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
             transform.SetParent(Canvas);
             transform.SetAsLastSibling();
             
-            canvasGroup.blocksRaycasts = false;
-            canvasGroup.GetComponent<Image>().color = new Color(0.5f, 0.5f, 0.5f, 1.0f);
+            canvasGroup.blocksRaycasts = true;
+            canvasGroup.alpha = 1f;
         }
         
     }
@@ -72,8 +70,8 @@ public class UnitDraggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
                 transform.SetParent(previousParent);
                 rect.position = previousParent.GetComponent<RectTransform>().position;
             }
-            canvasGroup.blocksRaycasts = true;
-            canvasGroup.GetComponent<Image>().color = new Color(0.5f, 0.5f, 0.5f, 1.0f);
+            canvasGroup.blocksRaycasts = false;
+            canvasGroup.alpha = 0.6f;
         }
     }
 }
