@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -7,12 +9,15 @@ public class UnitDropable : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 {
     private Image image;
     private RectTransform rect;
-    public UnitData assignedUnitData;
+    public UnitGameManager unitGameManager;
+    
+    private GameObject[] Prefabs;
 
     private void Awake()
     {
         image = GetComponent<Image>();
         rect = GetComponent<RectTransform>();
+        Prefabs = Resources.LoadAll<GameObject>("Defense/Unit");
     }
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -20,6 +25,7 @@ public class UnitDropable : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         if (eventData.pointerDrag != null)
         {
             UnitDraggable draggedUnit = eventData.pointerDrag.GetComponent<UnitDraggable>();
+            
             if (draggedUnit != null && !draggedUnit.isDropped)
             {
                 image.color = Color.yellow;
@@ -46,33 +52,42 @@ public class UnitDropable : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
         if (draggedUnit != null)
         {
-            // 현재 드롭된 위치의 인덱스 가져오기
-            // int slotIndex = transform.GetSiblingIndex();
-            //
-            // // SaveUnitList 호출하여 유닛 정보 저장
-            // SaveUnitList(draggedUnit.unitName, draggedUnit.unitPrefab, slotIndex);
+            int totalSiblings = transform.parent.childCount; // 부모 오브젝트의 전체 자식 수
+            int slotIndex = totalSiblings - 1 - transform.GetSiblingIndex();
             
-            // assignedUnitData = draggedUnit.unitData;
+            TextMeshProUGUI unitText = draggedUnit.GetComponentInChildren<TextMeshProUGUI>();
+            string unitName = unitText != null ? unitText.text : string.Empty;
+
+            if (!string.IsNullOrEmpty(unitName))
+            {
+                // selectedUnits 리스트에 추가
+                KeyValuePair<int, string> newUnitData = new KeyValuePair<int, string>(slotIndex, unitName);
+                
+                CustomLogger.Log(newUnitData.Key + " " + newUnitData.Value );
+                unitGameManager.selectedUnits.Add(newUnitData);
+
+                // PlayerLocalManager에 저장
+                PlayerLocalManager.Instance.lAllyUnitList = unitGameManager.selectedUnits;
+                PlayerLocalManager.Instance.Save();
+            }
 
             draggedUnit.transform.SetParent(transform);
             draggedUnit.GetComponent<RectTransform>().position = GetComponent<RectTransform>().position;
 
             Image dropZoneImage = GetComponent<Image>();
             
-            if (dropZoneImage != null) // 배치 후
+            if (dropZoneImage != null)
             {
-                // dropZoneImage.sprite = draggedUnit.unitData.UnitImage;
                 dropZoneImage.color = Color.white;
             }
             
             draggedUnit.transform.SetParent(draggedUnit.previousParent);
             draggedUnit.GetComponent<RectTransform>().position = draggedUnit.previousParent.GetComponent<RectTransform>().position;
             
-            UnitDraggable originalDraggable = draggedUnit.previousParent.GetComponentInChildren<UnitDraggable>();
-            if (originalDraggable != null)
-            { 
-                originalDraggable.enabled = false;
-            }
+            unitGameManager.DisplayPrefab();
+            
+            draggedUnit.SetDraggable(false);
+            draggedUnit.GetComponent<CanvasGroup>().alpha = 0.6f;
             draggedUnit.isDropped = true;
         }
     }

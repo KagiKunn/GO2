@@ -1,4 +1,4 @@
-using TMPro;
+ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -101,14 +101,8 @@ public class BtnScene : MonoBehaviour
 
     public void UnitManagementSceneChange()
     {
-        SceneManager.LoadScene("UnitManagementRight");
+        SceneManager.LoadScene("UnitManagement");
         CustomLogger.Log("Change UnitManagement successfuly!");
-    }
-
-    public void UnitManagementLeftSceneChange()
-    {
-        SceneManager.LoadScene("UnitManagementLeft");
-        CustomLogger.Log("Change UnitManagementLeft successfuly!");
     }
 
     public void UnitShopSceneChange()
