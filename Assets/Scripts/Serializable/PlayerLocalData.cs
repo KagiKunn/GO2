@@ -49,6 +49,11 @@ public class PlayerLocalData
         CastleExtraHealth = 0;
         UnitList = new List<KeyValuePair<string, int>>();
         AllyUnitList = new List<KeyValuePair<int, string>>();
+        for (int i = 0; i < 28; i++)
+        {
+            KeyValuePair<int, string> keyVals = new KeyValuePair<int, string>(i,"Default");
+            AllyUnitList.Add(keyVals);
+        }
         GameStarted = false;
         Locale = LocalizationSettings.SelectedLocale.Identifier.Code;
     }
