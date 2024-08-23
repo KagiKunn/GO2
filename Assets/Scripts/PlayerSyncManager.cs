@@ -338,7 +338,9 @@ public class PlayerSyncManager : MonoBehaviour, IDisposable {
 		return playerData.Serialize();
 	}
 
-	public void Dispose() {
+	public void Dispose()
+	{
+		Save();
 		stream?.Close();
 		client?.Close();
 	}
