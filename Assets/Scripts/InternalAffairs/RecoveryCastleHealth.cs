@@ -18,16 +18,19 @@ public class RecoveryCastleHealth : MonoBehaviour
     private int spendGold;
     private TextMeshProUGUI repairText;
     private TextMeshProUGUI goldText;
-
+    
+    
     private void Awake()
     {
-        SetRepairPopup();
-
         crntHealth = PlayerLocalManager.Instance.lCastleHp;
         maxHealth = PlayerLocalManager.Instance.lCastleMaxHp;
         emptyHealth = maxHealth - crntHealth;
         repairSlider.maxValue = emptyHealth / 10;
         repairSlider.value = 0;
+        
+      
+          SetRepairPopup();
+        
     }
 
     private void Update()
@@ -113,5 +116,18 @@ public class RecoveryCastleHealth : MonoBehaviour
         });
 
         CustomLogger.Log("Event listeners added.");
+    }
+
+    public void SetFullPopup()
+    {
+        GameObject fullPopup = Instantiate(Resources.Load<GameObject>("PreFab/SmithPopupHPfull"));
+        Transform confirmButtonTransform = fullPopup.transform.Find("PopupBackground/CancelButton");
+        Button confirmButton = confirmButtonTransform.GetComponent<Button>();
+        
+        confirmButton.onClick.AddListener(() =>
+        {
+            CustomLogger.Log("Confirm button clicked!");
+            Destroy(fullPopup); // 팝업을 닫음
+        });
     }
 }
