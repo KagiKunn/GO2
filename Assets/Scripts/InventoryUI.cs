@@ -10,7 +10,6 @@ public class InventoryUI : MonoBehaviour
 {
     public static InventoryUI Instance { get; private set; }
     private Canvas canvas;
-    private ScrollRect scrollRect;
     public Transform inventoryContent;
     public GameObject itemInfoPanel;
     public TextMeshProUGUI itemInfoText;
@@ -40,7 +39,6 @@ public class InventoryUI : MonoBehaviour
     private void Start()
     {
         canvas = GetComponent<Canvas>();
-        scrollRect = GetComponentInChildren<ScrollRect>();
         LoadInventory();
 
         deleteButton.onClick.AddListener(DeleteSelectedItem);
@@ -88,7 +86,6 @@ public class InventoryUI : MonoBehaviour
         
         if (canvas.enabled)
         {
-            ResetScrollRect();
             UpdateInventoryUI();
         }
         else
@@ -100,10 +97,6 @@ public class InventoryUI : MonoBehaviour
         }
     }
 
-    private void ResetScrollRect()
-    {
-        scrollRect.verticalNormalizedPosition = 1f;
-    }
 
     public void AddItemToInventory(ItemInstance itemInstance)
     {
