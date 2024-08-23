@@ -96,7 +96,6 @@ public class PlayerSyncManager : MonoBehaviour, IDisposable
             }
 
             if (bytes <= 0) return;
-            CustomLogger.LogWarning($"Byte : {bytes}");
             if (bytes < 20)
             {
                 string code = DeserializeCode(buffer, 16);
@@ -112,32 +111,28 @@ public class PlayerSyncManager : MonoBehaviour, IDisposable
                 Repeat = playerData.repeat;
                 Username = playerData.username;
                 RoguePoint = playerData.roguePoint;
-
+                
                 // 로컬 데이터 저장
                 SaveLocalData(playerData);
                 if (changeAccount)
                 {
                     changeAccount = false;
                     PlayerLocalManager.Instance.CreateNewPlayer();
-                    #if UNITY_EDITOR
-                            UnityEditor.EditorApplication.isPlaying = false;
-                    #else
+                    SaveLocalData(new PlayerSyncData(UUID,Level,Repeat,Username,RoguePoint));
+#if UNITY_EDITOR
+                    UnityEditor.EditorApplication.isPlaying = false;
+#else
                             Application.Quit();
-                    #endif
+#endif
+                    CustomLogger.LogWarning("Make NEW");
                 }
+
             }
         }
     }
 
     private async void Awake()
     {
-        /*float orthoSize = Camera.main.orthographicSize;
-        float screenAspect = (float)Screen.width / (float)Screen.height;
-        float cameraHeight = orthoSize * 2;
-        float cameraWidth = cameraHeight * screenAspect;
-        GameObject TitleImage = GameObject.Find("TitleImage");
-        TitleImage.transform.localScale = new Vector3(cameraWidth, cameraHeight, TitleImage.transform.localScale.z);*/
-
         sceneControl = gameObject.AddComponent<SceneControl>();
         persistentDataPath = Application.persistentDataPath;
         filePath = Path.Combine(persistentDataPath, "Player.dat");
@@ -295,8 +290,8 @@ public class PlayerSyncManager : MonoBehaviour, IDisposable
         PlayerSyncData dummyUUID = new PlayerSyncData(UUID, 1, 0, code, 0);
         byte[] serializedData = SerializePlayerData(dummyUUID);
         sendStream(serializedData, 4);
-        syncInit = true;
         changeAccount = true;
+        syncInit = true;
     }
 
     private void ChangeNickname(string name)
