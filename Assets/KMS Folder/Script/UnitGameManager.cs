@@ -7,6 +7,7 @@ public class UnitGameManager : MonoBehaviour
     public GameObject slotPrefab;
     public Transform slotParent;
     public Transform placementParent;
+    public UnitDropable unintDropable;
 
     public GameObject[] Prefabs; // 리소스 폴더 내 유닛 프리팹
     public GameObject[] Slot; // 유닛 배치 슬롯
@@ -96,6 +97,7 @@ public class UnitGameManager : MonoBehaviour
 
                 if (prefabname != null)
                 {
+                    unintDropable.RemoveExistingPrefab(slotIndex);
                     GameObject prefabObject = Instantiate(prefabname, Slot[slotIndex].transform); // 부모 객체
                     RectTransform prefab = prefabObject.GetComponent<RectTransform>(); // 드래그 했을때 그 유닛의 이름을 바탕
                     RectTransform slotRect = Slot[slotIndex].GetComponent<RectTransform>();
