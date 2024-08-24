@@ -18,6 +18,7 @@ public class UnitDropable : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         image = GetComponent<Image>();
         rect = GetComponent<RectTransform>();
         Prefabs = Resources.LoadAll<GameObject>("Defense/Unit");
+        unitGameManager = FindFirstObjectByType<UnitGameManager>();
     }
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -41,7 +42,7 @@ public class UnitDropable : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             if (draggedUnit != null && !draggedUnit.isDropped)
             {
 
-                image.color = Color.white;
+                image.color = new Color(0.643f, 0.643f, 0.643f);
             }
         }
     }
@@ -57,46 +58,64 @@ public class UnitDropable : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
             TextMeshProUGUI unitText = draggedUnit.GetComponentInChildren<TextMeshProUGUI>();
             string unitName = unitText != null ? unitText.text : string.Empty;
-                
-                if (!string.IsNullOrEmpty(unitName))
+
+            if (!string.IsNullOrEmpty(unitName))
+            {
+                int existingIndex = unitGameManager.selectedUnits
+                    .FindIndex(x => x.Key == slotIndex && x.Value == "Default");
+
+                if (existingIndex != -1)
                 {
-                    int existingIndex = unitGameManager.selectedUnits
-                        .FindIndex(x => x.Key == slotIndex && x.Value == "Default");
+                    unitGameManager.selectedUnits[existingIndex] = new KeyValuePair<int, string>(slotIndex, unitName);
+                }
+                else
+                {
+                    unitGameManager.selectedUnits.Add(new KeyValuePair<int, string>(slotIndex, unitName));
+                }
 
-                    if (existingIndex != -1)
-                    {
-                        unitGameManager.selectedUnits[existingIndex] = new KeyValuePair<int, string>(slotIndex, unitName);
-                    }
-                    else
-                    {
-                        unitGameManager.selectedUnits.Add(new KeyValuePair<int, string>(slotIndex, unitName));
-                    }
+                CustomLogger.Log(slotIndex + " " + unitName);
 
-                    CustomLogger.Log(slotIndex + " " + unitName);
+                PlayerLocalManager.Instance.lAllyUnitList = unitGameManager.selectedUnits;
+                PlayerLocalManager.Instance.Save();
 
-                    PlayerLocalManager.Instance.lAllyUnitList = unitGameManager.selectedUnits;
-                    PlayerLocalManager.Instance.Save();
-
+                unitGameManager.RemoveUnitFromList(unitName);
+                
                 draggedUnit.transform.SetParent(transform);
                 draggedUnit.GetComponent<RectTransform>().position = GetComponent<RectTransform>().position;
-
+                
                 Image dropZoneImage = GetComponent<Image>();
 
                 if (dropZoneImage != null)
                 {
-                    dropZoneImage.color = Color.white;
+                    dropZoneImage.color = new Color(0.643f, 0.643f, 0.643f);
                 }
-
+                
                 draggedUnit.transform.SetParent(draggedUnit.previousParent);
-                draggedUnit.GetComponent<RectTransform>().position =
+                draggedUnit.GetComponent<RectTransform>().position = 
                     draggedUnit.previousParent.GetComponent<RectTransform>().position;
-
+                
                 unitGameManager.DisplayPrefab();
-
+                
                 draggedUnit.SetDraggable(false);
-                draggedUnit.GetComponent<CanvasGroup>().alpha = 0.6f;
                 draggedUnit.isDropped = true;
             }
         }
+    }
+
+    public void RemoveExistingPrefab(int slotIndex)
+    {
+        Transform slotTransform = unitGameManager.Slot[slotIndex].transform;
+
+        if (slotTransform.childCount > 0)
+        {
+            foreach (Transform child in slotTransform)
+            {
+                if (child.name.EndsWith("(Clone)"))
+                {
+                    Destroy(child.gameObject);
+                }
+            }
+        }
+        
     }
 }

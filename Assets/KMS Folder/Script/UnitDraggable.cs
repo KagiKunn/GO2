@@ -14,7 +14,6 @@ public class UnitDraggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     private GameObject draggingInstance;
     private RectTransform draggingRect;
 
-    private bool isDragging = false;
     private bool isDraggable = true;
     public bool isDropped = false;
     
@@ -40,7 +39,6 @@ public class UnitDraggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     {
         if (!eventData.pointerPressRaycast.gameObject.GetComponent<Button>())
         {
-            isDragging = true;
             previousParent = transform.parent;
             
             Transform unitTransform = previousParent.Find("Unit");
@@ -73,8 +71,6 @@ public class UnitDraggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
             draggingInstance.transform.SetAsLastSibling();
             draggingInstance.GetComponent<CanvasGroup>().blocksRaycasts = false;
-            draggingInstance.GetComponent<CanvasGroup>().alpha = 0.6f; 
-            
         }
         
     }
@@ -99,18 +95,13 @@ public class UnitDraggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     
     public void OnEndDrag(PointerEventData eventData)
     {
-        isDragging = false;
-        draggingInstance.gameObject.SetActive(false);
-            
+        Destroy(draggingInstance);
+        
         if (transform.parent == Canvas)
         {
             transform.SetParent(previousParent);
             rect.position = previousParent.GetComponent<RectTransform>().position;
         }
-        
-        rect.gameObject.SetActive(true);
-        
-        canvasGroup.blocksRaycasts = false;
-        canvasGroup.alpha = 0.6f;
+        canvasGroup.blocksRaycasts = true;
     }
 }
