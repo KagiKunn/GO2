@@ -12,6 +12,7 @@ public class UnitGameManager : MonoBehaviour
 
     public GameObject[] Prefabs; // 리소스 폴더 내 유닛 프리팹
     public GameObject[] Slot; // 유닛 배치 슬롯
+    public Transform panelTransform;
     
     private List<KeyValuePair<string, int>> userUnits; // 유저 구매 유닛 및 가진 유닛들
     public List<KeyValuePair<int, string>> selectedUnits;
@@ -71,26 +72,34 @@ public class UnitGameManager : MonoBehaviour
                 unitDraggables.Add(unitDraggable);
             }
         }
-        foreach (var unitDraggable in unitDraggables)
+        
+        foreach (var unitDrag in unitDraggables)
         {
-            if (unitDraggable.unitName == "Default")
+            Debug.LogWarning("반복문 들어옴");
+            if (unitDrag.unitName == "Default")
             {
+                Debug.LogWarning("디폴드 발견 후 컨티뉴");
                 continue;
             }
 
-            int placedCount = selectedUnits.Count(unit => unit.Value == unitDraggable.unitName);
-
+            int placedCount = selectedUnits.Count(unit => unit.Value == unitDrag.unitName);
+            Debug.LogWarning("int아래");
+            Debug.LogWarning($"Placed count for {unitDrag.unitName}: {placedCount}");
             if (placedCount > 0)
             {
-                foreach (var otherSlot in unitDraggables.Where(ud => ud.unitName == unitDraggable.unitName))
+                foreach (var otherSlot in unitDraggables.Where(ud => ud.unitName == unitDrag.unitName))
                 {
                     if (placedCount <= 0)
                         break;
 
                     if (otherSlot.gameObject.activeSelf)
-                    {
+                    {   
+                        Debug.LogWarning($"Disabling slot for {otherSlot.unitName}");
                         otherSlot.gameObject.SetActive(false);
                         placedCount--;
+                    } else
+                    {
+                        Debug.LogWarning($"{otherSlot.unitName} is already inactive");
                     }
                 }
             }
@@ -129,10 +138,8 @@ public class UnitGameManager : MonoBehaviour
 
                     // 프리팹 위치 설정
                     prefab.anchoredPosition = new Vector2(0, -50);
-                }
-                else
-                {
-                    CustomLogger.Log("유닛 이름이랑 프리팹 다르다캄", Color.yellow);
+                    
+                    RemoveClones();
                 }
             }
         }
@@ -163,7 +170,7 @@ public class UnitGameManager : MonoBehaviour
             {
                 child.gameObject.SetActive(false);  // 슬롯 비활성화
                 CustomLogger.Log($"{unitName} 지워짐", Color.yellow);
-                break;  // 첫 번째로 일치하는 활성화된 슬롯을 비활성화한 후 루프 종료
+                break;
             }
         }
     }
@@ -216,6 +223,17 @@ public class UnitGameManager : MonoBehaviour
         }
         PlayerLocalManager.Instance.lAllyUnitList = selectedUnits;
         PlayerLocalManager.Instance.Save();
+    }
+
+    public void RemoveClones()
+    {
+        foreach (Transform child in panelTransform)
+        {
+            if (child.name.EndsWith("(Clone)"))
+            {
+                Destroy(child.gameObject);
+            }
+        }
     }
 }
 

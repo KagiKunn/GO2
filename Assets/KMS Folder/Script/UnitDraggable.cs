@@ -95,16 +95,13 @@ public class UnitDraggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     
     public void OnEndDrag(PointerEventData eventData)
     {
-        draggingInstance.gameObject.SetActive(false);
         Destroy(draggingInstance);
-        draggingInstance = null; 
         
         if (transform.parent == Canvas)
         {
             transform.SetParent(previousParent);
             rect.position = previousParent.GetComponent<RectTransform>().position;
         }
-        
         canvasGroup.blocksRaycasts = true;
     }
 }

@@ -18,6 +18,7 @@ public class UnitDropable : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         image = GetComponent<Image>();
         rect = GetComponent<RectTransform>();
         Prefabs = Resources.LoadAll<GameObject>("Defense/Unit");
+        unitGameManager = FindFirstObjectByType<UnitGameManager>();
     }
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -77,11 +78,10 @@ public class UnitDropable : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                 PlayerLocalManager.Instance.lAllyUnitList = unitGameManager.selectedUnits;
                 PlayerLocalManager.Instance.Save();
 
-                unitGameManager.RemoveUnitFromList(unitName); // 배치된 유닛 목록에서 제거
+                unitGameManager.RemoveUnitFromList(unitName);
                 
                 draggedUnit.transform.SetParent(transform);
                 draggedUnit.GetComponent<RectTransform>().position = GetComponent<RectTransform>().position;
-                
                 
                 Image dropZoneImage = GetComponent<Image>();
 
@@ -89,13 +89,13 @@ public class UnitDropable : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                 {
                     dropZoneImage.color = new Color(0.643f, 0.643f, 0.643f);
                 }
-
+                
                 draggedUnit.transform.SetParent(draggedUnit.previousParent);
                 draggedUnit.GetComponent<RectTransform>().position = 
                     draggedUnit.previousParent.GetComponent<RectTransform>().position;
-
+                
                 unitGameManager.DisplayPrefab();
-
+                
                 draggedUnit.SetDraggable(false);
                 draggedUnit.isDropped = true;
             }
@@ -116,5 +116,6 @@ public class UnitDropable : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                 }
             }
         }
+        
     }
 }
