@@ -1,3 +1,4 @@
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -17,6 +18,7 @@ public class UnitDraggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     public bool isDropped = false;
     
     private UnitGameManager unitGameManager;
+    private Camera mainCamera;
     
     private void Awake()
     {
@@ -24,6 +26,7 @@ public class UnitDraggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         rect = GetComponent<RectTransform>();
         canvasGroup = GetComponent<CanvasGroup>();
         unitGameManager = FindFirstObjectByType<UnitGameManager>();
+        mainCamera = Camera.main;
     }
     
     public void SetDraggable(bool draggable)
@@ -38,22 +41,6 @@ public class UnitDraggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         {
             isDragging = true;
             previousParent = transform.parent;
-            Transform unitTransform = previousParent.Find("Unit");
-            unitName = unitTransform.GetComponent<TextMeshProUGUI>().text;
-            
-            CustomLogger.Log(unitName, Color.magenta);
-            
-            GameObject prefabname = unitGameManager.FindPrefabByName(unitName);
-            
-            if(prefabname != null)
-            {
-                draggingInstance = Instantiate(prefabname, Canvas);
-                RectTransform draggingRect = draggingInstance.GetComponent<RectTransform>();
-
-                // 크기와 스케일 설정
-                draggingRect.sizeDelta = new Vector2(200, 200); 
-                draggingRect.localScale = new Vector3(1, 1, 1);
-            }
             
             transform.SetParent(Canvas);
             transform.SetAsLastSibling();
@@ -67,7 +54,9 @@ public class UnitDraggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     {
         if (isDragging)
         {
-            draggingInstance.GetComponent<RectTransform>().position = eventData.position;
+            Vector2 localPoint;
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(Canvas.GetComponent<RectTransform>(), eventData.position, mainCamera, out localPoint);
+            rect.localPosition = localPoint;
         }
 
     }
@@ -78,11 +67,6 @@ public class UnitDraggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         {
             isDragging = false;
 
-            if (draggingInstance != null)
-            {
-                Destroy(draggingInstance);
-            }
-            
             if (transform.parent == Canvas)
             {
                 transform.SetParent(previousParent);
