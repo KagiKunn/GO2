@@ -77,9 +77,12 @@ public class UnitDropable : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                 PlayerLocalManager.Instance.lAllyUnitList = unitGameManager.selectedUnits;
                 PlayerLocalManager.Instance.Save();
 
+                unitGameManager.RemoveUnitFromList(unitName); // 배치된 유닛 목록에서 제거
+                
                 draggedUnit.transform.SetParent(transform);
                 draggedUnit.GetComponent<RectTransform>().position = GetComponent<RectTransform>().position;
-
+                
+                
                 Image dropZoneImage = GetComponent<Image>();
 
                 if (dropZoneImage != null)
@@ -88,14 +91,12 @@ public class UnitDropable : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                 }
 
                 draggedUnit.transform.SetParent(draggedUnit.previousParent);
-                draggedUnit.GetComponent<RectTransform>().position =
+                draggedUnit.GetComponent<RectTransform>().position = 
                     draggedUnit.previousParent.GetComponent<RectTransform>().position;
 
-                RemoveExistingPrefab(slotIndex);
                 unitGameManager.DisplayPrefab();
 
                 draggedUnit.SetDraggable(false);
-                draggedUnit.GetComponent<CanvasGroup>().alpha = 0.6f;
                 draggedUnit.isDropped = true;
             }
         }

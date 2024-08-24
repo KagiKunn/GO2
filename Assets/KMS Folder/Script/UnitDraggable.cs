@@ -71,8 +71,6 @@ public class UnitDraggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
             draggingInstance.transform.SetAsLastSibling();
             draggingInstance.GetComponent<CanvasGroup>().blocksRaycasts = false;
-            draggingInstance.GetComponent<CanvasGroup>().alpha = 0.6f; 
-            
         }
         
     }
@@ -98,16 +96,15 @@ public class UnitDraggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     public void OnEndDrag(PointerEventData eventData)
     {
         draggingInstance.gameObject.SetActive(false);
-            
+        Destroy(draggingInstance);
+        draggingInstance = null; 
+        
         if (transform.parent == Canvas)
         {
             transform.SetParent(previousParent);
             rect.position = previousParent.GetComponent<RectTransform>().position;
         }
         
-        rect.gameObject.SetActive(true);
-        
-        canvasGroup.blocksRaycasts = false;
-        canvasGroup.alpha = 0.6f;
+        canvasGroup.blocksRaycasts = true;
     }
 }

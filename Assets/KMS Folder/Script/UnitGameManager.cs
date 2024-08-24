@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 
@@ -45,14 +46,14 @@ public class UnitGameManager : MonoBehaviour
             selectedUnits = new List<KeyValuePair<int, string>>();
         }
     }
-    
+
     private void DisplayUnitsList()
     {
         foreach (var unitData in userUnits)
         {
             GameObject newSlot = Instantiate(slotPrefab, slotParent);
             TextMeshProUGUI unitName = newSlot.GetComponentInChildren<TextMeshProUGUI>();
-            
+
             if (unitName != null)
             {
                 unitName.text = unitData.Key;
@@ -61,27 +62,47 @@ public class UnitGameManager : MonoBehaviour
             {
                 Debug.LogWarning("슬롯에 TextMeshProUGUI 컴포넌트 없음.");
             }
-            
+
             UnitDraggable unitDraggable = newSlot.GetComponent<UnitDraggable>();
+
             if (unitDraggable != null)
             {
                 unitDraggable.unitName = unitData.Key;
                 unitDraggables.Add(unitDraggable);
+            }
+        }
+        foreach (var unitDraggable in unitDraggables)
+        {
+            if (unitDraggable.unitName == "Default")
+            {
+                continue;
+            }
 
-                if (IsUnitAlreadyPlaced(unitData.Value))
+            int placedCount = selectedUnits.Count(unit => unit.Value == unitDraggable.unitName);
+
+            if (placedCount > 0)
+            {
+                foreach (var otherSlot in unitDraggables.Where(ud => ud.unitName == unitDraggable.unitName))
                 {
-                    unitDraggable.SetDraggable(false);
-                    unitDraggable.GetComponent<CanvasGroup>().alpha = 0.6f;
+                    if (placedCount <= 0)
+                        break;
+
+                    if (otherSlot.gameObject.activeSelf)
+                    {
+                        otherSlot.gameObject.SetActive(false);
+                        placedCount--;
+                    }
                 }
             }
         }
     }
     
-    private bool IsUnitAlreadyPlaced(int slotIndex)
+
+    public int CountUnitsAlreadyPlaced(string unitName)
     {
-        return slotIndex >= 0 && slotIndex < slotParent.childCount;
+        return selectedUnits.Count(unit => unit.Value == unitName);
     }
-    
+
     public void DisplayPrefab()
     {
         Prefabs = Resources.LoadAll<GameObject>("Defense/Unit");
@@ -130,6 +151,22 @@ public class UnitGameManager : MonoBehaviour
         CustomLogger.Log("일치하는 프리팹 없음", Color.yellow);
         return null;
     }
+    
+    public void RemoveUnitFromList(string unitName)
+    {
+        foreach (Transform child in slotParent)
+        {
+            TextMeshProUGUI unitText = child.GetComponentInChildren<TextMeshProUGUI>();
+        
+            // 이미 비활성화된 슬롯은 건너뛰고, 활성화된 슬롯을 비활성화
+            if (unitText != null && unitText.text == unitName && child.gameObject.activeSelf)
+            {
+                child.gameObject.SetActive(false);  // 슬롯 비활성화
+                CustomLogger.Log($"{unitName} 지워짐", Color.yellow);
+                break;  // 첫 번째로 일치하는 활성화된 슬롯을 비활성화한 후 루프 종료
+            }
+        }
+    }
 
     public void ResetList()
     {
@@ -141,18 +178,22 @@ public class UnitGameManager : MonoBehaviour
         {
             foreach (Transform child in slot)
             {
-                // 프리팹 삭제
                 if (child.name.EndsWith("(Clone)"))
                 {
                     Destroy(child.gameObject);
                 }
             }
         }
-
+        foreach (Transform child in slotParent)
+        {
+            child.gameObject.SetActive(true);
+        }
+        
         foreach (var unitDraggable in unitDraggables)
         {
             unitDraggable.SetDraggable(true);
-            unitDraggable.GetComponent<CanvasGroup>().alpha = 1f;
+            var canvasGroup = unitDraggable.GetComponent<CanvasGroup>();
+            canvasGroup.blocksRaycasts = true;
         }
     }
     
