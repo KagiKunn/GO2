@@ -100,9 +100,7 @@ public class UnitDraggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     public void OnEndDrag(PointerEventData eventData)
     {
         isDragging = false;
-
-        Destroy(draggingInstance);
-        draggingInstance = null;
+        draggingInstance.gameObject.SetActive(false);
             
         if (transform.parent == Canvas)
         {
@@ -110,7 +108,7 @@ public class UnitDraggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
             rect.position = previousParent.GetComponent<RectTransform>().position;
         }
         
-        rect.gameObject.SetActive(false);
+        rect.gameObject.SetActive(true);
         
         canvasGroup.blocksRaycasts = false;
         canvasGroup.alpha = 0.6f;
