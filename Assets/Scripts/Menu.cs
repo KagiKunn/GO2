@@ -80,10 +80,12 @@ public class Menu : MonoBehaviour
         if (Time.timeScale < 2)
         {
             Time.timeScale = 2;
+            speedButton.style.backgroundColor = new Color(1, 0.1f, 0.1f,0.4f);
         }
         else
         {
             Time.timeScale = 1;
+            speedButton.style.backgroundColor = new Color(0, 0, 0,0.4f);
         }
     }
 
