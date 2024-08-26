@@ -36,7 +36,7 @@ public class AllySpawner : MonoBehaviour {
 		allyUnitList = PlayerLocalManager.Instance.lAllyUnitList
 			.OrderBy(unit => unit.Key)
 			.ToList();
-		for (int i = 0; i<23; i++)
+		for (int i = 0; i<28; i++)
 		{
 			string name = allyUnitList[i].Value;
 			if (i < 14)

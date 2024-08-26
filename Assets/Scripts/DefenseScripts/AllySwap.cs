@@ -52,22 +52,26 @@ public class AllySwap : MonoBehaviour {
 
 				if (unit1 == null) {
 					unit1 = clickedObject;
-
 					if (unit1 != null) {
 						originTime = Time.timeScale;
-						CustomLogger.Log("fistunit" + originTime);
 						playerObjCircle1.SetActive(true);
 						playerObjCircle1.transform.position = unit1.transform.position;
-						CustomLogger.Log("Selected unit1: " + unit1.name);
 					}
 				} else if (unit1 != null && unit2 == null) {
 					unit2 = clickedObject;
 
+					if (unit2 == unit1)
+					{
+						MoveDone();
+					}
+
+					if (unit1.transform.parent.name == "Default(Clone)" && unit2.transform.parent.name == "Default(Clone)")
+					{
+						MoveDone();
+					}
 					if (unit2 != null) {
-						CustomLogger.Log("second unit: " + originTime);
 						playerObjCircle2.SetActive(true);
 						playerObjCircle2.transform.position = unit2.transform.position;
-						CustomLogger.Log("Selected unit2: " + unit2.name);
 						targetPosition1 = unit2.transform.position;
 						targetPosition2 = unit1.transform.position;
 						animator1 = unit1.GetComponent<Animator>();
@@ -100,7 +104,7 @@ public class AllySwap : MonoBehaviour {
 		float speed2 = allyScan2.movementSpeed;
 		unit1.transform.position = Vector3.MoveTowards(unit1.transform.position, targetPosition1, speed1 * Time.deltaTime);
 		unit2.transform.position = Vector3.MoveTowards(unit2.transform.position, targetPosition2, speed2 * Time.deltaTime);
-
+		
 		animator1.SetTrigger("Idle");
 		animator2.SetTrigger("Idle");
 		animator1.SetFloat("RunState", 0.5f);
@@ -119,11 +123,17 @@ public class AllySwap : MonoBehaviour {
 
 			// AllyScan 스크립트 활성화
 
-			isMoving = false; // 이동 완료
-			playerObjCircle1.SetActive(false);
-			playerObjCircle2.SetActive(false);
-			unit1 = null;
-			unit2 = null;
+			MoveDone();
 		}
 	}
+
+	void MoveDone()
+	{
+		isMoving = false; // 이동 완료
+		playerObjCircle1.SetActive(false);
+		playerObjCircle2.SetActive(false);
+		unit1 = null;
+		unit2 = null;
+	}
+	
 }

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
 
 public class EndingCredit : MonoBehaviour
@@ -6,6 +7,9 @@ public class EndingCredit : MonoBehaviour
     private RectTransform rectTransform;
     public GameObject[] Creators;
 
+    public AudioClip soundClip;
+    private AudioSource audioSource;
+    public AudioMixerGroup bgmMixerGroup;
     private GameObject ground;
     private GameObject init;
     void Awake()
@@ -47,6 +51,19 @@ public class EndingCredit : MonoBehaviour
         }
     }
 
+    private void Start() {
+        audioSource = gameObject.AddComponent<AudioSource>();
+        audioSource.clip = soundClip;
+        audioSource.loop = true;
+        audioSource.outputAudioMixerGroup = bgmMixerGroup;
+        PlaySound();
+    }
+
+    public void PlaySound() {
+        if (audioSource != null && soundClip != null) {
+            audioSource.Play();
+        }
+    }
     private void Update()
     {
         if (rectTransform == null)
