@@ -267,8 +267,15 @@ public class EnemyMovement : MonoBehaviour {
 	private void Die() {
 		// 적이 죽었을 때의 동작 (예: 오브젝트 비활성화)
 		if (SceneManager.GetActiveScene().name == "Defense") {
-			if (GameObject.Find("InitSetting").GetComponent<DefenseInit>() == null) return;
+			if (GameObject.Find("InitSetting").GetComponent<DefenseInit>() == null)
+			{
+				CustomLogger.Log("return있던 자리임", "black");
+			}
 
+			
+			
+			CustomLogger.Log("DIE 실행", "cyan");
+			
 			DefenseInit defenseInit = GameObject.Find("InitSetting").GetComponent<DefenseInit>();
 			int crntgold = 0;
 
