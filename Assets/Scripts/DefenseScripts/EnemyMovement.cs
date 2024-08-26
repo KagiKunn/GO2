@@ -17,15 +17,16 @@ using UnityEngine.Serialization;
 
 public class EnemyMovement : MonoBehaviour {
 	[SerializeField] private float health = 10f;
-	[SerializeField] public float moveSpeed = 1.0f;
-	[SerializeField] private LayerMask detectionLayerMask;
 	[SerializeField] private int attackDamage = 1;
 	[SerializeField] private float attackSpeed = 1f;
+	[SerializeField] public float moveSpeed = 1.0f;
+	[SerializeField] private Vector2 boxSize = new Vector2(2, 0.1f);
+	public int gold = 10;
+	[SerializeField] private LayerMask detectionLayerMask;
 	[SerializeField] public float runState = 0.25f;
 	[SerializeField] private float attackState = 1f;
 	[SerializeField] private float normalState = 0f;
 	[SerializeField] private float skillState = 0f;
-	[SerializeField] private Vector2 boxSize = new Vector2(2, 0.1f);
 	[SerializeField] public int stageCount;
 	[SerializeField] public int weekCount;
 	public bool isRight;
@@ -38,7 +39,6 @@ public class EnemyMovement : MonoBehaviour {
 	private bool isChangingBrightness = false;
 	public bool isKnockedBack = false;
 	public float percent = 0f;
-	public int gold = 10;
 	private bool deadJudge = true;
 	public bool isBoss; //보스 여부 확인
 	private GameObject horseRoot;
