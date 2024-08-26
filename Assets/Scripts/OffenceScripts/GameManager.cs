@@ -150,7 +150,8 @@ public class GameManager : MonoBehaviour {
 		SceneManager.LoadScene("InternalAffairs");
 	}
 
-	public void GameWin() {
+	public void GameWin()
+	{
 		GameObject.Find("DTO").GetComponent<NextEnemy>().isVisual = true;
 		SceneManager.LoadScene("Gatcha");
 	}
@@ -170,7 +171,7 @@ public class GameManager : MonoBehaviour {
 
 		if (gameTime > maxGameTime) {
 			gameTime = maxGameTime;
-
+			
 			GameVictory();
 		}
 	}

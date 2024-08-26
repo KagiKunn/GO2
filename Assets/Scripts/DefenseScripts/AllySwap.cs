@@ -53,18 +53,19 @@ public class AllySwap : MonoBehaviour {
 				if (unit1 == null) {
 					unit1 = clickedObject;
 					if (unit1 != null) {
-						originTime = Time.timeScale;
+						targetPosition2 = unit1.transform.position;
+						animator1 = unit1.GetComponent<Animator>();
+						allyScan1 = unit1.GetComponent<AllyScan>();
 						playerObjCircle1.SetActive(true);
 						playerObjCircle1.transform.position = unit1.transform.position;
 					}
-				} else if (unit1 != null && unit2 == null) {
+				} else if (unit2 == null) {
 					unit2 = clickedObject;
 
 					if (unit2 == unit1)
 					{
 						MoveDone();
 					}
-
 					if (unit1.transform.parent.name == "Default(Clone)" && unit2.transform.parent.name == "Default(Clone)")
 					{
 						MoveDone();
@@ -73,13 +74,10 @@ public class AllySwap : MonoBehaviour {
 						playerObjCircle2.SetActive(true);
 						playerObjCircle2.transform.position = unit2.transform.position;
 						targetPosition1 = unit2.transform.position;
-						targetPosition2 = unit1.transform.position;
-						animator1 = unit1.GetComponent<Animator>();
 						animator2 = unit2.GetComponent<Animator>();
-						allyScan1 = unit1.GetComponent<AllyScan>();
 						allyScan2 = unit2.GetComponent<AllyScan>();
-
 						isMoving = true; // 이동 시작
+
 						// 이동 시작 애니메이션 트리거
 						animator1.SetTrigger("Run");
 						animator2.SetTrigger("Run");
@@ -93,7 +91,6 @@ public class AllySwap : MonoBehaviour {
 				CustomLogger.LogWarning("No object clicked");
 			}
 		}
-
 		if (isMoving) {
 			MoveUnits();
 		}
@@ -119,21 +116,17 @@ public class AllySwap : MonoBehaviour {
 		}
 
 		if (unit1.transform.position == targetPosition1 && unit2.transform.position == targetPosition2) {
-			// 이동 완료 애니메이션 트리거
-
-			// AllyScan 스크립트 활성화
-
 			MoveDone();
 		}
 	}
 
 	void MoveDone()
 	{
-		isMoving = false; // 이동 완료
 		playerObjCircle1.SetActive(false);
 		playerObjCircle2.SetActive(false);
 		unit1 = null;
 		unit2 = null;
+		isMoving = false; // 이동 완료
 	}
 	
 }
