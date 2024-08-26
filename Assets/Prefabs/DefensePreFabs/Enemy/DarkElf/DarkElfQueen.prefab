@@ -2073,13 +2073,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f417b36df4681e48a4521d737d5c364, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 25
+  health: 8
   moveSpeed: 20
   detectionLayerMask:
     serializedVersion: 2
     m_Bits: 64
   attackDamage: 7
-  attackSpeed: 1.2
+  attackSpeed: 1.7
   runState: 0.25
   attackState: 0
   normalState: 0.5
@@ -2093,12 +2093,9 @@ MonoBehaviour:
   movementdirection: {x: -1, y: 0, z: 0}
   isKnockedBack: 0
   percent: 0
-  gold: 10
+  gold: 14
   isBoss: 0
   stageEndNotice: {fileID: 0}
-  stageClearUI: {fileID: 0}
-  EnemyInfoText: {fileID: 7944156010839475692, guid: b8c560309991cb64fbecc5baa49cd477,
-    type: 3}
 --- !u!58 &1633647741894230480
 CircleCollider2D:
   m_ObjectHideFlags: 0

@@ -59,7 +59,7 @@ public class RecoveryCastleHealth : MonoBehaviour {
 		}
 		if (goldText != null)
 		{
-			goldText.text = $"HP: {spendGold}";
+			goldText.text = $"GOLD: {spendGold}";
 		}
 	}
 
@@ -83,7 +83,7 @@ public class RecoveryCastleHealth : MonoBehaviour {
 	}
 
 	public void SetRepairPopup() {
-		if (GameObject.FindWithTag("Popup") != null) return;
+		// if (GameObject.FindWithTag("Popup") != null) return;
 
 		// PopupBackground 패널 하위의 ConfirmButton 찾기
 		Transform confirmButtonTransform = gameObject.transform.Find("PopupBackground/ConfirmButton");
