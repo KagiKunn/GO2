@@ -162,8 +162,6 @@ public class PlayerLocalManager : MonoBehaviour
 		} else {
 			Destroy(this);
 		}
-
-		LocaleManager.Instance.setLocale(lLocale);
 	}
 
 	private void LoadLocalData() {

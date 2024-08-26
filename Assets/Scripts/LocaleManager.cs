@@ -15,6 +15,8 @@ public class LocaleManager : MonoBehaviour
         } else {
             Destroy(this);
         }
+        
+        setLocale(PlayerLocalManager.Instance.lLocale);
     }
 
     public void setLocale(string toLocale)
