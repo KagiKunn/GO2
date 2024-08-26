@@ -79,8 +79,8 @@ public class EnemySpawner : MonoBehaviour
         CustomLogger.Log("스포너에서 받은 stageCount값:" + stageCount, "black");
         bossImage.SetActive(false);
         
-        //스테이지 수에 따른 웨이브당 스폰 숫자 증가
-        numberOfObjects += stageCount;
+        //스테이지 수에 따른 웨이브당 스폰 숫자 증가 제어하는 부분
+        numberOfObjects += (2*stageCount);
         CustomLogger.Log("StageCount를 받아와서 스폰할 숫자 재설정 결과 : " + numberOfObjects, "pink");
 
         // EnemyPrefabList 참조 가져오기
