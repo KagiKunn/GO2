@@ -232,6 +232,8 @@ public class StageC : MonoBehaviour
 
     private void OnStageClearButtonClick()
     {
+        DefenseInit init = GameObject.Find("InitSetting").GetComponent<DefenseInit>();
+        init.OnGameEnd();
         CustomLogger.Log("스테이지 클리어 버튼 클릭됨");
         SceneManager.LoadScene("InternalAffairs");
     }
@@ -257,7 +259,7 @@ public class StageC : MonoBehaviour
         PlayerSyncManager.Instance.RoguePoint += 1;
         PlayerLocalManager.Instance.lPoint += 1;
         Debug.Log("증가 전 위크값:" + PlayerSyncManager.Instance.Repeat);
-        PlayerSyncManager.Instance.Repeat++;
+        PlayerSyncManager.Instance.Repeat += 1;
         PlayerLocalManager.Instance.GoNextWeek(); // 스테이지와 체력 정보 초기화
 
         PlayerSyncManager.Instance.Save();

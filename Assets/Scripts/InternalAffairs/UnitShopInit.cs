@@ -18,7 +18,7 @@ public class UnitShopInit : MonoBehaviour
 
         newObjectRect.localScale = new Vector3(200, 200, 1);
         newObjectRect.anchoredPosition = new Vector2(0,-50);
-        GameObject.Find("RealPrice ").GetComponent<TextMeshProUGUI>().text = UnitPrice().ToString();
+        GameObject.Find("RealPrice").GetComponent<TextMeshProUGUI>().text = UnitPrice().ToString();
     }
 
     public void Back()
@@ -54,7 +54,8 @@ public class UnitShopInit : MonoBehaviour
 
         newObjectRect.localScale = new Vector3(200, 200, 1);
         newObjectRect.anchoredPosition = new Vector2(0,-50);
-        GameObject.Find("RealPrice ").GetComponent<TextMeshProUGUI>().text = UnitPrice().ToString();
+        GameObject.Find("Name").GetComponent<TextMeshProUGUI>().text = UnitName();
+        GameObject.Find("RealPrice").GetComponent<TextMeshProUGUI>().text = UnitPrice().ToString();
     }
 
     private int UnitPrice()
@@ -69,14 +70,9 @@ public class UnitShopInit : MonoBehaviour
         };
         return price;
     }
-    public void BuyUnit()
+
+    private string UnitName()
     {
-        int price = UnitPrice();
-        if (PlayerLocalManager.Instance.lMoney < price)
-        {
-            CustomLogger.Log("Need More Money!","red");
-            return;
-        }
         string unit = unitIndex switch
         {
             0 => "Bow",
@@ -85,6 +81,18 @@ public class UnitShopInit : MonoBehaviour
             3 => "Mage",
             _ => "err"
         };
+        return unit;
+    }
+    public void BuyUnit()
+    {
+        int price = UnitPrice();
+        if (PlayerLocalManager.Instance.lMoney < price)
+        {
+            CustomLogger.Log("Need More Money!","red");
+            return;
+        }
+
+        string unit = UnitName();
         KeyValuePair<string, int> keyVal = new KeyValuePair<string, int>(unit, 0);
         boughtUnit.Add(keyVal);
         PlayerLocalManager.Instance.lMoney -= price;

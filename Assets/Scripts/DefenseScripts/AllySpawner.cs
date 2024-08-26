@@ -4,17 +4,23 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 
 using System.Collections.Generic;
+using System.Linq;
 
 #pragma warning disable CS0414 // 필드가 대입되었으나 값이 사용되지 않습니다
 
 public class AllySpawner : MonoBehaviour {
-	[SerializeField] public GameObject[] allies;
+	[SerializeField] public List<GameObject> allies;
+	private List<GameObject> leftAllies; //0~
+	private List<GameObject> rightAllies; //13~
 	[SerializeField] public GameObject defaultObject;
 	[SerializeField] private Tilemap tilemap;
 	[SerializeField] private bool facingRight;
 	[SerializeField] private float xSpacing = 10f; // 타일 크기에 맞게 조정
 	[SerializeField] private float ySpacing = 10f; // 타일 크기에 맞게 조정
 	private Dictionary<Vector3Int, GameObject> allyPositions = new Dictionary<Vector3Int, GameObject>();
+
+	private List<KeyValuePair<int, string>> allyUnitList;
+	
 	private Vector3Int? selectedPosition = null;
 	private int maxUnitCount;
 	private int currentNumber;
@@ -23,31 +29,28 @@ public class AllySpawner : MonoBehaviour {
 	private int row = 7;
 	private int column = 2;
 
-	void Awake() {
-		/* 유닛 편성 완료되면 활성화
-		   filePath = Path.Combine(Path.Combine(Application.dataPath, "save", "unitInfo"), "selectedUnits.json");
-		   if (File.Exists(filePath)) {
-            try {
-                string json = File.ReadAllText(filePath);
+	void Awake()
+	{
+		List<GameObject> leftAllies = new List<GameObject>();
+		List<GameObject> rightAllies = new List<GameObject>();
+		allyUnitList = PlayerLocalManager.Instance.lAllyUnitList
+			.OrderBy(unit => unit.Key)
+			.ToList();
+		for (int i = 0; i<23; i++)
+		{
+			string name = allyUnitList[i].Value;
+			if (i < 14)
+			{
+				leftAllies.Add(Resources.Load<GameObject>("Defense/Unit/" + name));
+			}
+			else
+			{
+				rightAllies.Add(Resources.Load<GameObject>("Defense/Unit/" + name));
+			}
+		}
 
-                UnitDataWrapper wrapper = JsonUtility.FromJson<UnitDataWrapper>(json);
-                CustomLogger.Log(wrapper.Unit.Count,"red");
-                for (int i = 0; i < wrapper.Unit.Count; i++) {
-                    UnitData unit = wrapper.Unit[i];
-                    CustomLogger.Log(unit.Name,"red");
-                    allies[i] = Resources.Load<GameObject>("Defense/Unit/"+unit.Name);
-
-                    if (hero != null) {
-                        selectedHeroes.Add(hero.Name);
-                        CustomLogger.Log(hero.Name);
-                    }
-                }
-            } catch (Exception e) {
-                CustomLogger.Log("Error parsing JSON: " + e.Message);
-            }
-        }
-		 */
-		maxUnitCount = allies.Length;
+		allies = facingRight ? rightAllies : leftAllies;
+		maxUnitCount = allies.Count;
 		currentNumber = 0;
 		BoundsInt bounds = tilemap.cellBounds;
 		gridStart = new Vector3Int(facingRight?bounds.xMax - column - 1 : bounds.xMin + column +1, bounds.yMin + 1, 0); // 오른쪽에서 한 칸 띄운 위치를 기준점으로 설정

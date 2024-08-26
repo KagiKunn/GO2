@@ -61,16 +61,32 @@ public class BounusSaveManager : MonoBehaviour
         PlayerLocalManager.Instance.lPoint =
             int.Parse(GameObject.Find("Soul").transform.GetChild(0).GetComponent<TextMeshProUGUI>().text);
         PlayerLocalManager.Instance.lGameStarted = true;
-        PlayerLocalManager.Instance.lMoreEarnGold = 10000;
-        PlayerLocalManager.Instance.Save();
-
         StartGoldSetup();
+        StartHealthSetup();
+        PlayerLocalManager.Instance.Save();
+        
         SceneManager.LoadScene("InternalAffairs");
     }
-    
+
+    public void Back()
+    {
+        SceneManager.LoadScene("Title");
+    }
     void StartGoldSetup()
     {
         PlayerLocalManager.Instance.lMoney = PlayerLocalManager.Instance.lStartGold switch
+        {
+            1 => 500,
+            2 => 1000,
+            3 => 1500,
+            4 => 2000,
+            _ => 0
+        };
+    }
+
+    void StartHealthSetup()
+    {
+        PlayerLocalManager.Instance.lCastleMaxHp = PlayerLocalManager.Instance.lMoreCastleHealth switch
         {
             1 => 500,
             2 => 1000,

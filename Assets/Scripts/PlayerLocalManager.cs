@@ -27,7 +27,14 @@ public class PlayerLocalManager : MonoBehaviour
 	private List<KeyValuePair<string, int>> L_UnitList;
 	private List<KeyValuePair<int, string>> L_AllyUnitList;
 	private bool L_GameStarted;
-    
+	private string L_Locale;
+
+	public string lLocale
+	{
+		get => L_Locale;
+		set => L_Locale = value;
+	}
+
 	public int lMoney {
 		get => L_money;
 
@@ -148,13 +155,15 @@ public class PlayerLocalManager : MonoBehaviour
 		} else {
 			CreateNewPlayer();
 		}
-
+		
 		if (Instance == null) {
 			Instance = this;
 			DontDestroyOnLoad(this);
 		} else {
 			Destroy(this);
 		}
+
+		LocaleManager.Instance.setLocale(lLocale);
 	}
 
 	private void LoadLocalData() {
@@ -180,6 +189,7 @@ public class PlayerLocalManager : MonoBehaviour
 					lUnitList = localData.UnitList;
 					lAllyUnitList = localData.AllyUnitList;
 					lGameStarted = localData.GameStarted;
+					lLocale = localData.Locale;
 				}
 			}
 		} catch (Exception ex) {
@@ -208,6 +218,7 @@ public class PlayerLocalManager : MonoBehaviour
 		lUnitList = localData.UnitList;
 		lAllyUnitList = localData.AllyUnitList;
 		lGameStarted = localData.GameStarted;
+		lLocale = localData.Locale;
 
 		SaveLocalData(localData);
 	}
@@ -243,7 +254,7 @@ public class PlayerLocalManager : MonoBehaviour
 
 	public void Save() {
 		PlayerLocalData localData = new PlayerLocalData(lMoney, lPoint, lStartGold, lMoreEarnGold, lMoreCastleHealth,
-			lReduceCooldown, lHeroeList, lStage, lStageRace, lSelectedRace, lCastleMaxHp, lCastleHp, lCastleExtraHp, lUnitList, lAllyUnitList, lGameStarted);
+			lReduceCooldown, lHeroeList, lStage, lStageRace, lSelectedRace, lCastleMaxHp, lCastleHp, lCastleExtraHp, lUnitList, lAllyUnitList, lGameStarted, lLocale);
 
 		SaveLocalData(localData);
 	}

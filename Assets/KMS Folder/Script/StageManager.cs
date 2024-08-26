@@ -1,38 +1,30 @@
-using System;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
 
 public class StageManager : MonoBehaviour
 {
-    public GameObject[] leftStageUnits;
-    public GameObject[] rightStageUnits;
     public Button leftButton;
     public Button rightButton;
+    public Button resetButton;
+    
+    public UnitGameManager unitGameManager;
+    
+    public GameObject[] slots;
 
-    private UnitGameManagerA unitGameManager;
-    private UnitSlotManagerA unitSlotManager;
-
-    private IEnumerator Start()
+    void Start()
     {
-        yield return new WaitUntil(() => UnitGameManagerA.Instance != null);
-
-        unitGameManager = UnitGameManagerA.Instance;
-        unitSlotManager = FindFirstObjectByType<UnitSlotManagerA>();
-
         leftButton.onClick.AddListener(ShowLeftStage);
         rightButton.onClick.AddListener(ShowRightStage);
-
-        CustomLogger.Log("StageManagement 스타트 메서드 활성화", "green");
+        resetButton.onClick.AddListener(reset);
+        
+        ShowLeftStage(); 
     }
+    
 
     private void ShowLeftStage()
     {
-        
-        SaveCurrentWallPlacement();
-        
-        SetStageActive(leftStageUnits, true);
-        SetStageActive(rightStageUnits, false);
+        SetSlotVisibility(0, 13);
+        SetSlotInvisibility(14, 27);
         
         leftButton.gameObject.SetActive(false);
         rightButton.gameObject.SetActive(true);
@@ -41,48 +33,36 @@ public class StageManager : MonoBehaviour
 
     private void ShowRightStage()
     {
-        
-        SaveCurrentWallPlacement();
-        
-        SetStageActive(leftStageUnits, false);
-        SetStageActive(rightStageUnits, true);
+        SetSlotVisibility(14, 27);
+        SetSlotInvisibility(0, 13);
 
         rightButton.gameObject.SetActive(false);
         leftButton.gameObject.SetActive(true);
     }
 
-    private void SetStageActive(GameObject[] stageUnits, bool isActive)
+    private void SetSlotVisibility(int start, int end)
     {
-        foreach (var unit in stageUnits)
+        for (int i = start; i <= end; i++)
         {
-            unit.SetActive(isActive);
+            slots[i].SetActive(true);
+        }
+    }
+    
+    private void SetSlotInvisibility(int start, int end)
+    {
+        for (int i = start; i <= end; i++)
+        {
+            slots[i].SetActive(false);
         }
     }
 
-    public int GetCurrentWallStatus()
+    private void reset()
     {
-        if (!leftButton.gameObject.activeSelf)
-        {
-            return 1;
-        }
-        if (!rightButton.gameObject.activeSelf)
-        {
-            return 2;
-        }
-        return 0;
+        unitGameManager.ResetList();
     }
-    
-    private void SaveCurrentWallPlacement()
+
+    private void OnDestroy()
     {
-        PlacementUnitA placementUnit = FindAnyObjectByType<PlacementUnitA>();
-        if (placementUnit != null)
-        {
-            placementUnit.SavePlacementUnits();
-            CustomLogger.Log("현재 성벽 데이터를 저장했습니다.", Color.green);
-        }
-        else
-        {
-            CustomLogger.Log("PlacementUnitA를 찾을 수 없습니다.", Color.red);
-        }
+        unitGameManager.SaveDefaultUnitData();
     }
 }

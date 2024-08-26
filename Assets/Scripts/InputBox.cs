@@ -67,16 +67,14 @@ public class InputBox : MonoBehaviour
 
     void Continue()
     {
-        CustomLogger.LogWarning("Continue");
         if (!string.IsNullOrEmpty(Input.text))
         {
             PlayerSyncManager.Instance.ChangeAccount(Input.text);
         }
     }
 
-    void Issue()
+    public void Issue()
     {
-        CustomLogger.LogWarning("Issue");
         PlayerSyncManager.Instance.IssueCode();
     }
     

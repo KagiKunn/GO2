@@ -160,7 +160,7 @@ public class DefenseInit : MonoBehaviour {
 		GameObject.Find("Gold").GetComponent<TMP_InputField>().text = currentGold.ToString();
 	}
 
-	private void OnDisable() {
+	public void OnGameEnd() {
 		PlayerLocalManager.Instance.lMoney = currentGold;
 		PlayerLocalManager.Instance.lPoint = soul;
 		PlayerLocalManager.Instance.Save();

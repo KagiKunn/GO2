@@ -1,60 +1,54 @@
 using System;
 using System.Collections.Generic;
+
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class ItemSlot : MonoBehaviour
-{
-    public ItemInstance ItemInstance;
-    public ItemSO item => ItemInstance?.itemData;
-    public Image itemImage;
+#pragma warning disable CS0618, CS0414 // 형식 또는 멤버는 사용되지 않습니다.
 
-    private Transform originalParent;
-    private Canvas canvas;
-    private RectTransform rectTransform;
-    private LayoutGroup layoutGroup;
-    private int originalSiblingIndex;
+public class ItemSlot : MonoBehaviour {
+	public ItemInstance ItemInstance;
+	public ItemSO item => ItemInstance?.itemData;
+	public Image itemImage;
 
-    private InventoryUI inventoryUI;
+	private Transform originalParent;
+	private Canvas canvas;
+	private RectTransform rectTransform;
+	private LayoutGroup layoutGroup;
+	private int originalSiblingIndex;
 
-    private bool isDragging = false;
+	private InventoryUI inventoryUI;
 
-    private void Start()
-    {
-        rectTransform = GetComponent<RectTransform>();
-        itemImage = GetComponentInChildren<Image>();
+	private bool isDragging = false;
 
-        inventoryUI = FindObjectOfType<InventoryUI>();
+	private void Start() {
+		rectTransform = GetComponent<RectTransform>();
+		itemImage = GetComponentInChildren<Image>();
 
-        if (ItemInstance == null)
-        {
-            CustomLogger.Log($"Slot {gameObject.name} has no ItemInstance assigned.");
-            return;
-        }
+		inventoryUI = FindObjectOfType<InventoryUI>();
 
-        if (inventoryUI != null)
-        {
-            if (ItemInstance != null && item != null)
-            {
-                inventoryUI.UpdateSlotUI(this.transform, ItemInstance);
-                CustomLogger.Log($"Slot {gameObject.name} initialized with item: {item.itemName}");
-            }
-            else
-            {
-                CustomLogger.Log($"Slot {gameObject.name} has no item assigned or item data is null.");
-            }
-        }
-        else
-        {
-            CustomLogger.LogError($"InventoryUI not found in the scene for slot {gameObject.name}.");
-        }
+		if (ItemInstance == null) {
+			CustomLogger.Log($"Slot {gameObject.name} has no ItemInstance assigned.");
 
-        if (GetComponentInParent<Canvas>() == null)
-        {
-            CustomLogger.Log("Canvas not found in parent hierarchy.");
-        }
-    }
+			return;
+		}
+
+		if (inventoryUI != null) {
+			if (ItemInstance != null && item != null) {
+				inventoryUI.UpdateSlotUI(this.transform, ItemInstance);
+				CustomLogger.Log($"Slot {gameObject.name} initialized with item: {item.itemName}");
+			} else {
+				CustomLogger.Log($"Slot {gameObject.name} has no item assigned or item data is null.");
+			}
+		} else {
+			CustomLogger.LogError($"InventoryUI not found in the scene for slot {gameObject.name}.");
+		}
+
+		if (GetComponentInParent<Canvas>() == null) {
+			CustomLogger.Log("Canvas not found in parent hierarchy.");
+		}
+	}
 }
 //     public void OnBeginDrag(PointerEventData eventData)
 //     {
