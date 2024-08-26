@@ -33,7 +33,7 @@ public class PlayerLocalData
 
     public PlayerLocalData()
     {
-        Money = 0; // 초기 값 설정
+        Money = 1000; // 초기 값 설정
         RemainedPoint = 0;
         StartGold = 0;
         MoreEarnGold = 0;
