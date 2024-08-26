@@ -8,4 +8,13 @@ public class ResetConfrim : MonoBehaviour
         PlayerLocalManager.Instance.CreateNewPlayer();
         SceneManager.LoadScene("RoguePoint");
     }
+
+    public void Quit()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+		    Application.Quit();
+#endif
+    }
 }
