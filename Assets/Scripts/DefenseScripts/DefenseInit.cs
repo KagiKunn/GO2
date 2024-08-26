@@ -130,7 +130,6 @@ public class DefenseInit : MonoBehaviour {
         };
         PlayerLocalManager.Instance.lCastleExtraHp = castleExtraHp;
     }
-
 	void CoolDownSetup() {
 		switch (cooldown) {
 			case 1:
@@ -166,5 +165,6 @@ public class DefenseInit : MonoBehaviour {
 		PlayerLocalManager.Instance.Save();
 		PlayerSyncManager.Instance.RoguePoint = soul;
 		PlayerSyncManager.Instance.Save();
+		GameObject.Find("DTO").GetComponent<NextEnemy>().isVisual = false;
 	}
 }

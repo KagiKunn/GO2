@@ -4,6 +4,7 @@ using TMPro;
 
 using UnityEngine;
 using UnityEngine.InputSystem.LowLevel;
+using UnityEngine.Localization;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -111,7 +112,12 @@ public class BtnScene : MonoBehaviour {
 				Destroy(popup);
 			});
 		} else {
-			offencePopupText.text = "Need Choice 3 Hero";
+			
+			LocalizedString localizedString = new LocalizedString
+				{ TableReference = "UI", TableEntryReference = "Choose3" };
+			localizedString.StringChanged  += (localizedText) => {
+				offencePopupText.text = $"{localizedText}";
+			};
 
 			confirmButtonTransform.gameObject.SetActive(false);
 			cancelButtonTransform.gameObject.SetActive(false);

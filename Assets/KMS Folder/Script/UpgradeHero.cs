@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using TMPro;
+using UnityEngine.Localization;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
@@ -37,17 +38,47 @@ public class UpgradeHero : MonoBehaviour
 
     private void Update()
     {
-        heroHP.text = $"HP: {upgradeHero.OffenceHP}";
-        heroAttack.text = $"Attack: {upgradeHero.OffenceAttack}";
-        heroAttackSpeed.text = $"Attack Speed: {upgradeHero.OffenceAttackSpeed}";
+        LocalizedString localizedString = new LocalizedString
+            { TableReference = "UI", TableEntryReference = "HeroHP" };
+
+        localizedString.StringChanged += (localizedText) => {
+            heroHP.text = $"{localizedText}: {upgradeHero.OffenceHP}";
+        };
+        localizedString = new LocalizedString
+            { TableReference = "UI", TableEntryReference = "HeroAtk" };
+
+        localizedString.StringChanged += (localizedText) => {
+            heroAttack.text = $"{localizedText}: {upgradeHero.OffenceAttack}";
+        };
+        localizedString = new LocalizedString
+            { TableReference = "UI", TableEntryReference = "HeroAtkSp" };
+
+        localizedString.StringChanged += (localizedText) => {
+            heroAttackSpeed.text = $"{localizedText}: {upgradeHero.OffenceAttackSpeed}";
+        };
     }
 
     private void DisplayHeroInfo()
     {
         heroName.text = upgradeHero.Name;
-        heroHP.text = $"HP: {upgradeHero.OffenceHP}";
-        heroAttack.text = $"Attack: {upgradeHero.OffenceAttack}";
-        heroAttackSpeed.text = $"Attack Speed: {upgradeHero.OffenceAttackSpeed}";
+        LocalizedString localizedString = new LocalizedString
+            { TableReference = "UI", TableEntryReference = "HeroHP" };
+
+        localizedString.StringChanged += (localizedText) => {
+            heroHP.text = $"{localizedText}: {upgradeHero.OffenceHP}";
+        };
+        localizedString = new LocalizedString
+            { TableReference = "UI", TableEntryReference = "HeroAtk" };
+
+        localizedString.StringChanged += (localizedText) => {
+            heroAttack.text = $"{localizedText}: {upgradeHero.OffenceAttack}";
+        };
+        localizedString = new LocalizedString
+            { TableReference = "UI", TableEntryReference = "HeroAtkSp" };
+
+        localizedString.StringChanged += (localizedText) => {
+            heroAttackSpeed.text = $"{localizedText}: {upgradeHero.OffenceAttackSpeed}";
+        };
         heroCharacterImage.sprite = upgradeHero.CharacterImg;
     }
     

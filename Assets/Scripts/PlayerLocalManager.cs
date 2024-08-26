@@ -26,6 +26,9 @@ public class PlayerLocalManager : MonoBehaviour
 	private float L_CastleExtraHP;
 	private List<KeyValuePair<string, int>> L_UnitList;
 	private List<KeyValuePair<int, string>> L_AllyUnitList;
+
+	private KeyValuePair<string, int> dd;
+
 	private bool L_GameStarted;
 	private string L_Locale;
 

@@ -52,7 +52,7 @@ public class Menu : MonoBehaviour
     private void OnMenuButtonClicked()
     {
         CustomLogger.Log("MenuButton clicked!", "yellow");
-        if (Time.timeScale <= 0)
+        if (Time.timeScale < 1)
         {
             Time.timeScale = 1;
             StageC.Instance.isGamePaused = false;
@@ -63,7 +63,7 @@ public class Menu : MonoBehaviour
         }
         else
         {
-            Time.timeScale = 0;
+            Time.timeScale = 0.1f;
             StageC.Instance.isGamePaused = true;
             SettingManager.Instance.SetMainCamera();
             SettingManager.Instance.gameObject.SetActive(true);
