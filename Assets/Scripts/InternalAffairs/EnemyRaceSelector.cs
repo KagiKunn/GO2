@@ -33,6 +33,7 @@ namespace InternalAffairs {
 				CustomLogger.Log("종족 선택되지 않음. 종족 선택으로 이행", Color.cyan);
 
 				if (stageCount == 1) { //1스테이지일때 벽 체력정보 리셋
+					
 					PlayerLocalManager.Instance.ResetHealthData();
 				}
 
