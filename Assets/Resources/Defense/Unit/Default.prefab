@@ -956,9 +956,11 @@ MonoBehaviour:
   normalState: 0
   skillState: 0
   aoe: 2
-  movementSpeed: 10
+  movementSpeed: 10000
   damageEffect: {fileID: 0}
   projectilePrefab: {fileID: 0}
+  soundClip: {fileID: 0}
+  sfxMixerGroup: {fileID: 0}
 --- !u!1 &779481323314682059
 GameObject:
   m_ObjectHideFlags: 0
@@ -1071,7 +1073,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &6530831701735933550
 Transform:
   m_ObjectHideFlags: 0
@@ -1438,7 +1440,7 @@ GameObject:
   - component: {fileID: 4246671544249245027}
   - component: {fileID: 1173435248892915167}
   m_Layer: 8
-  m_Name: Defualt
+  m_Name: Default
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
