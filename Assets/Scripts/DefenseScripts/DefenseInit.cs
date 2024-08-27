@@ -130,7 +130,6 @@ public class DefenseInit : MonoBehaviour {
         };
         PlayerLocalManager.Instance.lCastleExtraHp = castleExtraHp;
     }
-
 	void CoolDownSetup() {
 		switch (cooldown) {
 			case 1:

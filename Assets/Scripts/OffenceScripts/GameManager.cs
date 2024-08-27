@@ -160,7 +160,7 @@ public class GameManager : MonoBehaviour {
 		if (!isLive) {
 			if (Input.GetKeyDown(KeyCode.Escape)) {
 				PlayerLocalManager.Instance.lMoney++;
-				PlayerLocalManager.Instance.Save();;
+				PlayerLocalManager.Instance.Save();
 				SceneManager.LoadScene("InternalAffairs");
 			}
 
