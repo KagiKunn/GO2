@@ -254,6 +254,14 @@ public class StageC : MonoBehaviour
 
     private void allStageClear()
     {
+        //초기화
+        PlayerLocalManager.Instance.lMoney = 1000;
+        PlayerLocalManager.Instance.lHeroeList = null;
+        PlayerLocalManager.Instance.lAllyUnitList = null;
+        PlayerLocalManager.Instance.lUnitList = null;
+        PlayerLocalManager.Instance.lCastleMaxHp = 5000f;
+        PlayerLocalManager.Instance.lCastleHp = 5000f;
+        
         PlayerLocalManager.Instance.lGameStarted = false;
         // 로그라이크 포인트 증가
         PlayerSyncManager.Instance.RoguePoint += 1;
