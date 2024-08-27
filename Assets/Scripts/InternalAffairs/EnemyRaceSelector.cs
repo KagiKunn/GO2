@@ -43,10 +43,8 @@ namespace InternalAffairs {
 				SelectedRace = PlayerLocalManager.Instance.lSelectedRace;
 				PlayerLocalManager.Instance.Save();
 				CustomLogger.Log("Save데이터 상에 종족이 선택되어 있으므로 그 값을 받아옴 : " + SelectedRace, "black");
-			}
-
-			;
-			if (GameObject.Find("DTO").GetComponent<NextEnemy>().isVisual)
+			} 
+			if (GameObject.Find("NextEnemy").GetComponent<NextEnemy>().isVisual)
 			{
 				GameObject.Find("NextEnemy").GetComponent<TextMeshProUGUI>().text = SelectedRace;
 			}

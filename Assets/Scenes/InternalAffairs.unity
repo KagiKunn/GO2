@@ -7792,6 +7792,7 @@ GameObject:
   - component: {fileID: 1656120725}
   - component: {fileID: 1656120727}
   - component: {fileID: 1656120726}
+  - component: {fileID: 1656120728}
   m_Layer: 5
   m_Name: NextEnemy
   m_TagString: Untagged
@@ -7918,6 +7919,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1656120724}
   m_CullTransparentMesh: 1
+--- !u!114 &1656120728
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1656120724}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a43902cd226c134ea09998d61108fa1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isVisual: 0
 --- !u!1 &1731888178
 GameObject:
   m_ObjectHideFlags: 0
@@ -13498,7 +13512,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: SMITH
+  m_text: Repair
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 7f21707a91fb94244970dd0ef7f52b10, type: 2}
   m_sharedMaterial: {fileID: 8236074413892793931, guid: 7f21707a91fb94244970dd0ef7f52b10,
@@ -13925,4 +13939,3 @@ SceneRoots:
   - {fileID: 1533890858}
   - {fileID: 3581249630882363006}
   - {fileID: 1095269775}
-  - {fileID: 570132332}

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 
 using TMPro;
-
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.Localization;
@@ -11,7 +11,7 @@ using UnityEngine.UI;
 public class BtnScene : MonoBehaviour {
 	public GameObject defensePopupPrefab; // 팝업 프리팹을 연결할 수 있도록 public 변수로 선언
 	public GameObject offencePopupPrefab;
-
+	private bool unitSet = false;
 	public void heroSceneChange() {
 		SceneManager.LoadScene("HeroManagement");
 		CustomLogger.Log("Change HeroManagementScene successfuly!");
@@ -25,6 +25,16 @@ public class BtnScene : MonoBehaviour {
 	public void DefenseSceneChange() {
 		if (GameObject.FindWithTag("Popup") != null) return;
 		
+		List<KeyValuePair<int, string>> allylist = PlayerLocalManager.Instance.lAllyUnitList;
+		foreach (KeyValuePair<int,string> ally in allylist)
+		{
+			if (ally.Value != "Default")
+			{
+				unitSet = true;
+				break;
+			}
+		}
+		CustomLogger.Log(unitSet,"red");		
 		// 팝업을 생성하고, 팝업 UI에 접근
 		GameObject popup = Instantiate(defensePopupPrefab);
 		
@@ -37,20 +47,50 @@ public class BtnScene : MonoBehaviour {
 		// PopupBackground 패널 하위의 CancelButton 찾기
 		Transform cancelButtonTransform = popup.transform.Find("PopupBackground/CancelButton");
 		Button cancelButton = cancelButtonTransform.GetComponent<Button>();
+		
+		// PopupBackground 패널 하위의 DefensePrefab 찾기
+		Transform defensePopupTextTransform = popup.transform.Find("PopupBackground/DefensePopupText");
 
-		// 확인 버튼 클릭 이벤트 등록
-		confirmButton.onClick.AddListener(() => {
-			CustomLogger.Log("Confirm button clicked!");
-			SceneManager.LoadScene("Defense");
-			CustomLogger.Log("Change Defense successfuly!");
-			Destroy(popup); // 팝업을 닫음
-		});
+		// TextMeshProUGUI 컴포넌트 가져오기
+		TextMeshProUGUI defensePopupText = defensePopupTextTransform.GetComponent<TextMeshProUGUI>();
 
-		// 취소 버튼 클릭 시 팝업을 닫기
-		cancelButton.onClick.AddListener(() => {
-			CustomLogger.Log("Cancel button clicked!");
-			Destroy(popup);
-		});
+		Transform noUnitButtonTransform = popup.transform.Find("PopupBackground/NoUnitButton");
+		Button noUnitButton = noUnitButtonTransform.GetComponent<Button>();
+
+		if (unitSet)
+		{
+			// 확인 버튼 클릭 이벤트 등록
+			confirmButton.onClick.AddListener(() =>
+			{
+				CustomLogger.Log("Confirm button clicked!");
+				SceneManager.LoadScene("Defense");
+				CustomLogger.Log("Change Defense successfuly!");
+				Destroy(popup); // 팝업을 닫음
+			});
+
+			// 취소 버튼 클릭 시 팝업을 닫기
+			cancelButton.onClick.AddListener(() =>
+			{
+				CustomLogger.Log("Cancel button clicked!");
+				Destroy(popup);
+			});
+		}
+		else {
+			
+			LocalizedString localizedString = new LocalizedString
+				{ TableReference = "UI", TableEntryReference = "ChooseUnit" };
+			localizedString.StringChanged  += (localizedText) => {
+				defensePopupText.text = $"{localizedText}";
+			};
+
+			confirmButtonTransform.gameObject.SetActive(false);
+			cancelButtonTransform.gameObject.SetActive(false);
+			noUnitButtonTransform.gameObject.SetActive(true);
+
+			noUnitButton.onClick.AddListener(() => {
+				Destroy(popup);
+			});
+		}
 
 		CustomLogger.Log("Event listeners added.");
 	}
