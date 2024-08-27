@@ -1,12 +1,17 @@
+using System;
 using System.Collections.Generic;
 using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.Localization;
 using UnityEngine.SceneManagement;
 
 public class UnitShopInit : MonoBehaviour
 {
     public GameObject[] units;
+    public SimplePopup popup;
+    public LocalizedString saveString;
+    
     private int unitIndex = 0;
 
     private List<KeyValuePair<string, int>> boughtUnit;
@@ -20,6 +25,12 @@ public class UnitShopInit : MonoBehaviour
         newObjectRect.anchoredPosition = new Vector2(0,-50);
         GameObject.Find("RealPrice").GetComponent<TextMeshProUGUI>().text = UnitPrice().ToString();
         GameObject.Find("Name").GetComponent<TextMeshProUGUI>().text = UnitName();
+    }
+
+    private void Start()
+    {
+        saveString.TableReference = "UI";
+        saveString.TableEntryReference = "Heired Success";
     }
 
     public void Back()
@@ -89,7 +100,7 @@ public class UnitShopInit : MonoBehaviour
         int price = UnitPrice();
         if (PlayerLocalManager.Instance.lMoney < price)
         {
-            CustomLogger.Log("Need More Money!","red");
+            CustomLogger.Log("Need More Money!", "red");
             return;
         }
 
@@ -97,8 +108,12 @@ public class UnitShopInit : MonoBehaviour
         KeyValuePair<string, int> keyVal = new KeyValuePair<string, int>(unit, 0);
         boughtUnit.Add(keyVal);
         PlayerLocalManager.Instance.lMoney -= price;
-        //여기서 유닛 세이브
+
+        // 유닛 세이브
         PlayerLocalManager.Instance.lUnitList = boughtUnit;
         PlayerLocalManager.Instance.Save();
+
+        // 간단한 팝업 호출
+        popup.ShowPopup("Unit Purchased: " + unit);
     }
 }
