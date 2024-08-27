@@ -60,33 +60,6 @@ public class AchieveManager : MonoBehaviour {
 	}
 
 	private void CheckAchieve(Achieve Achieve) {
-		bool isAchieve = false;
-
-		switch (Achieve) {
-			case Achieve.UnlockPotato:
-				if (gameManager.IsLive) {
-					isAchieve = gameManager.Kill >= 10;
-				}
-
-				break;
-
-			case Achieve.UnlockBean:
-				isAchieve = gameManager.GameTime == gameManager.MaxGameTime;
-
-				break;
-		}
-
-		if (isAchieve && PlayerPrefs.GetInt(Achieve.ToString()) == 0) {
-			PlayerPrefs.SetInt(Achieve.ToString(), 1);
-
-			for (int i = 0; i < uiNotice.transform.childCount; i++) {
-				bool isActive = i == (int)Achieve;
-
-				uiNotice.transform.GetChild(i).gameObject.SetActive(isActive);
-			}
-
-			StartCoroutine(NoticeRoutine());
-		}
 	}
 
 	IEnumerator NoticeRoutine() {

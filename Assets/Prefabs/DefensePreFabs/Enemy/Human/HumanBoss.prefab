@@ -985,18 +985,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f417b36df4681e48a4521d737d5c364, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 30
-  moveSpeed: 10
+  health: 200
+  moveSpeed: 15
   detectionLayerMask:
     serializedVersion: 2
     m_Bits: 64
-  attackDamage: 10
-  attackSpeed: 1
+  attackDamage: 20
+  attackSpeed: 1.5
   runState: 0.25
   attackState: 1
   normalState: 0
   skillState: 0
-  boxSize: {x: 10, y: 0.1}
+  boxSize: {x: 20, y: 0.1}
   stageCount: 0
   weekCount: 0
   isRight: 0
@@ -1004,7 +1004,7 @@ MonoBehaviour:
   movementdirection: {x: 0, y: 0, z: 0}
   isKnockedBack: 0
   percent: 0
-  gold: 10
+  gold: 100
   isBoss: 0
   stageEndNotice: {fileID: 0}
 --- !u!114 &8872348519532254940

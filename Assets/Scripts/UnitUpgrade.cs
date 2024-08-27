@@ -1,7 +1,9 @@
-using System;
-using Unity.VisualScripting;
+using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
+using Button = UnityEngine.UI.Button;
+using Image = UnityEngine.UI.Image;
 
 [System.Serializable]
 public class UnitList
@@ -30,9 +32,14 @@ public class UnitUpgrade : MonoBehaviour
 
     public GameObject leftBox, rightBox, origin, upgrade, prevMage, nextMage;
     public int[] levelList = new int[4];
+
     public int classNum = 0;
+
     //0 Bow, 1 Crossbow, 2 Gun, 3 Mage
     public int mageClass = 0;
+    public GameObject[] Prefabs; // 리소스 폴더 내 유닛 프리팹
+
+    public GameObject UnitListView;
     //Mage Class Value 0 = fire, 1 = ice, 2 = lightning
 
     void Start()
@@ -51,6 +58,7 @@ public class UnitUpgrade : MonoBehaviour
         upgrade.transform.localScale = new Vector3(2.5f, 2.5f);
         origin.transform.position = leftBox.transform.position;
         upgrade.transform.position = rightBox.transform.position;
+        DisplayPrefab();
     }
 
     private void Update()
@@ -71,6 +79,27 @@ public class UnitUpgrade : MonoBehaviour
             {
                 prevMage.SetActive(false);
                 nextMage.SetActive(false);
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            SceneManager.LoadScene("InternalAffairs");
+        }
+        
+        if (Input.GetMouseButtonDown(0)) // 마우스 왼쪽 버튼 클릭
+        {
+            Vector2 localMousePosition = UnitListView.transform.Find("Viewport/Content").GetComponent<RectTransform>().InverseTransformPoint(Input.mousePosition);
+
+            foreach (Transform child in UnitListView.transform.Find("Viewport/Content"))
+            {
+                RectTransform childRect = child.GetComponent<RectTransform>();
+                if (RectTransformUtility.RectangleContainsScreenPoint(childRect, Input.mousePosition, null))
+                {
+                    // 클릭된 오브젝트의 정보를 처리합니다.
+                    ShowPrefabInfo(child.gameObject);
+                    break; // 첫 번째로 감지된 오브젝트만 처리한다면 반복문을 종료합니다.
+                }
             }
         }
     }
@@ -131,6 +160,7 @@ public class UnitUpgrade : MonoBehaviour
         classNum = (classNum + val + maxIndex + 1) % (maxIndex + 1);
         updateHero();
     }
+
     public void changeMageClass(int val)
     {
         var maxIndex = 2;
@@ -171,5 +201,80 @@ public class UnitUpgrade : MonoBehaviour
                 }
             }
         }
+    }
+
+
+    public GameObject FindPrefabByName(string unitName)
+    {
+        Prefabs = Resources.LoadAll<GameObject>("Defense/Unit");
+        foreach (GameObject prefab in Prefabs)
+        {
+            if (prefab.name == unitName)
+            {
+                return prefab;
+            }
+        }
+
+        CustomLogger.Log("일치하는 프리팹 없음", Color.yellow);
+        return null;
+    }
+
+    public void DisplayPrefab()
+    {
+        Prefabs = Resources.LoadAll<GameObject>("Defense/Unit");
+        float xOffset = 0f; // 처음 X 위치는 0으로 시작
+        if (PlayerLocalManager.Instance.lUnitList != null)
+        {
+            float spacing = 10f; // 각 프리팹 사이의 간격
+            int index = 0;
+            // Content 오브젝트의 RectTransform을 가져옵니다.
+            RectTransform contentRect = UnitListView.transform.Find("Viewport/Content").GetComponent<RectTransform>();
+
+            var unitList = PlayerLocalManager.Instance.lUnitList;
+
+            for (int i = 0; i < unitList.Count; i++)
+            {
+                var unitData = unitList[i];
+                string unitName = unitData.Key;
+                int slotIndex = i; // i가 곧 인덱스
+
+                GameObject prefabname = FindPrefabByName(unitName);
+
+                if (prefabname != null && !unitName.Equals("Default"))
+                {
+                    index++;
+                    GameObject prefabObject = Instantiate(prefabname, contentRect);
+                    RectTransform prefab = prefabObject.GetComponent<RectTransform>();
+                    prefab.localScale = new Vector3(200, 200, 1);
+
+                    Image image = prefabObject.AddComponent<Image>();
+                    image.color = new Color(1, 1, 1, 0);
+
+                    Button button = prefabObject.AddComponent<Button>();
+        
+                    // 캡처된 변수들을 명확히 전달
+                    int capturedSlotIndex = slotIndex;
+                    string capturedUnitName = unitName;
+
+                    prefab.anchoredPosition = new Vector2(xOffset, 0);
+                    CustomLogger.LogWarning($"slotIndex:{capturedSlotIndex} | unitName:{capturedUnitName} | PrefabName:{prefabObject.name}");
+                    xOffset = index * 200;
+                }
+            }
+
+            contentRect.sizeDelta = new Vector2(xOffset / 2 - 600, contentRect.sizeDelta.y);
+        }
+    }
+
+
+
+    void ShowPrefabInfo(GameObject clickedObject)
+    {
+        // 여기서 필요한 정보를 가져와 출력합니다.
+        string unitName = clickedObject.name; // 예를 들어, 이름을 가져온다.
+        CustomLogger.LogWarning($"Clicked on Prefab: {unitName}");
+        CustomLogger.LogWarning($"Pos: {clickedObject.transform.position}");
+
+        // 추가로 필요한 로직을 여기에 구현할 수 있습니다.
     }
 }

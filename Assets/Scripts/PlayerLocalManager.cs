@@ -240,6 +240,8 @@ public class PlayerLocalManager : MonoBehaviour
 
 	// 성벽 체력 데이터를 기본값으로 재설정하는 메서드
 	public void ResetHealthData() {
+		lCastleMaxHp = 10000f; // 기본값으로 재설정
+		lCastleExtraHp = 0f; // 기본값으로 재설정
 		lCastleMaxHp += lCastleExtraHp;
 		lCastleHp = lCastleMaxHp; // 기본값으로 재설정
 		CustomLogger.Log("성벽 체력 데이터가 기본값으로 재설정되었습니다.");

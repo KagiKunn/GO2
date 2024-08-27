@@ -3443,18 +3443,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f417b36df4681e48a4521d737d5c364, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 10
-  moveSpeed: 10
+  health: 4
+  moveSpeed: 14
   detectionLayerMask:
     serializedVersion: 2
     m_Bits: 64
-  attackDamage: 1
-  attackSpeed: 1
+  attackDamage: 3
+  attackSpeed: 1.5
   runState: 0.25
   attackState: 1
   normalState: 0.25
   skillState: 0
-  boxSize: {x: 60, y: 0.1}
+  boxSize: {x: 70, y: 0.1}
   stageCount: 0
   weekCount: 0
   isRight: 0
@@ -3463,12 +3463,9 @@ MonoBehaviour:
   movementdirection: {x: -1, y: 0, z: 0}
   isKnockedBack: 0
   percent: 0
-  gold: 10
+  gold: 13
   isBoss: 0
   stageEndNotice: {fileID: 0}
-  stageClearUI: {fileID: 0}
-  EnemyInfoText: {fileID: 7944156010839475692, guid: b8c560309991cb64fbecc5baa49cd477,
-    type: 3}
 --- !u!50 &5933452589616873904
 Rigidbody2D:
   serializedVersion: 4
