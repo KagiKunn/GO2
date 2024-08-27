@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Org.BouncyCastle.Cms;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
@@ -10,7 +11,7 @@ public class UnitList
 {
     [SerializeField] private string className;
     [SerializeField] private GameObject[] unitList;
-
+    
     // className의 속성
     public string ClassName
     {
@@ -28,7 +29,7 @@ public class UnitUpgrade : MonoBehaviour
 {
     [ArrayElementTitle("className")] [SerializeField]
     public UnitList[] upgradeList;
-
+    
 
     public GameObject leftBox, rightBox, origin, upgrade, prevMage, nextMage;
     public int[] levelList = new int[4];
@@ -41,9 +42,10 @@ public class UnitUpgrade : MonoBehaviour
 
     public GameObject UnitListView;
     //Mage Class Value 0 = fire, 1 = ice, 2 = lightning
-
+    public LayerMask clickableLayer;
     void Start()
     {
+        clickableLayer = LayerMask.NameToLayer("Ally");
     }
 
     void Awake()
@@ -89,18 +91,28 @@ public class UnitUpgrade : MonoBehaviour
         
         if (Input.GetMouseButtonDown(0)) // 마우스 왼쪽 버튼 클릭
         {
-            Vector2 localMousePosition = UnitListView.transform.Find("Viewport/Content").GetComponent<RectTransform>().InverseTransformPoint(Input.mousePosition);
-
-            foreach (Transform child in UnitListView.transform.Find("Viewport/Content"))
+            Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Vector2 mousePosition2D = new Vector2(mousePosition.x, mousePosition.y);
+            Collider2D collider = Physics2D.OverlapPoint(mousePosition2D); // 특정 레이어만 감지
+            if (collider != null)
             {
-                RectTransform childRect = child.GetComponent<RectTransform>();
-                if (RectTransformUtility.RectangleContainsScreenPoint(childRect, Input.mousePosition, null))
-                {
-                    // 클릭된 오브젝트의 정보를 처리합니다.
-                    ShowPrefabInfo(child.gameObject);
-                    break; // 첫 번째로 감지된 오브젝트만 처리한다면 반복문을 종료합니다.
-                }
+                GameObject clickedObject = collider.gameObject;
+                int unitIndex = clickedObject.GetComponent<UnitIndex>().unitIndex;
+                CustomLogger.Log(clickedObject.transform.parent.name+","+unitIndex);
             }
+
+            // Vector2 localMousePosition = UnitListView.transform.Find("Viewport/Content").GetComponent<RectTransform>().InverseTransformPoint(Input.mousePosition);
+            //
+            // foreach (Transform child in UnitListView.transform.Find("Viewport/Content"))
+            // {
+            //     RectTransform childRect = child.GetComponent<RectTransform>();
+            //     if (RectTransformUtility.RectangleContainsScreenPoint(childRect, Input.mousePosition, null))
+            //     {
+            //         // 클릭된 오브젝트의 정보를 처리합니다.
+            //         ShowPrefabInfo(child.gameObject);
+            //         break; // 첫 번째로 감지된 오브젝트만 처리한다면 반복문을 종료합니다.
+            //     }
+            // }
         }
     }
 
@@ -244,6 +256,7 @@ public class UnitUpgrade : MonoBehaviour
                 {
                     index++;
                     GameObject prefabObject = Instantiate(prefabname, contentRect);
+                    prefabObject.transform.GetChild(0).gameObject.AddComponent<UnitIndex>().unitIndex = i;
                     RectTransform prefab = prefabObject.GetComponent<RectTransform>();
                     prefab.localScale = new Vector3(200, 200, 1);
 
