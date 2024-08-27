@@ -92,22 +92,14 @@ public class UnitUpgrade : MonoBehaviour
                 nextMage.SetActive(false);
             }
         }
+        bool isInteractable = !(string.IsNullOrEmpty(selected) || selected.Split("_")[1].Split(":")[0].Split("-")[1] == "2");
 
-        if (selected != "")
+        if (PlayerLocalManager.Instance.lMoney < price)
         {
-            if (selected.Split("_")[1].Split(":")[0].Split("-")[1] == "2")
-            {
-                btn.interactable = false;
-            }
-            else
-            {
-                btn.interactable = true;
-            }
+            isInteractable = false;
         }
-        else
-        {
-            btn.interactable = false;
-        }
+
+        btn.interactable = isInteractable;
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -178,15 +170,6 @@ public class UnitUpgrade : MonoBehaviour
                 upgrade.transform.localScale = new Vector3(2.5f, 2.5f);
                 upgrade.transform.position = rightBox.transform.position;
             }
-        }
-
-        if (price < PlayerLocalManager.Instance.lMoney)
-        {
-            btn.interactable = false;
-        }
-        else
-        {
-            btn.interactable = true;
         }
     }
 
