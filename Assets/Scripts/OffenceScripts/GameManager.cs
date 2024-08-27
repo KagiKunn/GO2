@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-
+using InternalAffairs;
 using Unity.Cinemachine;
 
 using UnityEngine;
@@ -152,7 +152,7 @@ public class GameManager : MonoBehaviour {
 
 	public void GameWin()
 	{
-		GameObject.Find("DTO").GetComponent<NextEnemy>().isVisual = true;
+		PlayerLocalManager.Instance.lNextEnemy = true;
 		SceneManager.LoadScene("Gatcha");
 	}
 
