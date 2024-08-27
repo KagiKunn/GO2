@@ -24,6 +24,7 @@ public class PlayerLocalData
     public float CastleHealth { get; set; }
     public float CastleExtraHealth { get; set; }
     public bool GameStarted { get; set; }
+    public bool NextEnemy { get; set; }
     
     public List<KeyValuePair<string, int>> UnitList { get; set; }
     
@@ -56,11 +57,12 @@ public class PlayerLocalData
         }
         GameStarted = false;
         Locale = LocalizationSettings.SelectedLocale.Identifier.Code;
+        NextEnemy = false;
     }
 
     public PlayerLocalData(int money, int remainedPoint, int startGold, int moreEarnGold, int moreCastleHealth,
         int reduceCooldown, HeroList[] herosList, int stage, string[] stageRace, string selectedRace, float castleMaxHealth,
-        float castleHealth, float castleExtraHealth, List<KeyValuePair<string, int>> unitList, List<KeyValuePair<int, string>> allyUnitList, bool gameStarted, string locale)
+        float castleHealth, float castleExtraHealth, List<KeyValuePair<string, int>> unitList, List<KeyValuePair<int, string>> allyUnitList, bool gameStarted, string locale, bool nextEnemy)
     {
         Money = money;
         RemainedPoint = remainedPoint;
@@ -79,6 +81,7 @@ public class PlayerLocalData
         AllyUnitList = allyUnitList;
         GameStarted = gameStarted;
         Locale = locale;
+        NextEnemy = nextEnemy;
     }
 }
 

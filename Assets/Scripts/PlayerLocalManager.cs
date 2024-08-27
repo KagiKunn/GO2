@@ -30,6 +30,7 @@ public class PlayerLocalManager : MonoBehaviour
 	private KeyValuePair<string, int> dd;
 
 	private bool L_GameStarted;
+	private bool L_NextEnemy;
 	private string L_Locale;
 
 	public string lLocale
@@ -145,6 +146,11 @@ public class PlayerLocalManager : MonoBehaviour
 
 		set => L_GameStarted = value;
 	}
+	public bool lNextEnemy {
+		get => L_NextEnemy;
+
+		set => L_NextEnemy = value;
+	}
 
 	public static PlayerLocalManager Instance { get; private set; }
 
@@ -191,6 +197,7 @@ public class PlayerLocalManager : MonoBehaviour
 					lAllyUnitList = localData.AllyUnitList;
 					lGameStarted = localData.GameStarted;
 					lLocale = localData.Locale;
+					lNextEnemy = localData.NextEnemy;
 				}
 			}
 		} catch (Exception ex) {
@@ -220,6 +227,7 @@ public class PlayerLocalManager : MonoBehaviour
 		lAllyUnitList = localData.AllyUnitList;
 		lGameStarted = localData.GameStarted;
 		lLocale = localData.Locale;
+		lNextEnemy = localData.NextEnemy;
 
 		SaveLocalData(localData);
 	}
@@ -255,7 +263,7 @@ public class PlayerLocalManager : MonoBehaviour
 
 	public void Save() {
 		PlayerLocalData localData = new PlayerLocalData(lMoney, lPoint, lStartGold, lMoreEarnGold, lMoreCastleHealth,
-			lReduceCooldown, lHeroeList, lStage, lStageRace, lSelectedRace, lCastleMaxHp, lCastleHp, lCastleExtraHp, lUnitList, lAllyUnitList, lGameStarted, lLocale);
+			lReduceCooldown, lHeroeList, lStage, lStageRace, lSelectedRace, lCastleMaxHp, lCastleHp, lCastleExtraHp, lUnitList, lAllyUnitList, lGameStarted, lLocale, lNextEnemy);
 
 		SaveLocalData(localData);
 	}

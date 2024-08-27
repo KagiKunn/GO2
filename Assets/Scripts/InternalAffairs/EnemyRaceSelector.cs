@@ -12,7 +12,6 @@ namespace InternalAffairs {
 		private int randomIndex;
 		public int stageCount;
 		public int weekCount;
-
 		private void Awake() {
 			CustomLogger.Log("EnemyRaceSelector Awake()진입", Color.cyan);
 			PlayerLocalManager.Instance.UpdateStageCount();
@@ -43,11 +42,13 @@ namespace InternalAffairs {
 				SelectedRace = PlayerLocalManager.Instance.lSelectedRace;
 				PlayerLocalManager.Instance.Save();
 				CustomLogger.Log("Save데이터 상에 종족이 선택되어 있으므로 그 값을 받아옴 : " + SelectedRace, "black");
+				CustomLogger.Log(PlayerLocalManager.Instance.lNextEnemy,"yellow");
+				if (PlayerLocalManager.Instance.lNextEnemy)
+				{
+					GameObject.Find("NextEnemy").GetComponent<TextMeshProUGUI>().text = SelectedRace;
+				}
 			} 
-			if (GameObject.Find("NextEnemy").GetComponent<NextEnemy>().isVisual)
-			{
-				GameObject.Find("NextEnemy").GetComponent<TextMeshProUGUI>().text = SelectedRace;
-			}
+			
 		}
 
 		private void SelectAndSaveRace() {
