@@ -286,6 +286,7 @@ public class UnitUpgrade : MonoBehaviour
         }
         else
         {
+            mageClass = 0;
             classNum = 0;
         }
 
