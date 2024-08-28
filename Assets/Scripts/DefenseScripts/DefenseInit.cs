@@ -73,11 +73,11 @@ public class DefenseInit : MonoBehaviour {
 	private void Awake() {
 		EarnGoldSetup();
 
-        CastleHealthSetup();
-        currentGold = PlayerLocalManager.Instance.lMoney;
-        soul = PlayerLocalManager.Instance.lPoint;
-        PlayerLocalManager.Instance.Save();
-    }
+		CastleHealthSetup();
+		currentGold = PlayerLocalManager.Instance.lMoney;
+		soul = PlayerLocalManager.Instance.lPoint;
+		PlayerLocalManager.Instance.Save();
+	}
 
 	private void Start() {
 		audioSource = gameObject.AddComponent<AudioSource>();
@@ -118,18 +118,18 @@ public class DefenseInit : MonoBehaviour {
 		}
 	}
 
-    void CastleHealthSetup()
-    {
-        int castleExtraHp = castleHealth switch
-        {
-            1 => 500,
-            2 => 1000,
-            3 => 1500,
-            4 => 2000,
-            _ => 0
-        };
-        PlayerLocalManager.Instance.lCastleExtraHp = castleExtraHp;
-    }
+	void CastleHealthSetup() {
+		int castleExtraHp = castleHealth switch {
+			1 => 500,
+			2 => 1000,
+			3 => 1500,
+			4 => 2000,
+			_ => 0
+		};
+
+		PlayerLocalManager.Instance.lCastleExtraHp = castleExtraHp;
+	}
+
 	void CoolDownSetup() {
 		switch (cooldown) {
 			case 1:
