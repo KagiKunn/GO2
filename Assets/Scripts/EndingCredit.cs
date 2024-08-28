@@ -74,9 +74,9 @@ public class EndingCredit : MonoBehaviour
 
         Debug.Log($"Current Position: {rectTransform.anchoredPosition.y}");
 
-        if (rectTransform.anchoredPosition.y >= 2000f)
+        if (rectTransform.anchoredPosition.y >= 5000f)
         {
-            Debug.Log("Position reached 2000, loading Title scene.");
+            Debug.Log("Position reached 3500f, loading Title scene.");
             SceneManager.LoadScene("Title");
         }
 
