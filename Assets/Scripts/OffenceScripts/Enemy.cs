@@ -92,9 +92,13 @@ public class Enemy : MonoBehaviour {
 	}
 
 	public void Initialized(SpawnData spawnData) {
-		speed = spawnData.Speed;
-		maxHealth = spawnData.Health;
-		health = spawnData.Health;
+		speed = spawnData.Speed + ((PlayerLocalManager.Instance.lStage - 1) * 0.1f);
+		maxHealth = spawnData.Health + ((PlayerLocalManager.Instance.lStage - 1) * 5);
+		health = maxHealth;
+
+		CustomLogger.Log(speed);
+		CustomLogger.Log(maxHealth);
+		CustomLogger.Log(health);
 	}
 
 	private void OnTriggerEnter2D(Collider2D other) {
