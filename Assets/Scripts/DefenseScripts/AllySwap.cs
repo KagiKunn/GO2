@@ -35,65 +35,63 @@ public class AllySwap : MonoBehaviour {
 	}
 
 	void Update() {
-		// 게임이 일시 정지된 상태인지 확인
-		if (StageC.Instance != null && StageC.Instance.isGamePaused) {
-			return; // 게임이 일시 정지된 상태에서는 클릭을 무시함
-		}
+    // 게임이 일시 정지된 상태인지 확인
+	    if (StageC.Instance != null && StageC.Instance.isGamePaused) {
+	        return; // 게임이 일시 정지된 상태에서는 클릭을 무시함
+	    }
 
-		if (Input.GetMouseButtonDown(0) && !isMoving) // 마우스 왼쪽 버튼 클릭 확인 및 이동 중인지 확인
-		{
-			Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-			Vector2 mousePosition2D = new Vector2(mousePosition.x, mousePosition.y);
+	    if (Input.GetMouseButtonDown(0) && !isMoving) // 마우스 왼쪽 버튼 클릭 확인 및 이동 중인지 확인
+	    {
+	        Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+	        Vector2 mousePosition2D = new Vector2(mousePosition.x, mousePosition.y);
 
-			Collider2D collider = Physics2D.OverlapPoint(mousePosition2D, clickableLayer); // 특정 레이어만 감지
+	        Collider2D collider = Physics2D.OverlapPoint(mousePosition2D, clickableLayer); // 특정 레이어만 감지
 
-			if (collider != null) {
-				GameObject clickedObject = collider.gameObject;
+	        if (collider != null) {
+	            GameObject clickedObject = collider.gameObject;
 
-				if (unit1 == null) {
-					unit1 = clickedObject;
-					if (unit1 != null) {
-						targetPosition2 = unit1.transform.position;
-						animator1 = unit1.GetComponent<Animator>();
-						allyScan1 = unit1.GetComponent<AllyScan>();
-						playerObjCircle1.SetActive(true);
-						playerObjCircle1.transform.position = unit1.transform.position;
-					}
-				} else if (unit2 == null) {
-					unit2 = clickedObject;
+	            if (unit1 == null && unit2 == null) {
+	                unit1 = clickedObject;
+	                if (unit1 != null) {
+	                    targetPosition2 = unit1.transform.position;
+	                    animator1 = unit1.GetComponent<Animator>();
+	                    allyScan1 = unit1.GetComponent<AllyScan>();
+	                    playerObjCircle1.SetActive(true);
+	                    playerObjCircle1.transform.position = unit1.transform.position;
+	                }
+	            } else if (unit2 == null) {
+	                unit2 = clickedObject;
 
-					if (unit2 == unit1)
-					{
-						MoveDone();
-					}
-					if (unit1.transform.parent.name == "Default(Clone)" && unit2.transform.parent.name == "Default(Clone)")
-					{
-						MoveDone();
-					}
-					if (unit2 != null) {
-						playerObjCircle2.SetActive(true);
-						playerObjCircle2.transform.position = unit2.transform.position;
-						targetPosition1 = unit2.transform.position;
-						animator2 = unit2.GetComponent<Animator>();
-						allyScan2 = unit2.GetComponent<AllyScan>();
-						isMoving = true; // 이동 시작
+	                if (unit2 == unit1) {
+	                    MoveDone();
+	                } else if (unit1.transform.parent.name == "Default(Clone)" && unit2.transform.parent.name == "Default(Clone)") {
+	                    MoveDone();
+	                } else if (unit2 != null) {
+	                    playerObjCircle2.SetActive(true);
+	                    playerObjCircle2.transform.position = unit2.transform.position;
+	                    targetPosition1 = unit2.transform.position;
+	                    animator2 = unit2.GetComponent<Animator>();
+	                    allyScan2 = unit2.GetComponent<AllyScan>();
+	                    isMoving = true; // 이동 시작
 
-						// 이동 시작 애니메이션 트리거
-						animator1.SetTrigger("Run");
-						animator2.SetTrigger("Run");
+	                    // 이동 시작 애니메이션 트리거
+	                    animator1.SetTrigger("Run");
+	                    animator2.SetTrigger("Run");
 
-						// AllyScan 스크립트 비활성화
-						if (allyScan1 != null) allyScan1.enabled = false;
-						if (allyScan2 != null) allyScan2.enabled = false;
-					}
-				}
-			} else {
-				CustomLogger.LogWarning("No object clicked");
-			}
-		}
-		if (isMoving) {
-			MoveUnits();
-		}
+	                    // AllyScan 스크립트 비활성화
+	                    if (allyScan1 != null) allyScan1.enabled = false;
+	                    if (allyScan2 != null) allyScan2.enabled = false;
+	                }
+	            }
+	        } else {
+	            CustomLogger.LogWarning("No object clicked");
+	            MoveDone();
+	        }
+	    }
+
+	    if (isMoving) {
+	        MoveUnits();
+	    }
 	}
 
 	void MoveUnits() {
@@ -120,8 +118,7 @@ public class AllySwap : MonoBehaviour {
 		}
 	}
 
-	void MoveDone()
-	{
+	void MoveDone() {
 		playerObjCircle1.SetActive(false);
 		playerObjCircle2.SetActive(false);
 		unit1 = null;
