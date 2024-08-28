@@ -114,6 +114,7 @@ public class UnitShopInit : MonoBehaviour
         int price = UnitPrice();
         if (PlayerLocalManager.Instance.lMoney < price)
         {
+            popup.ShowPopup("Need More Money!");
             CustomLogger.Log("Need More Money!", "red");
             return;
         }
