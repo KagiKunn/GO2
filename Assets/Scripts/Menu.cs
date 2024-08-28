@@ -56,18 +56,13 @@ public class Menu : MonoBehaviour
         {
             Time.timeScale = 1;
             StageC.Instance.isGamePaused = false;
-            SettingManager.Instance.SetMainCamera();
-            SettingManager.Instance.gameObject.SetActive(false);
             SetButtonInteractable(speedButton, true);
             SetButtonInteractable(giveupButton, true);
         }
         else
         {
-            Time.timeScale = 0.1f;
+            Time.timeScale = 0;
             StageC.Instance.isGamePaused = true;
-            SettingManager.Instance.SetMainCamera();
-            SettingManager.Instance.gameObject.SetActive(true);
-            SettingManager.Instance.LoadText();
             SetButtonInteractable(speedButton, false);
             SetButtonInteractable(giveupButton, false);
             

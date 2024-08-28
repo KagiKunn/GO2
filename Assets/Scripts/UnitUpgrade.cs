@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Org.BouncyCastle.Cms;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
@@ -92,7 +93,9 @@ public class UnitUpgrade : MonoBehaviour
                 nextMage.SetActive(false);
             }
         }
-        bool isInteractable = !(string.IsNullOrEmpty(selected) || selected.Split("_")[1].Split(":")[0].Split("-")[1] == "2");
+
+        bool isInteractable = !(string.IsNullOrEmpty(selected) ||
+                                Int32.Parse(selected.Split("_")[1].Split(":")[0].Split("-")[1]) >= 2);
 
         if (PlayerLocalManager.Instance.lMoney < price)
         {
@@ -126,6 +129,20 @@ public class UnitUpgrade : MonoBehaviour
                 levelList[classNum] = FindPrefabClassUpNum(clickedObject.transform.parent.name.Split("_")[1]);
                 selected =
                     $"{unitIndex}_{classNum}-{levelList[classNum]}:{clickedObject.transform.parent.name.Split("_")[1]}";
+                if (clickedObject.transform.parent.name.Split("_")[1].Contains("Ice"))
+                {
+                    mageClass = 1;
+                }
+                else if (clickedObject.transform.parent.name.Split("_")[1].Contains("Lightning"))
+                {
+                    mageClass = 2;
+                }
+                else
+                {
+                    mageClass = 0;
+                }
+
+                CustomLogger.LogWarning(selected);
                 updateHero();
             }
         }
@@ -148,9 +165,10 @@ public class UnitUpgrade : MonoBehaviour
                 priceTxt.text = "MAX";
                 break;
         }
+
         Destroy(origin);
         Destroy(upgrade);
-        origin = Instantiate(upgradeList[classNum].UnitListArray[levelList[classNum]]);
+        origin = Instantiate(upgradeList[classNum].UnitListArray[levelList[classNum]+mageClass]);
         origin.transform.localScale = new Vector3(2.5f, 2.5f);
         origin.transform.position = leftBox.transform.position;
         if (classNum != 3)
@@ -199,6 +217,7 @@ public class UnitUpgrade : MonoBehaviour
         //0 Bow, 1 Crossbow, 2 Gun, 3 Mage
         //Mage Class Value 0 = fire, 1 = ice, 2 = lightning
         levelList[classNum] += increment;
+
         string newUnitName = upgradeList[classNum].UnitListArray[levelList[classNum]].name;
         int selectedIdx = Convert.ToInt32(selected.Split("_")[0]);
         var newKeyValuePair = new KeyValuePair<string, int>(newUnitName, selectedIdx);
@@ -206,6 +225,8 @@ public class UnitUpgrade : MonoBehaviour
         PlayerLocalManager.Instance.lMoney -= price;
         PlayerLocalManager.Instance.Save();
         Transform content = UnitListView.transform.Find("Viewport/Content");
+        selected =
+            $"{selectedIdx}_{classNum}-{levelList[classNum]}:{newUnitName}";
         foreach (Transform child in content)
         {
             Destroy(child.gameObject);
@@ -245,6 +266,7 @@ public class UnitUpgrade : MonoBehaviour
                 return prefab;
             }
         }
+
         return null;
     }
 

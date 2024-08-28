@@ -2,7 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+
 using InternalAffairs;
+
 using Unity.Cinemachine;
 
 using UnityEngine;
@@ -150,9 +152,9 @@ public class GameManager : MonoBehaviour {
 		SceneManager.LoadScene("InternalAffairs");
 	}
 
-	public void GameWin()
-	{
+	public void GameWin() {
 		PlayerLocalManager.Instance.lNextEnemy = true;
+
 		Time.timeScale = 1;
 		SceneManager.LoadScene("Gatcha");
 	}
@@ -172,7 +174,7 @@ public class GameManager : MonoBehaviour {
 
 		if (gameTime > maxGameTime) {
 			gameTime = maxGameTime;
-			
+
 			GameVictory();
 		}
 	}

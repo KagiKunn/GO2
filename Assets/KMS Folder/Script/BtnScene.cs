@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 
 using TMPro;
+
 using Unity.VisualScripting;
+
 using UnityEngine;
 using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.Localization;
@@ -12,6 +14,7 @@ public class BtnScene : MonoBehaviour {
 	public GameObject defensePopupPrefab; // 팝업 프리팹을 연결할 수 있도록 public 변수로 선언
 	public GameObject offencePopupPrefab;
 	private bool unitSet = false;
+
 	public void heroSceneChange() {
 		SceneManager.LoadScene("HeroManagement");
 		CustomLogger.Log("Change HeroManagementScene successfuly!");
@@ -24,20 +27,21 @@ public class BtnScene : MonoBehaviour {
 
 	public void DefenseSceneChange() {
 		if (GameObject.FindWithTag("Popup") != null) return;
-		
+
 		List<KeyValuePair<int, string>> allylist = PlayerLocalManager.Instance.lAllyUnitList;
-		foreach (KeyValuePair<int,string> ally in allylist)
-		{
-			if (ally.Value != "Default")
-			{
+
+		foreach (KeyValuePair<int, string> ally in allylist) {
+			if (ally.Value != "Default") {
 				unitSet = true;
+
 				break;
 			}
 		}
-		CustomLogger.Log(unitSet,"red");		
+
+		CustomLogger.Log(unitSet, "red");
 		// 팝업을 생성하고, 팝업 UI에 접근
 		GameObject popup = Instantiate(defensePopupPrefab);
-		
+
 		popup.tag = "Popup";
 
 		// PopupBackground 패널 하위의 ConfirmButton 찾기
@@ -47,7 +51,7 @@ public class BtnScene : MonoBehaviour {
 		// PopupBackground 패널 하위의 CancelButton 찾기
 		Transform cancelButtonTransform = popup.transform.Find("PopupBackground/CancelButton");
 		Button cancelButton = cancelButtonTransform.GetComponent<Button>();
-		
+
 		// PopupBackground 패널 하위의 DefensePrefab 찾기
 		Transform defensePopupTextTransform = popup.transform.Find("PopupBackground/DefensePopupText");
 
@@ -57,11 +61,9 @@ public class BtnScene : MonoBehaviour {
 		Transform noUnitButtonTransform = popup.transform.Find("PopupBackground/NoUnitButton");
 		Button noUnitButton = noUnitButtonTransform.GetComponent<Button>();
 
-		if (unitSet)
-		{
+		if (unitSet) {
 			// 확인 버튼 클릭 이벤트 등록
-			confirmButton.onClick.AddListener(() =>
-			{
+			confirmButton.onClick.AddListener(() => {
 				CustomLogger.Log("Confirm button clicked!");
 				SceneManager.LoadScene("Defense");
 				CustomLogger.Log("Change Defense successfuly!");
@@ -69,17 +71,15 @@ public class BtnScene : MonoBehaviour {
 			});
 
 			// 취소 버튼 클릭 시 팝업을 닫기
-			cancelButton.onClick.AddListener(() =>
-			{
+			cancelButton.onClick.AddListener(() => {
 				CustomLogger.Log("Cancel button clicked!");
 				Destroy(popup);
 			});
-		}
-		else {
-			
+		} else {
 			LocalizedString localizedString = new LocalizedString
 				{ TableReference = "UI", TableEntryReference = "ChooseUnit" };
-			localizedString.StringChanged  += (localizedText) => {
+
+			localizedString.StringChanged += (localizedText) => {
 				defensePopupText.text = $"{localizedText}";
 			};
 
@@ -129,6 +129,20 @@ public class BtnScene : MonoBehaviour {
 		Transform noHeroButtonTransform = popup.transform.Find("PopupBackground/NoHeroButton");
 		Button noHeroButton = noHeroButtonTransform.GetComponent<Button>();
 
+		if (PlayerLocalManager.Instance.lNextEnemy) {
+			offencePopupText.text = "이미 클리어 하셨습니다.";
+
+			confirmButtonTransform.gameObject.SetActive(false);
+			cancelButtonTransform.gameObject.SetActive(false);
+			noHeroButtonTransform.gameObject.SetActive(true);
+
+			noHeroButton.onClick.AddListener(() => {
+				Destroy(popup);
+			});
+
+			return;
+		}
+
 		if (cnt == 3) {
 			// 확인 버튼 클릭 이벤트 등록
 			confirmButton.onClick.AddListener(() => {
@@ -152,10 +166,10 @@ public class BtnScene : MonoBehaviour {
 				Destroy(popup);
 			});
 		} else {
-			
 			LocalizedString localizedString = new LocalizedString
 				{ TableReference = "UI", TableEntryReference = "Choose3" };
-			localizedString.StringChanged  += (localizedText) => {
+
+			localizedString.StringChanged += (localizedText) => {
 				offencePopupText.text = $"{localizedText}";
 			};
 
@@ -173,6 +187,7 @@ public class BtnScene : MonoBehaviour {
 		SceneManager.LoadScene("UnitShop");
 		CustomLogger.Log("Change UnitShop successfuly!");
 	}
+
 	public void UnitManageSceneChange() {
 		SceneManager.LoadScene("UnitManagement");
 		CustomLogger.Log("Change UnitManagement successfuly!");

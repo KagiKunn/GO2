@@ -58,14 +58,14 @@ public class EnemyMovement : MonoBehaviour {
 		if (SceneManager.GetActiveScene().name != "Defense") return;
 
 		stageCount = PlayerLocalManager.Instance.lStage;
-		CustomLogger.Log("무브먼트의 스테이지 카운트:" + stageCount, "black");
+		CustomLogger.Log("무브먼트의 스테이지 카운트:" + stageCount, Color.cyan);
 
 		// 기본 체력 값
 		float baseHealth = health;
 		// 20%씩 체력 증가 
 		float plusHealth = (baseHealth * 0.2f * (stageCount));
 		health = baseHealth + plusHealth;
-		CustomLogger.Log("무브먼트의 증가된 plushealth값 :" + plusHealth, "black");
+		CustomLogger.Log("무브먼트의 증가된 plushealth값 :" + plusHealth, Color.cyan);
 
 		// HorseRoot 오브젝트 찾기
 		Transform horseRootTransform = transform.Find("HorseRoot");
@@ -184,9 +184,11 @@ public class EnemyMovement : MonoBehaviour {
 		if (!isChangingBrightness && deadJudge) {
 			StartCoroutine(ChangeBrightnessTemporarily(0.1f, 0.6f)); // 예: 명도를 50%로 줄임
 		}
-		CustomLogger.Log(deadJudge,"red");
+
+		CustomLogger.Log(deadJudge, "red");
+
 		if (health <= 0 && deadJudge) {
-			CustomLogger.Log("애니메이션 활성화","red");
+			CustomLogger.Log("애니메이션 활성화", "red");
 			movementdirection = Vector3.zero;
 			rigid2d.velocity = movementdirection * (moveSpeed * Time.timeScale);
 			animator.SetTrigger("Die");
@@ -267,7 +269,8 @@ public class EnemyMovement : MonoBehaviour {
 
 	private void Die() {
 		// 적이 죽었을 때의 동작 (예: 오브젝트 비활성화)
-		CustomLogger.Log("Die콜됨","red");
+		CustomLogger.Log("Die콜됨", "red");
+
 		if (SceneManager.GetActiveScene().name == "Defense") {
 			if (GameObject.Find("InitSetting").GetComponent<DefenseInit>() == null)
 				CustomLogger.Log("dead");

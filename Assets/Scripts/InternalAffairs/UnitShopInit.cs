@@ -11,21 +11,32 @@ public class UnitShopInit : MonoBehaviour
     public GameObject[] units;
     public SimplePopup popup;
     public LocalizedString saveString;
-    
+
     private int unitIndex = 0;
 
     private List<KeyValuePair<string, int>> boughtUnit;
+
     private void Awake()
     {
         boughtUnit = PlayerLocalManager.Instance.lUnitList ?? new List<KeyValuePair<string, int>>();
-        GameObject prefabObject = Instantiate(units[unitIndex],transform.position,quaternion.identity,transform);
+        GameObject prefabObject = Instantiate(units[unitIndex], transform.position, quaternion.identity, transform);
         RectTransform newObjectRect = prefabObject.GetComponent<RectTransform>();
 
         newObjectRect.localScale = new Vector3(200, 200, 1);
-        newObjectRect.anchoredPosition = new Vector2(0,-50);
-        GameObject.Find("RealPrice").GetComponent<TextMeshProUGUI>().text = UnitPrice().ToString();
-        GameObject.Find("Name").GetComponent<TextMeshProUGUI>().text = UnitName();
-        GameObject.Find("Description").GetComponent<TextMeshProUGUI>().text = Info();
+        newObjectRect.anchoredPosition = new Vector2(0, -50);
+        GameObject.Find("RealPrice").GetComponent<TextMeshProUGUI>().text = $"{UnitPrice().ToString()}G";
+        LocalizedString localizedString = new LocalizedString
+            { TableReference = "UI", TableEntryReference = $"{UnitName()}" };
+        localizedString.StringChanged += (localizedText) =>
+        {
+            GameObject.Find("Name").GetComponent<TextMeshProUGUI>().text = $"{localizedText}";
+        };
+        localizedString = new LocalizedString
+            { TableReference = "UI", TableEntryReference = $"{UnitName()}Desc" };
+        localizedString.StringChanged += (localizedText) =>
+        {
+            GameObject.Find("Description").GetComponent<TextMeshProUGUI>().text = $"{localizedText}";
+        };
     }
 
     private void Start()
@@ -46,26 +57,29 @@ public class UnitShopInit : MonoBehaviour
         };
         return info;
     }
+
     public void Back()
     {
         SceneManager.LoadScene("InternalAffairs");
     }
+
     public void NextUnitButton()
     {
         unitIndex++;
-        if (unitIndex > units.Length-1)
+        if (unitIndex > units.Length - 1)
         {
             unitIndex = 0;
         }
 
         OtherUnit();
     }
+
     public void PrevUnitButton()
     {
         unitIndex--;
         if (unitIndex < 0)
         {
-            unitIndex = units.Length-1;
+            unitIndex = units.Length - 1;
         }
 
         OtherUnit();
@@ -74,14 +88,26 @@ public class UnitShopInit : MonoBehaviour
     private void OtherUnit()
     {
         Destroy(transform.GetChild(0).gameObject);
-        GameObject prefabObject = Instantiate(units[unitIndex],transform.position,quaternion.identity,transform);
+        GameObject prefabObject = Instantiate(units[unitIndex], transform.position, quaternion.identity, transform);
         RectTransform newObjectRect = prefabObject.GetComponent<RectTransform>();
 
         newObjectRect.localScale = new Vector3(200, 200, 1);
-        newObjectRect.anchoredPosition = new Vector2(0,-50);
-        GameObject.Find("Name").GetComponent<TextMeshProUGUI>().text = UnitName();
-        GameObject.Find("RealPrice").GetComponent<TextMeshProUGUI>().text = UnitPrice().ToString();
-        GameObject.Find("Description").GetComponent<TextMeshProUGUI>().text = Info();
+        newObjectRect.anchoredPosition = new Vector2(0, -50);
+        GameObject.Find("RealPrice").GetComponent<TextMeshProUGUI>().text = $"{UnitPrice().ToString()}G";
+
+        LocalizedString localizedString = new LocalizedString
+            { TableReference = "UI", TableEntryReference = $"{UnitName()}" };
+        localizedString.StringChanged += (localizedText) =>
+        {
+            GameObject.Find("Name").GetComponent<TextMeshProUGUI>().text = $"{localizedText}";
+        };
+
+        localizedString = new LocalizedString
+            { TableReference = "UI", TableEntryReference = $"{UnitName()}Desc" };
+        localizedString.StringChanged += (localizedText) =>
+        {
+            GameObject.Find("Description").GetComponent<TextMeshProUGUI>().text = $"{localizedText}";
+        };
     }
 
     private int UnitPrice()
@@ -101,19 +127,21 @@ public class UnitShopInit : MonoBehaviour
     {
         string unit = unitIndex switch
         {
-            0 => "Bow",
-            1 => "Crossbow",
-            2 => "Gun",
+            0 => "Bowman",
+            1 => "Crossbowman",
+            2 => "Artillery",
             3 => "Mage",
             _ => "err"
         };
         return unit;
     }
+
     public void BuyUnit()
     {
         int price = UnitPrice();
         if (PlayerLocalManager.Instance.lMoney < price)
         {
+            popup.ShowPopup("Need More Money!");
             CustomLogger.Log("Need More Money!", "red");
             return;
         }
