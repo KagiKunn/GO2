@@ -53,9 +53,9 @@ public class Reposition : MonoBehaviour {
 				diffX = Mathf.Abs(diffX);
 				diffY = Mathf.Abs(diffY);
 
-				if (diffX > diffY) transform.Translate(Vector3.right * directionX * 40);
-				else if (diffX < diffY) transform.Translate(Vector3.up * directionY * 40);
-				else transform.Translate(directionX * 40, directionY * 40, 0);
+				if (diffX > diffY) transform.Translate(Vector3.right * directionX * 80);
+				else if (diffX < diffY) transform.Translate(Vector3.up * directionY * 80);
+				else transform.Translate(directionX * 80, directionY * 80, 0);
 
 				break;
 			case "Enemy":
