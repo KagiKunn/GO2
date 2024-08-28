@@ -22,6 +22,9 @@ public class Hand : MonoBehaviour {
 
 		playerSprite = GetComponentsInParent<SpriteRenderer>()[1];
 		player = gameManager.Player[gameManager.PlayerId];
+		
+		CustomLogger.Log(playerSprite.name);
+		CustomLogger.Log(player.gameObject.name);
 	}
 
 	private void Update() {
@@ -29,6 +32,9 @@ public class Hand : MonoBehaviour {
 
 		playerSprite = GetComponentsInParent<SpriteRenderer>()[1];
 		player = gameManager.Player[gameManager.PlayerId];
+		
+		CustomLogger.Log(playerSprite.name);
+		CustomLogger.Log(player.gameObject.name);
 	}
 
 	private void LateUpdate() {
