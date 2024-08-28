@@ -121,8 +121,8 @@ public class Weapon : MonoBehaviour {
 			return;
 		}
 
-		hand.SpriteRenderer.sprite = itemData.Hand;
-		hand.gameObject.SetActive(true);
+		// hand.SpriteRenderer.sprite = itemData.Hand;
+		// hand.gameObject.SetActive(true);
 
 		player.BroadcastMessage("ApplyGear", SendMessageOptions.DontRequireReceiver);
 	}
