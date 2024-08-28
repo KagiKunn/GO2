@@ -8,6 +8,12 @@ public class SceneControl : MonoBehaviour
     private bool isClick;
     private int count;
 
+    private void Awake()
+    {
+        Time.timeScale = 1f;
+        CustomLogger.Log(Time.time,"red");
+    }
+
     public void LoadScene(string SceneName)
     {
         SceneManager.LoadScene(SceneName);
