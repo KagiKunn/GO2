@@ -78,6 +78,7 @@ public class EnemySpawner : MonoBehaviour
     public float displayTime = 4.0f; // 이미지가 표시될 시간(초)
     private float blinkDuration = 4.0f; // 깜빡임이 지속될 시간(초)
     private float blinkInterval = 0.3f; // 깜빡임 간격(초)
+    private Sprite raceImage;
 
     public void SetSelectedRace(string race)
     {
@@ -85,37 +86,39 @@ public class EnemySpawner : MonoBehaviour
         CustomLogger.Log("에너미 스포너의 SetSelectedRace : " + selectedRace, "pink");
     }
 
-    private void Start()
+     private void Awake()
     {
-        CustomLogger.Log("EnemySpawner Start()진입", "pink");
-        stageCount = PlayerLocalManager.Instance.L_Stage;
-        CustomLogger.Log("스포너에서 받은 stageCount값:" + stageCount, "black");
-        bossImage.SetActive(false);
-
         // 종족별 이미지를 초기화
-        raceImages = new Dictionary<string, Sprite>
+        raceImage = selectedRace switch
         {
-            { "Human", Resources.Load<Sprite>("Image/Invasion_Human") },
-            { "DarkElf", Resources.Load<Sprite>("Image/Invasion_DarkElf") },
-            { "Orc", Resources.Load<Sprite>("Image/Invasion_Orc") },
-            { "Witch", Resources.Load<Sprite>("Image/Invasion_Witch") },
-            { "Skeleton", Resources.Load<Sprite>("Image/Invasion_Skeleton") }
+            "Human" => Resources.Load<Sprite>("Image/Invasion_Human"),
+            "DarkElf" => Resources.Load<Sprite>("Image/Invasion_DarkElf"),
+            "Orc" => Resources.Load<Sprite>("Image/Invasion_Orc"),
+            "Witch" => Resources.Load<Sprite>("Image/Invasion_Witch"),
+            "Skeleton" => Resources.Load<Sprite>("Image/Invasion_Skeleton"),
+            _ => Resources.Load<Sprite>("Image/Invasion_Human")
         };
         
-
-        //스테이지 수에 따른 웨이브당 스폰 숫자 증가 제어하는 부분
-        numberOfObjects += (2 * stageCount);
-        CustomLogger.Log("StageCount를 받아와서 스폰할 숫자 재설정 결과 : " + numberOfObjects, "pink");
-
-        // EnemyPrefabList 참조 가져오기
+        // EnemyPrefabList 초기화
         enemyPrefabList = FindObjectOfType<EnemyPrefabList>();
 
         if (enemyPrefabList == null)
         {
             Debug.LogError("EnemyPrefabList를 찾을 수 없습니다!");
-
             return;
         }
+    }
+
+    private void Start()
+    {
+        CustomLogger.Log("EnemySpawner Start() 진입", "pink");
+        stageCount = PlayerLocalManager.Instance.L_Stage;
+        CustomLogger.Log("스포너에서 받은 stageCount값:" + stageCount, "black");
+        bossImage.SetActive(false);
+
+        // 스테이지 수에 따른 웨이브당 스폰 숫자 증가 제어하는 부분
+        numberOfObjects += (2 * stageCount);
+        CustomLogger.Log("StageCount를 받아와서 스폰할 숫자 재설정 결과 : " + numberOfObjects, "pink");
 
         // 선택된 종족의 적 프리팹 배열 가져오기
         var enemyPrefabsArray = enemyPrefabList.GetEnemyPrefabs(selectedRace);
@@ -132,7 +135,6 @@ public class EnemySpawner : MonoBehaviour
         else
         {
             Debug.LogError("EnemyPrefabList에서 프리팹을 찾을 수 없습니다!");
-
             return;
         }
 
@@ -146,12 +148,10 @@ public class EnemySpawner : MonoBehaviour
             progressBar.SetValue(0);
         }
 
-        CustomLogger.Log("SpawnWaves() 시작", "pink");
-       
         // 선택된 종족의 이미지 표시
-        if (raceImages.ContainsKey(selectedRace))
+        if (raceImage!=null)
         {
-            raceImageRenderer.sprite = raceImages[selectedRace];
+            raceImageRenderer.sprite = raceImage;
             StartCoroutine(DisplayRaceImageAndStartWaves());
         }
         else
@@ -160,6 +160,16 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
+    private IEnumerator DisplayRaceImageAndStartWaves()
+    {
+        raceImageObject.SetActive(true); // 이미지 오브젝트 활성화
+        yield return new WaitForSeconds(3f); // 3초 동안 대기
+        raceImageObject.SetActive(false); // 이미지 오브젝트 비활성화
+
+        // 적 스폰 코루틴 시작
+        StartCoroutine(SpawnWaves());
+    }
+    
     private void Update()
     {
         if (CheckBossSpawn())
@@ -170,13 +180,11 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
-    private IEnumerator DisplayRaceImageAndStartWaves()
+    private IEnumerator DisplayRaceImage()
     {
         raceImageObject.SetActive(true); // 이미지 오브젝트 활성화
         yield return new WaitForSeconds(3f); // 3초 동안 대기
         raceImageObject.SetActive(false); // 이미지 오브젝트 비활성화
-        
-        StartCoroutine(SpawnWaves());
     }
 
     private IEnumerator DisplayBossImageAndSpawn()
@@ -199,6 +207,7 @@ public class EnemySpawner : MonoBehaviour
 
     IEnumerator SpawnWaves()
     {
+        waveImageObject.SetActive(true);
         CustomLogger.Log("SpawnWaves()입갤 ㅋ");
 
         if (currentWave == 0)
