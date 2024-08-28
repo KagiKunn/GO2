@@ -254,11 +254,11 @@ public class UnitUpgrade : MonoBehaviour
         //0 Bow, 1 Crossbow, 2 Gun, 3 Mage
         if (unitName.Contains("Cross"))
         {
-            classNum = 0;
+            classNum = 1;
         }
         else if (unitName.Contains("Bow"))
         {
-            classNum = 1;
+            classNum = 0;
         }
         else if (unitName.Contains("Gun"))
         {
@@ -280,7 +280,7 @@ public class UnitUpgrade : MonoBehaviour
         {
             classNum = 2;
         }
-        else if (unitName.Contains("Master"))
+        else if (unitName.Contains("Master") || unitName.Contains("Arc"))
         {
             classNum = 1;
         }
