@@ -36,7 +36,7 @@ public abstract class HeroSkill : MonoBehaviour
     {
         CustomLogger.Log("스킬 발동!!!!!!");
         // 이미지 오브젝트 생성 및 위치 설정
-        originTime = Time.timeScale;
+        originTime = 1f;
         StartCoroutine(CreateSkillImage());
     }
 
@@ -94,7 +94,7 @@ public abstract class HeroSkill : MonoBehaviour
                 rectTransform.anchoredPosition = new Vector2(outsideRightPositionX, 0);
 
                 // 시간을 멈추기
-                Time.timeScale = 0.5f;
+                Time.timeScale = 1f;
                 PlaySound();
                 // 왼쪽으로 이동 시작
                 yield return StartCoroutine(MoveAndPauseImage(skillImage));
