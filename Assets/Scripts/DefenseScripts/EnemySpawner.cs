@@ -2,12 +2,20 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 #pragma warning disable CS0618 // 형식 또는 멤버는 사용되지 않습니다.
 
 public class EnemySpawner : MonoBehaviour
 {
+    // 종족별 이미지 저장
+    public Dictionary<string, Sprite> raceImages;
+
+    // 이미지 표시할 UI 오브젝트
+    public GameObject raceImageObject;
+    public Image raceImageRenderer;
+    
     // EnemyPrefabList 스크립트 참조
     private EnemyPrefabList enemyPrefabList;
 
@@ -79,6 +87,28 @@ public class EnemySpawner : MonoBehaviour
         CustomLogger.Log("스포너에서 받은 stageCount값:" + stageCount, "black");
         bossImage.SetActive(false);
         
+        // 종족별 이미지를 초기화
+        raceImages = new Dictionary<string, Sprite>
+        {
+            { "Human", Resources.Load<Sprite>("Image/Invasion_Human") },
+            { "DarkElf", Resources.Load<Sprite>("Image/Invasion_DarkElf") },
+            { "Orc", Resources.Load<Sprite>("Image/Invasion_Orc") },
+            { "Witch", Resources.Load<Sprite>("Image/Invasion_Witch") },
+            { "Skeleton", Resources.Load<Sprite>("Image/Invasion_Skeleton") }
+        };
+
+        // 선택된 종족의 이미지 표시
+        if (raceImages.ContainsKey(selectedRace))
+        {
+            raceImageRenderer.sprite = raceImages[selectedRace];
+            StartCoroutine(DisplayRaceImage());
+        }
+        else
+        {
+            Debug.LogError("선택된 종족에 해당하는 이미지가 없습니다.");
+        }
+        
+        
         //스테이지 수에 따른 웨이브당 스폰 숫자 증가 제어하는 부분
         numberOfObjects += (2*stageCount);
         CustomLogger.Log("StageCount를 받아와서 스폰할 숫자 재설정 결과 : " + numberOfObjects, "pink");
@@ -125,7 +155,7 @@ public class EnemySpawner : MonoBehaviour
         CustomLogger.Log("SpawnWaves() 시작", "pink");
         StartCoroutine(SpawnWaves());
     }
-
+    
     private void Update()
     {
         if (CheckBossSpawn())
@@ -136,6 +166,13 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
+    private IEnumerator DisplayRaceImage()
+    {
+        raceImageObject.SetActive(true); // 이미지 오브젝트 활성화
+        yield return new WaitForSeconds(3f); // 3초 동안 대기
+        raceImageObject.SetActive(false); // 이미지 오브젝트 비활성화
+    }
+    
     private IEnumerator DisplayBossImageAndSpawn()
     {
         bossImage.SetActive(true);
