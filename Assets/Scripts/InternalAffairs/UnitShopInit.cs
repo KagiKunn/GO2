@@ -151,7 +151,10 @@ public class UnitShopInit : MonoBehaviour
         LocalizedString localizedString = new LocalizedString
             { TableReference = "UI", TableEntryReference = $"{UnitName()}" };
         
-        popup.ShowPopup("Unit Purchased: " + localizedString);
+        localizedString.StringChanged += (localizedText) =>
+        {
+            popup.ShowPopup($"Unit Purchased: {localizedText}");
+        };
 
         if (unit.Equals("Bowman"))
         {
