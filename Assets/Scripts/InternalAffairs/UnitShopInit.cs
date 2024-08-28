@@ -147,6 +147,12 @@ public class UnitShopInit : MonoBehaviour
         }
 
         string unit = UnitName();
+        
+        LocalizedString localizedString = new LocalizedString
+            { TableReference = "UI", TableEntryReference = $"{UnitName()}" };
+        
+        popup.ShowPopup("Unit Purchased: " + localizedString);
+
         if (unit.Equals("Bowman"))
         {
             unit = "Bow";
@@ -164,8 +170,5 @@ public class UnitShopInit : MonoBehaviour
         // 유닛 세이브
         PlayerLocalManager.Instance.lUnitList = boughtUnit;
         PlayerLocalManager.Instance.Save();
-
-        // 간단한 팝업 호출
-        popup.ShowPopup("Unit Purchased: " + unit);
     }
 }
