@@ -147,6 +147,16 @@ public class UnitShopInit : MonoBehaviour
         }
 
         string unit = UnitName();
+        if (unit.Equals("Bowman"))
+        {
+            unit = "Bow";
+        }else if (unit.Equals("Crossbowman"))
+        {
+            unit = "Crossbow";
+        }else if (unit.Equals("Artillery"))
+        {
+            unit = "Gun";
+        }
         KeyValuePair<string, int> keyVal = new KeyValuePair<string, int>(unit, 0);
         boughtUnit.Add(keyVal);
         PlayerLocalManager.Instance.lMoney -= price;
