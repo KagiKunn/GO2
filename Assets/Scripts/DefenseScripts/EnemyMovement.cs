@@ -270,14 +270,8 @@ public class EnemyMovement : MonoBehaviour {
 		CustomLogger.Log("Die콜됨","red");
 		if (SceneManager.GetActiveScene().name == "Defense") {
 			if (GameObject.Find("InitSetting").GetComponent<DefenseInit>() == null)
-			{
-				CustomLogger.Log("return있던 자리임", "black");
-			}
+				CustomLogger.Log("dead");
 
-			
-			
-			CustomLogger.Log("DIE 실행", "cyan");
-			
 			DefenseInit defenseInit = GameObject.Find("InitSetting").GetComponent<DefenseInit>();
 			int crntgold = 0;
 
