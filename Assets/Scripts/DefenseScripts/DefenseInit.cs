@@ -120,7 +120,7 @@ public class DefenseInit : MonoBehaviour {
 
     void CastleHealthSetup()
     {
-        int castleExtraHp = earnGold switch
+        int castleExtraHp = castleHealth switch
         {
             1 => 500,
             2 => 1000,
