@@ -169,7 +169,7 @@ public class EnemySpawner : MonoBehaviour
         // 적 스폰 코루틴 시작
         StartCoroutine(SpawnWaves());
     }
-    
+
     private void Update()
     {
         if (CheckBossSpawn())
@@ -180,11 +180,13 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
-    private IEnumerator DisplayRaceImage()
+    private IEnumerator DisplayRaceImageAndStartWaves()
     {
         raceImageObject.SetActive(true); // 이미지 오브젝트 활성화
         yield return new WaitForSeconds(3f); // 3초 동안 대기
         raceImageObject.SetActive(false); // 이미지 오브젝트 비활성화
+        
+        StartCoroutine(SpawnWaves());
     }
 
     private IEnumerator DisplayBossImageAndSpawn()

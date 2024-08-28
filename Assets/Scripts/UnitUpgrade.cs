@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Org.BouncyCastle.Cms;
 using TMPro;
 using Unity.VisualScripting;
@@ -64,12 +65,6 @@ public class UnitUpgrade : MonoBehaviour
 
         upConfirm.SetActive(false);
         upOk.SetActive(false);
-        /*origin = Instantiate(upgradeList[classNum].UnitListArray[levelList[0]]);
-        upgrade = Instantiate(upgradeList[classNum].UnitListArray[levelList[0] + 1]);
-        origin.transform.localScale = new Vector3(2.5f, 2.5f);
-        upgrade.transform.localScale = new Vector3(2.5f, 2.5f);
-        origin.transform.position = leftBox.transform.position;
-        upgrade.transform.position = rightBox.transform.position;*/
         DisplayPrefab();
     }
 
@@ -168,7 +163,14 @@ public class UnitUpgrade : MonoBehaviour
 
         Destroy(origin);
         Destroy(upgrade);
-        origin = Instantiate(upgradeList[classNum].UnitListArray[levelList[classNum]+mageClass]);
+        Prefabs = Resources.LoadAll<GameObject>("Defense/Unit");
+        foreach (GameObject prefab in Prefabs)
+        {
+            if (prefab.name.Equals(selected.Split(":")[1]))
+            {
+                origin = Instantiate(prefab);
+            }
+        }
         origin.transform.localScale = new Vector3(2.5f, 2.5f);
         origin.transform.position = leftBox.transform.position;
         if (classNum != 3)
@@ -298,7 +300,7 @@ public class UnitUpgrade : MonoBehaviour
     {
         int classNum = -1;
         if (unitName.Contains("Hero") || unitName.Contains("Fire") || unitName.Contains("Ice") ||
-            unitName.Contains("Lighting"))
+            unitName.Contains("Lightning"))
         {
             classNum = 2;
         }
