@@ -16,7 +16,7 @@ public class UnitGameManager : MonoBehaviour
 
     private List<KeyValuePair<string, int>> userUnits; // 유저 구매 유닛 및 가진 유닛들
     public List<KeyValuePair<int, string>> selectedUnits;
-    private List<UnitDraggable> unitDraggables = new List<UnitDraggable>();
+    public List<UnitDraggable> unitDraggables = new List<UnitDraggable>();
 
     private void Awake()
     {
@@ -49,24 +49,25 @@ public class UnitGameManager : MonoBehaviour
     {
         foreach (var unitData in userUnits)
         {
-            GameObject newSlot = Instantiate(slotPrefab, slotParent);
-            TextMeshProUGUI unitName = newSlot.GetComponentInChildren<TextMeshProUGUI>();
-
-            if (unitName != null)
+            Prefabs = Resources.LoadAll<GameObject>("Defense/Unit");
+            RectTransform contentRect = slotParent.GetComponent<RectTransform>();
+            foreach (GameObject prefab in Prefabs)
             {
-                unitName.text = unitData.Key;
-            }
-            else
-            {
-                Debug.LogWarning("슬롯에 TextMeshProUGUI 컴포넌트 없음.");
-            }
-
-            UnitDraggable unitDraggable = newSlot.GetComponentInChildren<UnitDraggable>();
-
-            if (unitDraggable != null)
-            {
-                unitDraggable.unitName = unitData.Key;
-                unitDraggables.Add(unitDraggable);
+                if (prefab.name.Equals(unitData.Key))
+                {
+                    GameObject newSlot =  Instantiate(prefab, contentRect);
+                    RectTransform newSlotRect = newSlot.GetComponent<RectTransform>();
+                    newSlotRect.localScale = new Vector3(200, 200, 1);
+                    UnitDropable unitDropable = newSlot.AddComponent<UnitDropable>();
+                    unitDropable.unitGameManager = this;
+                    UnitDraggable unitDraggable = newSlot.AddComponent<UnitDraggable>();
+                    if (unitDraggable != null)
+                    {
+                        unitDraggable.previousParent = newSlot.transform;
+                        unitDraggable.unitName = unitData.Key;
+                        unitDraggables.Add(unitDraggable);
+                    }
+                }
             }
         }
     }
