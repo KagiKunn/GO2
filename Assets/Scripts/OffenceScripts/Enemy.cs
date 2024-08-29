@@ -95,10 +95,6 @@ public class Enemy : MonoBehaviour {
 		speed = spawnData.Speed + ((PlayerLocalManager.Instance.lStage - 1) * 0.1f);
 		maxHealth = spawnData.Health + ((PlayerLocalManager.Instance.lStage - 1) * 5);
 		health = maxHealth;
-
-		CustomLogger.Log(speed);
-		CustomLogger.Log(maxHealth);
-		CustomLogger.Log(health);
 	}
 
 	private void OnTriggerEnter2D(Collider2D other) {
@@ -125,6 +121,9 @@ public class Enemy : MonoBehaviour {
 			if (gameManager.IsLive) {
 				gameManager.Kill++;
 				gameManager.GetExp();
+
+				if (gameManager.PlayerId == 3)
+					gameManager.Health += 1;
 
 				AudioManager.Instance.PlaySfx(AudioManager.Sfx.Dead);
 			}
