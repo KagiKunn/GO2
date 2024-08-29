@@ -103,10 +103,15 @@ public class UpgradeHero : MonoBehaviour
             CustomLogger.Log("Need More Money!", "red");
             return;
         }
+
+        if (HeroManager.Instance.upgradeHero.OffenceAttackSpeed<80)
+        {
+            return;
+        }
         PlayerLocalManager.Instance.lMoney -= 100;
-        HeroManager.Instance.upgradeHero.OffenceHP += 20;
-        HeroManager.Instance.upgradeHero.OffenceAttack += 10;
-        HeroManager.Instance.upgradeHero.OffenceAttackSpeed += 5;
+        HeroManager.Instance.upgradeHero.OffenceHP += 10;
+        HeroManager.Instance.upgradeHero.OffenceAttack += 2;
+        HeroManager.Instance.upgradeHero.OffenceAttackSpeed -= 5;
         HeroManager.Instance.SaveHeroFormation();
         PlayerLocalManager.Instance.Save();
         popup.ShowPopup("Upgrade Complete!");

@@ -6,6 +6,7 @@ using InternalAffairs;
 using TMPro;
 
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
@@ -33,7 +34,9 @@ public class StageC : MonoBehaviour {
 	public bool isGamePaused;
 	[SerializeField] private GameObject uiGameObject;
 	private int currentWaveInStageC;
-
+	public AudioClip soundClip;
+	private AudioSource audioSource;
+	public AudioMixerGroup sfxMixerGroup;
 	private void Awake() {
 		if (Instance == null) {
 			Instance = this;
@@ -64,6 +67,13 @@ public class StageC : MonoBehaviour {
 		}
 	}
 
+	private void Start()
+	{
+		audioSource = gameObject.AddComponent<AudioSource>();
+		audioSource.clip = soundClip;
+		audioSource.outputAudioMixerGroup = sfxMixerGroup;
+	}
+
 	private void Update() {
 		int currentWave = enemySpawner.currentWave;
 
@@ -72,7 +82,13 @@ public class StageC : MonoBehaviour {
 			UpdateStageInfoText();
 		}
 	}
-
+	public void PlaySound()
+	{
+		if (audioSource != null && soundClip != null)
+		{
+			audioSource.Play();
+		}
+	}
 	// 스테이지 정보 표시
 	private void UpdateStageInfoText() {
 		stageInfoText.text =
@@ -94,8 +110,10 @@ public class StageC : MonoBehaviour {
 		}
 	}
 
-	private void UploadCastleWallDataToDefenseGameData() {
-		if (castleWallManager != null && PlayerLocalManager.Instance != null) {
+	private void UploadCastleWallDataToDefenseGameData()
+	{
+		if (castleWallManager != null && PlayerLocalManager.Instance != null)
+		{
 			PlayerLocalManager.Instance.lCastleMaxHp = castleWallManager.maxHealth;
 			PlayerLocalManager.Instance.lCastleHp = castleWallManager.health;
 			PlayerLocalManager.Instance.lCastleExtraHp = castleWallManager.extraHealth;
@@ -157,7 +175,9 @@ public class StageC : MonoBehaviour {
 		}
 	}
 
-	public void ShowStageClearUI() {
+	public void ShowStageClearUI()
+	{
+		PlaySound();
 		isGamePaused = true;
 		// 게임 종료시 메뉴UI들 버튼도 비활성화
 		Menu menuScript = uiGameObject.GetComponent<Menu>();

@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using DefenseScripts;
 using Unity.VisualScripting;
+using UnityEngine.Audio;
 
 #pragma warning disable CS0618 // 형식 또는 멤버는 사용되지 않습니다.
 
@@ -31,7 +32,9 @@ public class CastleWallManager : MonoBehaviour {
     public float maxHealth;
     public float health;
     public float shield;
-
+    public AudioClip soundClip;
+    private AudioSource audioSource;
+    public AudioMixerGroup sfxMixerGroup;
     private void Awake() {
         Debug.Log("특전 추가체력 : " + extraHealth);
         Debug.Log("캐슬월에서 가져온 스테이지카운트 : " + PlayerLocalManager.Instance.lStage);
@@ -72,7 +75,12 @@ public class CastleWallManager : MonoBehaviour {
             handleImage.sprite = healthIcon; // 기본 체력 아이콘 설정
         }
     }
-
+    private void Start()
+    {
+        audioSource = gameObject.AddComponent<AudioSource>();
+        audioSource.clip = soundClip;
+        audioSource.outputAudioMixerGroup = sfxMixerGroup;
+    }
     private void Update() {
         if (!hasShield) {
             foreach (var wall in wallObjects) {
@@ -89,7 +97,13 @@ public class CastleWallManager : MonoBehaviour {
             Debug.Log("Shield deactivated.");
         }
     }
-
+    public void PlaySound()
+    {
+        if (audioSource != null && soundClip != null)
+        {
+            audioSource.Play();
+        }
+    }
     public void ApplyDamage(float damage) {
         if (hasShield) {
             shield -= damage;
@@ -188,12 +202,14 @@ public class CastleWallManager : MonoBehaviour {
         }
     }
 
-    private void HandleGameOver() {
+    private void HandleGameOver()
+    {
+        PlaySound();
         DestroyWallsWithTag("RightWall");
         DestroyWallsWithTag("LeftWall");
 
         Debug.Log("성벽이 파괴되었습니다! 게임 오버!");
-
+    
         if (stageC != null) {
             stageC.ShowGameOverUI();
         } else {
