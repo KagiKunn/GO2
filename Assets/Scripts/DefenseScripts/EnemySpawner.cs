@@ -151,6 +151,7 @@ public class EnemySpawner : MonoBehaviour
         // 선택된 종족의 이미지 표시
         if (raceImage!=null)
         {
+            
             raceImageRenderer.sprite = raceImage;
             StartCoroutine(DisplayRaceImageAndStartWaves());
         }
