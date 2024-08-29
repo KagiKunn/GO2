@@ -13,8 +13,12 @@ public class InternalInit : MonoBehaviour {
 
 	private GameObject gold;
 	private GameObject soul;
+	private List<HeroData> heroList;
 
-	void Start() {
+	void Start()
+	{
+		// PlayerLocalManager.Instance.lNextEnemy = false;
+		// PlayerLocalManager.Instance.Save();
 		current = GameObject.Find("Current");
 		max = GameObject.Find("Max");
 		gold = GameObject.Find("GoldInput");
@@ -25,7 +29,7 @@ public class InternalInit : MonoBehaviour {
 		gold.GetComponent<TMP_InputField>().text = PlayerLocalManager.Instance.lMoney.ToString();
 		soul.GetComponent<TMP_InputField>().text = PlayerLocalManager.Instance.lPoint.ToString();
 
-		List<HeroData> heroList = HeroManager.Instance.selectedHeroes;
+		heroList = HeroManager.Instance.selectedHeroes;
 
 		for (int i = 0; i < heroList.Count; i++) {
 			HeroData hero = heroList[i];
@@ -42,6 +46,10 @@ public class InternalInit : MonoBehaviour {
 	}
 
 	private void Update() {
+		if (heroList != HeroManager.Instance.selectedHeroes)
+		{
+			heroList.Clear();
+		}
 		current.GetComponent<TextMeshProUGUI>().text = PlayerLocalManager.Instance.lCastleHp.ToString(CultureInfo.CurrentCulture);
 		gold.GetComponent<TMP_InputField>().text = PlayerLocalManager.Instance.lMoney.ToString();
 	}

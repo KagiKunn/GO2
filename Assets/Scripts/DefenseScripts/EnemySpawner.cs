@@ -32,7 +32,7 @@ public class EnemySpawner : MonoBehaviour
     public float rightMaxY = 115f;
 
     // 왼쪽 스폰 위치의 Y축 최소 및 최대 좌표
-    private float leftMinY = -280f;
+    private float leftMinY = -285f;
     private float leftMaxY = -415f;
 
     // 고정된 X축 좌표
@@ -151,6 +151,7 @@ public class EnemySpawner : MonoBehaviour
         // 선택된 종족의 이미지 표시
         if (raceImage!=null)
         {
+            
             raceImageRenderer.sprite = raceImage;
             StartCoroutine(DisplayRaceImageAndStartWaves());
         }
