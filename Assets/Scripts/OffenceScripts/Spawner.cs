@@ -24,8 +24,6 @@ public class Spawner : MonoBehaviour {
 		levelTime = gameManager.MaxGameTime / spawnData.Length;
 
 		spawnTime = spawnData[Random.Range(0, spawnData.Length)].SpawnTime - ((PlayerLocalManager.Instance.lStage - 1) * 0.1f);
-
-		CustomLogger.Log(spawnTime);
 	}
 
 	private void Update() {

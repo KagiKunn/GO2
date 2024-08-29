@@ -90,6 +90,8 @@ public class Weapon : MonoBehaviour {
 			}
 		}
 
+		int isLeft = player.Scale.x == 1 ? -1 : 1;
+
 		// prefabId = num;
 
 		switch (id) {
@@ -100,7 +102,7 @@ public class Weapon : MonoBehaviour {
 			case 14:
 			case 15:
 			case 16:
-				speed = 150 * Character.WeaponRate;
+				speed = (gameManager.AttackSpeed * isLeft) * Character.WeaponRate;
 
 				Batch();
 
@@ -146,7 +148,7 @@ public class Weapon : MonoBehaviour {
 			bullet.Rotate(rotateVector3);
 			bullet.Translate(bullet.up * 1.5f, Space.World);
 
-			bullet.GetComponent<Bullet>().Initialized(damage, -100, Vector3.zero); // -1 is Infinity penetration.
+			bullet.GetComponent<Bullet>().Initialized(damage + gameManager.AttackDamage, -100, Vector3.zero); // -1 is Infinity penetration.
 
 			AudioManager.Instance.PlaySfx(AudioManager.Sfx.Melee);
 		}
