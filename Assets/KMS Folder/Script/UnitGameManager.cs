@@ -111,7 +111,6 @@ public class UnitGameManager : MonoBehaviour
                 return prefab;
             }
         }
-
         CustomLogger.Log("일치하는 프리팹 없음", Color.yellow);
         return null;
     }
@@ -158,6 +157,12 @@ public class UnitGameManager : MonoBehaviour
             var canvasGroup = unitDraggable.GetComponent<CanvasGroup>();
             canvasGroup.blocksRaycasts = true;
         }
+
+        foreach (var unitDropable in Slot)
+        {
+            unitDropable.GetComponent<UnitDropable>().enabled = true;
+        }
+        
     }
 
     public void SaveDefaultUnitData()
