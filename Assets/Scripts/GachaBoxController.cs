@@ -1,210 +1,171 @@
 using UnityEngine;
 
-public class GachaBoxController : MonoBehaviour
-{
-    private Animator animator;
-    public Gacha gacha;
-    private bool isMultiGacha = false;
-    private int gachaCount = 1;
-    public ParticleSystem sparkleEffect;
-    private void Start()
-    {
-        animator = GetComponent<Animator>();
+public class GachaBoxController : MonoBehaviour {
+	private Animator animator;
+	public Gacha gacha;
+	private bool isMultiGacha = false;
+	private int gachaCount = 1;
+	public ParticleSystem sparkleEffect;
 
-        if (sparkleEffect != null)
-        {
-            sparkleEffect.Stop();
-        }
-    }
+	private void Start() {
+		animator = GetComponent<Animator>();
 
-    public void OpenBox()
-    {
-        CustomLogger.Log("OpenBOx 들어옴");
+		if (sparkleEffect != null) {
+			sparkleEffect.Stop();
+		}
+	}
 
-        animator.SetTrigger("Open");
-        CustomLogger.Log("open 통과함");
-        Invoke("ShowItemInfo", 0.65f);
+	public void OpenBox() {
+		CustomLogger.Log("OpenBOx 들어옴");
 
-    }
+		animator.SetTrigger("Open");
+		CustomLogger.Log("open 통과함");
+		Invoke("ShowItemInfo", 0.65f);
+	}
 
-    public void Particle()
-    {
-        if (sparkleEffect != null)
-        {
-            sparkleEffect.Play();
-        }
-    }
-    
-    public void SetParticleColor(ItemRarity rarity)
-    {
-        if (sparkleEffect != null)
-        {
-            var mainModule = sparkleEffect.main;
-            switch (rarity)
-            {
-                case ItemRarity.Normal:
-                    mainModule.startColor = Color.white;
-                    break;
-                case ItemRarity.Rare:
-                    mainModule.startColor = Color.blue;
-                    break;
-                case ItemRarity.Unique:
-                    mainModule.startColor = Color.red;
-                    break;
-                default:
-                    mainModule.startColor = Color.white;
-                    break;
-            }
-        }
-    }
+	public void Particle() {
+		if (sparkleEffect != null) {
+			sparkleEffect.Play();
+		}
+	}
 
-    public void ShowItemInfo()
-    {
-        if (Gacha.Instance.inventoryUI != null && !Gacha.Instance.inventoryUI.CanAdditems(1))
-        {
-            CustomLogger.LogWarning("인벤토리에 충분한 공간이 없습니다.");
-            return;
-        }
-        
-        if (isMultiGacha)
-        {
-            gacha.OnMultiGachaButtonClicked(gachaCount);
-        }
-        else
-        {
-            ItemInstance gachaItem = gacha.OnGachaButtonClicked();
-            if (gachaItem != null)
-            {
-                SetParticleColor(gachaItem.itemData.rarity);
-            }
-            
-        }
-        
-        
+	public void SetParticleColor(ItemRarity rarity) {
+		if (sparkleEffect != null) {
+			var mainModule = sparkleEffect.main;
 
-        EnableUIElements();
-    }
+			switch (rarity) {
+				case ItemRarity.Normal:
+					mainModule.startColor = Color.white;
 
-    void EnableUIElements()
-    {
-        if (isMultiGacha)
-        {
-            if (Gacha.Instance.resultText != null)
-            {
-                Gacha.Instance.resultText.enabled = false;
-            }
+					break;
+				case ItemRarity.Rare:
+					mainModule.startColor = Color.blue;
 
-            if (Gacha.Instance.resultImage != null)
-            {
-                Gacha.Instance.resultImage.enabled = false;
-            }
-        }
-        else
-        {
-            Transform multiGachaParent;
+					break;
+				case ItemRarity.Unique:
+					mainModule.startColor = Color.red;
 
-            if (Gacha.Instance.inventoryUI != null && !Gacha.Instance.inventoryUI.CanAdditems(1))
-            {
-                if (Gacha.Instance.resultImage != null)
-                {
-                    Gacha.Instance.resultImage.enabled = false;
+					break;
+				default:
+					mainModule.startColor = Color.white;
 
-                    CustomLogger.Log("Gacha.Instance.resultImage.enabled : " + Gacha.Instance.resultImage.enabled);
-                }
+					break;
+			}
+		}
+	}
 
-                if (Gacha.Instance.resultText != null)
-                {
-                    Gacha.Instance.resultText.enabled = false;
+	public void ShowItemInfo() {
+		if (Gacha.Instance.inventoryUI != null && !Gacha.Instance.inventoryUI.CanAdditems(1)) {
+			CustomLogger.LogWarning("인벤토리에 충분한 공간이 없습니다.");
 
-                    CustomLogger.Log("Gacha.Instance.resultText.enabled : " + Gacha.Instance.resultText.enabled);
-                }
+			return;
+		}
 
-                if (Gacha.Instance.multiGachaResultText != null)
-                {
-                    Gacha.Instance.multiGachaResultText.enabled = false;
+		if (isMultiGacha) {
+			gacha.OnMultiGachaButtonClicked(gachaCount);
+		} else {
+			ItemInstance gachaItem = gacha.OnGachaButtonClicked();
 
-                    CustomLogger.Log("Gacha.Instance.multiGachaResultText.enabled : " +
-                                     Gacha.Instance.multiGachaResultText.enabled);
-                }
+			if (gachaItem != null) {
+				SetParticleColor(gachaItem.itemData.rarity);
+			}
+		}
 
-                multiGachaParent = Gacha.Instance.multiGachaResultText.transform.parent;
+		EnableUIElements();
+	}
 
-                foreach (Transform child in multiGachaParent)
-                {
-                    if (child.name.StartsWith("GachaItem"))
-                    {
-                        child.gameObject.SetActive(false);
-                    }
-                }
+	void EnableUIElements() {
+		if (isMultiGacha) {
+			if (Gacha.Instance.resultText != null) {
+				Gacha.Instance.resultText.enabled = false;
+			}
 
-                return;
-            }
+			if (Gacha.Instance.resultImage != null) {
+				Gacha.Instance.resultImage.enabled = false;
+			}
+		} else {
+			Transform multiGachaParent;
 
-            if (Gacha.Instance.resultImage != null)
-            {
-                Gacha.Instance.resultImage.enabled = true;
-            }
+			if (Gacha.Instance.inventoryUI != null && !Gacha.Instance.inventoryUI.CanAdditems(1)) {
+				if (Gacha.Instance.resultImage != null) {
+					Gacha.Instance.resultImage.enabled = false;
 
-            if (Gacha.Instance.resultText != null)
-            {
-                Gacha.Instance.resultText.enabled = true;
-            }
+					CustomLogger.Log("Gacha.Instance.resultImage.enabled : " + Gacha.Instance.resultImage.enabled);
+				}
 
-            if (Gacha.Instance.multiGachaResultText != null)
-            {
-                Gacha.Instance.multiGachaResultText.enabled = false;
-            }
+				if (Gacha.Instance.resultText != null) {
+					Gacha.Instance.resultText.enabled = false;
 
-            multiGachaParent = Gacha.Instance.multiGachaResultText.transform.parent;
+					CustomLogger.Log("Gacha.Instance.resultText.enabled : " + Gacha.Instance.resultText.enabled);
+				}
 
-            foreach (Transform child in multiGachaParent)
-            {
-                if (child.name.StartsWith("GachaItem"))
-                {
-                    child.gameObject.SetActive(false);
-                }
-            }
-        }
-    }
+				if (Gacha.Instance.multiGachaResultText != null) {
+					Gacha.Instance.multiGachaResultText.enabled = false;
 
-    public void SetMultiGacha(bool isMulti, int count)
-    {
-        isMultiGacha = isMulti;
-        gachaCount = count;
-    }
+					CustomLogger.Log("Gacha.Instance.multiGachaResultText.enabled : " +
+					                 Gacha.Instance.multiGachaResultText.enabled);
+				}
 
-    public void SingleGacha()
-    {
-        CustomLogger.Log("SingleGacha 눌림");
+				multiGachaParent = Gacha.Instance.multiGachaResultText.transform.parent;
 
-        if (Gacha.Instance.inventoryUI != null && Gacha.Instance.inventoryUI.CanAdditems(1))
-        {
-            CustomLogger.Log("if 들어옴");
-            SetMultiGacha(false, 1);
-            OpenBox();
-        }
-        else
-        {
-            CustomLogger.LogWarning("인벤토리에 충분한 공간이 없습니다.");
-        }
+				foreach (Transform child in multiGachaParent) {
+					if (child.name.StartsWith("GachaItem")) {
+						child.gameObject.SetActive(false);
+					}
+				}
 
-        CustomLogger.Log("if 통과함");
-    }
+				return;
+			}
 
-    public void MultiGacha(int count)
-    {
-        CustomLogger.Log("MultiGacha 눌림");
+			if (Gacha.Instance.resultImage != null) {
+				Gacha.Instance.resultImage.enabled = true;
+			}
 
-        if (Gacha.Instance.inventoryUI != null && Gacha.Instance.inventoryUI.CanAdditems(count))
-        {
-            SetMultiGacha(true, count);
-            OpenBox();
-        }
-        else
-        {
-            CustomLogger.LogWarning("인벤토리에 충분한 공간이 없습니다.");
-        }
-    }
+			if (Gacha.Instance.resultText != null) {
+				Gacha.Instance.resultText.enabled = true;
+			}
 
-    
+			if (Gacha.Instance.multiGachaResultText != null) {
+				Gacha.Instance.multiGachaResultText.enabled = false;
+			}
+
+			multiGachaParent = Gacha.Instance.multiGachaResultText.transform.parent;
+
+			foreach (Transform child in multiGachaParent) {
+				if (child.name.StartsWith("GachaItem")) {
+					child.gameObject.SetActive(false);
+				}
+			}
+		}
+	}
+
+	public void SetMultiGacha(bool isMulti, int count) {
+		isMultiGacha = isMulti;
+		gachaCount = count;
+	}
+
+	public void SingleGacha() {
+		CustomLogger.Log("SingleGacha 눌림");
+
+		if (Gacha.Instance.inventoryUI != null && Gacha.Instance.inventoryUI.CanAdditems(1)) {
+			CustomLogger.Log("if 들어옴");
+			SetMultiGacha(false, 1);
+			OpenBox();
+		} else {
+			CustomLogger.LogWarning("인벤토리에 충분한 공간이 없습니다.");
+		}
+
+		CustomLogger.Log("if 통과함");
+	}
+
+	public void MultiGacha(int count) {
+		CustomLogger.Log("MultiGacha 눌림");
+
+		if (Gacha.Instance.inventoryUI != null && Gacha.Instance.inventoryUI.CanAdditems(count)) {
+			SetMultiGacha(true, count);
+			OpenBox();
+		} else {
+			CustomLogger.LogWarning("인벤토리에 충분한 공간이 없습니다.");
+		}
+	}
 }
