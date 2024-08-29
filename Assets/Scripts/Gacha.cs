@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-using DG.Tweening;
+// using DG.Tweening;
 
 using UnityEngine;
 using UnityEngine.UI;
@@ -41,7 +41,7 @@ public class Gacha : MonoBehaviour {
 		InitializeRandomizer();
 		InitializeItems();
 		ItemSO GachaItem = GachaRandomItem();
-		DOTween.Init();
+		// DOTween.Init();
 		CustomLogger.Log($"Gacha Item: {GachaItem.itemName}, Rarity: {GachaItem.rarity}");
 
 		if (resultImage != null) {
@@ -203,8 +203,8 @@ public class Gacha : MonoBehaviour {
 
 		itemTransform.localScale = Vector3.zero;
 
-		itemTransform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutBack);
-		canvasGroup.DOFade(1f, 0.5f);
+		// itemTransform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutBack);
+		// canvasGroup.DOFade(1f, 0.5f);
 	}
 
 	private void DisplayMultiGachaResult(Dictionary<ItemRarity, int> gachaResults, int gachaCount,

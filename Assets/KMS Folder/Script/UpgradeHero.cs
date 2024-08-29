@@ -106,7 +106,7 @@ public class UpgradeHero : MonoBehaviour
         
         PlayerLocalManager.Instance.lMoney -= 100;
         HeroManager.Instance.upgradeHero.OffenceHP += 10;
-        HeroManager.Instance.upgradeHero.OffenceAttack += 2;
+        HeroManager.Instance.upgradeHero.OffenceAttack += 10;
         HeroManager.Instance.upgradeHero.OffenceAttackSpeed += 5;
         HeroManager.Instance.SaveHeroFormation();
         PlayerLocalManager.Instance.Save();
