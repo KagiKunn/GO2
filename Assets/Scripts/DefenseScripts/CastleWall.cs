@@ -20,6 +20,7 @@ public class CastleWall : MonoBehaviour {
 	private void Start() {
 		attackAudioSource = gameObject.AddComponent<AudioSource>();
 		attackAudioSource.clip = soundClip;
+		attackAudioSource.volume /= 2;
 	}
 
 	public void PlaySound() {

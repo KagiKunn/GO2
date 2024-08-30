@@ -410,9 +410,9 @@ public class EnemySpawner : MonoBehaviour
             case 1:
                 return new float[] { 0.5f, 0.5f }; // 각 50%
             case 2:
-                return new float[] { 0.35f, 0.35f, 0.15f, 0.15f }; // 35% 35% 15% 15%
+                return new float[] { 0.2f, 0.2f, 0.3f, 0.3f }; 
             case 3:
-                return new float[] { 0.25f, 0.25f, 0.2f, 0.2f, 0.1f }; // 25% 25% 20% 20% 10%
+                return new float[] { 0.1f, 0.2f, 0.3f, 0.25f, 0.15f }; // 25% 25% 20% 20% 10%
             default:
                 return new float[] { 1f };
         }
