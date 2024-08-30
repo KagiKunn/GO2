@@ -31,6 +31,8 @@ public class Weapon : MonoBehaviour {
 		if (player.gameObject.name == "Dummy")
 			player = gameManager.Player[gameManager.PlayerId];
 
+		int isLeft = player.Scale.x == 1 ? -1 : 1;
+
 		switch (id) {
 			case 0:
 			case 11:
@@ -39,7 +41,7 @@ public class Weapon : MonoBehaviour {
 			case 14:
 			case 15:
 			case 16:
-				transform.Rotate(Vector3.back * (speed * Time.deltaTime));
+				transform.Rotate(Vector3.back * ((speed * isLeft) * Time.deltaTime));
 
 				break;
 
@@ -79,7 +81,7 @@ public class Weapon : MonoBehaviour {
 
 		// Property Set
 		id = num;
-		damage = itemData.BaseDamge * Character.Damage;
+		damage = (itemData.BaseDamge * Character.Damage) + gameManager.AttackDamage;
 		count = itemData.BaseCount + Character.Count;
 
 		for (int i = 1; i < poolManager.WeaponPrefabs.Length; i++) {
@@ -89,8 +91,6 @@ public class Weapon : MonoBehaviour {
 				break;
 			}
 		}
-
-		int isLeft = player.Scale.x == 1 ? -1 : 1;
 
 		// prefabId = num;
 
@@ -102,7 +102,7 @@ public class Weapon : MonoBehaviour {
 			case 14:
 			case 15:
 			case 16:
-				speed = (gameManager.AttackSpeed * isLeft) * Character.WeaponRate;
+				speed = gameManager.AttackSpeed * Character.WeaponRate;
 
 				Batch();
 
@@ -148,7 +148,7 @@ public class Weapon : MonoBehaviour {
 			bullet.Rotate(rotateVector3);
 			bullet.Translate(bullet.up * 1.5f, Space.World);
 
-			bullet.GetComponent<Bullet>().Initialized(damage + gameManager.AttackDamage, -100, Vector3.zero); // -1 is Infinity penetration.
+			bullet.GetComponent<Bullet>().Initialized(damage, -100, Vector3.zero); // -1 is Infinity penetration.
 
 			AudioManager.Instance.PlaySfx(AudioManager.Sfx.Melee);
 		}
