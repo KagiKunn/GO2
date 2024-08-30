@@ -31,6 +31,8 @@ public class Weapon : MonoBehaviour {
 		if (player.gameObject.name == "Dummy")
 			player = gameManager.Player[gameManager.PlayerId];
 
+		int isLeft = player.Scale.x == 1 ? -1 : 1;
+
 		switch (id) {
 			case 0:
 			case 11:
@@ -39,7 +41,7 @@ public class Weapon : MonoBehaviour {
 			case 14:
 			case 15:
 			case 16:
-				transform.Rotate(Vector3.back * (speed * Time.deltaTime));
+				transform.Rotate(Vector3.back * ((speed * isLeft) * Time.deltaTime));
 
 				break;
 
@@ -79,7 +81,7 @@ public class Weapon : MonoBehaviour {
 
 		// Property Set
 		id = num;
-		damage = itemData.BaseDamge * Character.Damage;
+		damage = (itemData.BaseDamge * Character.Damage) + gameManager.AttackDamage;
 		count = itemData.BaseCount + Character.Count;
 
 		for (int i = 1; i < poolManager.WeaponPrefabs.Length; i++) {
@@ -100,7 +102,7 @@ public class Weapon : MonoBehaviour {
 			case 14:
 			case 15:
 			case 16:
-				speed = 150 * Character.WeaponRate;
+				speed = gameManager.AttackSpeed * Character.WeaponRate;
 
 				Batch();
 

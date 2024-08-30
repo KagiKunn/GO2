@@ -39,7 +39,10 @@ public class UnitDraggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     {
         if (!eventData.pointerPressRaycast.gameObject.GetComponent<Button>())
         {
-            unitName = previousParent.name.Split("(")[0];
+            previousParent = transform.parent;
+            
+            Transform unitTransform = previousParent.Find("Unit");
+            unitName = unitTransform.GetComponent<TextMeshProUGUI>().text;
             GameObject prefabname = unitGameManager.FindPrefabByName(unitName);
             
             draggingInstance = Instantiate(prefabname, Canvas);

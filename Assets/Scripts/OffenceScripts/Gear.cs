@@ -53,7 +53,7 @@ public class Gear : MonoBehaviour {
 				case 14:
 				case 15:
 				case 16:
-					float speed = 150 * Character.WeaponRate;
+					float speed = GameManager.Instance.AttackSpeed * Character.WeaponRate;
 
 					weapon.Speed = speed + (speed * rate);
 

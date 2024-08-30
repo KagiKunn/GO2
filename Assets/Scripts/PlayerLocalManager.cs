@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+
 using UnityEngine;
 
-public class PlayerLocalManager : MonoBehaviour
-{
-    private SceneControl sceneControl;
-    private static string persistentDataPath;
-    private string filePath;
+public class PlayerLocalManager : MonoBehaviour {
+	private SceneControl sceneControl;
+	private static string persistentDataPath;
+	private string filePath;
 
 	private int L_money;
 	private int L_point;
@@ -33,9 +33,9 @@ public class PlayerLocalManager : MonoBehaviour
 	private bool L_NextEnemy;
 	private string L_Locale;
 
-	public string lLocale
-	{
+	public string lLocale {
 		get => L_Locale;
+
 		set => L_Locale = value;
 	}
 
@@ -128,7 +128,7 @@ public class PlayerLocalManager : MonoBehaviour
 
 		set => L_UnitList = value;
 	}
-	
+
 	public List<KeyValuePair<int, string>> lAllyUnitList {
 		get => L_AllyUnitList;
 
@@ -146,6 +146,7 @@ public class PlayerLocalManager : MonoBehaviour
 
 		set => L_GameStarted = value;
 	}
+
 	public bool lNextEnemy {
 		get => L_NextEnemy;
 
@@ -164,7 +165,7 @@ public class PlayerLocalManager : MonoBehaviour
 		} else {
 			CreateNewPlayer();
 		}
-		
+
 		if (Instance == null) {
 			Instance = this;
 			DontDestroyOnLoad(this);
@@ -238,13 +239,12 @@ public class PlayerLocalManager : MonoBehaviour
 		UpdateStageCount(); // 배열 리셋 후 stageCount도 동기화
 	}
 
-    // stageRace 배열의 길이에 따라 stageCount를 동기화
-    public void UpdateStageCount()
-    {
-        //스테이지 카운트 업뎃
-        lStage = 6 - lStageRace.Length; // 남은 종족 수에 따라 stageCount를 계산
-        Save();
-    }
+	// stageRace 배열의 길이에 따라 stageCount를 동기화
+	public void UpdateStageCount() {
+		//스테이지 카운트 업뎃
+		lStage = 6 - lStageRace.Length; // 남은 종족 수에 따라 stageCount를 계산
+		Save();
+	}
 
 	// 성벽 체력 데이터를 기본값으로 재설정하는 메서드
 	public void ResetHealthData() {

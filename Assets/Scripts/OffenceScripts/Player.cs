@@ -108,4 +108,6 @@ public class Player : MonoBehaviour {
 
 		set => hands = value;
 	}
+
+	public Vector3 Scale => scale;
 }
