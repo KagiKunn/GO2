@@ -5055,7 +5055,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 2
+  m_fontStyle: 0
   m_HorizontalAlignment: 4
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -7358,9 +7358,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyRaces: []
-  SelectedRace: 
+  selectedRace: 
   stageCount: 0
   weekCount: 0
+  humanLogo: {fileID: 21300000, guid: 4fe361ecde1a0504ebb824e1db46244d, type: 3}
+  darkElfLogo: {fileID: 21300000, guid: 2fd112c780c163c468f71955a4113322, type: 3}
+  orcLogo: {fileID: 21300000, guid: 8b0fe30fddd36934787324bb4653054c, type: 3}
+  skeletonLogo: {fileID: 21300000, guid: fb4514835ec87454685d12b06300c9af, type: 3}
+  witchLogo: {fileID: 3225510037122653588, guid: 185d0df36a6603c45b27f2feae4d053f,
+    type: 3}
 --- !u!4 &1095269775
 Transform:
   m_ObjectHideFlags: 0
@@ -8951,7 +8957,7 @@ GameObject:
   - component: {fileID: 1847924535}
   - component: {fileID: 1847924534}
   m_Layer: 5
-  m_Name: Image
+  m_Name: RaceImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8973,8 +8979,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -40, y: 0}
-  m_SizeDelta: {x: 20, y: 20}
+  m_AnchoredPosition: {x: -38, y: 0}
+  m_SizeDelta: {x: 20, y: 19}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1847924534
 MonoBehaviour:
@@ -8996,7 +9002,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 797312dd7b0b9a845bb245a303f72e47, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
