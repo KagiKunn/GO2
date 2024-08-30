@@ -1,95 +1,56 @@
-using System;
-
 using UnityEngine;
 using UnityEngine.UI;
 
-using System.Collections;
-
 public class StageManager : MonoBehaviour {
-	public GameObject[] leftStageUnits;
-	public GameObject[] rightStageUnits;
-
 	public Button leftButton;
 	public Button rightButton;
-	
-	public PlacementUnitA leftWallStage;
-	public PlacementUnitA rightWallStage;
+	public Button resetButton;
 
-	private UnitGameManagerA unitGameManager;
-	private UnitSlotManagerA unitSlotManager;
-	public PlacementUnitA placementUnit;
+	public UnitGameManager unitGameManager;
 
-	private IEnumerator Start() {
-		yield return new WaitUntil(() => UnitGameManagerA.Instance != null);
+	public GameObject[] slots;
 
-		unitGameManager = UnitGameManagerA.Instance;
-		unitSlotManager = FindFirstObjectByType<UnitSlotManagerA>();
-		
-		// 초기 상태에 따라 placementUnit 설정
-		if (leftButton.gameObject.activeSelf) {
-			placementUnit = rightWallStage;
-		} else if (rightButton.gameObject.activeSelf) {
-			placementUnit = leftWallStage;
-		}
+	void Start() {
+		leftButton.onClick.AddListener(ShowLeftStage);
+		rightButton.onClick.AddListener(ShowRightStage);
+		resetButton.onClick.AddListener(reset);
 
-		leftButton.onClick.AddListener(OnLeftButtonClicked);
-		rightButton.onClick.AddListener(OnRightButtonClicked);
+		ShowLeftStage();
 	}
 
-	private void OnLeftButtonClicked() {
-		// 1. 오른쪽 성벽(Right Wall Stage)을 PlacementUnit으로 설정
-		placementUnit = rightWallStage;
+	private void ShowLeftStage() {
+		SetSlotVisibility(0, 13);
+		SetSlotInvisibility(14, 27);
 
-		// 2. 현재 성벽 정보를 저장
-		SaveCurrentWallPlacement();
-
-		// 3. 성벽 전환
-		SwitchToStage(leftStageUnits, rightStageUnits, leftButton, rightButton);
+		leftButton.gameObject.SetActive(false);
+		rightButton.gameObject.SetActive(true);
 	}
 
-	private void OnRightButtonClicked() {
-		// 1. 왼쪽 성벽(Left Wall Stage)을 PlacementUnit으로 설정
-		placementUnit = leftWallStage;
+	private void ShowRightStage() {
+		SetSlotVisibility(14, 27);
+		SetSlotInvisibility(0, 13);
 
-		// 2. 현재 성벽 정보를 저장
-		SaveCurrentWallPlacement();
-
-		// 3. 성벽 전환
-		SwitchToStage(rightStageUnits, leftStageUnits, rightButton, leftButton);
+		rightButton.gameObject.SetActive(false);
+		leftButton.gameObject.SetActive(true);
 	}
 
-	private void SwitchToStage(GameObject[] stageToActivate, GameObject[] stageToDeactivate, Button buttonToDisable, Button buttonToEnable) {
-		SetStageActive(stageToActivate, true);
-		SetStageActive(stageToDeactivate, false);
-
-		buttonToDisable.gameObject.SetActive(false);
-		buttonToEnable.gameObject.SetActive(true);
-	}
-
-	private void SetStageActive(GameObject[] stageUnits, bool isActive) {
-		foreach (var unit in stageUnits) {
-			unit.SetActive(isActive);
+	private void SetSlotVisibility(int start, int end) {
+		for (int i = start; i <= end; i++) {
+			slots[i].SetActive(true);
 		}
 	}
 
-	private void SaveCurrentWallPlacement() {
-		if (placementUnit != null) {
-			CustomLogger.Log(placementUnit.name);
-			placementUnit.SavePlacementUnits();
-		} else {
-			CustomLogger.Log("활성화된 PlacementUnitA를 찾을 수 없습니다.", Color.red);
+	private void SetSlotInvisibility(int start, int end) {
+		for (int i = start; i <= end; i++) {
+			slots[i].SetActive(false);
 		}
 	}
 
-	public int GetCurrentWallStatus() {
-		if (!leftButton.gameObject.activeSelf) {
-			return 1;  // 왼쪽 성벽이 활성화됨
-		}
+	private void reset() {
+		unitGameManager.ResetList();
+	}
 
-		if (!rightButton.gameObject.activeSelf) {
-			return 2;  // 오른쪽 성벽이 활성화됨
-		}
-
-		return 0;  // 아무 성벽도 활성화되지 않음
+	private void OnDestroy() {
+		unitGameManager.SaveDefaultUnitData();
 	}
 }

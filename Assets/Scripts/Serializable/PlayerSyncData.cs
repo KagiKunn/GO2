@@ -45,7 +45,6 @@ public class PlayerSyncData
                 {
                     byte[] codeBytes = reader.ReadBytes(8);
                     string code = System.Text.Encoding.UTF8.GetString(codeBytes);
-                    CustomLogger.LogWarning(code);
                     return code;
                 }
                 catch (Exception ex)

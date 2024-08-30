@@ -54,6 +54,7 @@ public class BounusSaveManager : MonoBehaviour
 
     public void SaveGame()
     {
+        PlayerLocalManager.Instance.lMoney += PlayerLocalManager.Instance.lStartGold;
         PlayerLocalManager.Instance.lStartGold = startGold.GetComponent<UIButtonToggle>().level;
         PlayerLocalManager.Instance.lMoreEarnGold = earnGold.GetComponent<UIButtonToggle>().level;
         PlayerLocalManager.Instance.lMoreCastleHealth = castleHealth.GetComponent<UIButtonToggle>().level;
@@ -61,9 +62,10 @@ public class BounusSaveManager : MonoBehaviour
         PlayerLocalManager.Instance.lPoint =
             int.Parse(GameObject.Find("Soul").transform.GetChild(0).GetComponent<TextMeshProUGUI>().text);
         PlayerLocalManager.Instance.lGameStarted = true;
-        PlayerLocalManager.Instance.Save();
-
         StartGoldSetup();
+        StartHealthSetup();
+        PlayerLocalManager.Instance.Save();
+        
         SceneManager.LoadScene("InternalAffairs");
     }
 
@@ -74,6 +76,18 @@ public class BounusSaveManager : MonoBehaviour
     void StartGoldSetup()
     {
         PlayerLocalManager.Instance.lMoney = PlayerLocalManager.Instance.lStartGold switch
+        {
+            1 => 1500,
+            2 => 2000,
+            3 => 2500,
+            4 => 3000,
+            _ => 1000
+        };
+    }
+
+    void StartHealthSetup()
+    {
+        PlayerLocalManager.Instance.lCastleExtraHp = PlayerLocalManager.Instance.lMoreCastleHealth switch
         {
             1 => 500,
             2 => 1000,

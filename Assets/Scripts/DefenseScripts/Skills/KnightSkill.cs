@@ -54,7 +54,7 @@ public class KnightSkill : HeroSkill
 
         foreach (GameObject obj in allyObjects)
         {
-            if (obj.name != "Defualt(Clone)")
+            if (obj.name != "Default(Clone)")
             {
                 // 첫 번째 자식 오브젝트를 가져옵니다.
                 if (obj.transform.childCount > 0)

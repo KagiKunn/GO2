@@ -53,9 +53,9 @@ public class SettingManager : MonoBehaviour {
 			Destroy(gameObject);
 		}
 
-		nickChange = gameObject.transform.Find("NickChange").gameObject;
-		ContinueGet = gameObject.transform.Find("ContinueGet").gameObject;
-		ContinueInput = gameObject.transform.Find("ContinueInput").gameObject;
+		nickChange = gameObject.transform.Find("SettingCanvas/NickChange").gameObject;
+		ContinueGet = gameObject.transform.Find("SettingCanvas/ContinueGet").gameObject;
+		ContinueInput = gameObject.transform.Find("SettingCanvas/ContinueInput").gameObject;
 
 		persistentDataPath = Application.persistentDataPath;
 		filepath = Path.Combine(persistentDataPath, "Setting.dat");
@@ -119,18 +119,24 @@ public class SettingManager : MonoBehaviour {
 		InputBox.Instance.nowType = "Nick";
 		SetPlaceholderText("NickChange");
 		InputBoxUI.SetActive(true);
+		InputBoxUI.transform.Find("BoardCanvas/Board/ChangeButton").gameObject.SetActive(true);
 	}
 
 	public void openIssue() {
 		InputBox.Instance.nowType = "Issue";
 		SetPlaceholderText("Continous");
+		inputField.readOnly = true;
 		InputBoxUI.SetActive(true);
+		InputBox.Instance.Issue();
+		InputBoxUI.transform.Find("BoardCanvas/Board/ChangeButton").gameObject.SetActive(false);
 	}
 
 	public void openContinue() {
 		InputBox.Instance.nowType = "Continue";
 		SetPlaceholderText("Continous");
+		inputField.readOnly = false;
 		InputBoxUI.SetActive(true);
+		InputBoxUI.transform.Find("BoardCanvas/Board/ChangeButton").gameObject.SetActive(true);
 	}
 
 	private void FirstSetting() {

@@ -2171,7 +2171,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 13, y: 17}
+  m_Size: {x: 40, y: 40}
   m_EdgeRadius: 0
 --- !u!1 &148726841
 GameObject:
@@ -2202,12 +2202,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a970fca29fab35946804ef150b02d2f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lockCharacter:
-  - {fileID: 298262789}
-  - {fileID: 1719970164}
-  unlockCharacter:
-  - {fileID: 855871063}
-  - {fileID: 1219698851}
+  lockCharacter: []
+  unlockCharacter: []
   uiNotice: {fileID: 795051030}
 --- !u!4 &148726843
 Transform:
@@ -2618,7 +2614,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 13, y: 17}
+  m_Size: {x: 40, y: 40}
   m_EdgeRadius: 0
 --- !u!1 &186382240
 GameObject:
@@ -4017,7 +4013,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &298262790
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4035,10 +4031,10 @@ RectTransform:
   - {fileID: 1519695351}
   m_Father: {fileID: 1465161452}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 77, y: -77}
+  m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &298262791
 MonoBehaviour:
@@ -5289,7 +5285,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 13, y: 17}
+  m_Size: {x: 40, y: 40}
   m_EdgeRadius: 0
 --- !u!1 &478507716
 GameObject:
@@ -9812,7 +9808,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &855871064
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9830,10 +9826,10 @@ RectTransform:
   - {fileID: 232012027}
   m_Father: {fileID: 1465161452}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 25, y: -77}
-  m_SizeDelta: {x: 50, y: 50}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &855871065
 MonoBehaviour:
@@ -10579,7 +10575,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 13, y: 17}
+  m_Size: {x: 40, y: 40}
   m_EdgeRadius: 0
 --- !u!1 &987239247
 GameObject:
@@ -12201,9 +12197,9 @@ Transform:
   m_GameObject: {fileID: 1144865528}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -10, y: -10, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalPosition: {x: -20, y: -20, z: 0}
+  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 288611650}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -16458,20 +16454,20 @@ CompositeCollider2D:
   m_ColliderPaths:
   - m_Collider: {fileID: 1144865533}
     m_ColliderPaths:
-    - - X: 100000000
-        Y: 100000000
-      - X: -100000000
-        Y: 100000000
-      - X: -100000000
-        Y: -100000000
-      - X: 100000000
-        Y: -100000000
+    - - X: 200000000
+        Y: 200000000
+      - X: -200000000
+        Y: 200000000
+      - X: -200000000
+        Y: -200000000
+      - X: 200000000
+        Y: -200000000
   m_CompositePaths:
     m_Paths:
-    - - {x: 9.99997, y: -10}
-      - {x: 9.99997, y: 10}
-      - {x: -10, y: 9.99997}
-      - {x: -9.99997, y: -10}
+    - - {x: 19.999971, y: -20}
+      - {x: 19.999971, y: 20}
+      - {x: -20, y: 19.999971}
+      - {x: -19.999971, y: -20}
   m_VertexDistance: 0.0005
   m_OffsetDistance: 0.00005
   m_UseDelaunayMesh: 0
@@ -17319,7 +17315,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
@@ -18643,10 +18639,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isLive: 0
   gameTime: 0
-  maxGameTime: 100
+  maxGameTime: 60
   playerId: 0
   health: 0
-  maxHealth: 10000
+  maxHealth: 100
   level: 0
   kill: 0
   exp: 0
@@ -19375,7 +19371,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -40}
+  m_AnchoredPosition: {x: -33, y: -30}
   m_SizeDelta: {x: 102, y: 102}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1465161453
@@ -19399,9 +19395,9 @@ MonoBehaviour:
   m_StartCorner: 0
   m_StartAxis: 0
   m_CellSize: {x: 50, y: 50}
-  m_Spacing: {x: 2, y: 2}
-  m_Constraint: 0
-  m_ConstraintCount: 2
+  m_Spacing: {x: 4, y: 2}
+  m_Constraint: 1
+  m_ConstraintCount: 3
 --- !u!114 &1465161454
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20173,9 +20169,9 @@ Transform:
   m_GameObject: {fileID: 1587932161}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 10, y: 10, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalPosition: {x: 20, y: 20, z: 0}
+  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 288611650}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -20232,20 +20228,20 @@ CompositeCollider2D:
   m_ColliderPaths:
   - m_Collider: {fileID: 1587932165}
     m_ColliderPaths:
-    - - X: 100000000
-        Y: 100000000
-      - X: -100000000
-        Y: 100000000
-      - X: -100000000
-        Y: -100000000
-      - X: 100000000
-        Y: -100000000
+    - - X: 200000000
+        Y: 200000000
+      - X: -200000000
+        Y: 200000000
+      - X: -200000000
+        Y: -200000000
+      - X: 200000000
+        Y: -200000000
   m_CompositePaths:
     m_Paths:
-    - - {x: 9.99997, y: -10}
-      - {x: 9.99997, y: 10}
-      - {x: -10, y: 9.99997}
-      - {x: -9.99997, y: -10}
+    - - {x: 19.999971, y: -20}
+      - {x: 19.999971, y: 20}
+      - {x: -20, y: 19.999971}
+      - {x: -19.999971, y: -20}
   m_VertexDistance: 0.0005
   m_OffsetDistance: 0.00005
   m_UseDelaunayMesh: 0
@@ -24564,9 +24560,9 @@ Transform:
   m_GameObject: {fileID: 1595807849}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 10, y: -10, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalPosition: {x: 20, y: -20, z: 0}
+  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 288611650}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -24623,20 +24619,20 @@ CompositeCollider2D:
   m_ColliderPaths:
   - m_Collider: {fileID: 1595807853}
     m_ColliderPaths:
-    - - X: 100000000
-        Y: 100000000
-      - X: -100000000
-        Y: 100000000
-      - X: -100000000
-        Y: -100000000
-      - X: 100000000
-        Y: -100000000
+    - - X: 200000000
+        Y: 200000000
+      - X: -200000000
+        Y: 200000000
+      - X: -200000000
+        Y: -200000000
+      - X: 200000000
+        Y: -200000000
   m_CompositePaths:
     m_Paths:
-    - - {x: 9.99997, y: -10}
-      - {x: 9.99997, y: 10}
-      - {x: -10, y: 9.99997}
-      - {x: -9.99997, y: -10}
+    - - {x: 19.999971, y: -20}
+      - {x: 19.999971, y: 20}
+      - {x: -20, y: 19.999971}
+      - {x: -19.999971, y: -20}
   m_VertexDistance: 0.0005
   m_OffsetDistance: 0.00005
   m_UseDelaunayMesh: 0
@@ -30654,7 +30650,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1719970165
 RectTransform:
   m_ObjectHideFlags: 0
@@ -30672,10 +30668,10 @@ RectTransform:
   - {fileID: 2121169704}
   m_Father: {fileID: 1465161452}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 77, y: -77}
+  m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1719970166
 MonoBehaviour:
@@ -30981,7 +30977,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 13, y: 17}
+  m_Size: {x: 40, y: 40}
   m_EdgeRadius: 0
 --- !u!1 &1722067927
 GameObject:
@@ -32444,7 +32440,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 13, y: 17}
+  m_Size: {x: 40, y: 40}
   m_EdgeRadius: 0
 --- !u!1 &1949011563
 GameObject:
@@ -33604,8 +33600,8 @@ Transform:
   m_GameObject: {fileID: 2077469149}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -10, y: 10, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -20, y: 20, z: 0}
+  m_LocalScale: {x: 2, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 288611650}
@@ -33663,20 +33659,20 @@ CompositeCollider2D:
   m_ColliderPaths:
   - m_Collider: {fileID: 2077469153}
     m_ColliderPaths:
-    - - X: 100000000
-        Y: 100000000
-      - X: -100000000
-        Y: 100000000
-      - X: -100000000
-        Y: -100000000
-      - X: 100000000
-        Y: -100000000
+    - - X: 200000000
+        Y: 200000000
+      - X: -200000000
+        Y: 200000000
+      - X: -200000000
+        Y: -200000000
+      - X: 200000000
+        Y: -200000000
   m_CompositePaths:
     m_Paths:
-    - - {x: 9.99997, y: -10}
-      - {x: 9.99997, y: 10}
-      - {x: -10, y: 9.99997}
-      - {x: -9.99997, y: -10}
+    - - {x: 19.999971, y: -20}
+      - {x: 19.999971, y: 20}
+      - {x: -20, y: 19.999971}
+      - {x: -19.999971, y: -20}
   m_VertexDistance: 0.0005
   m_OffsetDistance: 0.00005
   m_UseDelaunayMesh: 0

@@ -1183,28 +1183,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f417b36df4681e48a4521d737d5c364, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 10
-  moveSpeed: 10
+  health: 3
+  attackDamage: 7
+  attackSpeed: 0.8
+  moveSpeed: 8
+  boxSize: {x: 70, y: 0.1}
+  gold: 12
   detectionLayerMask:
     serializedVersion: 2
     m_Bits: 64
-  attackDamage: 6
-  attackSpeed: 0.8
   runState: 0.25
   attackState: 1
   normalState: 0.5
   skillState: 0
-  boxSize: {x: 60, y: 0.1}
+  stageCount: 0
+  weekCount: 0
   isRight: 0
   projectilePrefab: {fileID: 8172912759357463194, guid: 38c3d5abd431f1b48a9b27f0b52bdea4,
     type: 3}
   movementdirection: {x: -1, y: 0, z: 0}
   isKnockedBack: 0
   percent: 0
-  gold: 10
   isBoss: 0
   stageEndNotice: {fileID: 0}
-  stageClearUI: {fileID: 0}
 --- !u!50 &5187762442346293339
 Rigidbody2D:
   serializedVersion: 4

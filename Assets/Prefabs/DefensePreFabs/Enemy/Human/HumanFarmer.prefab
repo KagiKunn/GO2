@@ -2348,7 +2348,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f417b36df4681e48a4521d737d5c364, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 10
+  health: 1
   moveSpeed: 12
   detectionLayerMask:
     serializedVersion: 2
@@ -2360,6 +2360,8 @@ MonoBehaviour:
   normalState: 0
   skillState: 0
   boxSize: {x: 20, y: 0.1}
+  stageCount: 0
+  weekCount: 0
   isRight: 0
   projectilePrefab: {fileID: 0}
   movementdirection: {x: -1, y: 0, z: 0}
@@ -2368,7 +2370,6 @@ MonoBehaviour:
   gold: 10
   isBoss: 0
   stageEndNotice: {fileID: 0}
-  stageClearUI: {fileID: 0}
 --- !u!50 &2666322221466028137
 Rigidbody2D:
   serializedVersion: 4

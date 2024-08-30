@@ -1,33 +1,32 @@
+using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using System.Collections.Generic;
 
 public class UnitDraggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
-{   
+{
+    public string unitName;
     private Transform Canvas;
     public Transform previousParent; 
     private RectTransform rect;
     private CanvasGroup canvasGroup;
+    private GameObject draggingInstance;
+    private RectTransform draggingRect;
 
-    public int unitIndex;
-    public UnitData unitData;
-    
-    private bool isDragging = false;
     private bool isDraggable = true;
     public bool isDropped = false;
     
-    private UnitGameManagerA unitGameManager;
-    private StageManager stageManager;
+    private UnitGameManager unitGameManager;
+    private Camera mainCamera;
     
     private void Awake()
     {
         Canvas = FindFirstObjectByType<Canvas>().transform;
         rect = GetComponent<RectTransform>();
         canvasGroup = GetComponent<CanvasGroup>();
-        
-        unitGameManager = UnitGameManagerA.Instance;
-        stageManager = FindFirstObjectByType<StageManager>();
+        unitGameManager = FindFirstObjectByType<UnitGameManager>();
+        mainCamera = Camera.main;
     }
     
     public void SetDraggable(bool draggable)
@@ -40,40 +39,69 @@ public class UnitDraggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     {
         if (!eventData.pointerPressRaycast.gameObject.GetComponent<Button>())
         {
-            isDragging = true;
-            
             previousParent = transform.parent;
             
-            transform.SetParent(Canvas);
-            transform.SetAsLastSibling();
+            Transform unitTransform = previousParent.Find("Unit");
+            unitName = unitTransform.GetComponent<TextMeshProUGUI>().text;
+            GameObject prefabname = unitGameManager.FindPrefabByName(unitName);
             
-            canvasGroup.blocksRaycasts = false;
-            canvasGroup.GetComponent<Image>().color = new Color(0.5f, 0.5f, 0.5f, 1.0f);
+            draggingInstance = Instantiate(prefabname, Canvas);
+            draggingRect = draggingInstance.GetComponent<RectTransform>();
+
+            CanvasGroup prefabCanvasGroup = draggingInstance.GetComponent<CanvasGroup>();
+            if (prefabCanvasGroup == null)
+            {
+                prefabCanvasGroup = draggingInstance.AddComponent<CanvasGroup>();
+            }
+            
+            var newDraggable = draggingInstance.AddComponent<UnitDraggable>();
+            newDraggable.unitName = unitName;
+            newDraggable.Canvas = Canvas;
+            newDraggable.previousParent = previousParent;
+            newDraggable.mainCamera = mainCamera;
+            newDraggable.unitGameManager = unitGameManager;
+            newDraggable.SetDraggable(true);
+
+            SetDraggingPosition(eventData);
+            
+            draggingRect.sizeDelta = new Vector2(200, 200);
+            draggingRect.localScale = new Vector3(200, 200, 1);
+            
+            rect.gameObject.SetActive(true);
+
+            draggingInstance.transform.SetAsLastSibling();
+            draggingInstance.GetComponent<CanvasGroup>().blocksRaycasts = false;
         }
         
     }
+    
+    private void SetDraggingPosition(PointerEventData eventData)
+    {
+        Vector3 worldPoint;
+        RectTransformUtility.ScreenPointToWorldPointInRectangle(
+            Canvas.GetComponent<RectTransform>(), 
+            eventData.position, 
+            mainCamera, 
+            out worldPoint
+        );
+
+        draggingRect.position = worldPoint;
+    }
+    
     public void OnDrag(PointerEventData eventData)
     {
-        if (isDragging)
-        {
-            rect.position = eventData.position;
-        }
-
+        SetDraggingPosition(eventData);
     }
-    // 현재 오브젝트의 드래그를 종료할 때 1회 호출
+    
     public void OnEndDrag(PointerEventData eventData)
     {
-        if (isDragging)
+        Destroy(draggingInstance);
+        
+        if (transform.parent == Canvas)
         {
-            isDragging = false;
-
-            if (transform.parent == Canvas)
-            {
-                transform.SetParent(previousParent);
-                rect.position = previousParent.GetComponent<RectTransform>().position;
-            }
-            canvasGroup.blocksRaycasts = true;
-            canvasGroup.GetComponent<Image>().color = new Color(0.5f, 0.5f, 0.5f, 1.0f);
+            transform.SetParent(previousParent);
+            rect.position = previousParent.GetComponent<RectTransform>().position;
         }
+        canvasGroup.blocksRaycasts = true;
     }
 }

@@ -52,12 +52,10 @@ public class Menu : MonoBehaviour
     private void OnMenuButtonClicked()
     {
         CustomLogger.Log("MenuButton clicked!", "yellow");
-        if (Time.timeScale <= 0)
+        if (Time.timeScale < 1)
         {
             Time.timeScale = 1;
             StageC.Instance.isGamePaused = false;
-            SettingManager.Instance.SetMainCamera();
-            SettingManager.Instance.gameObject.SetActive(false);
             SetButtonInteractable(speedButton, true);
             SetButtonInteractable(giveupButton, true);
         }
@@ -65,9 +63,6 @@ public class Menu : MonoBehaviour
         {
             Time.timeScale = 0;
             StageC.Instance.isGamePaused = true;
-            SettingManager.Instance.SetMainCamera();
-            SettingManager.Instance.gameObject.SetActive(true);
-            SettingManager.Instance.LoadText();
             SetButtonInteractable(speedButton, false);
             SetButtonInteractable(giveupButton, false);
             
@@ -80,10 +75,12 @@ public class Menu : MonoBehaviour
         if (Time.timeScale < 2)
         {
             Time.timeScale = 2;
+            speedButton.style.backgroundColor = new Color(1, 0.1f, 0.1f,0.4f);
         }
         else
         {
             Time.timeScale = 1;
+            speedButton.style.backgroundColor = new Color(0, 0, 0,0.4f);
         }
     }
 

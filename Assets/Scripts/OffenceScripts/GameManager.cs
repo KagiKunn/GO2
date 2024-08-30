@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 
+using InternalAffairs;
+
 using Unity.Cinemachine;
 
 using UnityEngine;
@@ -28,6 +30,8 @@ public class GameManager : MonoBehaviour {
 
 	[SerializeField] private float health;
 	[SerializeField] private float maxHealth = 100;
+	[SerializeField] private float attackSpeed;
+	[SerializeField] private float attackDamage;
 	[SerializeField] private int level;
 	[SerializeField] private int kill;
 	[SerializeField] private int exp;
@@ -43,6 +47,8 @@ public class GameManager : MonoBehaviour {
 	[SerializeField] private CinemachineCamera camera;
 
 	private List<string> selectedHeroes = new List<string>();
+	private List<HeroData> heroDatas = new List<HeroData>();
+
 	private string filePath;
 
 	private Hand hand;
@@ -70,24 +76,25 @@ public class GameManager : MonoBehaviour {
 			Destroy(this.gameObject);
 		}
 
-		for (int i = 0; i < PlayerLocalManager.Instance.lHeroeList.Length; i++) {
-			if (PlayerLocalManager.Instance.lHeroeList[i].Item3 > 0) {
-				string hero = PlayerLocalManager.Instance.lHeroeList[i].Item1;
+		HeroList[] heroList = PlayerLocalManager.Instance.lHeroeList;
+
+		for (int i = 0; i < heroList.Length; i++) {
+			if (heroList[i].Item3 > 0) {
+				string hero = heroList[i].Item1;
 
 				if (hero != null) {
 					selectedHeroes.Add(hero);
+					heroDatas.Add(HeroManager.Instance.heroDataList.Find(h => h.Name == heroList[i].Item1));
 				}
 			}
 		}
 
 		// foreach (string selectedHero in selectedHeroes) {
-		// 	CustomLogger.Log(selectedHero);
+		//	CustomLogger.Log(selectedHero);
 		// }
 	}
 
 	public void GameStart(Text text) {
-		health = maxHealth;
-
 		for (int i = 0; i < selectedHeroes.Count; i++) {
 			if (text.text == selectedHeroes[i]) {
 				HeroNames heroEnum;
@@ -96,12 +103,20 @@ public class GameManager : MonoBehaviour {
 					players[(int)heroEnum].gameObject.SetActive(true);
 					playerId = (int)heroEnum;
 
+					maxHealth = heroDatas[i].OffenceHP;
+					attackSpeed = heroDatas[i].OffenceAttackSpeed;
+					attackDamage = heroDatas[i].OffenceAttack / 100f;
+
 					camera.Target.TrackingTarget = players[(int)heroEnum].gameObject.transform;
 				} else {
 					CustomLogger.Log("Invalid hero name: " + selectedHeroes[i]);
 				}
 			}
 		}
+
+		health = maxHealth;
+
+		CustomLogger.Log(playerId);
 
 		uiLevelUp.Select(playerId + 5);
 		Resume();
@@ -115,6 +130,7 @@ public class GameManager : MonoBehaviour {
 
 	IEnumerator GameOverRoutine() {
 		isLive = false;
+		enemyCleaner.SetActive(true);
 
 		yield return new WaitForSeconds(0.5f);
 
@@ -151,12 +167,17 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void GameWin() {
-		SceneManager.LoadScene("Gatcha");
+		PlayerLocalManager.Instance.lNextEnemy = true;
+
+		Time.timeScale = 1;
+		SceneManager.LoadScene("Reward");
 	}
 
 	private void Update() {
 		if (!isLive) {
 			if (Input.GetKeyDown(KeyCode.Escape)) {
+				PlayerLocalManager.Instance.lMoney++;
+				PlayerLocalManager.Instance.Save();
 				SceneManager.LoadScene("InternalAffairs");
 			}
 
@@ -256,6 +277,10 @@ public class GameManager : MonoBehaviour {
 
 		set => maxHealth = value;
 	}
+
+	public float AttackSpeed => attackSpeed;
+
+	public float AttackDamage => attackDamage;
 
 	public int Level => level;
 

@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -7,23 +9,24 @@ public class UnitDropable : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 {
     private Image image;
     private RectTransform rect;
-    public UnitData assignedUnitData;
+    public UnitGameManager unitGameManager;
+
+    private GameObject[] Prefabs;
 
     private void Awake()
     {
         image = GetComponent<Image>();
         rect = GetComponent<RectTransform>();
+        Prefabs = Resources.LoadAll<GameObject>("Defense/Unit");
+        unitGameManager = FindFirstObjectByType<UnitGameManager>();
+        
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
         if (eventData.pointerDrag != null)
         {
-            UnitDraggable draggedUnit = eventData.pointerDrag.GetComponent<UnitDraggable>();
-            if (draggedUnit != null && !draggedUnit.isDropped)
-            {
                 image.color = Color.yellow;
-            }
         }
     }
 
@@ -31,12 +34,7 @@ public class UnitDropable : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     {
         if (eventData.pointerDrag != null)
         {
-            UnitDraggable draggedUnit = eventData.pointerDrag.GetComponent<UnitDraggable>();
-            if (draggedUnit != null && !draggedUnit.isDropped)
-            {
-
-                image.color = Color.white;
-            }
+            image.color = new Color(0.643f, 0.643f, 0.643f);
         }
     }
 
@@ -46,46 +44,70 @@ public class UnitDropable : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
         if (draggedUnit != null)
         {
-            assignedUnitData = draggedUnit.unitData;
+            int totalSiblings = transform.parent.childCount; // 부모 오브젝트의 전체 자식 수
+            int slotIndex = totalSiblings - 1 - transform.GetSiblingIndex();
 
-            int placement;
-            
-            if (gameObject.transform.parent.name.Contains("Left Wall Stage"))
-            {
-                placement = 1;
-            }
-            else if (gameObject.transform.parent.name.Contains("Right Wall Stage"))
-            {
-                placement = 2;
-            }
-            else
-            {
-                placement = 0;
-            }
-            
-            int slotIndex = transform.GetSiblingIndex();
+            TextMeshProUGUI unitText = draggedUnit.GetComponentInChildren<TextMeshProUGUI>();
+            string unitName = unitText != null ? unitText.text : string.Empty;
 
-            UnitGameManagerA.Instance.SaveUnitPlacement(slotIndex, draggedUnit.unitData, placement);
-
-            draggedUnit.transform.SetParent(transform);
-            draggedUnit.GetComponent<RectTransform>().position = GetComponent<RectTransform>().position;
-
-            Image dropZoneImage = GetComponent<Image>();
-            if (dropZoneImage != null)
+            if (!string.IsNullOrEmpty(unitName))
             {
-                dropZoneImage.sprite = draggedUnit.unitData.UnitImage;
-                dropZoneImage.color = Color.white;
+                int existingIndex = unitGameManager.selectedUnits
+                    .FindIndex(x => x.Key == slotIndex && x.Value == "Default");
+
+                if (existingIndex != -1)
+                {
+                    unitGameManager.selectedUnits[existingIndex] = new KeyValuePair<int, string>(slotIndex, unitName);
+                }
+                else
+                {
+                    unitGameManager.selectedUnits.Add(new KeyValuePair<int, string>(slotIndex, unitName));
+                }
+
+                CustomLogger.Log(slotIndex + " " + unitName);
+
+                PlayerLocalManager.Instance.lAllyUnitList = unitGameManager.selectedUnits;
+                PlayerLocalManager.Instance.Save();
+
+                unitGameManager.RemoveUnitFromList(unitName);
+                
+                draggedUnit.transform.SetParent(transform);
+                draggedUnit.GetComponent<RectTransform>().position = GetComponent<RectTransform>().position;
+                
+                Image dropZoneImage = GetComponent<Image>();
+                
+                if (dropZoneImage != null)
+                {
+                    dropZoneImage.color = new Color(0.643f, 0.643f, 0.643f);
+                    dropZoneImage.GetComponent<UnitDropable>().enabled = false; // 중복 배치 방지
+                }
+                
+                draggedUnit.transform.SetParent(draggedUnit.previousParent);
+                draggedUnit.GetComponent<RectTransform>().position = 
+                    draggedUnit.previousParent.GetComponent<RectTransform>().position;
+                
+                unitGameManager.DisplayPrefab();
+                
+                draggedUnit.SetDraggable(false);
+                draggedUnit.isDropped = true;
             }
-            
-            draggedUnit.transform.SetParent(draggedUnit.previousParent);
-            draggedUnit.GetComponent<RectTransform>().position = draggedUnit.previousParent.GetComponent<RectTransform>().position;
-            
-            UnitDraggable originalDraggable = draggedUnit.previousParent.GetComponentInChildren<UnitDraggable>();
-            if (originalDraggable != null)
-            { 
-                originalDraggable.enabled = false;
-            }
-            draggedUnit.isDropped = true;
         }
+    }
+
+    public void RemoveExistingPrefab(int slotIndex)
+    {
+        Transform slotTransform = unitGameManager.Slot[slotIndex].transform;
+
+        if (slotTransform.childCount > 0)
+        {
+            foreach (Transform child in slotTransform)
+            {
+                if (child.name.EndsWith("(Clone)"))
+                {
+                    Destroy(child.gameObject);
+                }
+            }
+        }
+        
     }
 }

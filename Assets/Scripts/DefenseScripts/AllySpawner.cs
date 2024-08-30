@@ -31,15 +31,16 @@ public class AllySpawner : MonoBehaviour {
 
 	void Awake()
 	{
+		List<GameObject> leftAllies = new List<GameObject>();
+		List<GameObject> rightAllies = new List<GameObject>();
 		allyUnitList = PlayerLocalManager.Instance.lAllyUnitList
 			.OrderBy(unit => unit.Key)
 			.ToList();
-		for (int i = 0; i<23; i++)
+		for (int i = 0; i<28; i++)
 		{
 			string name = allyUnitList[i].Value;
 			if (i < 14)
 			{
-				
 				leftAllies.Add(Resources.Load<GameObject>("Defense/Unit/" + name));
 			}
 			else

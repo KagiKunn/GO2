@@ -1639,7 +1639,7 @@ Animator:
   m_GameObject: {fileID: 2160878103218979641}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 1d582fc429fc13a4cbaad817432708c7, type: 2}
+  m_Controller: {fileID: 9100000, guid: 7d202f578bec24e928d3baa75058aae5, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -1663,27 +1663,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f417b36df4681e48a4521d737d5c364, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 30
+  health: 10
+  attackDamage: 10
+  attackSpeed: 1
   moveSpeed: 20
+  boxSize: {x: 20, y: 0.1}
+  gold: 14
   detectionLayerMask:
     serializedVersion: 2
     m_Bits: 64
-  attackDamage: 6
-  attackSpeed: 1
   runState: 0.25
   attackState: 0
   normalState: 0
   skillState: 0
-  boxSize: {x: 20, y: 0.1}
+  stageCount: 0
+  weekCount: 0
   isRight: 0
   projectilePrefab: {fileID: 0}
   movementdirection: {x: -1, y: 0, z: 0}
   isKnockedBack: 0
   percent: 0
-  gold: 10
   isBoss: 0
   stageEndNotice: {fileID: 0}
-  stageClearUI: {fileID: 0}
 --- !u!50 &182812178885286203
 Rigidbody2D:
   serializedVersion: 4

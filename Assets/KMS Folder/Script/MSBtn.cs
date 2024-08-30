@@ -39,12 +39,7 @@ public class MSBtn : MonoBehaviour {
 
 	public void CallRepairPopup() {
 		if (Mathf.Approximately(PlayerLocalManager.Instance.lCastleHp, PlayerLocalManager.Instance.lCastleMaxHp)) {
-			if (GameObject.FindWithTag("Popup") != null) return;
-
 			GameObject fullPopup = Instantiate(Resources.Load<GameObject>("PreFab/SmithPopupHpFull"));
-
-			fullPopup.tag = "Popup";
-
 			Transform confirmButtonTransform = fullPopup.transform.Find("PopupBackground/ConfirmButton");
 			Button confirmButton = confirmButtonTransform.GetComponent<Button>();
 

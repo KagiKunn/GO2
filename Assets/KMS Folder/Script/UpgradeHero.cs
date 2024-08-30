@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using TMPro;
+using UnityEngine.Localization;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
@@ -12,7 +13,7 @@ public class UpgradeHero : MonoBehaviour
     public TMP_Text heroAttackSpeed;
     public Image heroCharacterImage;
     public Button closeBtn;
-
+    public SimplePopup popup;
     private HeroData upgradeHero;
 
     void OnEnable()
@@ -37,17 +38,47 @@ public class UpgradeHero : MonoBehaviour
 
     private void Update()
     {
-        heroHP.text = $"HP: {upgradeHero.OffenceHP}";
-        heroAttack.text = $"Attack: {upgradeHero.OffenceAttack}";
-        heroAttackSpeed.text = $"Attack Speed: {upgradeHero.OffenceAttackSpeed}";
+        LocalizedString localizedString = new LocalizedString
+            { TableReference = "UI", TableEntryReference = "HeroHP" };
+
+        localizedString.StringChanged += (localizedText) => {
+            heroHP.text = $"{localizedText}: {upgradeHero.OffenceHP}";
+        };
+        localizedString = new LocalizedString
+            { TableReference = "UI", TableEntryReference = "HeroAtk" };
+
+        localizedString.StringChanged += (localizedText) => {
+            heroAttack.text = $"{localizedText}: {upgradeHero.OffenceAttack}";
+        };
+        localizedString = new LocalizedString
+            { TableReference = "UI", TableEntryReference = "HeroAtkSp" };
+
+        localizedString.StringChanged += (localizedText) => {
+            heroAttackSpeed.text = $"{localizedText}: {upgradeHero.OffenceAttackSpeed}";
+        };
     }
 
     private void DisplayHeroInfo()
     {
         heroName.text = upgradeHero.Name;
-        heroHP.text = $"HP: {upgradeHero.OffenceHP}";
-        heroAttack.text = $"Attack: {upgradeHero.OffenceAttack}";
-        heroAttackSpeed.text = $"Attack Speed: {upgradeHero.OffenceAttackSpeed}";
+        LocalizedString localizedString = new LocalizedString
+            { TableReference = "UI", TableEntryReference = "HeroHP" };
+
+        localizedString.StringChanged += (localizedText) => {
+            heroHP.text = $"{localizedText}: {upgradeHero.OffenceHP}";
+        };
+        localizedString = new LocalizedString
+            { TableReference = "UI", TableEntryReference = "HeroAtk" };
+
+        localizedString.StringChanged += (localizedText) => {
+            heroAttack.text = $"{localizedText}: {upgradeHero.OffenceAttack}";
+        };
+        localizedString = new LocalizedString
+            { TableReference = "UI", TableEntryReference = "HeroAtkSp" };
+
+        localizedString.StringChanged += (localizedText) => {
+            heroAttackSpeed.text = $"{localizedText}: {upgradeHero.OffenceAttackSpeed}";
+        };
         heroCharacterImage.sprite = upgradeHero.CharacterImg;
     }
     
@@ -66,14 +97,19 @@ public class UpgradeHero : MonoBehaviour
 
     public void OnUpgradeBtn()
     {
-        if (100 < PlayerLocalManager.Instance.lMoney)
+        if (PlayerLocalManager.Instance.lMoney < 100)
         {
-            PlayerLocalManager.Instance.lMoney -= 100;
-            PlayerLocalManager.Instance.Save();
+            popup.ShowPopup("Need More Money!");
+            CustomLogger.Log("Need More Money!", "red");
+            return;
         }
-        HeroManager.Instance.upgradeHero.OffenceHP += 20;
+        
+        PlayerLocalManager.Instance.lMoney -= 100;
+        HeroManager.Instance.upgradeHero.OffenceHP += 10;
         HeroManager.Instance.upgradeHero.OffenceAttack += 10;
         HeroManager.Instance.upgradeHero.OffenceAttackSpeed += 5;
         HeroManager.Instance.SaveHeroFormation();
+        PlayerLocalManager.Instance.Save();
+        popup.ShowPopup("Upgrade Complete!");
     }
 }

@@ -35,7 +35,7 @@ public class Enemy : MonoBehaviour {
 		waitForFixedUpdate = new WaitForFixedUpdate();
 
 		gameManager = GameManager.Instance;
-		player = GameManager.Instance.Player[GameManager.Instance.PlayerId];
+		player = gameManager.Player[gameManager.PlayerId];
 
 		scale = transform.localScale;
 
@@ -45,7 +45,7 @@ public class Enemy : MonoBehaviour {
 	private void Update() {
 		if (player.gameObject.name != "Dummy") return;
 
-		player = GameManager.Instance.Player[GameManager.Instance.PlayerId];
+		player = gameManager.Player[gameManager.PlayerId];
 	}
 
 	private void FixedUpdate() {
@@ -86,14 +86,15 @@ public class Enemy : MonoBehaviour {
 		rigidbody2D.simulated = true;
 		spriteRenderer.sortingOrder = 2;
 		animator.SetBool("Die", false);
+		animator.SetFloat("RunState", 0.25f);
 
 		health = maxHealth;
 	}
 
 	public void Initialized(SpawnData spawnData) {
-		speed = spawnData.Speed;
-		maxHealth = spawnData.Health;
-		health = spawnData.Health;
+		speed = spawnData.Speed + ((PlayerLocalManager.Instance.lStage - 1) * 0.1f);
+		maxHealth = spawnData.Health + ((PlayerLocalManager.Instance.lStage - 1) * 5);
+		health = maxHealth;
 	}
 
 	private void OnTriggerEnter2D(Collider2D other) {
@@ -107,6 +108,8 @@ public class Enemy : MonoBehaviour {
 		if (health > 0) {
 			animator.SetFloat("RunState", 1);
 
+			StartCoroutine(ResetRunState());
+
 			AudioManager.Instance.PlaySfx(AudioManager.Sfx.Hit);
 		} else {
 			isLive = false;
@@ -119,9 +122,18 @@ public class Enemy : MonoBehaviour {
 				gameManager.Kill++;
 				gameManager.GetExp();
 
+				if (gameManager.PlayerId == 3)
+					gameManager.Health += 1;
+
 				AudioManager.Instance.PlaySfx(AudioManager.Sfx.Dead);
 			}
 		}
+	}
+
+	IEnumerator ResetRunState() {
+		yield return new WaitForSeconds(1.5f);
+
+		animator.SetFloat("RunState", 0.25f);
 	}
 
 	IEnumerator KnockBack() {
@@ -132,7 +144,7 @@ public class Enemy : MonoBehaviour {
 		yield return waitForFixedUpdate; // 다음 하나의 무리 프레임 딜레이
 
 		Vector3 playerPosition = player.transform.position;
-		Vector3 directionVector3 = transform.position - playerPosition;
+		Vector3 directionVector3 = transform.parent.position - playerPosition;
 
 		rigidbody2D.AddForce(directionVector3.normalized * 3, ForceMode2D.Impulse);
 	}

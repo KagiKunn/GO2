@@ -106,11 +106,7 @@ public class PlayerSyncManager : MonoBehaviour, IDisposable {
 					changeAccount = false;
 					PlayerLocalManager.Instance.CreateNewPlayer();
 					SaveLocalData(new PlayerSyncData(UUID, Level, Repeat, Username, RoguePoint));
-					#if UNITY_EDITOR
-					UnityEditor.EditorApplication.isPlaying = false;
-					#else
-                            Application.Quit();
-					#endif
+					Quit();
 					CustomLogger.LogWarning("Make NEW");
 				}
 			}
@@ -338,7 +334,18 @@ public class PlayerSyncManager : MonoBehaviour, IDisposable {
 		return playerData.Serialize();
 	}
 
-	public void Dispose() {
+	public void Quit()
+	{
+		#if UNITY_EDITOR
+			UnityEditor.EditorApplication.isPlaying = false;
+		#else
+		    Application.Quit();
+		#endif
+	}
+
+	public void Dispose()
+	{
+		Save();
 		stream?.Close();
 		client?.Close();
 	}
