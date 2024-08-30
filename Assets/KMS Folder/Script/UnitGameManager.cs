@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
+
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UnitGameManager : MonoBehaviour
 {
@@ -26,7 +28,6 @@ public class UnitGameManager : MonoBehaviour
         {
             DisplayPrefab();
         }
-
         DisplayUnitsList();
         UpdateUnitsList();
     }
@@ -47,18 +48,27 @@ public class UnitGameManager : MonoBehaviour
 
     private void DisplayUnitsList()
     {
+        Sprite[] prefabImages = Resources.LoadAll<Sprite>("Image/Unit");
         foreach (var unitData in userUnits)
         {
             GameObject newSlot = Instantiate(slotPrefab, slotParent);
-            TextMeshProUGUI unitName = newSlot.GetComponentInChildren<TextMeshProUGUI>();
+            Image unitImage = newSlot.GetComponentInChildren<Image>();
 
-            if (unitName != null)
+            if (unitImage != null)
             {
-                unitName.text = unitData.Key;
+                foreach (var prefabImage in prefabImages)
+                {
+                    string spriteNameWithoutSuffix = prefabImage.name.Split('_')[0];
+                    if (spriteNameWithoutSuffix == unitData.Key)
+                    {
+                        unitImage.sprite = prefabImage;
+                        break;
+                    }
+                }
             }
             else
             {
-                Debug.LogWarning("슬롯에 TextMeshProUGUI 컴포넌트 없음.");
+                Debug.LogWarning("슬롯에 Image 컴포넌트 없음.");
             }
 
             UnitDraggable unitDraggable = newSlot.GetComponentInChildren<UnitDraggable>();
@@ -74,7 +84,6 @@ public class UnitGameManager : MonoBehaviour
     public void DisplayPrefab()
     {
         Prefabs = Resources.LoadAll<GameObject>("Defense/Unit");
-
         if (selectedUnits != null)
         {
             foreach (var unitData in selectedUnits)
@@ -83,14 +92,14 @@ public class UnitGameManager : MonoBehaviour
                 string unitName = unitData.Value;
 
                 GameObject prefabname = FindPrefabByName(unitName);
-
-                if (prefabname.name == "Default")
-                {
-                    return;
-                }
                 
                 if (prefabname != null)
                 {
+                    
+                    if (prefabname.name == "Default")
+                    {
+                        return;
+                    }
                     unintDropable.RemoveExistingPrefab(slotIndex);
                     GameObject prefabObject = Instantiate(prefabname, Slot[slotIndex].transform);
                     RectTransform prefab = prefabObject.GetComponent<RectTransform>();
@@ -99,7 +108,9 @@ public class UnitGameManager : MonoBehaviour
                     prefab.sizeDelta = slotRect.sizeDelta;
                     prefab.localScale = new Vector3(200, 200, 1);
                     prefab.anchoredPosition = new Vector2(0, -50);
-
+                    
+                    Slot[slotIndex].GetComponent<UnitDropable>().enabled = false;
+                    
                     RemoveClones();
                 }
             }
@@ -109,6 +120,7 @@ public class UnitGameManager : MonoBehaviour
     public GameObject FindPrefabByName(string unitName)
     {
         Prefabs = Resources.LoadAll<GameObject>("Defense/Unit");
+        
         foreach (GameObject prefab in Prefabs)
         {
             if (prefab.name == unitName)
@@ -122,6 +134,7 @@ public class UnitGameManager : MonoBehaviour
 
     public void RemoveUnitFromList(string unitName)
     {
+        CustomLogger.Log("리스트에서 리무브 하는 메서드 발동", Color.magenta);
         foreach (Transform child in slotParent)
         {
             TextMeshProUGUI unitText = child.GetComponentInChildren<TextMeshProUGUI>();
@@ -203,7 +216,7 @@ public class UnitGameManager : MonoBehaviour
         }
     }
 
-    private void UpdateUnitsList()
+    public void UpdateUnitsList()
     {
         Dictionary<string, int> deployedUnitCounts = new Dictionary<string, int>();
 
