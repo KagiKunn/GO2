@@ -50,7 +50,7 @@ namespace InternalAffairs
                 {
                     //1스테이지일때 벽 체력정보 리셋
 
-                    PlayerLocalManager.Instance.ResetHealthData();
+                    PlayerLocalManager.Instance.lCastleHp=PlayerLocalManager.Instance.lCastleMaxHp;
                 }
 
                 // 종족 선택 및 저장

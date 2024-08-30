@@ -15,7 +15,7 @@ public class SkillPanelManager : MonoBehaviour
     private bool isPanelVisible = true;
     private float hiddenPosition = -120f; // 패널 숨김 위치 (패널 높이 만큼)
     private float visiblePosition = 0f;   // 패널 보임 위치 (화면 하단)
-    
+    private bool canTogglePanel = true;
     private string filePath;
     private string jsonData;
 
@@ -147,6 +147,8 @@ public class SkillPanelManager : MonoBehaviour
 
     private void TogglePanel()
     {
+        if (!canTogglePanel) return; // 토글이 불가능한 상태라면 함수 종료
+
         // 패널의 현재 위치에 따라 슬라이드 위치 변경
         if (isPanelVisible)
         {
@@ -183,6 +185,36 @@ public class SkillPanelManager : MonoBehaviour
         if (StageC.Instance != null && StageC.Instance.isGamePaused) {
             return; // 게임이 일시 정지된 상태에서는 클릭을 무시함
         }
+
+        // HeroSkill을 시작하기 전에 자식 요소들을 2초 동안 비활성화
         heroSkill.HeroSkillStart();
+
+        // 패널 토글 기능을 일시적으로 비활성화
+        canTogglePanel = false;
+
+        StartCoroutine(DisableChildrenTemporarily(bottomPanel, 1.4f));
+    }
+    
+    private IEnumerator DisableChildrenTemporarily(VisualElement parent, float duration)
+    {
+        // 자식 요소들을 비활성화
+        foreach (var child in parent.Children())
+        {
+            child.SetEnabled(false);
+            CustomLogger.Log("disabled" + child.name, "red");
+        }
+
+        // 지정된 시간(duration) 동안 대기
+        yield return new WaitForSeconds(duration);
+
+        // 자식 요소들을 다시 활성화
+        foreach (var child in parent.Children())
+        {
+            child.SetEnabled(true);
+            CustomLogger.Log("activated" + child.name, "blue");
+        }
+
+        // 패널 토글 기능을 다시 활성화
+        canTogglePanel = true;
     }
 }
