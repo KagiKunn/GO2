@@ -19,18 +19,14 @@ public class UnitDropable : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         rect = GetComponent<RectTransform>();
         Prefabs = Resources.LoadAll<GameObject>("Defense/Unit");
         unitGameManager = FindFirstObjectByType<UnitGameManager>();
+        
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
         if (eventData.pointerDrag != null)
         {
-            UnitDraggable draggedUnit = eventData.pointerDrag.GetComponent<UnitDraggable>();
-
-            if (draggedUnit != null && !draggedUnit.isDropped)
-            {
                 image.color = Color.yellow;
-            }
         }
     }
 
@@ -38,12 +34,7 @@ public class UnitDropable : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     {
         if (eventData.pointerDrag != null)
         {
-            UnitDraggable draggedUnit = eventData.pointerDrag.GetComponent<UnitDraggable>();
-            if (draggedUnit != null && !draggedUnit.isDropped)
-            {
-
-                image.color = new Color(0.643f, 0.643f, 0.643f);
-            }
+            image.color = new Color(0.643f, 0.643f, 0.643f);
         }
     }
 
@@ -84,10 +75,11 @@ public class UnitDropable : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                 draggedUnit.GetComponent<RectTransform>().position = GetComponent<RectTransform>().position;
                 
                 Image dropZoneImage = GetComponent<Image>();
-
+                
                 if (dropZoneImage != null)
                 {
                     dropZoneImage.color = new Color(0.643f, 0.643f, 0.643f);
+                    dropZoneImage.GetComponent<UnitDropable>().enabled = false; // 중복 배치 방지
                 }
                 
                 draggedUnit.transform.SetParent(draggedUnit.previousParent);
