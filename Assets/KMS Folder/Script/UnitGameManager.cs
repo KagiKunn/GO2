@@ -23,7 +23,6 @@ public class UnitGameManager : MonoBehaviour
     private void Awake()
     {
         LoadUserUnit();
-
         if (selectedUnits != null)
         {
             DisplayPrefab();
@@ -39,6 +38,7 @@ public class UnitGameManager : MonoBehaviour
         if (PlayerLocalManager.Instance.lAllyUnitList != null)
         {
             selectedUnits = PlayerLocalManager.Instance.lAllyUnitList;
+            
         }
         else
         {
@@ -93,13 +93,8 @@ public class UnitGameManager : MonoBehaviour
 
                 GameObject prefabname = FindPrefabByName(unitName);
                 
-                if (prefabname != null)
+                if (prefabname != null && prefabname.name != "Default")
                 {
-                    
-                    if (prefabname.name == "Default")
-                    {
-                        return;
-                    }
                     unintDropable.RemoveExistingPrefab(slotIndex);
                     GameObject prefabObject = Instantiate(prefabname, Slot[slotIndex].transform);
                     RectTransform prefab = prefabObject.GetComponent<RectTransform>();
@@ -137,9 +132,9 @@ public class UnitGameManager : MonoBehaviour
         CustomLogger.Log("리스트에서 리무브 하는 메서드 발동", Color.magenta);
         foreach (Transform child in slotParent)
         {
-            TextMeshProUGUI unitText = child.GetComponentInChildren<TextMeshProUGUI>();
-
-            if (unitText != null && unitText.text == unitName && child.gameObject.activeSelf)
+            Image unitText = child.GetComponentInChildren<Image>();
+            string unit = unitText.sprite.name.Split('_')[0];
+            if (unitText != null && unit == unitName && child.gameObject.activeSelf)
             {
                 child.gameObject.SetActive(false);
                 break;

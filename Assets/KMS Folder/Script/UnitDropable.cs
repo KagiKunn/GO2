@@ -68,10 +68,8 @@ public class UnitDropable : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
                 PlayerLocalManager.Instance.lAllyUnitList = unitGameManager.selectedUnits;
                 PlayerLocalManager.Instance.Save();
-                // unitGameManager.RemoveUnitFromList(unitName);
-                
-                unitGameManager.UpdateUnitsList();
-                
+                unitGameManager.RemoveUnitFromList(unitName);
+                // unitGameManager.UpdateUnitsList();
                 // draggedUnit.transform.SetParent(transform);
                 // draggedUnit.GetComponent<RectTransform>().position = GetComponent<RectTransform>().position;
                 
@@ -87,9 +85,9 @@ public class UnitDropable : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                     CustomLogger.Log("Warning: Drop zone does not have an Image component.");
                 }
                 
-                draggedUnit.transform.SetParent(draggedUnit.previousParent);
-                draggedUnit.GetComponent<RectTransform>().position = 
-                    draggedUnit.previousParent.GetComponent<RectTransform>().position;
+                // draggedUnit.transform.SetParent(draggedUnit.previousParent);
+                // draggedUnit.GetComponent<RectTransform>().position = 
+                //     draggedUnit.previousParent.GetComponent<RectTransform>().position;
                 
                 unitGameManager.DisplayPrefab();
                 

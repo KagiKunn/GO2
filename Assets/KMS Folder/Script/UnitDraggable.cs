@@ -49,6 +49,7 @@ public class UnitDraggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
             draggingRect = draggingInstance.GetComponent<RectTransform>();
 
             CanvasGroup prefabCanvasGroup = draggingInstance.GetComponent<CanvasGroup>();
+            
             if (prefabCanvasGroup == null)
             {
                 prefabCanvasGroup = draggingInstance.AddComponent<CanvasGroup>();
