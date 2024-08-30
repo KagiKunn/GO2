@@ -202,11 +202,10 @@ public class CastleWallManager : MonoBehaviour {
     private void HandleGameOver()
     {
         PlaySound();
-        DestroyWallsWithTag("RightWall");
-        DestroyWallsWithTag("LeftWall");
+        DestroyWallsWithTag("TagForDestroyWalls");
 
         Debug.Log("성벽이 파괴되었습니다! 게임 오버!");
-    
+
         if (stageC != null) {
             stageC.ShowGameOverUI();
         } else {
