@@ -95,6 +95,8 @@ public class BounusSaveManager : MonoBehaviour
             4 => 2000,
             _ => 0
         };
+        PlayerLocalManager.Instance.lCastleMaxHp += PlayerLocalManager.Instance.lCastleExtraHp;
+        PlayerLocalManager.Instance.lCastleHp = PlayerLocalManager.Instance.lCastleMaxHp;
     }
 
 }

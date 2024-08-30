@@ -12,7 +12,6 @@ public class CastleWallManager : MonoBehaviour {
     public static CastleWallManager Instance;
 
     [SerializeField] private float activateShieldValue = 80f; // 기본 실드 최대값
-    public float extraHealth;
 
     private HeroManager heroManager;
     private Coroutine resetShieldCoroutine;
@@ -36,16 +35,14 @@ public class CastleWallManager : MonoBehaviour {
     private AudioSource audioSource;
     public AudioMixerGroup sfxMixerGroup;
     private void Awake() {
-        Debug.Log("특전 추가체력 : " + extraHealth);
         Debug.Log("캐슬월에서 가져온 스테이지카운트 : " + PlayerLocalManager.Instance.lStage);
         if (PlayerLocalManager.Instance.lStage == 1) {
-            maxHealth += extraHealth; //2회차 1스테이지 경우에는 로그라이크 특전 추가체력을 더해줌
+            
             health = maxHealth;
         }
         // Load game data
         if (PlayerLocalManager.Instance != null) {
             maxHealth = PlayerLocalManager.Instance.lCastleMaxHp;
-            extraHealth = PlayerLocalManager.Instance.lCastleExtraHp;
             health = PlayerLocalManager.Instance.lCastleHp;
         }
 
@@ -228,10 +225,9 @@ public class CastleWallManager : MonoBehaviour {
     }
 
     public void SaveWallHP() {
-        CustomLogger.Log("성벽 HP 정보 저장됨 health, mH, eH" + health + "," + maxHealth + "," + extraHealth);
+        CustomLogger.Log("성벽 HP 정보 저장됨 health, mH, eH" + health + "," + maxHealth);
         PlayerLocalManager.Instance.lCastleHp = health;
         PlayerLocalManager.Instance.lCastleMaxHp = maxHealth;
-        PlayerLocalManager.Instance.lCastleExtraHp = extraHealth;
         PlayerLocalManager.Instance.Save();
     }
 
