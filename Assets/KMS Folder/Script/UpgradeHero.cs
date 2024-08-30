@@ -13,7 +13,7 @@ public class UpgradeHero : MonoBehaviour
     public TMP_Text heroAttackSpeed;
     public Image heroCharacterImage;
     public Button closeBtn;
-
+    public SimplePopup popup;
     private HeroData upgradeHero;
 
     void OnEnable()
@@ -97,14 +97,19 @@ public class UpgradeHero : MonoBehaviour
 
     public void OnUpgradeBtn()
     {
-        if (100 < PlayerLocalManager.Instance.lMoney)
+        if (PlayerLocalManager.Instance.lMoney < 100)
         {
-            PlayerLocalManager.Instance.lMoney -= 100;
-            PlayerLocalManager.Instance.Save();
+            popup.ShowPopup("Need More Money!");
+            CustomLogger.Log("Need More Money!", "red");
+            return;
         }
-        HeroManager.Instance.upgradeHero.OffenceHP += 20;
-        HeroManager.Instance.upgradeHero.OffenceAttack += 10;
+        
+        PlayerLocalManager.Instance.lMoney -= 100;
+        HeroManager.Instance.upgradeHero.OffenceHP += 10;
+        HeroManager.Instance.upgradeHero.OffenceAttack += 2;
         HeroManager.Instance.upgradeHero.OffenceAttackSpeed += 5;
         HeroManager.Instance.SaveHeroFormation();
+        PlayerLocalManager.Instance.Save();
+        popup.ShowPopup("Upgrade Complete!");
     }
 }

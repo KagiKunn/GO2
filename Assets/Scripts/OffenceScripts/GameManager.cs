@@ -156,7 +156,7 @@ public class GameManager : MonoBehaviour {
 		PlayerLocalManager.Instance.lNextEnemy = true;
 
 		Time.timeScale = 1;
-		SceneManager.LoadScene("Gatcha");
+		SceneManager.LoadScene("Reward");
 	}
 
 	private void Update() {
