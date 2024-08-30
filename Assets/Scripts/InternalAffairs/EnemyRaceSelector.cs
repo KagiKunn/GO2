@@ -50,7 +50,7 @@ namespace InternalAffairs {
 				CustomLogger.Log(PlayerLocalManager.Instance.lNextEnemy, "yellow");
 
 				if (PlayerLocalManager.Instance.lNextEnemy) {
-					GameObject.Find("NextEnemy").GetComponent<TextMeshProUGUI>().text = SelectedRace;
+					GameObject.Find("NextEnemy").GetComponent<TMP_InputField>().text = SelectedRace;
 				}
 			}
 		}
