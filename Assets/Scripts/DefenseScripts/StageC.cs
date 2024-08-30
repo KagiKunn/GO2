@@ -110,17 +110,6 @@ public class StageC : MonoBehaviour {
 		}
 	}
 
-	private void UploadCastleWallDataToDefenseGameData()
-	{
-		if (castleWallManager != null && PlayerLocalManager.Instance != null)
-		{
-			PlayerLocalManager.Instance.lCastleMaxHp = castleWallManager.maxHealth;
-			PlayerLocalManager.Instance.lCastleHp = castleWallManager.health;
-			PlayerLocalManager.Instance.lCastleExtraHp = castleWallManager.extraHealth;
-			Debug.Log("현재 시점의 CastleWall 데이터가 DefenseGameData에 업로드되었습니다.");
-		}
-	}
-
 	private void InitializeStageClearUI() {
 		if (stageClearCanvas != null) {
 			stageClearCanvas.enabled = false;

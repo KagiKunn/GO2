@@ -46,10 +46,10 @@ public class UnitDropable : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         {
             int totalSiblings = transform.parent.childCount; // 부모 오브젝트의 전체 자식 수
             int slotIndex = totalSiblings - 1 - transform.GetSiblingIndex();
-
-            TextMeshProUGUI unitText = draggedUnit.GetComponentInChildren<TextMeshProUGUI>();
-            string unitName = unitText != null ? unitText.text : string.Empty;
-
+            
+            Image unitText = draggedUnit.gameObject.transform.parent.GetComponent<Image>();
+            string unitName = unitText.sprite.name.Split('_')[0];
+            
             if (!string.IsNullOrEmpty(unitName))
             {
                 int existingIndex = unitGameManager.selectedUnits
@@ -68,23 +68,26 @@ public class UnitDropable : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
                 PlayerLocalManager.Instance.lAllyUnitList = unitGameManager.selectedUnits;
                 PlayerLocalManager.Instance.Save();
-
                 unitGameManager.RemoveUnitFromList(unitName);
-                
-                draggedUnit.transform.SetParent(transform);
-                draggedUnit.GetComponent<RectTransform>().position = GetComponent<RectTransform>().position;
+                // unitGameManager.UpdateUnitsList();
+                // draggedUnit.transform.SetParent(transform);
+                // draggedUnit.GetComponent<RectTransform>().position = GetComponent<RectTransform>().position;
                 
                 Image dropZoneImage = GetComponent<Image>();
                 
                 if (dropZoneImage != null)
                 {
                     dropZoneImage.color = new Color(0.643f, 0.643f, 0.643f);
-                    dropZoneImage.GetComponent<UnitDropable>().enabled = false; // 중복 배치 방지
+                    dropZoneImage.GetComponent<UnitDropable>().enabled = false;
+                }
+                else
+                {
+                    CustomLogger.Log("Warning: Drop zone does not have an Image component.");
                 }
                 
-                draggedUnit.transform.SetParent(draggedUnit.previousParent);
-                draggedUnit.GetComponent<RectTransform>().position = 
-                    draggedUnit.previousParent.GetComponent<RectTransform>().position;
+                // draggedUnit.transform.SetParent(draggedUnit.previousParent);
+                // draggedUnit.GetComponent<RectTransform>().position = 
+                //     draggedUnit.previousParent.GetComponent<RectTransform>().position;
                 
                 unitGameManager.DisplayPrefab();
                 
