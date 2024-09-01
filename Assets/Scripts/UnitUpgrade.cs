@@ -130,12 +130,12 @@ public class UnitUpgrade : MonoBehaviour {
 	void updateHero() {
 		switch (levelList[classNum]) {
 			case 0:
-				price = 80;
+				price = 100;
 				priceTxt.text = $"{price}G/{PlayerLocalManager.Instance.lMoney}G";
 
 				break;
 			case 1:
-				price = 100;
+				price = 150;
 				priceTxt.text = $"{price}G/{PlayerLocalManager.Instance.lMoney}G";
 
 				break;
