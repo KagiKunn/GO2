@@ -120,8 +120,25 @@ public class HeroSelect : MonoBehaviour
     // 선택해서 배치 슬롯에 들어간 영웅 전신 이미지 표시
     private void SetMainCharacterImage(Sprite mainSprite)
     {
-        CharacterImage.sprite = mainSprite;
-        CharacterImage.gameObject.SetActive(mainSprite != null);
+        if (mainSprite != null)
+        {
+            CharacterImage.sprite = mainSprite;
+            CharacterImage.gameObject.SetActive(mainSprite != null);
+            CharacterImage.GetComponent<Image>().enabled = true;
+            RectTransform rectTransform = CharacterImage.GetComponent<RectTransform>();
+            if (CharacterImage.sprite.name.Equals("ElfNuki_0"))
+            {
+                rectTransform.anchoredPosition = new Vector2(-464, -412);
+            }
+            else
+            {
+                rectTransform.anchoredPosition = new Vector2(-464, -637);
+            }
+        }
+        else
+        {
+            Debug.LogWarning("Main sprite is Null");
+        }
     }
     // 리셋 버튼(리셋시 영웅 편성 정보도 날라감)
     private void ResetHeroSelection()
