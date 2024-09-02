@@ -24,8 +24,7 @@ public class PlayerLocalManager : MonoBehaviour {
 	private float L_CastleMaxHP;
 	private float L_CastleHP;
 	private float L_CastleExtraHP;
-	private List<KeyValuePair<string, int>> L_UnitList;
-	private List<KeyValuePair<int, string>> L_AllyUnitList;
+	private List<Triple<int, int, string>> L_UnitList;
 
 	private KeyValuePair<string, int> dd;
 
@@ -123,16 +122,10 @@ public class PlayerLocalManager : MonoBehaviour {
 		set => L_CastleExtraHP = value;
 	}
 
-	public List<KeyValuePair<string, int>> lUnitList {
+	public List<Triple<int, int, string>> lUnitList {
 		get => L_UnitList;
 
 		set => L_UnitList = value;
-	}
-
-	public List<KeyValuePair<int, string>> lAllyUnitList {
-		get => L_AllyUnitList;
-
-		set => L_AllyUnitList = value;
 	}
 
 	public SceneControl SceneControl {
@@ -195,10 +188,13 @@ public class PlayerLocalManager : MonoBehaviour {
 					lCastleHp = localData.CastleHealth;
 					lCastleExtraHp = localData.CastleExtraHealth;
 					lUnitList = localData.UnitList;
-					lAllyUnitList = localData.AllyUnitList;
 					lGameStarted = localData.GameStarted;
 					lLocale = localData.Locale;
 					lNextEnemy = localData.NextEnemy;
+					foreach (Triple<int, int, string> unit in lUnitList)
+					{
+						CustomLogger.LogWarning($"[{unit.Item1}] {unit.Item3} at {unit.Item2}");
+					}
 				}
 			}
 		} catch (Exception ex) {
@@ -225,7 +221,6 @@ public class PlayerLocalManager : MonoBehaviour {
 		lCastleHp = localData.CastleHealth;
 		lCastleExtraHp = localData.CastleExtraHealth;
 		lUnitList = localData.UnitList;
-		lAllyUnitList = localData.AllyUnitList;
 		lGameStarted = localData.GameStarted;
 		lLocale = localData.Locale;
 		lNextEnemy = localData.NextEnemy;
@@ -263,7 +258,7 @@ public class PlayerLocalManager : MonoBehaviour {
 
 	public void Save() {
 		PlayerLocalData localData = new PlayerLocalData(lMoney, lPoint, lStartGold, lMoreEarnGold, lMoreCastleHealth,
-			lReduceCooldown, lHeroeList, lStage, lStageRace, lSelectedRace, lCastleMaxHp, lCastleHp, lCastleExtraHp, lUnitList, lAllyUnitList, lGameStarted, lLocale, lNextEnemy);
+			lReduceCooldown, lHeroeList, lStage, lStageRace, lSelectedRace, lCastleMaxHp, lCastleHp, lCastleExtraHp, lUnitList, lGameStarted, lLocale, lNextEnemy);
 
 		SaveLocalData(localData);
 	}
