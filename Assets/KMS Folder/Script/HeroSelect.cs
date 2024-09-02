@@ -122,6 +122,7 @@ public class HeroSelect : MonoBehaviour
     {
         CharacterImage.sprite = mainSprite;
         CharacterImage.gameObject.SetActive(mainSprite != null);
+        CharacterImage.GetComponent<Image>().enabled = true;
     }
     // 리셋 버튼(리셋시 영웅 편성 정보도 날라감)
     private void ResetHeroSelection()
