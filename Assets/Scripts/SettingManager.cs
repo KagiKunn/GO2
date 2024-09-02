@@ -278,4 +278,9 @@ public class SettingManager : MonoBehaviour {
 			localizedString.StringChanged -= UpdatePlaceholderText;
 		}
 	}
+
+	public void OnClosePop()
+	{
+		gameObject.SetActive(false);
+	}
 }
