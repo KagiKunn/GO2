@@ -196,7 +196,7 @@ public class UnitUpgrade : MonoBehaviour {
 
 		string newUnitName = upgradeList[classNum].UnitListArray[levelList[classNum]].name;
 		int selectedIdx = Convert.ToInt32(selected.Split("_")[0]);
-		var newKeyValuePair = new KeyValuePair<string, int>(newUnitName, selectedIdx);
+		var newKeyValuePair = new Triple<int, int, string>(selectedIdx,PlayerLocalManager.Instance.lUnitList[selectedIdx].Item2,newUnitName);
 		PlayerLocalManager.Instance.lUnitList[selectedIdx] = newKeyValuePair;
 		PlayerLocalManager.Instance.lMoney -= price;
 		PlayerLocalManager.Instance.Save();
@@ -288,7 +288,7 @@ public class UnitUpgrade : MonoBehaviour {
 
 			for (int i = 0; i < unitList.Count; i++) {
 				var unitData = unitList[i];
-				string unitName = unitData.Key;
+				string unitName = unitData.Item3;
 				int slotIndex = i;
 
 				GameObject prefabname = FindPrefabByName(unitName);

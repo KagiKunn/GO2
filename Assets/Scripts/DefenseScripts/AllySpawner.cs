@@ -19,7 +19,7 @@ public class AllySpawner : MonoBehaviour {
 	[SerializeField] private float ySpacing = 10f; // 타일 크기에 맞게 조정
 	private Dictionary<Vector3Int, GameObject> allyPositions = new Dictionary<Vector3Int, GameObject>();
 
-	private List<KeyValuePair<int, string>> allyUnitList;
+	private List<Triple<int, int, string>> allyUnitList;
 	
 	private Vector3Int? selectedPosition = null;
 	private int maxUnitCount;
@@ -33,19 +33,25 @@ public class AllySpawner : MonoBehaviour {
 	{
 		List<GameObject> leftAllies = new List<GameObject>();
 		List<GameObject> rightAllies = new List<GameObject>();
-		allyUnitList = PlayerLocalManager.Instance.lAllyUnitList
-			.OrderBy(unit => unit.Key)
+		allyUnitList = PlayerLocalManager.Instance.lUnitList
+			.OrderBy(unit => unit.Item2)
 			.ToList();
-		for (int i = 0; i<28; i++)
+		for (int j = 0; j < allyUnitList.Count; j++)
 		{
-			string name = allyUnitList[i].Value;
-			if (i < 14)
+			for (int i = 0; i<28; i++)
 			{
-				leftAllies.Add(Resources.Load<GameObject>("Defense/Unit/" + name));
-			}
-			else
-			{
-				rightAllies.Add(Resources.Load<GameObject>("Defense/Unit/" + name));
+				if (allyUnitList[j].Item2 == i)
+				{
+					string name = allyUnitList[j].Item3;
+					if (i < 14)
+					{
+						leftAllies.Add(Resources.Load<GameObject>("Defense/Unit/" + name));
+					}
+					else
+					{
+						rightAllies.Add(Resources.Load<GameObject>("Defense/Unit/" + name));
+					}
+				}
 			}
 		}
 

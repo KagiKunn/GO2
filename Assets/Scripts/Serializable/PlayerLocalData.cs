@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using NUnit.Framework;
 using UnityEngine.Localization.Settings;
 
 [Serializable]
@@ -26,9 +26,7 @@ public class PlayerLocalData {
 	public bool GameStarted { get; set; }
 	public bool NextEnemy { get; set; }
 
-	public List<KeyValuePair<string, int>> UnitList { get; set; }
-
-	public List<KeyValuePair<int, string>> AllyUnitList { get; set; }
+	public new List<Triple<int, int, string>> UnitList { get; set; }
 
 	public string Locale { get; set; }
 
@@ -47,12 +45,11 @@ public class PlayerLocalData {
 		CastleMaxHealth = 5000f;
 		CastleHealth = 5000f;
 		CastleExtraHealth = 0;
-		UnitList = new List<KeyValuePair<string, int>>();
-		AllyUnitList = new List<KeyValuePair<int, string>>();
+		UnitList = new List<Triple<int, int, string>>();
 
 		for (int i = 0; i < 28; i++) {
-			KeyValuePair<int, string> keyVals = new KeyValuePair<int, string>(i, "Default");
-			AllyUnitList.Add(keyVals);
+			Triple<int, int, string> keyVals = new Triple<int, int, string>(i, 0, "Default");
+			UnitList.Add(keyVals);
 		}
 
 		GameStarted = false;
@@ -62,7 +59,7 @@ public class PlayerLocalData {
 
 	public PlayerLocalData(int money, int remainedPoint, int startGold, int moreEarnGold, int moreCastleHealth,
 	                       int reduceCooldown, HeroList[] herosList, int stage, string[] stageRace, string selectedRace, float castleMaxHealth,
-	                       float castleHealth, float castleExtraHealth, List<KeyValuePair<string, int>> unitList, List<KeyValuePair<int, string>> allyUnitList, bool gameStarted,
+	                       float castleHealth, float castleExtraHealth, List<Triple<int, int, string>> unitList, bool gameStarted,
 	                       string locale, bool nextEnemy) {
 		Money = money;
 		RemainedPoint = remainedPoint;
@@ -78,7 +75,6 @@ public class PlayerLocalData {
 		CastleHealth = castleHealth;
 		CastleExtraHealth = castleExtraHealth;
 		UnitList = unitList;
-		AllyUnitList = allyUnitList;
 		GameStarted = gameStarted;
 		Locale = locale;
 		NextEnemy = nextEnemy;
@@ -91,6 +87,41 @@ public class HeroList : Quad<string, bool, int, ItemSO[]> {
 
 	public HeroList(string heroName, bool unlocked, int selected) : base(heroName, unlocked, selected) { }
 }
+
+[Serializable]
+public class Triple<T1, T2, T3>
+{
+	public T1 Item1 { get; set; }
+	public T2 Item2 { get; set; }
+	public T3 Item3 { get; set; }
+
+	public Triple(T1 item1, T2 item2, T3 item3)
+	{
+		Item1 = item1;
+		Item2 = item2;
+		Item3 = item3;
+	}
+	public static Triple<T1, T2, T3> GetTripleWithMaxT1<T1, T2, T3>(List<Triple<T1, T2, T3>> triples) where T1 : IComparable<T1>
+	{
+		if (triples == null || triples.Count == 0)
+		{
+			throw new ArgumentException("The list cannot be null or empty.");
+		}
+
+		Triple<T1, T2, T3> maxTriple = triples[0];
+
+		foreach (var triple in triples)
+		{
+			if (triple.Item1.CompareTo(maxTriple.Item1) > 0)
+			{
+				maxTriple = triple;
+			}
+		}
+
+		return maxTriple;
+	}
+}
+
 
 [Serializable]
 public class Quad<T1, T2, T3, T4> {

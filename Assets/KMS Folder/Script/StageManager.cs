@@ -47,10 +47,10 @@ public class StageManager : MonoBehaviour {
 	}
 
 	private void reset() {
-		unitGameManager.ResetList();
+		unitGameManager.resetUnitsList();
 	}
 
 	private void OnDestroy() {
-		unitGameManager.SaveDefaultUnitData();
+		
 	}
 }

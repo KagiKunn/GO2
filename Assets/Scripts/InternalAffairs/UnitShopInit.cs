@@ -14,11 +14,11 @@ public class UnitShopInit : MonoBehaviour
 
     private int unitIndex = 0;
 
-    private List<KeyValuePair<string, int>> boughtUnit;
+    private List<Triple<int, int, string>> boughtUnit;
 
     private void Awake()
     {
-        boughtUnit = PlayerLocalManager.Instance.lUnitList ?? new List<KeyValuePair<string, int>>();
+        boughtUnit = PlayerLocalManager.Instance.lUnitList ?? new List<Triple<int, int, string>>();
         GameObject prefabObject = Instantiate(units[unitIndex], transform.position, quaternion.identity, transform);
         RectTransform newObjectRect = prefabObject.GetComponent<RectTransform>();
 
@@ -166,7 +166,9 @@ public class UnitShopInit : MonoBehaviour
         {
             unit = "Gun";
         }
-        KeyValuePair<string, int> keyVal = new KeyValuePair<string, int>(unit, 0);
+
+        var nextIndex = Triple<int,int,string>.GetTripleWithMaxT1(PlayerLocalManager.Instance.lUnitList);
+        Triple<int, int, string> keyVal = new Triple<int, int, string>(nextIndex.Item1+1,-1,unit);
         boughtUnit.Add(keyVal);
         PlayerLocalManager.Instance.lMoney -= price;
 
