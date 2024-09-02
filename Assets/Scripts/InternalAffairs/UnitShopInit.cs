@@ -167,7 +167,7 @@ public class UnitShopInit : MonoBehaviour
             unit = "Gun";
         }
 
-        var nextIndex = Triple<int,int,string>.GetTripleWithMaxT1(PlayerLocalManager.Instance.lUnitList);
+        var nextIndex = Triple<int,int,string>.GetTripleWithMaxT1<int, int, string>(PlayerLocalManager.Instance.lUnitList);
         Triple<int, int, string> keyVal = new Triple<int, int, string>(nextIndex.Item1+1,-1,unit);
         boughtUnit.Add(keyVal);
         PlayerLocalManager.Instance.lMoney -= price;

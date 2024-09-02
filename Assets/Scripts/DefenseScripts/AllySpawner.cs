@@ -36,12 +36,14 @@ public class AllySpawner : MonoBehaviour {
 		allyUnitList = PlayerLocalManager.Instance.lUnitList
 			.OrderBy(unit => unit.Item2)
 			.ToList();
-		for (int j = 0; j < allyUnitList.Count; j++)
+		for (int i = 0; i<28; i++)
 		{
-			for (int i = 0; i<28; i++)
+			bool founded = false;
+			for (int j = 0; j < allyUnitList.Count; j++)
 			{
 				if (allyUnitList[j].Item2 == i)
 				{
+					founded = true;
 					string name = allyUnitList[j].Item3;
 					if (i < 14)
 					{
@@ -51,6 +53,18 @@ public class AllySpawner : MonoBehaviour {
 					{
 						rightAllies.Add(Resources.Load<GameObject>("Defense/Unit/" + name));
 					}
+				} 
+			}
+
+			if (!founded)
+			{
+				if (i < 14)
+				{
+					leftAllies.Add(Resources.Load<GameObject>("Defense/Unit/Default"));
+				}
+				else
+				{
+					rightAllies.Add(Resources.Load<GameObject>("Defense/Unit/Default"));
 				}
 			}
 		}

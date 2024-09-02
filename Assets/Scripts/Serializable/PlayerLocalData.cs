@@ -47,10 +47,10 @@ public class PlayerLocalData {
 		CastleExtraHealth = 0;
 		UnitList = new List<Triple<int, int, string>>();
 
-		for (int i = 0; i < 28; i++) {
+		/*for (int i = 0; i < 28; i++) {
 			Triple<int, int, string> keyVals = new Triple<int, int, string>(i, 0, "Default");
 			UnitList.Add(keyVals);
-		}
+		}*/
 
 		GameStarted = false;
 		Locale = LocalizationSettings.SelectedLocale.Identifier.Code;
@@ -101,14 +101,14 @@ public class Triple<T1, T2, T3>
 		Item2 = item2;
 		Item3 = item3;
 	}
-	public static Triple<T1, T2, T3> GetTripleWithMaxT1<T1, T2, T3>(List<Triple<T1, T2, T3>> triples) where T1 : IComparable<T1>
+	public static Triple<int, int, string> GetTripleWithMaxT1<T1, T2, T3>(List<Triple<int, int, string>> triples) where T1 : IComparable<T1>
 	{
 		if (triples == null || triples.Count == 0)
 		{
-			throw new ArgumentException("The list cannot be null or empty.");
+			return new Triple<int, int, string>(-1,-1,"Default");
 		}
 
-		Triple<T1, T2, T3> maxTriple = triples[0];
+		Triple<int, int, string> maxTriple = triples[0];
 
 		foreach (var triple in triples)
 		{

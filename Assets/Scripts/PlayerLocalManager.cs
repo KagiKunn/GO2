@@ -191,6 +191,10 @@ public class PlayerLocalManager : MonoBehaviour {
 					lGameStarted = localData.GameStarted;
 					lLocale = localData.Locale;
 					lNextEnemy = localData.NextEnemy;
+					foreach (Triple<int, int, string> unit in lUnitList)
+					{
+						CustomLogger.LogWarning($"[{unit.Item1}] {unit.Item3} at {unit.Item2}");
+					}
 				}
 			}
 		} catch (Exception ex) {
