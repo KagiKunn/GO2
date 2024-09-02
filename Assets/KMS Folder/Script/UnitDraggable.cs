@@ -19,6 +19,7 @@ public class UnitDraggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     
     private UnitGameManager unitGameManager;
     private Camera mainCamera;
+    public int unitIndex = -1;
     
     private void Awake()
     {

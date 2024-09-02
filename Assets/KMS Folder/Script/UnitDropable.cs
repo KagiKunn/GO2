@@ -52,21 +52,20 @@ public class UnitDropable : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             
             if (!string.IsNullOrEmpty(unitName))
             {
-                int existingIndex = unitGameManager.selectedUnits
-                    .FindIndex(x => x.Key == slotIndex && x.Value == "Default");
+                int existingIndex = unitGameManager.userUnits
+                    .FindIndex(x => x.Item2 == slotIndex && x.Item3 == "Default");
 
                 if (existingIndex != -1)
                 {
-                    unitGameManager.selectedUnits[existingIndex] = new KeyValuePair<int, string>(slotIndex, unitName);
+                    unitGameManager.userUnits[existingIndex] = new Triple<int, int, string>(unitGameManager.userUnits[existingIndex].Item1, slotIndex, unitName);
                 }
                 else
                 {
-                    unitGameManager.selectedUnits.Add(new KeyValuePair<int, string>(slotIndex, unitName));
+                    unitGameManager.userUnits[draggedUnit.unitIndex] = new Triple<int, int, string>(unitGameManager.userUnits[draggedUnit.unitIndex].Item1, slotIndex, unitName);
                 }
 
                 CustomLogger.Log(slotIndex + " " + unitName);
 
-                PlayerLocalManager.Instance.lAllyUnitList = unitGameManager.selectedUnits;
                 PlayerLocalManager.Instance.Save();
                 unitGameManager.RemoveUnitFromList(unitName);
                 // unitGameManager.UpdateUnitsList();

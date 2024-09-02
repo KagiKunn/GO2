@@ -1,8 +1,9 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UnitGameManager : MonoBehaviour
@@ -16,67 +17,95 @@ public class UnitGameManager : MonoBehaviour
     public GameObject[] Slot; // 유닛 배치 슬롯
     public Transform panelTransform;
 
-    private List<KeyValuePair<string, int>> userUnits; // 유저 구매 유닛 및 가진 유닛들
-    public List<KeyValuePair<int, string>> selectedUnits;
+    public List<Triple<int, int, string>> userUnits; // 유저 구매 유닛 및 가진 유닛들
     private List<UnitDraggable> unitDraggables = new List<UnitDraggable>();
 
     private void Awake()
     {
         LoadUserUnit();
-        if (selectedUnits != null)
+        if (countPlacedUnit() > 0)
         {
             DisplayPrefab();
         }
+
         DisplayUnitsList();
-        UpdateUnitsList();
+        //UpdateUnitsList();
+    }
+
+    private int countPlacedUnit()
+    {
+        int ret = 0;
+        foreach (var t in userUnits)
+        {
+            if (t.Item2 > -1)
+            {
+                ret++;
+            }
+        }
+
+        return ret;
     }
 
     private void LoadUserUnit()
     {
         userUnits = PlayerLocalManager.Instance.lUnitList;
-
-        if (PlayerLocalManager.Instance.lAllyUnitList != null)
-        {
-            selectedUnits = PlayerLocalManager.Instance.lAllyUnitList;
-            
-        }
-        else
-        {
-            selectedUnits = new List<KeyValuePair<int, string>>();
-        }
     }
 
+    public void resetUnitsList()
+    {
+        ResetList();
+        LoadNextScene();
+    }
+    
+    public void LoadNextScene(){
+        StartCoroutine(LoadMyAsyncScene());
+    }
+
+    IEnumerator LoadMyAsyncScene()
+    {    
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
+
+        while (!asyncLoad.isDone)
+        {
+            yield return null;
+        }
+    }
+    
     private void DisplayUnitsList()
     {
         Sprite[] prefabImages = Resources.LoadAll<Sprite>("Image/Unit");
         foreach (var unitData in userUnits)
         {
-            GameObject newSlot = Instantiate(slotPrefab, slotParent);
-            Image unitImage = newSlot.GetComponentInChildren<Image>();
-
-            if (unitImage != null)
+            if (unitData.Item3 != "Default" && unitData.Item2 < 0)
             {
-                foreach (var prefabImage in prefabImages)
+                GameObject newSlot = Instantiate(slotPrefab, slotParent);
+                Image unitImage = newSlot.GetComponentInChildren<Image>();
+
+                if (unitImage != null)
                 {
-                    string spriteNameWithoutSuffix = prefabImage.name.Split('_')[0];
-                    if (spriteNameWithoutSuffix == unitData.Key)
+                    foreach (var prefabImage in prefabImages)
                     {
-                        unitImage.sprite = prefabImage;
-                        break;
+                        string spriteNameWithoutSuffix = prefabImage.name.Split('_')[0];
+                        if (spriteNameWithoutSuffix == unitData.Item3)
+                        {
+                            unitImage.sprite = prefabImage;
+                            break;
+                        }
                     }
                 }
-            }
-            else
-            {
-                Debug.LogWarning("슬롯에 Image 컴포넌트 없음.");
-            }
+                else
+                {
+                    Debug.LogWarning("슬롯에 Image 컴포넌트 없음.");
+                }
 
-            UnitDraggable unitDraggable = newSlot.GetComponentInChildren<UnitDraggable>();
+                UnitDraggable unitDraggable = newSlot.GetComponentInChildren<UnitDraggable>();
 
-            if (unitDraggable != null)
-            {
-                unitDraggable.unitName = unitData.Key;
-                unitDraggables.Add(unitDraggable);
+                if (unitDraggable != null)
+                {
+                    unitDraggable.unitName = unitData.Item3;
+                    unitDraggable.unitIndex = unitData.Item1;
+                    unitDraggables.Add(unitDraggable);
+                }
             }
         }
     }
@@ -84,16 +113,16 @@ public class UnitGameManager : MonoBehaviour
     public void DisplayPrefab()
     {
         Prefabs = Resources.LoadAll<GameObject>("Defense/Unit");
-        if (selectedUnits != null)
+        if (countPlacedUnit() > 0)
         {
-            foreach (var unitData in selectedUnits)
+            foreach (var unitData in userUnits)
             {
-                int slotIndex = unitData.Key;
-                string unitName = unitData.Value;
+                int slotIndex = unitData.Item2;
+                string unitName = unitData.Item3;
 
                 GameObject prefabname = FindPrefabByName(unitName);
-                
-                if (prefabname != null && prefabname.name != "Default")
+
+                if (prefabname != null && prefabname.name != "Default" && slotIndex > -1)
                 {
                     unintDropable.RemoveExistingPrefab(slotIndex);
                     GameObject prefabObject = Instantiate(prefabname, Slot[slotIndex].transform);
@@ -103,9 +132,9 @@ public class UnitGameManager : MonoBehaviour
                     prefab.sizeDelta = slotRect.sizeDelta;
                     prefab.localScale = new Vector3(200, 200, 1);
                     prefab.anchoredPosition = new Vector2(0, -50);
-                    
+
                     Slot[slotIndex].GetComponent<UnitDropable>().enabled = false;
-                    
+
                     RemoveClones();
                 }
             }
@@ -115,7 +144,7 @@ public class UnitGameManager : MonoBehaviour
     public GameObject FindPrefabByName(string unitName)
     {
         Prefabs = Resources.LoadAll<GameObject>("Defense/Unit");
-        
+
         foreach (GameObject prefab in Prefabs)
         {
             if (prefab.name == unitName)
@@ -123,6 +152,7 @@ public class UnitGameManager : MonoBehaviour
                 return prefab;
             }
         }
+
         CustomLogger.Log("일치하는 프리팹 없음", Color.yellow);
         return null;
     }
@@ -132,7 +162,7 @@ public class UnitGameManager : MonoBehaviour
         CustomLogger.Log("리스트에서 리무브 하는 메서드 발동", Color.magenta);
         foreach (Transform child in slotParent)
         {
-            Image unitText = child.GetComponentInChildren<Image>();
+            Image unitText = child.GetComponent<Image>();
             string unit = unitText.sprite.name.Split('_')[0];
             if (unitText != null && unit == unitName && child.gameObject.activeSelf)
             {
@@ -144,8 +174,12 @@ public class UnitGameManager : MonoBehaviour
 
     public void ResetList()
     {
-        selectedUnits = new List<KeyValuePair<int, string>>();
-        PlayerLocalManager.Instance.lAllyUnitList = selectedUnits;
+        foreach (var t in userUnits)
+        {
+            t.Item2 = -1;
+        }
+
+        PlayerLocalManager.Instance.lUnitList = userUnits;
         PlayerLocalManager.Instance.Save();
 
         foreach (Transform slot in placementParent)
@@ -175,29 +209,6 @@ public class UnitGameManager : MonoBehaviour
         {
             unitDropable.GetComponent<UnitDropable>().enabled = true;
         }
-        
-    }
-
-    public void SaveDefaultUnitData()
-    {
-        HashSet<int> occupiedSlots = new HashSet<int>();
-        foreach (var unit in selectedUnits)
-        {
-            occupiedSlots.Add(unit.Key);
-        }
-
-        for (int i = 0; i < 28; i++)
-        {
-            if (!occupiedSlots.Contains(i))
-            {
-                KeyValuePair<int, string> defaultUnitData = new KeyValuePair<int, string>(i, "Default");
-                CustomLogger.Log(defaultUnitData.Key + " " + defaultUnitData.Value, Color.magenta);
-                selectedUnits.Add(defaultUnitData);
-            }
-        }
-
-        PlayerLocalManager.Instance.lAllyUnitList = selectedUnits;
-        PlayerLocalManager.Instance.Save();
     }
 
     public void RemoveClones()
@@ -215,9 +226,9 @@ public class UnitGameManager : MonoBehaviour
     {
         Dictionary<string, int> deployedUnitCounts = new Dictionary<string, int>();
 
-        foreach (var selectedUnit in selectedUnits)
+        foreach (var selectedUnit in userUnits)
         {
-            string unitName = selectedUnit.Value.Trim();
+            string unitName = selectedUnit.Item3.Trim();
             CustomLogger.Log("Checking deployed unit: " + unitName, Color.magenta);
 
             if (!deployedUnitCounts.TryAdd(unitName, 1))
@@ -240,6 +251,7 @@ public class UnitGameManager : MonoBehaviour
                     if (deployedUnitCounts[unitName] <= 0)
                     {
                         deployedUnitCounts.Remove(unitName);
+                        CustomLogger.Log("Remove deployed unit: " + unitName, Color.red);
                     }
                 }
             }

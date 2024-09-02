@@ -28,10 +28,10 @@ public class BtnScene : MonoBehaviour {
 	public void DefenseSceneChange() {
 		if (GameObject.FindWithTag("Popup") != null) return;
 
-		List<KeyValuePair<int, string>> allylist = PlayerLocalManager.Instance.lAllyUnitList;
+		List<Triple<int, int, string>> allylist = PlayerLocalManager.Instance.lUnitList;
 
-		foreach (KeyValuePair<int, string> ally in allylist) {
-			if (ally.Value != "Default") {
+		foreach (Triple<int, int, string> ally in allylist) {
+			if (ally.Item3 != "Default" && ally.Item2>-1) {
 				unitSet = true;
 
 				break;

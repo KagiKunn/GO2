@@ -233,7 +233,6 @@ public class StageC : MonoBehaviour {
 		//초기화
 		PlayerLocalManager.Instance.lMoney = 1000;
 		PlayerLocalManager.Instance.lHeroeList = null;
-		PlayerLocalManager.Instance.lAllyUnitList = null;
 		PlayerLocalManager.Instance.lUnitList = null;
 		PlayerLocalManager.Instance.lCastleMaxHp = 5000f;
 		PlayerLocalManager.Instance.lCastleHp = 5000f;
