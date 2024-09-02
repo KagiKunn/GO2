@@ -220,7 +220,13 @@ public class CastleWallManager : MonoBehaviour {
         foreach (GameObject wall in walls) {
             Destroy(wall);
         }
+
+        GameObject[] destroyedWalls = GameObject.FindGameObjectsWithTag("DestroyedWalls");
+        foreach (GameObject wall in destroyedWalls) {
+            wall.SetActive(true);
+        }
     }
+    
 
     public void SaveWallHP() {
         CustomLogger.Log("성벽 HP 정보 저장됨 health, mH, eH" + health + "," + maxHealth);
