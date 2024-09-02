@@ -90,6 +90,14 @@ public class SettingManager : MonoBehaviour {
 		}
 	}
 
+	void Update()
+	{
+		if (gameObject.activeSelf && SceneManager.GetActiveScene().name != "InternalAffairs")
+		{
+			gameObject.SetActive(false);
+		}
+	}
+
 	public void SetMainCamera() {
 		GetComponent<Canvas>().worldCamera = Camera.main;
 	}
