@@ -2,6 +2,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Audio;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
@@ -80,6 +81,10 @@ public class EnemySpawner : MonoBehaviour
     private float blinkInterval = 0.3f; // 깜빡임 간격(초)
     private Sprite raceImage;
 
+    public AudioClip soundClip;
+    private AudioSource audioSource;
+    public AudioMixerGroup sfxMixerGroup;
+    
     public void SetSelectedRace(string race)
     {
         selectedRace = race;
@@ -116,6 +121,10 @@ public class EnemySpawner : MonoBehaviour
         CustomLogger.Log("스포너에서 받은 stageCount값:" + stageCount, "black");
         bossImage.SetActive(false);
 
+        audioSource = gameObject.AddComponent<AudioSource>();
+        audioSource.clip = soundClip;
+        audioSource.outputAudioMixerGroup = sfxMixerGroup;
+        
         // 스테이지 수에 따른 웨이브당 스폰 숫자 증가 제어하는 부분
         numberOfObjects += (2 * stageCount);
         CustomLogger.Log("StageCount를 받아와서 스폰할 숫자 재설정 결과 : " + numberOfObjects, "pink");
@@ -183,6 +192,11 @@ public class EnemySpawner : MonoBehaviour
 
     private IEnumerator DisplayBossImageAndSpawn()
     {
+        if (audioSource != null && soundClip != null)
+        {
+            audioSource.Play();
+        }
+        
         bossImage.SetActive(true);
         float elapsedTime = 0f;
 

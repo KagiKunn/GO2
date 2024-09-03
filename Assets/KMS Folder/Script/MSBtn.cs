@@ -22,6 +22,7 @@ public class MSBtn : MonoBehaviour {
 	}
 
 	public void Change() {
+		SfxManager.Instance.clickSound();
 		targetImage.sprite = newImage;
 		newTxtColor = new Color(156f / 255f, 146f / 255f, 73f / 255f);
 		btn_txt.color = newTxtColor;
@@ -31,6 +32,7 @@ public class MSBtn : MonoBehaviour {
 	}
 
 	private void RestoreOriginal() {
+		SfxManager.Instance.clickSound();
 		targetImage.sprite = originalImage;
 		btn_txt.color = originalTxtColor;
 
@@ -44,10 +46,12 @@ public class MSBtn : MonoBehaviour {
 			Button confirmButton = confirmButtonTransform.GetComponent<Button>();
 
 			confirmButton.onClick.AddListener(() => {
+				SfxManager.Instance.clickSound();
 				CustomLogger.Log("Confirm button clicked!");
 				Destroy(fullPopup); // 팝업을 닫음
 			});
 		} else {
+			SfxManager.Instance.clickSound();
 			Instantiate(Resources.Load<GameObject>("PreFab/SmithPopupCanvas"));
 		}
 	}

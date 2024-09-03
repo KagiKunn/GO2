@@ -16,16 +16,19 @@ public class BtnScene : MonoBehaviour {
 	private bool unitSet = false;
 
 	public void heroSceneChange() {
+		SfxManager.Instance.clickSound();
 		SceneManager.LoadScene("HeroManagement");
 		CustomLogger.Log("Change HeroManagementScene successfuly!");
 	}
 
 	public void internalSceneChange() {
+		SfxManager.Instance.clickSound();
 		SceneManager.LoadScene("InternalAffairs");
 		CustomLogger.Log("Change InternalAffairsScene successfuly!");
 	}
 
 	public void DefenseSceneChange() {
+		SfxManager.Instance.clickSound();
 		if (GameObject.FindWithTag("Popup") != null) return;
 
 		List<Triple<int, int, string>> allylist = PlayerLocalManager.Instance.lUnitList;
@@ -96,6 +99,7 @@ public class BtnScene : MonoBehaviour {
 	}
 
 	public void OffenceSceneChange() {
+		SfxManager.Instance.clickSound();
 		if (GameObject.FindWithTag("Popup") != null) return;
 
 		HeroList[] heroList = PlayerLocalManager.Instance.lHeroeList;
@@ -184,11 +188,13 @@ public class BtnScene : MonoBehaviour {
 	}
 
 	public void UnitShopSceneChange() {
+		SfxManager.Instance.clickSound();
 		SceneManager.LoadScene("UnitShop");
 		CustomLogger.Log("Change UnitShop successfuly!");
 	}
 
 	public void UnitManageSceneChange() {
+		SfxManager.Instance.clickSound();
 		SceneManager.LoadScene("UnitManagement");
 		CustomLogger.Log("Change UnitManagement successfuly!");
 	}
