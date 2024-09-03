@@ -24,8 +24,8 @@ public class InternalUiButton : MonoBehaviour
     public void SettingControl()
     {
         SfxManager.Instance.clickSound();
-        settingActive = !settingActive;
-        if (settingActive)
+        SettingManager.Instance.SettingOpend = !SettingManager.Instance.SettingOpend;
+        if (SettingManager.Instance.SettingOpend)
         {
             SettingManager.Instance.SetMainCamera();
             SettingManager.Instance.gameObject.SetActive(true);
