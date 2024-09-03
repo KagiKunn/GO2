@@ -61,6 +61,10 @@ public class CameraControl : MonoBehaviour {
 		UpdateCameraPosition();
 		CameraZoom();
 		HandleTouchInput();
+		
+		if (Input.GetKeyDown(KeyCode.Space)){
+			SwitchTilemap();	
+		}
 	}
 
 	private void ControlCameraPosition() {

@@ -15,7 +15,6 @@ public class SfxManager : MonoBehaviour {
     private void Awake() {
         if (Instance == null)
         {
-            audio.loop = false;
             Instance = this;
             DontDestroyOnLoad(this);
         } else {
