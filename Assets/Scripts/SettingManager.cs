@@ -42,6 +42,7 @@ public class SettingManager : MonoBehaviour {
 	public TMP_InputField inputField;
 	private LocalizedString localizedString;
 	private TMP_Text plt;
+	public bool SettingOpend;
 	[SerializeField] public bool IsVibrationEnabled { get; private set; }
 
 	private void Awake() {
@@ -289,6 +290,7 @@ public class SettingManager : MonoBehaviour {
 
 	public void OnClosePop()
 	{
+		SettingManager.Instance.SettingOpend = false;
 		gameObject.SetActive(false);
 	}
 }
