@@ -23,6 +23,7 @@ public class InternalUiButton : MonoBehaviour
 
     public void SettingControl()
     {
+        SfxManager.Instance.clickSound();
         SettingManager.Instance.SettingOpend = !SettingManager.Instance.SettingOpend;
         if (SettingManager.Instance.SettingOpend)
         {
@@ -37,6 +38,7 @@ public class InternalUiButton : MonoBehaviour
     }
     public void GiveupControl()
     {
+        SfxManager.Instance.clickSound();
         SceneManager.LoadScene("Title");
     }
 }

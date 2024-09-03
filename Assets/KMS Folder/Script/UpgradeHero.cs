@@ -84,6 +84,7 @@ public class UpgradeHero : MonoBehaviour
     
     private void OnCloseBtn()
     {
+        SfxManager.Instance.clickSound();
         // HeroGameManager의 upgradeHero를 초기화
         HeroManager heroManager = FindFirstObjectByType<HeroManager>();
         if (heroManager != null)
