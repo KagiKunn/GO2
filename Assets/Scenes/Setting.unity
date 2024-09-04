@@ -161,6 +161,26 @@ PrefabInstance:
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1176781124495994053, guid: f657df8988f762849af8896b4e423986,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1176781124495994053, guid: f657df8988f762849af8896b4e423986,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 633944620}
+    - target: {fileID: 1176781124495994053, guid: f657df8988f762849af8896b4e423986,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnClosePop
+      objectReference: {fileID: 0}
+    - target: {fileID: 1176781124495994053, guid: f657df8988f762849af8896b4e423986,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: SettingManager, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 2603610555735937829, guid: f657df8988f762849af8896b4e423986,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -499,10 +519,14 @@ MonoBehaviour:
   bgmVal: {fileID: 1505972}
   sfxVolSlider: {fileID: 1505971}
   sfxVal: {fileID: 1505970}
+  voiceVolSlider: {fileID: 0}
+  voiceVal: {fileID: 0}
   audioMixer: {fileID: 24100000, guid: d065b8aa044ad154ab429c8647f579a2, type: 2}
   vibrationToggle: {fileID: 1505969}
   UUID: {fileID: 1505968}
   Username: {fileID: 1505967}
+  InputBoxUI: {fileID: 0}
+  inputField: {fileID: 0}
 --- !u!4 &280782579
 Transform:
   m_ObjectHideFlags: 0
@@ -518,6 +542,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &633944620 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7846756892517775691, guid: f657df8988f762849af8896b4e423986,
+    type: 3}
+  m_PrefabInstance: {fileID: 1505966}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8864891a7535aa0408f76394ff2642ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1383085085
 GameObject:
   m_ObjectHideFlags: 0

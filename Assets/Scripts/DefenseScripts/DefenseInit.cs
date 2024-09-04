@@ -4,6 +4,7 @@ using TMPro;
 
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.InputSystem;
 
 public class DefenseInit : MonoBehaviour {
 
@@ -143,9 +144,11 @@ public class DefenseInit : MonoBehaviour {
 		}
 	}
 
-	private void Update() {
+	private void Update()
+	{
 		GameObject.Find("Gold").GetComponent<TMP_InputField>().text = currentGold.ToString();
-	}
+
+}
 
 	public void OnGameEnd() {
 		PlayerLocalManager.Instance.lMoney = currentGold;

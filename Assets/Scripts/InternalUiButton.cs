@@ -23,8 +23,9 @@ public class InternalUiButton : MonoBehaviour
 
     public void SettingControl()
     {
-        settingActive = !settingActive;
-        if (settingActive)
+        SfxManager.Instance.clickSound();
+        SettingManager.Instance.SettingOpend = !SettingManager.Instance.SettingOpend;
+        if (SettingManager.Instance.SettingOpend)
         {
             SettingManager.Instance.SetMainCamera();
             SettingManager.Instance.gameObject.SetActive(true);
@@ -37,6 +38,7 @@ public class InternalUiButton : MonoBehaviour
     }
     public void GiveupControl()
     {
+        SfxManager.Instance.clickSound();
         SceneManager.LoadScene("Title");
     }
 }
