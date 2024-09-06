@@ -19,14 +19,13 @@ public class UnitDropable : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         rect = GetComponent<RectTransform>();
         Prefabs = Resources.LoadAll<GameObject>("Defense/Unit");
         unitGameManager = FindFirstObjectByType<UnitGameManager>();
-        
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
         if (eventData.pointerDrag != null)
         {
-                image.color = Color.yellow;
+            image.color = Color.yellow;
         }
     }
 
@@ -46,34 +45,26 @@ public class UnitDropable : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         {
             int totalSiblings = transform.parent.childCount; // 부모 오브젝트의 전체 자식 수
             int slotIndex = totalSiblings - 1 - transform.GetSiblingIndex();
-            
+
             Image unitText = draggedUnit.gameObject.transform.parent.GetComponent<Image>();
             string unitName = unitText.sprite.name.Split('_')[0];
-            
+
             if (!string.IsNullOrEmpty(unitName))
             {
-                int existingIndex = unitGameManager.userUnits
-                    .FindIndex(x => x.Item2 == slotIndex && x.Item3 == "Default");
+                unitGameManager.userUnits[draggedUnit.unitIndex] =
+                    new Triple<int, int, string>(unitGameManager.userUnits[draggedUnit.unitIndex].Item1, slotIndex,
+                        unitName);
 
-                if (existingIndex != -1)
-                {
-                    unitGameManager.userUnits[existingIndex] = new Triple<int, int, string>(unitGameManager.userUnits[existingIndex].Item1, slotIndex, unitName);
-                }
-                else
-                {
-                    unitGameManager.userUnits[draggedUnit.unitIndex] = new Triple<int, int, string>(unitGameManager.userUnits[draggedUnit.unitIndex].Item1, slotIndex, unitName);
-                }
 
-                CustomLogger.Log(slotIndex + " " + unitName);
-
+                PlayerLocalManager.Instance.lUnitList = unitGameManager.userUnits;
                 PlayerLocalManager.Instance.Save();
                 unitGameManager.RemoveUnitFromList(unitName);
                 // unitGameManager.UpdateUnitsList();
                 // draggedUnit.transform.SetParent(transform);
                 // draggedUnit.GetComponent<RectTransform>().position = GetComponent<RectTransform>().position;
-                
+
                 Image dropZoneImage = GetComponent<Image>();
-                
+
                 if (dropZoneImage != null)
                 {
                     dropZoneImage.color = new Color(0.643f, 0.643f, 0.643f);
@@ -83,13 +74,13 @@ public class UnitDropable : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                 {
                     CustomLogger.Log("Warning: Drop zone does not have an Image component.");
                 }
-                
+
                 // draggedUnit.transform.SetParent(draggedUnit.previousParent);
                 // draggedUnit.GetComponent<RectTransform>().position = 
                 //     draggedUnit.previousParent.GetComponent<RectTransform>().position;
-                
+
                 unitGameManager.DisplayPrefab();
-                
+
                 draggedUnit.SetDraggable(false);
                 draggedUnit.isDropped = true;
             }
@@ -110,6 +101,5 @@ public class UnitDropable : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                 }
             }
         }
-        
     }
 }

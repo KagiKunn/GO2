@@ -167,6 +167,8 @@ public class UnitGameManager : MonoBehaviour
             if (unitText != null && unit == unitName && child.gameObject.activeSelf)
             {
                 child.gameObject.SetActive(false);
+                PlayerLocalManager.Instance.lUnitList = userUnits;
+                PlayerLocalManager.Instance.Save();;
                 break;
             }
         }

@@ -27,6 +27,7 @@ public class InputBox : MonoBehaviour
         {
             Instance = this;
             this.gameObject.SetActive(false);
+            Change.onClick.AddListener(ChangeNick);
             DontDestroyOnLoad(gameObject);
         }
     }

@@ -22,6 +22,8 @@ public class StageManager : MonoBehaviour {
 		SetSlotVisibility(0, 13);
 		SetSlotInvisibility(14, 27);
 
+		PlayerLocalManager.Instance.lUnitList = unitGameManager.userUnits;
+		PlayerLocalManager.Instance.Save();;
 		leftButton.gameObject.SetActive(false);
 		rightButton.gameObject.SetActive(true);
 	}
@@ -30,6 +32,9 @@ public class StageManager : MonoBehaviour {
 		SetSlotVisibility(14, 27);
 		SetSlotInvisibility(0, 13);
 
+
+        PlayerLocalManager.Instance.lUnitList = unitGameManager.userUnits;
+        PlayerLocalManager.Instance.Save();;
 		rightButton.gameObject.SetActive(false);
 		leftButton.gameObject.SetActive(true);
 	}

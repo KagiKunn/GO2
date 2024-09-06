@@ -22,6 +22,7 @@ public class BtnScene : MonoBehaviour {
 	}
 
 	public void internalSceneChange() {
+		PlayerLocalManager.Instance.Save();
 		SfxManager.Instance.clickSound();
 		SceneManager.LoadScene("InternalAffairs");
 		CustomLogger.Log("Change InternalAffairsScene successfuly!");
